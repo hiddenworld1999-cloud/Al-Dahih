@@ -1,115 +1,217 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الدخول</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>تسجيل الدخول - منصة الدحيح</title>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
+:root {
+--primary-blue: #0A2647;
+--accent-orange: #FFC800;
+--bg-light: #F8F9FA;
+--text-dark: #212529;
+--text-grey: #6c757d;
+}
+
 *{
-box-sizing:border-box;
 margin:0;
 padding:0;
-font-family:Arial,sans-serif;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#0D0D0D;
-color:white;
+font-family:'IBM Plex Sans Arabic',sans-serif;
+background-color:var(--bg-light);
+color:var(--text-dark);
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
+padding:20px;
 user-select:none;
 }
 
-/* العلامة المائية */
-body::before{
-content:"DAHEEH PLATFORM";
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%) rotate(-30deg);
-font-size:60px;
-font-weight:bold;
-color:rgba(255,255,255,0.04);
-pointer-events:none;
-}
-
-.login-box{
-background:#1A1A1A;
-padding:40px;
-border-radius:16px;
-width:320px;
+.login-container{
+background:white;
+padding:40px 30px;
+border-radius:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+width:100%;
+max-width:400px;
 text-align:center;
 }
 
-.login-box h2{
+.login-logo{
+font-size:2.2rem;
+font-weight:700;
+color:var(--primary-blue);
+display:flex;
+align-items:center;
+justify-content:center;
 margin-bottom:20px;
-color:#FFB800;
 }
 
-input{
+.login-logo .material-icons{
+font-size:40px;
+margin-left:8px;
+color:var(--accent-orange);
+}
+
+.login-title{
+font-size:1.4rem;
+color:var(--primary-blue);
+margin-bottom:15px;
+}
+
+.login-subtitle{
+color:var(--text-grey);
+font-size:1rem;
+margin-bottom:35px;
+line-height:1.5;
+}
+
+.input-group{
+margin-bottom:25px;
+position:relative;
+}
+
+.login-input{
 width:100%;
-padding:12px;
-margin:10px 0;
+padding:18px 50px 18px 20px;
+border:2px solid var(--accent-orange);
+border-radius:15px;
+font-size:1.1rem;
+background:rgba(255,200,0,0.05);
+color:var(--primary-blue);
+font-weight:700;
+text-align:center;
+text-transform:uppercase;
+}
+
+.login-input:focus{
+border-color:var(--primary-blue);
+background:white;
+outline:none;
+}
+
+.input-icon{
+position:absolute;
+right:15px;
+top:50%;
+transform:translateY(-50%);
+color:var(--accent-orange);
+font-size:28px;
+}
+
+.login-btn{
+width:100%;
+padding:18px;
 border:none;
-border-radius:8px;
-background:#2A2A2A;
+border-radius:15px;
+background:var(--primary-blue);
 color:white;
-}
-
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:#FFB800;
+font-size:1.1rem;
+font-weight:700;
 cursor:pointer;
-font-weight:bold;
 }
 
-button:hover{
-background:#FF6B00;
+.message-box{
+padding:15px;
+border-radius:12px;
+margin-bottom:25px;
+display:none;
+}
+
+.error-msg{
+background:#ffebee;
+color:#c62828;
+}
+
+.success-msg{
+background:#e8f5e9;
+color:#2e7d32;
+}
+
+@keyframes shake{
+0%,100%{transform:translateX(0)}
+25%,75%{transform:translateX(-5px)}
+50%{transform:translateX(5px)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="login-box">
-<h2>تسجيل الدخول</h2>
+<div class="login-container">
 
-<input type="text" id="username" placeholder="اسم المستخدم">
-<input type="password" id="password" placeholder="كلمة المرور">
+<div class="login-logo">
+<span class="material-icons">local_library</span>
+الدحيح
+</div>
 
-<button onclick="login()">دخول</button>
+<h2 class="login-title">تسجيل الدخول</h2>
+<p class="login-subtitle">أدخل كود التفعيل الخاص بك للدخول إلى المنصة.</p>
+
+<div id="errorBox" class="message-box error-msg">
+الكود غير صحيح
+</div>
+
+<div id="successBox" class="message-box success-msg">
+تم الدخول بنجاح
+</div>
+
+<form onsubmit="event.preventDefault(); validateLogin();">
+
+<div class="input-group">
+<span class="material-icons input-icon">vpn_key</span>
+<input type="text" id="accessCode" class="login-input" placeholder="أدخل الكود هنا" required>
+</div>
+
+<button class="login-btn">دخول للمنصة</button>
+
+</form>
+
 </div>
 
 <script>
 
-/* تسجيل دخول بسيط */
-function login(){
-let user=document.getElementById("username").value;
-let pass=document.getElementById("password").value;
+/* كود الدخول */
+const CORRECT_CODE="DAHEEH123";
 
-if(user==="admin" && pass==="1234"){
-window.location="index.html";
+function validateLogin(){
+
+const code=document.getElementById("accessCode").value.toUpperCase();
+const errorBox=document.getElementById("errorBox");
+const successBox=document.getElementById("successBox");
+
+errorBox.style.display="none";
+successBox.style.display="none";
+
+if(code===CORRECT_CODE){
+
+localStorage.setItem("isLoggedInDaheeh","true");
+successBox.style.display="block";
+
+setTimeout(()=>{
+window.location.href="index.html";
+},1000);
+
 }else{
-alert("بيانات غير صحيحة");
-}
+errorBox.style.display="block";
+document.getElementById("accessCode").style.animation="shake 0.5s";
 }
 
-/* حماية */
+}
+
+/* حماية بسيطة */
 document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("selectstart",e=>e.preventDefault());
 
-document.onkeydown=function(e){
-if(
-e.keyCode==123 ||
-(e.ctrlKey&&e.shiftKey&&e.keyCode==73) ||
-(e.ctrlKey&&e.keyCode==85)
-){return false;}
-};
 </script>
 
 </body>
