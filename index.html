@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script>
+        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق الدحيح - الرئيسي</title>
@@ -9,13 +14,9 @@
 
     <style>
         :root { --primary-blue: #0A2647; --accent-orange: #FFC800; --bg-light: #F8F9FA; --text-dark: #212529; --text-grey: #6c757d; --card-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .material-icons { font-family: 'Material Icons'; font-weight: normal; font-style: normal; font-size: 24px; display: inline-block; line-height: 1; text-transform: none; letter-spacing: normal; word-wrap: normal; white-space: nowrap; direction: ltr; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'liga'; }
+        .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 80px; overflow-x: hidden; }
-        
-        .page-section { display: none; animation: fadeIn 0.3s ease; }
-        .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; }
@@ -27,18 +28,11 @@
         .welcome-text p { color: var(--text-grey); font-size: 0.95rem; margin-top: 5px;}
         
         .search-bar-container { position: relative; width: 100%; }
-        .search-input { width: 100%; padding: 14px 45px 14px 20px; border: none; border-radius: 15px; background: var(--bg-light); font-size: 0.95rem; color: var(--text-dark); box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); }
-        .search-icon-inside { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); opacity: 0.6; }
+        .search-input { width: 100%; padding: 14px 45px 14px 20px; border: none; border-radius: 15px; background: var(--bg-light); font-size: 0.95rem; }
+        .search-icon-inside { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0.6; }
         
         .container { padding: 0 20px; }
-        .section-title { font-size: 1.1rem; margin: 25px 0 15px 0; color: var(--primary-blue); display: flex; justify-content: space-between;}
-
-        .recently-added-card { background: white; border-radius: 18px; padding: 15px; display: flex; align-items: center; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.04); margin-bottom: 20px; cursor: pointer; }
-        .ra-icon-container { width: 60px; height: 60px; background: rgba(255, 200, 0, 0.15); border-radius: 14px; display: flex; justify-content: center; align-items: center; margin-left: 15px; color: var(--accent-orange); }
-        .ra-content { flex: 1; }
-        .ra-title { font-size: 1rem; margin-bottom: 4px; color: var(--primary-blue); font-weight: 700;}
-        .ra-subtitle { font-size: 0.85rem; color: var(--text-grey); margin-bottom: 8px; }
-        .ra-date { font-size: 0.75rem; color: #adb5bd; display: flex; align-items: center; }
+        .section-title { font-size: 1.1rem; margin: 25px 0 15px 0; color: var(--primary-blue); }
 
         .course-card-vertical { background: white; border-radius: 18px; overflow: hidden; margin-bottom: 18px; box-shadow: var(--card-shadow); display: flex; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.2s; }
         .course-card-vertical:active { transform: scale(0.98); background-color: #fcfcfc; }
@@ -47,153 +41,93 @@
         .cc-v-content { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
         .cc-v-title { font-size: 1rem; font-weight: 700; color: var(--primary-blue); line-height: 1.3; }
         .cc-v-instructor { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; margin-top: 5px; }
-        .cc-v-instructor .material-icons { font-size: 16px; margin-left: 4px; opacity: 0.7; }
         .rating-badge { background: rgba(255, 200, 0, 0.15); color: #d4a600; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; }
 
-        .profile-card { background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); margin-top: 20px; }
-        .logout-btn { width: 100%; padding: 15px; background: #ff4d4d; color: white; border: none; border-radius: 12px; font-weight: 700; font-family: inherit; margin-top: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-
+        /* الشريط السفلي */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 200; border-top-left-radius: 20px; border-top-right-radius: 20px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #adb5bd; transition: all 0.3s ease; font-weight: 500; position: relative; cursor: pointer; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #adb5bd; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary-blue); font-weight: 700; }
-        .nav-item .material-icons { font-size: 26px; margin-bottom: 4px; }
-        .nav-item.active::after { content: ''; position: absolute; top: -6px; width: 6px; height: 6px; background: var(--accent-orange); border-radius: 50%; }
-
-        .player-header { padding: 15px; display: flex; align-items: center; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .back-btn { font-size: 24px; color: var(--primary-blue); cursor: pointer; padding: 5px; }
-        .course-details-header { padding: 25px 20px; background: white; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 25px; }
-        .course-title-large { font-size: 1.4rem; color: var(--primary-blue); margin-bottom: 8px; }
-        .course-instructor-large { color: var(--text-grey); font-size: 0.95rem; display: flex; align-items: center; }
-        .question-bank-options { display: flex; flex-direction: column; gap: 15px; }
-        .qb-button { padding: 20px; border-radius: 16px; border: none; font-family: inherit; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; box-shadow: var(--card-shadow); }
-        .qb-button:active { transform: scale(0.98); }
-        .qb-btn-answers { background: var(--accent-orange); color: var(--primary-blue); }
-        .qb-btn-no-answers { background: white; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
-        .qb-btn-icon { font-size: 28px; }
+        
+        /* صفحة الحساب البسيطة */
+        .profile-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 300; display: none; justify-content: center; align-items: center; }
+        .profile-modal { background: white; width: 90%; padding: 30px; border-radius: 20px; text-align: center; }
     </style>
 </head>
 <body>
-    <header class="app-header" id="mainHeader">
+    <header class="app-header">
         <div class="logo-text"><span class="material-icons logo-icon">local_library</span>الدحيح</div>
-        <span class="material-icons" style="color:var(--primary-blue); font-size: 28px; cursor:pointer;" onclick="switchTab('profile', document.querySelector('.nav-item:last-child'))">account_circle</span>
+        <span class="material-icons" style="color:var(--primary-blue); font-size: 28px; cursor:pointer;" onclick="toggleProfile()">account_circle</span>
     </header>
 
-    <div id="page-home" class="page-section active">
-        <section class="hero-section">
-            <div class="welcome-text"><h2>مرحباً، يا دحيح 👋</h2><p>جاهز لجرعة تركيز اليوم؟</p></div>
-            <div class="search-bar-container"><span class="material-icons search-icon-inside">search</span><input type="text" id="searchInput" class="search-input" placeholder="ابحث عن مادة..."></div>
-        </section>
-        <div class="container">
-            <h3 class="section-title">أحدث الإضافات</h3>
-            <div class="recently-added-card" onclick="alert('سيتم فتح المراجعة قريباً')">
-                <div class="ra-icon-container"><span class="material-icons" style="font-size: 32px;">new_releases</span></div>
-                <div class="ra-content"><h4 class="ra-title">مراجعة ليلة الامتحان - اقتصاد كلي</h4><p class="ra-subtitle">ملخص شامل لأهم الأسئلة المتوقعة</p><div class="ra-date"><span class="material-icons" style="font-size: 14px; margin-left: 4px;">access_time</span>منذ ساعتين</div></div>
-            </div>
-            <h3 class="section-title" style="margin-top: 30px;">المواد الدراسية</h3>
-            <div id="coursesListContainer"></div>
+    <div class="hero-section">
+        <div class="welcome-text"><h2>مرحباً، يا دحيح 👋</h2><p>جاهز لجرعة تركيز اليوم؟</p></div>
+        <div class="search-bar-container"><span class="material-icons search-icon-inside">search</span><input type="text" id="searchInput" class="search-input" placeholder="ابحث عن مادة..."></div>
+    </div>
+
+    <div class="container">
+        <h3 class="section-title">المواد الدراسية</h3>
+        <div id="coursesListContainer"></div>
+    </div>
+
+    <div id="profileOverlay" class="profile-overlay" onclick="toggleProfile()">
+        <div class="profile-modal" onclick="event.stopPropagation()">
+            <span class="material-icons" style="font-size: 60px; color: var(--primary-blue);">account_circle</span>
+            <h3>طالب الدحيح</h3>
+            <p style="color:gray; margin-bottom: 20px;">كود: DAHEEH123</p>
+            <button onclick="logout()" style="width:100%; padding:12px; background:#ff4d4d; color:white; border:none; border-radius:10px; font-weight:bold;">تسجيل الخروج</button>
         </div>
     </div>
 
-    <div id="page-courses" class="page-section">
-        <div class="container">
-            <h3 class="section-title" style="margin-top:20px">دوراتي المسجلة</h3>
-            <div style="text-align:center; padding:50px 0; color:#999;"><span class="material-icons" style="font-size:60px; margin-bottom:10px; color: var(--primary-blue); opacity: 0.5;">school</span><p>أنت مشترك في 5 دورات حالياً</p></div>
-        </div>
-    </div>
-
-    <div id="page-profile" class="page-section">
-        <div class="container">
-            <div class="profile-card">
-                <span class="material-icons" style="font-size: 70px; color: var(--primary-blue);">account_circle</span>
-                <h2 style="margin-top:10px">طالب الدحيح</h2>
-                <p style="color:var(--text-grey)">كود التفعيل النشط: DAHEEH123</p>
-                <button class="logout-btn" onclick="logout()">
-                    <span class="material-icons" style="margin-left:8px">logout</span>
-                    تسجيل الخروج من الحساب
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <nav class="bottom-nav" id="bottomNav">
-        <div class="nav-item active" onclick="switchTab('home', this)"><span class="material-icons">home</span><span>الرئيسية</span></div>
-        <div class="nav-item" onclick="switchTab('courses', this)"><span class="material-icons">menu_book</span><span>دوراتي</span></div>
-        <div class="nav-item" onclick="switchTab('search', this)"><span class="material-icons">search</span><span>بحث</span></div>
-        <div class="nav-item" onclick="switchTab('profile', this)"><span class="material-icons">person</span><span>حسابي</span></div>
+    <nav class="bottom-nav">
+        <div class="nav-item active"><span class="material-icons">home</span><span>الرئيسية</span></div>
+        <div class="nav-item"><span class="material-icons">menu_book</span><span>دوراتي</span></div>
+        <div class="nav-item"><span class="material-icons">search</span><span>بحث</span></div>
+        <div class="nav-item" onclick="toggleProfile()"><span class="material-icons">person</span><span>حسابي</span></div>
     </nav>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // التحقق من تسجيل الدخول
-        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        const studentName = 'طالب الدحيح';
-
+        // هنا قمنا بإضافة خاصية "file" لكل مادة
         const coursesData = [
-            { id: 1, title: "تصميم برامج الحاسب", instructor: "د. تامر البرمجيات", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Code" },
-            { id: 2, title: "البنية التحتية للتكنولوجيا", instructor: "م. علي الشبكات", rating: "4.7", img: "https://placehold.co/200x300/FFC800/0A2647?text=Network" },
-            { id: 3, title: "الإدارة الإستراتيجية", instructor: "د. هالة الإدارية", rating: "4.9", img: "https://placehold.co/200x300/0A2647/FFF?text=Strategy" },
-            { id: 4, title: "الاقتصاد الكلي", instructor: "د. وائل الاقتصادي", rating: "4.6", img: "https://placehold.co/200x300/FFC800/FFF?text=Macro" },
-            { id: 5, title: "الإحصاء التطبيقي", instructor: "د. رانيا الأرقام", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Stats" }
+            { id: 1, title: "تصميم برامج الحاسب", instructor: "د. تامر البرمجيات", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Code", file: "course_coding.html" },
+            { id: 2, title: "البنية التحتية للتكنولوجيا", instructor: "م. علي الشبكات", rating: "4.7", img: "https://placehold.co/200x300/FFC800/0A2647?text=Network", file: "course_network.html" },
+            { id: 3, title: "الإدارة الإستراتيجية", instructor: "د. هالة الإدارية", rating: "4.9", img: "https://placehold.co/200x300/0A2647/FFF?text=Strategy", file: "course_strategy.html" },
+            { id: 4, title: "الاقتصاد الكلي", instructor: "د. وائل الاقتصادي", rating: "4.6", img: "https://placehold.co/200x300/FFC800/FFF?text=Macro", file: "course_macro.html" },
+            { id: 5, title: "الإحصاء التطبيقي", instructor: "د. رانيا الأرقام", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Stats", file: "course_stats.html" }
         ];
 
         const container = document.getElementById('coursesListContainer');
-
-        function renderCourses(courses) {
+        
+        function renderCourses(list) {
             container.innerHTML = '';
-            courses.forEach(course => {
-                const card = document.createElement('div');
-                card.className = 'course-card-vertical';
-                card.onclick = () => openPlayer(course.id);
-
-                const imgContainer = document.createElement('div');
-                imgContainer.className = 'cc-v-image-container';
-                imgContainer.style.position = 'relative';
-
-                const img = document.createElement('img');
-                img.src = course.img;
-                img.className = 'cc-v-image';
-
-                // العلامة المائية
-                const watermark = document.createElement('div');
-                watermark.innerText = studentName;
-                watermark.style.position = 'absolute';
-                watermark.style.bottom = '8px';
-                watermark.style.right = '8px';
-                watermark.style.fontSize = '12px';
-                watermark.style.color = 'rgba(255,255,255,0.6)';
-                watermark.style.background = 'rgba(0,0,0,0.15)';
-                watermark.style.padding = '2px 5px';
-                watermark.style.borderRadius = '4px';
-                watermark.style.pointerEvents = 'none';
-                watermark.style.fontWeight = '700';
-
-                imgContainer.appendChild(img);
-                imgContainer.appendChild(watermark);
-
-                const content = document.createElement('div');
-                content.className = 'cc-v-content';
-                content.innerHTML = `
-                    <div>
-                        <h4 class="cc-v-title">${course.title}</h4>
-                        <p class="cc-v-instructor"><span class="material-icons" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p>
+            list.forEach(course => {
+                // عند الضغط، نذهب للملف الخاص بالمادة
+                container.innerHTML += `
+                <div class="course-card-vertical" onclick="window.location.href='${course.file}'">
+                    <div class="cc-v-image-container"><img src="${course.img}" class="cc-v-image"></div>
+                    <div class="cc-v-content">
+                        <div><h4 class="cc-v-title">${course.title}</h4><p class="cc-v-instructor"><span class="material-icons" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p></div>
+                        <div class="cc-v-footer"><span class="rating-badge"><span class="material-icons" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span></div>
                     </div>
-                    <div class="cc-v-footer">
-                        <span class="rating-badge"><span class="material-icons" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span>
-                    </div>
-                `;
-
-                card.appendChild(imgContainer);
-                card.appendChild(content);
-                container.appendChild(card);
+                </div>`;
             });
         }
 
-        renderCourses(coursesData);
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            renderCourses(coursesData.filter(c => c.title.includes(term)));
+        });
 
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value
+        function toggleProfile() {
+            const overlay = document.getElementById('profileOverlay');
+            overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedInDaheeh');
+            window.location.href = 'login.html';
+        }
+
+        renderCourses(coursesData);
+    </script>
+</body>
+</html>
