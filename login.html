@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        /* --- تنسيقات صفحة الدخول (مبسطة) --- */
+        /* --- تنسيقات صفحة الدخول (مبسطة للحقل الواحد) --- */
         :root { --primary-blue: #0A2647; --accent-orange: #FFC800; --bg-light: #F8F9FA; --text-dark: #212529; --text-grey: #6c757d; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); color: var(--text-dark); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -92,7 +92,7 @@
                     codeInput.style.animation = 'shake 0.5s';
                     setTimeout(() => codeInput.style.animation = '', 500);
                 }
-            }, 1000); // تقليل وقت الانتظار قليلاً
+            }, 1000);
         }
     </script>
 </body>
