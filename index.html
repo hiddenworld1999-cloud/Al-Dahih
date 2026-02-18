@@ -107,6 +107,42 @@ body {
 }
 
 /* ===============================
+   MODAL
+=============================== */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 50; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+  background-color: #2A2A2A;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  color: #F5F5F5;
+  text-align: center;
+}
+
+.modal .close {
+  color: #FFB800;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.modal .close:hover {
+  color: #FF6B00;
+}
+
+/* ===============================
    FOOTER (BOTTOM NAV)
 =============================== */
 .bottom-nav {
@@ -163,31 +199,40 @@ body {
 <div class="container">
   <h2>اختر المادة</h2>
   <div class="cards">
-    <div class="card" onclick="alert('فتح مادة: تصميم برامج الحاسب')">
+    <div class="card" data-title="تصميم برامج الحاسب" data-desc="ابدأ رحلتك مع البرمجة">
       <div class="icon">💻</div>
       <h2>تصميم برامج الحاسب</h2>
       <p>ابدأ رحلتك مع البرمجة</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: البنية التحتية للتكنولوجيا')">
+    <div class="card" data-title="البنية التحتية للتكنولوجيا" data-desc="معرفة أسس الشبكات والأنظمة">
       <div class="icon">🖥️</div>
       <h2>البنية التحتية للتكنولوجيا</h2>
       <p>معرفة أسس الشبكات والأنظمة</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: الإدارة الإستراتيجية')">
+    <div class="card" data-title="الإدارة الإستراتيجية" data-desc="تطوير مهارات اتخاذ القرار">
       <div class="icon">📊</div>
       <h2>الإدارة الإستراتيجية</h2>
       <p>تطوير مهارات اتخاذ القرار</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: الاقتصاد الكلي')">
+    <div class="card" data-title="الاقتصاد الكلي" data-desc="فهم السوق والاقتصاد العالمي">
       <div class="icon">💰</div>
       <h2>الاقتصاد الكلي</h2>
       <p>فهم السوق والاقتصاد العالمي</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: الإحصاء التطبيقي')">
+    <div class="card" data-title="الإحصاء التطبيقي" data-desc="تحليل البيانات واتخاذ القرار">
       <div class="icon">📈</div>
       <h2>الإحصاء التطبيقي</h2>
       <p>تحليل البيانات واتخاذ القرار</p>
     </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modal-title"></h2>
+    <p id="modal-desc"></p>
   </div>
 </div>
 
@@ -205,6 +250,36 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("selectstart", e => e.preventDefault());
 document.addEventListener("keydown", e => {
   if (e.ctrlKey && ['c','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
+});
+
+/* MODAL FUNCTIONALITY */
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modal-title");
+const modalDesc = document.getElementById("modal-desc");
+const closeBtn = document.querySelector(".modal .close");
+
+function openModal(title, desc) {
+  modalTitle.textContent = title;
+  modalDesc.textContent = desc;
+  modal.style.display = "block";
+}
+
+closeBtn.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("click", () => {
+    const title = card.dataset.title;
+    const desc = card.dataset.desc;
+    openModal(title, desc);
+  });
 });
 </script>
 
