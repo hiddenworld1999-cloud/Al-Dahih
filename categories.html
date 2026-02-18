@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الفئات</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-bar">
+  <h1>📚 الفئات</h1>
+  <div class="actions">
+    <span onclick="navigate('index.html')">🏠</span>
+  </div>
+</div>
+
+<div class="container">
+  <h2>جميع الفئات</h2>
+  <div class="cards">
+    <div class="card" onclick="alert('فتح فئة علوم')">
+      <div class="icon">🔬</div>
+      <h2>علوم</h2>
+      <p>فيديوهات علمية ممتعة</p>
+    </div>
+    <div class="card" onclick="alert('فتح فئة تاريخ')">
+      <div class="icon">🏺</div>
+      <h2>تاريخ</h2>
+      <p>استكشف الماضي</p>
+    </div>
+    <div class="card" onclick="alert('فتح فئة أدب')">
+      <div class="icon">📖</div>
+      <h2>أدب</h2>
+      <p>القصص والروايات</p>
+    </div>
+    <div class="card" onclick="alert('فتح فئة اقتصاد')">
+      <div class="icon">💰</div>
+      <h2>اقتصاد</h2>
+      <p>أساسيات المال والسوق</p>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <div onclick="navigate('index.html')"><span>🏠</span>الرئيسية</div>
+  <div onclick="navigate('categories.html')"><span>📚</span>الفئات</div>
+  <div onclick="navigate('search.html')"><span>🔍</span>بحث</div>
+  <div onclick="navigate('library.html')"><span>📖</span>مكتبتي</div>
+</div>
+
+<script src="js/scripts.js"></script>
+</body>
+</html>
