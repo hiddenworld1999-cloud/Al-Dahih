@@ -1,223 +1,142 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة المواد</title>
-
-<style>
-
-/* RESET */
-*{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-margin:0;
-padding:0;
-}
-
-body{
-background:#0D0D0D;
-color:#F5F5F5;
-min-height:100vh;
-user-select:none;
-}
-
-/* APP BAR */
-.app-bar{
-height:56px;
-background:#1A1A1A;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 20px;
-position:fixed;
-top:0;
-width:100%;
-z-index:10;
-box-shadow:0 2px 6px rgba(0,0,0,0.5);
-}
-
-.app-bar h1{
-font-size:20px;
-color:#FFB800;
-}
-
-.app-bar .actions{
-display:flex;
-gap:15px;
-}
-
-.app-bar .actions span{
-cursor:pointer;
-font-size:18px;
-}
-
-/* CONTAINER */
-.container{
-padding:80px 20px 20px;
-max-width:1000px;
-margin:auto;
-}
-
-/* CARDS */
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-}
-
-.card{
-background:#2A2A2A;
-padding:25px;
-border-radius:16px;
-text-align:center;
-cursor:pointer;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-8px);
-box-shadow:0 10px 25px rgba(255,184,0,0.5);
-}
-
-.card .icon{
-font-size:40px;
-margin-bottom:15px;
-color:#FFB800;
-}
-
-.card h2{
-font-size:18px;
-margin-bottom:10px;
-}
-
-.card p{
-font-size:14px;
-color:#AAAAAA;
-}
-
-/* BOTTOM NAV */
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-height:60px;
-background:#1A1A1A;
-display:flex;
-justify-content:space-around;
-align-items:center;
-box-shadow:0 -2px 6px rgba(0,0,0,0.5);
-}
-
-.bottom-nav div{
-display:flex;
-flex-direction:column;
-align-items:center;
-font-size:12px;
-cursor:pointer;
-}
-
-.bottom-nav div span{
-font-size:18px;
-margin-bottom:2px;
-}
-
-</style>
-</head>
-
-<body>
-
-<!-- APP BAR -->
-<div class="app-bar">
-<h1>📘 منصة المواد</h1>
-<div class="actions">
-<span>🔔</span>
-<span>⚙️</span>
-</div>
-</div>
-
-<!-- MAIN -->
-<div class="container">
-<h2>اختر المادة</h2>
-
-<div class="cards">
-
-<div class="card" onclick="openPage('programming.html')">
-<div class="icon">💻</div>
-<h2>تصميم برامج الحاسب</h2>
-<p>ابدأ رحلتك مع البرمجة</p>
-</div>
-
-<div class="card" onclick="openPage('network.html')">
-<div class="icon">🖥️</div>
-<h2>البنية التحتية للتكنولوجيا</h2>
-<p>معرفة أسس الشبكات والأنظمة</p>
-</div>
-
-<div class="card" onclick="openPage('management.html')">
-<div class="icon">📊</div>
-<h2>الإدارة الإستراتيجية</h2>
-<p>تطوير مهارات اتخاذ القرار</p>
-</div>
-
-<div class="card" onclick="openPage('economics.html')">
-<div class="icon">💰</div>
-<h2>الاقتصاد الكلي</h2>
-<p>فهم السوق والاقتصاد العالمي</p>
-</div>
-
-<div class="card" onclick="openPage('statistics.html')">
-<div class="icon">📈</div>
-<h2>الإحصاء التطبيقي</h2>
-<p>تحليل البيانات واتخاذ القرار</p>
-</div>
-
-</div>
-</div>
-
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-
-<div onclick="openPage('index.html')">
-<span>🏠</span>
-الرئيسية
-</div>
-
-<div onclick="alert('صفحة الفئات قريبا')">
-<span>📚</span>
-الفئات
-</div>
-
-<div onclick="alert('صفحة البحث قريبا')">
-<span>🔍</span>
-بحث
-</div>
-
-<div onclick="alert('مكتبتي قريبا')">
-<span>📖</span>
-مكتبتي
-</div>
-
-</div>
-
 <script>
+    const coursesData = [
+        { id: 1, title: "تصميم برامج الحاسب", instructor: "د. تامر البرمجيات", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Code" },
+        { id: 2, title: "البنية التحتية للتكنولوجيا", instructor: "م. علي الشبكات", rating: "4.7", img: "https://placehold.co/200x300/FFC800/0A2647?text=Network" },
+        { id: 3, title: "الإدارة الإستراتيجية", instructor: "د. هالة الإدارية", rating: "4.9", img: "https://placehold.co/200x300/0A2647/FFF?text=Strategy" },
+        { id: 4, title: "الاقتصاد الكلي", instructor: "د. وائل الاقتصادي", rating: "4.6", img: "https://placehold.co/200x300/FFC800/FFF?text=Macro" },
+        { id: 5, title: "الإحصاء التطبيقي", instructor: "د. رانيا الأرقام", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Stats" }
+    ];
 
-/* فتح الصفحات */
-function openPage(page){
-window.location.href=page;
-}
+    // ==========================
+    // دالة إنشاء صورة بعلامة مائية
+    // ==========================
+    function createWatermarkedImage(imageUrl, studentName) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous"; // مهم للصورة الخارجية
 
-/* الحماية */
-document.addEventListener("contextmenu",e=>e.preventDefault());
-document.addEventListener("selectstart",e=>e.preventDefault());
+            img.onload = function () {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
 
-document.addEventListener("keydown",e=>{
-if(e.ctrlKey && ['c','s','p','u'].includes(e.key.toLowerCase()))
-e.preventDefault();
-});
+                canvas.width = img.width;
+                canvas.height = img.height;
 
+                // رسم الصورة
+                ctx.drawImage(img, 0, 0);
+
+                if (studentName) {
+                    // إعدادات العلامة المائية
+                    ctx.font = "bold 40px Arial";
+                    ctx.fillStyle = "rgba(0,0,0,0.15)";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.rotate(-Math.PI / 6);
+
+                    // كتابة الاسم
+                    ctx.fillText(studentName, 0, 0);
+                }
+
+                resolve(canvas.toDataURL());
+            };
+
+            img.src = imageUrl;
+        });
+    }
+
+    // ==========================
+    // عرض المواد مع العلامة المائية
+    // ==========================
+    async function renderCourses(courses) {
+        const container = document.getElementById('coursesListContainer');
+        container.innerHTML = '';
+
+        const studentName = localStorage.getItem('studentName') || 'طالب الدحيح';
+
+        for (const course of courses) {
+            let watermarkedImg = course.img;
+
+            // إضافة العلامة المائية
+            if (studentName) {
+                watermarkedImg = await createWatermarkedImage(course.img, studentName);
+            }
+
+            container.innerHTML += `
+                <div class="course-card-vertical" onclick="openPlayer(${course.id})">
+                    <div class="cc-v-image-container">
+                        <img src="${watermarkedImg}" class="cc-v-image">
+                    </div>
+                    <div class="cc-v-content">
+                        <div>
+                            <h4 class="cc-v-title">${course.title}</h4>
+                            <p class="cc-v-instructor"><span class="material-icons" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p>
+                        </div>
+                        <div class="cc-v-footer">
+                            <span class="rating-badge"><span class="material-icons" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // ==========================
+    // فلترة البحث
+    // ==========================
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = coursesData.filter(c => c.title.toLowerCase().includes(searchTerm));
+        renderCourses(filtered);
+    });
+
+    // ==========================
+    // التبديل بين الصفحات
+    // ==========================
+    function switchTab(tabName, element) {
+        document.querySelectorAll('.page-section').forEach(p => { if(p.id !== 'page-player') p.classList.remove('active'); });
+        document.getElementById('page-' + tabName).classList.add('active');
+        if(tabName === 'search') document.getElementById('searchInput').focus();
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        if(element) element.classList.add('active');
+    }
+
+    // ==========================
+    // فتح وإغلاق مشغل الدورة
+    // ==========================
+    function openPlayer(id) {
+        const c = coursesData.find(x => x.id === id);
+        document.getElementById('playerCourseTitle').innerText = c.title;
+        document.getElementById('playerInstructor').innerText = c.instructor;
+        document.getElementById('page-player').style.display = 'block';
+        document.getElementById('bottomNav').style.display = 'none';
+        document.getElementById('mainHeader').style.display = 'none';
+    }
+
+    function closePlayer() {
+        document.getElementById('page-player').style.display = 'none';
+        document.getElementById('bottomNav').style.display = 'flex';
+        document.getElementById('mainHeader').style.display = 'flex';
+    }
+
+    // ==========================
+    // تسجيل الخروج
+    // ==========================
+    function logout() {
+        localStorage.removeItem('isLoggedInDaheeh');
+        window.location.href = 'login.html';
+    }
+
+    // ==========================
+    // حفظ اسم الطالب إذا لم يكن موجود
+    // ==========================
+    if (!localStorage.getItem('studentName')) {
+        localStorage.setItem('studentName', 'طالب الدحيح');
+    }
+
+    // ==========================
+    // تنفيذ العرض
+    // ==========================
+    renderCourses(coursesData);
 </script>
-
-</body>
-</html>
