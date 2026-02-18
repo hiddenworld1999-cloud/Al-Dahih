@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة الدحيح</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Cairo}
+body{background:#0D0D0D;color:#F5F5F5}
+
+/* حماية عدم تحديد النص */
+body{user-select:none}
+
+/* top bar */
+.appbar{
+height:56px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 15px;
+border-bottom:1px solid #222;
+position:fixed;
+width:100%;
+top:0;
+background:#0D0D0D;
+}
+
+/* content */
+.container{
+padding:70px 15px 90px;
+}
+
+/* cards */
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.card{
+background:#2A2A2A;
+padding:30px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+background:#FFB800;
+color:black;
+}
+
+/* watermark */
+.watermark{
+position:fixed;
+bottom:10px;
+left:10px;
+opacity:.3;
+font-size:14px;
+}
+
+/* logout */
+.logout{
+background:#ff4444;
+border:none;
+padding:8px 15px;
+border-radius:8px;
+color:white;
+}
+
+/* bottom nav */
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+height:60px;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+border-top:1px solid #222;
+}
+</style>
+</head>
+
+<body>
+
+<div class="appbar">
+<h3>📘 منصة الدحيح</h3>
+<button class="logout" onclick="logout()">خروج</button>
+</div>
+
+<div class="container">
+
+<h2 style="margin-bottom:20px">المواد</h2>
+
+<div class="grid">
+
+<div class="card" onclick="openSubject('investment.html')">
+مبادئ الاستثمار
+</div>
+
+<div class="card" onclick="openSubject('ethics.html')">
+اخلاقيات الاعمال
+</div>
+
+<div class="card" onclick="openSubject('insurance.html')">
+التأمين
+</div>
+
+<div class="card" onclick="openSubject('database.html')">
+قواعد البيانات
+</div>
+
+<div class="card" onclick="openSubject('entrepreneurship.html')">
+ريادة الاعمال
+</div>
+
+</div>
+
+</div>
+
+<div class="watermark" id="student"></div>
+
+<div class="bottom-nav">
+الطالب فقط للاستخدام التعليمي
+</div>
+
+<script>
+
+/* منع كليك يمين */
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+/* تحقق من تسجيل الدخول */
+const student = sessionStorage.getItem("studentName");
+
+if(!student){
+window.location.href="login.html";
+}
+
+/* عرض اسم الطالب */
+document.getElementById("student").innerText="👤 "+student;
+
+/* فتح مادة */
+function openSubject(file){
+window.location.href=file;
+}
+
+/* تسجيل خروج */
+function logout(){
+sessionStorage.clear();
+window.location.href="login.html";
+}
+
+</script>
+
+</body>
+</html>
