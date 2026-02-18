@@ -3,34 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الدحيح - تسجيل الدخول</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>منصة الدحيح - موبايل</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <style>
+        /* --- تعريف متغيرات الألوان والخطوط --- */
+        :root {
+            --primary-blue: #0A2647;
+            --accent-orange: #FFC800;
+            --bg-light: #F8F9FA;
+            --text-dark: #212529;
+            --text-grey: #6c757d;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* --- تنسيقات عامة --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding-bottom: 80px; /* مساحة للشريط السفلي الثابت */
+        }
+
+        a { text-decoration: none; color: inherit; }
+        h1, h2, h3 { font-weight: 700; }
+
+        /* --- مكونات متكررة --- */
+        .container { padding: 20px; }
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        /* --- الهيدر العلوي (Top App Bar) --- */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon { margin-left: 8px; color: var(--accent-orange); }
+        .profile-icon { color: var(--text-grey); font-size: 28px; }
+
+        /* --- قسم البحث والترحيب --- */
+        .hero-section {
+            padding: 20px;
+            background: white;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-text { margin-bottom: 15px; }
+        .welcome-text h2 { font-size: 1.5rem; }
+        .welcome-text p { color: var(--text-grey); }
+
+        .search-bar-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            background: var(--bg-light);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .search-icon-inside {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-grey);
+        }
+
+        /* --- بطاقة "استمر في التعلم" (Jump Back In Card) --- */
+        .continue-learning-card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--card-shadow);
+            border-right: 4px solid var(--accent-orange);
+        }
+
+        .cl-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-left: 15px;
+        }
+
+        .cl-content { flex: 1; }
+        .cl-title { font-size: 1rem; margin-bottom: 5px; }
+        .cl-subtitle { font-size: 0.85rem; color: var(--text-grey); margin-bottom: 10px; }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-grey);
+        }
+        
+        .progress-bar-bg {
+            flex: 1;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-left: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent-orange);
+            border-radius: 3px;
+        }
+
+        /* --- بطاقات الدورات العمودية (Vertical Course Cards) --- */
+        .course-card-vertical {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+        }
+        
+        .cc-v-image {
+            width: 110px;
+            object-fit: cover;
+        }
+
+        .cc-v-content {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cc-v-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+        .cc-v-instructor { font-size: 0.85rem; color: var(--text-grey); margin-bottom: 12px; }
+        
+        .cc-v-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .price-tag { color: var(--primary-blue); font-weight: 700; }
+        .btn-outline {
+            padding: 6px 15px;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* --- شريط التنقل السفلي (Bottom Navigation) --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 200;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-grey);
+            transition: color 0.3s;
+        }
+
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item .material-icons-round { margin-bottom: 4px; font-size: 24px; }
+
+    </style>
 </head>
 <body>
-    <div class="login-card">
-        <div class="logo">
-            <i class="fas fa-graduation-cap"></i>
-            <h1>الدحيح</h1>
+
+    <header class="app-header">
+        <div class="logo-text">
+            <span class="material-icons-round logo-icon">menu_book</span>
+            الدحيح
         </div>
-        <p class="tagline">منصة تعليمية ذكية</p>
-        <form id="loginForm">
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="username" placeholder="اسم المستخدم أو الكود" required>
+        <span class="material-icons-round profile-icon">account_circle</span>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="welcome-text">
+                <h2>مرحباً، يا دحيح 👋</h2>
+                <p>ماذا ستذاكر اليوم بجدية؟</p>
             </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="كلمة المرور" required>
+            <div class="search-bar-container">
+                <span class="material-icons-round search-icon-inside">search</span>
+                <input type="text" class="search-input" placeholder="ابحث عن مادة، تخصص...">
             </div>
-            <button type="submit" class="btn-primary">
-                <span>دخول</span>
-                <i class="fas fa-arrow-left"></i>
-            </button>
-        </form>
-        <div id="error-message" class="error-message"></div>
-    </div>
-    <div id="toast" class="toast hidden"></div>
-    <script src="script.js"></script>
+        </section>
+
+        <div class="container">
+            <h3 class="section-title">استمر في التعلم</h3>
+            <div class="continue-learning-card">
+                <img src="https://placehold.co/100x100/0A2647/FFF?text=AI" alt="Course Thumbtail" class="cl-image">
+                <div class="cl-content">
+                    <h4 class="cl-title">مقدمة في الذكاء الاصطناعي</h4>
+                    <p class="cl-subtitle">الوحدة 3: المعادلات - الدرس 2</p>
+                    <div class="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 45%;"></div>
+                        </div>
+                        <span>45%</span>
+                    </div>
+                </div>
+                <span class="material-icons-round" style="color: var(--primary-blue);">play_circle</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <h3 class="section-title" style="margin-top: 25px;">الدورات المميزة</h3>
+            
+            <div class="course-card-vertical">
+                <img src="https://placehold.co/150x200/FFC800/0A2647?text=Physics" alt="Course" class="cc-v-image">
+                <div class="cc-v-content">
+                    <div>
+                        <h4 class="cc-v-title">مفاهيم متقدمة في الفيزياء</h4>
+                        <p class="cc-v-instructor">د. أحمد زويل (مثال)</p>
+                    </div>
+                    <div class="cc-v-footer">
+                        <span class="price-tag">500 ج.م</span>
+                        <span style="display: flex; color:#FFC800">★ 4.9</span>
+                    </div>
+                </div>
+            </div>
+
+             <div class="course-card-vertical">
+                <img src="https://placehold.co/150x200/0A2647/FFF?text=Math" alt="Course" class="cc-v-image">
+                <div class="cc-v-content">
+                    <div>
+                        <h4 class="cc-v-title">التفاضل والتكامل للأكاديميين</h4>
+                        <p class="cc-v-instructor">أ. محمد الشاطر</p>
+                    </div>
+                    <div class="cc-v-footer">
+                        <span class="price-tag">مجاناً</span>
+                        <span style="display: flex; color:#FFC800">★ 4.8</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="material-icons-round">home</span>
+            <span>الرئيسية</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="material-icons-round">school</span>
+            <span>دوراتي</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="material-icons-round">search</span>
+            <span>بحث</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="material-icons-round">person</span>
+            <span>حسابي</span>
+        </a>
+    </nav>
+
 </body>
 </html>
