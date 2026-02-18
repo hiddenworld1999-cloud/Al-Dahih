@@ -6,6 +6,7 @@
             window.location.href = 'login.html';
         }
     </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق الدحيح - الرئيسي</title>
@@ -21,18 +22,12 @@
         
         /* الهيدر العلوي */
         .app-header { 
-            display: flex; justify-content: space-between; align-items: center; 
+            display: flex; justify-content: center; align-items: center; 
             padding: 15px 20px; background: white; position: sticky; top: 0; z-index: 100; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
         }
         .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; }
         .logo-icon { margin-left: 8px; color: var(--accent-orange); font-size: 28px; }
-        
-        /* زر الحساب العلوي */
-        .profile-btn { 
-            background: none; border: none; color: var(--primary-blue); 
-            cursor: pointer; display: flex; align-items: center; 
-        }
 
         .page-section { display: none; animation: fadeIn 0.3s ease; }
         .page-section.active { display: block; }
@@ -46,7 +41,6 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
-        /* شريط البحث والبطل */
         .hero-section { padding: 20px 20px 30px 20px; background: white; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; margin-bottom: 25px; }
         .search-input { width: 100%; padding: 14px 45px 14px 20px; border: none; border-radius: 15px; background: var(--bg-light); font-size: 0.95rem; }
         .search-container { position: relative; }
@@ -55,15 +49,14 @@
         .container { padding: 0 20px; }
         .section-title { font-size: 1.1rem; margin-bottom: 15px; color: var(--primary-blue); }
 
-        /* الكورسات */
         .course-card-vertical { background: white; border-radius: 18px; overflow: hidden; margin-bottom: 18px; box-shadow: var(--card-shadow); display: flex; cursor: pointer; }
         .cc-v-image { width: 110px; object-fit: cover; }
         .cc-v-content { padding: 15px; flex: 1; }
         .cc-v-title { font-size: 1rem; font-weight: 700; color: var(--primary-blue); }
 
-        /* القائمة السفلية */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); border-top-left-radius: 20px; border-top-right-radius: 20px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #adb5bd; cursor: pointer; }
+        /* الشريط السفلي المعدل */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 200; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #adb5bd; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary-blue); font-weight: 700; }
     </style>
 </head>
@@ -74,9 +67,6 @@
             <span class="material-icons logo-icon">local_library</span>
             الدحيح
         </div>
-        <button class="profile-btn" onclick="switchTab('profile')">
-            <span class="material-icons" style="font-size: 30px;">account_circle</span>
-        </button>
     </header>
 
     <div id="page-home" class="page-section active">
@@ -110,6 +100,7 @@
                 <span class="material-icons" style="font-size: 70px; color: var(--primary-blue);">account_circle</span>
                 <h2 style="margin-top:10px">طالب الدحيح</h2>
                 <p style="color:var(--text-grey)">كود النشاط: DAHEEH123</p>
+                
                 <button class="logout-btn" onclick="logout()">
                     <span class="material-icons" style="margin-left:8px">logout</span>
                     تسجيل الخروج
@@ -127,9 +118,13 @@
             <span class="material-icons">menu_book</span>
             <span>دوراتي</span>
         </div>
-        <div class="nav-item" onclick="switchTab('home')">
+        <div class="nav-item" onclick="switchTab('home', document.querySelector('.nav-item'))">
             <span class="material-icons">search</span>
             <span>بحث</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile', this)">
+            <span class="material-icons">person</span>
+            <span>حسابي</span>
         </div>
     </nav>
 
@@ -154,9 +149,12 @@
         }
 
         function switchTab(tabName, element) {
+            // إخفاء جميع الصفحات
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            // إظهار الصفحة المطلوبة
             document.getElementById('page-' + tabName).classList.add('active');
             
+            // تحديث حالة الأزرار في الشريط السفلي
             if (element) {
                 document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
                 element.classList.add('active');
