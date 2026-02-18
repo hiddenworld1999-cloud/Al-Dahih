@@ -1,162 +1,211 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة الدحيح</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
+<title>منصة المواد</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Cairo}
-body{background:#0D0D0D;color:#F5F5F5}
-
-/* حماية عدم تحديد النص */
-body{user-select:none}
-
-/* top bar */
-.appbar{
-height:56px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 15px;
-border-bottom:1px solid #222;
-position:fixed;
-width:100%;
-top:0;
-background:#0D0D0D;
+/* ===============================
+   RESET + BASE
+=============================== */
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-/* content */
-.container{
-padding:70px 15px 90px;
+body {
+  background: #0D0D0D;
+  color: #F5F5F5;
+  min-height: 100vh;
 }
 
-/* cards */
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
+/* ===============================
+   APP BAR
+=============================== */
+.app-bar {
+  height: 56px;
+  background: #1A1A1A;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 
-.card{
-background:#2A2A2A;
-padding:30px;
-border-radius:15px;
-text-align:center;
-cursor:pointer;
-transition:.3s;
+.app-bar h1 {
+  font-size: 20px;
+  color: #FFB800;
 }
 
-.card:hover{
-transform:scale(1.05);
-background:#FFB800;
-color:black;
+.app-bar .actions {
+  display: flex;
+  gap: 15px;
 }
 
-/* watermark */
-.watermark{
-position:fixed;
-bottom:10px;
-left:10px;
-opacity:.3;
-font-size:14px;
+.app-bar .actions span {
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
 }
 
-/* logout */
-.logout{
-background:#ff4444;
-border:none;
-padding:8px 15px;
-border-radius:8px;
-color:white;
+.app-bar .actions span:hover {
+  color: #FF6B00;
 }
 
-/* bottom nav */
-.bottom-nav{
-position:fixed;
-bottom:0;
-width:100%;
-height:60px;
-background:#111;
-display:flex;
-justify-content:center;
-align-items:center;
-border-top:1px solid #222;
+/* ===============================
+   CONTAINER
+=============================== */
+.container {
+  padding: 80px 20px 20px 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* ===============================
+   CARDS GRID
+=============================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #2A2A2A;
+  padding: 25px;
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(255,184,0,0.5);
+}
+
+.card .icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+  color: #FFB800;
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #AAAAAA;
+}
+
+/* ===============================
+   FOOTER (BOTTOM NAV)
+=============================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: #1A1A1A;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.5);
+}
+
+.bottom-nav div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bottom-nav div:hover {
+  color: #FFB800;
+}
+
+.bottom-nav div span {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+/* ===============================
+   PROTECTION
+=============================== */
+body {
+  user-select: none;
 }
 </style>
 </head>
-
 <body>
 
-<div class="appbar">
-<h3>📘 منصة الدحيح</h3>
-<button class="logout" onclick="logout()">خروج</button>
+<!-- APP BAR -->
+<div class="app-bar">
+  <h1>📘 منصة المواد</h1>
+  <div class="actions">
+    <span>🔔</span>
+    <span>⚙️</span>
+  </div>
 </div>
 
+<!-- MAIN CONTENT -->
 <div class="container">
-
-<h2 style="margin-bottom:20px">المواد</h2>
-
-<div class="grid">
-
-<div class="card" onclick="openSubject('investment.html')">
-مبادئ الاستثمار
+  <h2>اختر المادة</h2>
+  <div class="cards">
+    <div class="card" onclick="alert('فتح مادة: تصميم برامج الحاسب')">
+      <div class="icon">💻</div>
+      <h2>تصميم برامج الحاسب</h2>
+      <p>ابدأ رحلتك مع البرمجة</p>
+    </div>
+    <div class="card" onclick="alert('فتح مادة: البنية التحتية للتكنولوجيا')">
+      <div class="icon">🖥️</div>
+      <h2>البنية التحتية للتكنولوجيا</h2>
+      <p>معرفة أسس الشبكات والأنظمة</p>
+    </div>
+    <div class="card" onclick="alert('فتح مادة: الإدارة الإستراتيجية')">
+      <div class="icon">📊</div>
+      <h2>الإدارة الإستراتيجية</h2>
+      <p>تطوير مهارات اتخاذ القرار</p>
+    </div>
+    <div class="card" onclick="alert('فتح مادة: الاقتصاد الكلي')">
+      <div class="icon">💰</div>
+      <h2>الاقتصاد الكلي</h2>
+      <p>فهم السوق والاقتصاد العالمي</p>
+    </div>
+    <div class="card" onclick="alert('فتح مادة: الإحصاء التطبيقي')">
+      <div class="icon">📈</div>
+      <h2>الإحصاء التطبيقي</h2>
+      <p>تحليل البيانات واتخاذ القرار</p>
+    </div>
+  </div>
 </div>
 
-<div class="card" onclick="openSubject('ethics.html')">
-اخلاقيات الاعمال
-</div>
-
-<div class="card" onclick="openSubject('insurance.html')">
-التأمين
-</div>
-
-<div class="card" onclick="openSubject('database.html')">
-قواعد البيانات
-</div>
-
-<div class="card" onclick="openSubject('entrepreneurship.html')">
-ريادة الاعمال
-</div>
-
-</div>
-
-</div>
-
-<div class="watermark" id="student"></div>
-
+<!-- BOTTOM NAV -->
 <div class="bottom-nav">
-الطالب فقط للاستخدام التعليمي
+  <div><span>🏠</span>الرئيسية</div>
+  <div><span>📚</span>الفئات</div>
+  <div><span>🔍</span>بحث</div>
+  <div><span>📖</span>مكتبتي</div>
 </div>
 
 <script>
-
-/* منع كليك يمين */
+/* حماية النسخ والاختيار */
 document.addEventListener("contextmenu", e => e.preventDefault());
-
-/* تحقق من تسجيل الدخول */
-const student = sessionStorage.getItem("studentName");
-
-if(!student){
-window.location.href="login.html";
-}
-
-/* عرض اسم الطالب */
-document.getElementById("student").innerText="👤 "+student;
-
-/* فتح مادة */
-function openSubject(file){
-window.location.href=file;
-}
-
-/* تسجيل خروج */
-function logout(){
-sessionStorage.clear();
-window.location.href="login.html";
-}
-
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && ['c','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
+});
 </script>
 
 </body>
