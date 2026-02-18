@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تصميم برامج الحاسب</title>
+<style>
+body {background:#0D0D0D; color:#F5F5F5; font-family:Arial,sans-serif; margin:0; padding:0;}
+.app-bar {height:56px; background:#1A1A1A; display:flex; align-items:center; justify-content:space-between; padding:0 20px; position:fixed; top:0; width:100%; z-index:10; box-shadow:0 2px 6px rgba(0,0,0,0.5);}
+.app-bar h1 {font-size:20px; color:#FFB800;}
+.app-bar .actions span {cursor:pointer; font-size:18px; transition:0.2s;}
+.app-bar .actions span:hover {color:#FF6B00;}
+.container {padding:80px 20px 20px 20px; max-width:1000px; margin:auto;}
+.back-btn {margin-bottom:20px; cursor:pointer; color:#FFB800;}
+h2 {margin-bottom:15px;}
+p {color:#AAAAAA;}
+.bottom-nav {position:fixed; bottom:0; left:0; width:100%; height:60px; background:#1A1A1A; display:flex; justify-content:space-around; align-items:center; box-shadow:0 -2px 6px rgba(0,0,0,0.5);}
+.bottom-nav div {display:flex; flex-direction:column; align-items:center; font-size:12px; cursor:pointer; transition:0.2s;}
+.bottom-nav div:hover {color:#FFB800;}
+.bottom-nav div span {font-size:18px; margin-bottom:2px;}
+</style>
+</head>
+<body>
+
+<div class="app-bar">
+  <h1>💻 تصميم برامج الحاسب</h1>
+  <div class="actions">
+    <span onclick="alert('الإشعارات')">🔔</span>
+    <span onclick="alert('الإعدادات')">⚙️</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="back-btn" onclick="window.location.href='index.html'">⬅️ رجوع</div>
+  <h2>محتوى المادة</h2>
+  <p>هنا يمكنك إضافة أي محتوى تعليمي: نصوص، صور، فيديوهات أو أمثلة عملية.</p>
+  <p>يمكنك تكرار نفس القالب لكل مادة أخرى وتغيير المحتوى فقط.</p>
+</div>
+
+<div class="bottom-nav">
+  <div onclick="window.location.href='index.html'"><span>🏠</span>الرئيسية</div>
+  <div onclick="window.location.href='categories.html'"><span>📚</span>الفئات</div>
+  <div onclick="window.location.href='search.html'"><span>🔍</span>بحث</div>
+  <div onclick="window.location.href='library.html'"><span>📖</span>مكتبتي</div>
+</div>
+
+<script>
+document.addEventListener("contextmenu", e=>e.preventDefault());
+document.addEventListener("selectstart", e=>e.preventDefault());
+document.addEventListener("keydown", e=>{
+  if(e.ctrlKey && ['c','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
+});
+</script>
+
+</body>
+</html>
