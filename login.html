@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الدخول - منصة الدحيح</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* --- نفس متغيرات الألوان للحفاظ على الهوية --- */
+        :root {
+            --primary-blue: #0A2647;
+            --accent-orange: #FFC800;
+            --bg-light: #F8F9FA;
+            --text-dark: #212529;
+            --text-grey: #6c757d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- حاوية صفحة تسجيل الدخول --- */
+        .login-container {
+            background: white;
+            padding: 30px 25px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* --- الشعار والعناوين --- */
+        .login-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .login-logo .material-icons { font-size: 36px; margin-left: 8px; color: var(--accent-orange); }
+
+        .login-title { font-size: 1.5rem; color: var(--primary-blue); margin-bottom: 10px; }
+        .login-subtitle { color: var(--text-grey); font-size: 0.95rem; margin-bottom: 30px; line-height: 1.5; }
+
+        /* --- حقول الإدخال --- */
+        .input-group { margin-bottom: 20px; position: relative; }
+        .login-input {
+            width: 100%;
+            padding: 16px 45px 16px 20px; /* مساحة للأيقونة على اليمين */
+            border: 2px solid #eee;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-light);
+        }
+        .login-input:focus {
+            border-color: var(--primary-blue);
+            background: white;
+            outline: none;
+        }
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-blue);
+            opacity: 0.5;
+        }
+
+        /* --- حقل الكود المميز --- */
+        .code-input {
+            border-color: var(--accent-orange);
+            background: rgba(255, 200, 0, 0.05);
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary-blue);
+        }
+        .code-input:focus { border-color: var(--primary-blue); }
+
+        /* --- زر التفعيل --- */
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            background: var(--accent-orange);
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3);
+        }
+        .login-btn:active { transform: scale(0.98); }
+
+        /* --- رسائل الخطأ والنجاح --- */
+        .message-box {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none; /* مخفية افتراضياً */
+        }
+        .error-msg { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        .success-msg { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+
+        .help-text {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+        .help-text a { color: var(--primary-blue); font-weight: 700; text-decoration: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-logo">
+            <span class="material-icons">local_library</span>
+            الدحيح
+        </div>
+        <h2 class="login-title">تفعيل الحساب</h2>
+        <p class="login-subtitle">أهلاً بك! أدخل بياناتك والكود الخاص الذي حصلت عليه من الإدارة لبدء التعلم.</p>
+
+        <div id="errorBox" class="message-box error-msg">
+            <span class="material-icons" style="vertical-align: middle; margin-left: 5px;">error_outline</span>
+            الكود المدخل غير صحيح، يرجى التأكد والمحاولة مرة أخرى.
+        </div>
+        <div id="successBox" class="message-box success-msg">
+            <span class="material-icons" style="vertical-align: middle; margin-left: 5px;">check_circle</span>
+            تم تفعيل الحساب بنجاح! جاري تحويلك للمنصة...
+        </div>
+
+        <form id="loginForm" onsubmit="event.preventDefault(); validateLogin();">
+            <div class="input-group">
+                <span class="material-icons input-icon">person</span>
+                <input type="text" class="login-input" placeholder="اسم الطالب ثلاثي" required>
+            </div>
+
+            <div class="input-group">
+                <span class="material-icons input-icon">phone_iphone</span>
+                <input type="tel" class="login-input" placeholder="رقم الهاتف" required>
+            </div>
+
+            <div class="input-group">
+                <span class="material-icons input-icon" style="color: var(--accent-orange); opacity: 1;">vpn_key</span>
+                <input type="text" id="accessCode" class="login-input code-input" placeholder="كود التفعيل (مثال: DAHEEH123)" required style="text-transform: uppercase;">
+            </div>
+
+            <button type="submit" class="login-btn">تفعيل الحساب وبدء التعلم</button>
+        </form>
+
+        <p class="help-text">
+            ليس لديك كود؟ <a href="#" onclick="alert('يرجى التواصل مع إدارة المنصة أو المحاضر للحصول على كود التفعيل الخاص بك.')">تواصل مع الإدارة للحصول عليه</a>
+        </p>
+    </div>
+
+    <script>
+        function validateLogin() {
+            const codeInput = document.getElementById('accessCode');
+            const errorBox = document.getElementById('errorBox');
+            const successBox = document.getElementById('successBox');
+            const loginBtn = document.querySelector('.login-btn');
+            
+            // الكود الصحيح للمحاكاة (يمكنك تغييره هنا)
+            const CORRECT_CODE = "DAHEEH123";
+
+            // إخفاء الرسائل السابقة
+            errorBox.style.display = 'none';
+            successBox.style.display = 'none';
+
+            // محاكاة عملية التحميل
+            loginBtn.innerHTML = 'جاري التحقق...';
+            loginBtn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                if (codeInput.value.toUpperCase() === CORRECT_CODE) {
+                    // حالة النجاح
+                    successBox.style.display = 'block';
+                    loginBtn.innerHTML = 'تم التفعيل بنجاح ✓';
+                    loginBtn.style.background = '#2e7d32';
+                    loginBtn.style.color = 'white';
+                    
+                    // هنا يتم توجيه الطالب للصفحة الرئيسية للتطبيق
+                    setTimeout(() => {
+                        alert('سيتم نقلك الآن إلى الصفحة الرئيسية للتطبيق (في النظام الحقيقي).');
+                        // window.location.href = 'main-app.html'; // مثال على التوجيه
+                    }, 2000);
+
+                } else {
+                    // حالة الخطأ
+                    errorBox.style.display = 'block';
+                    loginBtn.innerHTML = 'تفعيل الحساب وبدء التعلم';
+                    loginBtn.style.opacity = '1';
+                    // هز حقل الكود للفت الانتباه (اختياري)
+                    codeInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => codeInput.style.animation = '', 500);
+                }
+            }, 1500); // تأخير ثانية ونصف للمحاكاة
+        }
+    </script>
+
+    <style>
+        /* أنيميشن بسيط لاهتزاز الحقل عند الخطأ */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+
+</body>
+</html>
