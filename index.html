@@ -5,38 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>منصة المواد</title>
 <style>
-* {box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
-body {background:#0D0D0D;color:#F5F5F5;min-height:100vh;user-select:none;padding-bottom:70px;}
-
-/* APP BAR */
-.app-bar {height:56px;background:#1A1A1A;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:fixed;top:0;width:100%;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,0.5);}
-.app-bar h1 {font-size:20px;color:#FFB800;}
-.app-bar .actions {display:flex;gap:15px;}
-.app-bar .actions span {cursor:pointer;font-size:18px;transition:0.2s;}
+* {box-sizing: border-box; font-family: Arial, sans-serif; margin:0; padding:0;}
+body {background:#0D0D0D; color:#F5F5F5; min-height:100vh;}
+.app-bar {height:56px; background:#1A1A1A; display:flex; align-items:center; justify-content:space-between; padding:0 20px; position:fixed; top:0; width:100%; z-index:10; box-shadow:0 2px 6px rgba(0,0,0,0.5);}
+.app-bar h1 {font-size:20px; color:#FFB800;}
+.app-bar .actions {display:flex; gap:15px;}
+.app-bar .actions span {cursor:pointer; font-size:18px; transition:0.2s;}
 .app-bar .actions span:hover {color:#FF6B00;}
-
-/* CONTAINER */
-.container {padding:80px 20px 20px 20px;max-width:1000px;margin:auto;}
-.cards {display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
-.card {background:#2A2A2A;padding:25px;border-radius:16px;text-align:center;cursor:pointer;transition:transform 0.3s, box-shadow 0.3s;}
-.card:hover {transform:translateY(-8px);box-shadow:0 10px 25px rgba(255,184,0,0.5);}
-.card .icon {font-size:40px;margin-bottom:15px;color:#FFB800;}
-.card h2 {font-size:18px;margin-bottom:10px;}
-.card p {font-size:14px;color:#AAAAAA;}
-
-/* BOTTOM NAV */
-.bottom-nav {position:fixed;bottom:0;left:0;width:100%;height:60px;background:#1A1A1A;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -2px 6px rgba(0,0,0,0.5);}
-.bottom-nav div {display:flex;flex-direction:column;align-items:center;font-size:12px;cursor:pointer;transition:0.2s;}
+.container {padding:80px 20px 20px 20px; max-width:1000px; margin:auto;}
+.cards {display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px;}
+.card {background:#2A2A2A; padding:25px; border-radius:16px; text-align:center; cursor:pointer; transition:transform 0.3s, box-shadow 0.3s;}
+.card:hover {transform:translateY(-8px); box-shadow:0 10px 25px rgba(255,184,0,0.5);}
+.card .icon {font-size:40px; margin-bottom:15px; color:#FFB800;}
+.card h2 {font-size:18px; margin-bottom:10px;}
+.card p {font-size:14px; color:#AAAAAA;}
+.bottom-nav {position:fixed; bottom:0; left:0; width:100%; height:60px; background:#1A1A1A; display:flex; justify-content:space-around; align-items:center; box-shadow:0 -2px 6px rgba(0,0,0,0.5);}
+.bottom-nav div {display:flex; flex-direction:column; align-items:center; font-size:12px; cursor:pointer; transition:0.2s;}
 .bottom-nav div:hover {color:#FFB800;}
-.bottom-nav div span {font-size:18px;margin-bottom:2px;}
-
-/* MODALS */
-.modal {display:none;position:fixed;z-index:20;left:0;top:0;width:100%;height:100%;overflow:auto;background:rgba(0,0,0,0.8);}
-.modal-content {background:#1A1A1A;margin:10% auto;padding:20px;border-radius:16px;width:90%;max-width:400px;position:relative;}
-.modal-content h2 {color:#FFB800;margin-bottom:15px;}
-.modal-content p {color:#F5F5F5;font-size:14px;}
-.modal-content .close {position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer;color:#FFB800;}
-.modal-content .close:hover {color:#FF6B00;}
+.bottom-nav div span {font-size:18px; margin-bottom:2px;}
+body {user-select:none;}
 </style>
 </head>
 <body>
@@ -45,8 +32,8 @@ body {background:#0D0D0D;color:#F5F5F5;min-height:100vh;user-select:none;padding
 <div class="app-bar">
   <h1>📘 منصة المواد</h1>
   <div class="actions">
-    <span>🔔</span>
-    <span>⚙️</span>
+    <span onclick="alert('الإشعارات')">🔔</span>
+    <span onclick="alert('الإعدادات')">⚙️</span>
   </div>
 </div>
 
@@ -54,27 +41,27 @@ body {background:#0D0D0D;color:#F5F5F5;min-height:100vh;user-select:none;padding
 <div class="container">
   <h2>اختر المادة</h2>
   <div class="cards">
-    <div class="card" onclick="alert('فتح مادة: تصميم برامج الحاسب')">
+    <div class="card" onclick="window.location.href='design.html'">
       <div class="icon">💻</div>
       <h2>تصميم برامج الحاسب</h2>
       <p>ابدأ رحلتك مع البرمجة</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: البنية التحتية للتكنولوجيا')">
+    <div class="card" onclick="window.location.href='infra.html'">
       <div class="icon">🖥️</div>
       <h2>البنية التحتية للتكنولوجيا</h2>
       <p>معرفة أسس الشبكات والأنظمة</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: الإدارة الإستراتيجية')">
+    <div class="card" onclick="window.location.href='strategy.html'">
       <div class="icon">📊</div>
       <h2>الإدارة الإستراتيجية</h2>
       <p>تطوير مهارات اتخاذ القرار</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: الاقتصاد الكلي')">
+    <div class="card" onclick="window.location.href='economy.html'">
       <div class="icon">💰</div>
       <h2>الاقتصاد الكلي</h2>
       <p>فهم السوق والاقتصاد العالمي</p>
     </div>
-    <div class="card" onclick="alert('فتح مادة: الإحصاء التطبيقي')">
+    <div class="card" onclick="window.location.href='statistics.html'">
       <div class="icon">📈</div>
       <h2>الإحصاء التطبيقي</h2>
       <p>تحليل البيانات واتخاذ القرار</p>
@@ -84,71 +71,18 @@ body {background:#0D0D0D;color:#F5F5F5;min-height:100vh;user-select:none;padding
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <div id="nav-home"><span>🏠</span>الرئيسية</div>
-  <div id="nav-categories"><span>📚</span>الفئات</div>
-  <div id="nav-search"><span>🔍</span>بحث</div>
-  <div id="nav-library"><span>📖</span>مكتبتي</div>
-</div>
-
-<!-- MODALS -->
-<div id="modal-categories" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>الفئات</h2>
-    <p>عرض جميع الفئات هنا...</p>
-  </div>
-</div>
-
-<div id="modal-search" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>البحث</h2>
-    <p>هنا حقل البحث والنتائج...</p>
-  </div>
-</div>
-
-<div id="modal-library" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>مكتبتي</h2>
-    <p>هنا الحلقات المفضلة والمكتبة...</p>
-  </div>
+  <div onclick="window.location.href='index.html'"><span>🏠</span>الرئيسية</div>
+  <div onclick="window.location.href='categories.html'"><span>📚</span>الفئات</div>
+  <div onclick="window.location.href='search.html'"><span>🔍</span>بحث</div>
+  <div onclick="window.location.href='library.html'"><span>📖</span>مكتبتي</div>
 </div>
 
 <script>
-// حماية النسخ
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("selectstart", e => e.preventDefault());
-document.addEventListener("keydown", e => {
+document.addEventListener("contextmenu", e=>e.preventDefault());
+document.addEventListener("selectstart", e=>e.preventDefault());
+document.addEventListener("keydown", e=>{
   if(e.ctrlKey && ['c','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
 });
-
-// NAV FUNCTIONALITY
-const navHome = document.getElementById("nav-home");
-const navCategories = document.getElementById("nav-categories");
-const navSearch = document.getElementById("nav-search");
-const navLibrary = document.getElementById("nav-library");
-
-const modalCategories = document.getElementById("modal-categories");
-const modalSearch = document.getElementById("modal-search");
-const modalLibrary = document.getElementById("modal-library");
-
-function closeModal(modal){modal.style.display="none";}
-
-navHome.onclick = ()=>window.scrollTo({top:0,behavior:"smooth"});
-navCategories.onclick = ()=>modalCategories.style.display="block";
-navSearch.onclick = ()=>modalSearch.style.display="block";
-navLibrary.onclick = ()=>modalLibrary.style.display="block";
-
-// close buttons
-document.querySelectorAll(".close").forEach(btn=>{
-  btn.onclick = ()=>closeModal(btn.closest(".modal"));
-});
-
-// close by clicking outside
-window.onclick = function(event){
-  if([modalCategories,modalSearch,modalLibrary].includes(event.target)) closeModal(event.target);
-}
 </script>
 
 </body>
