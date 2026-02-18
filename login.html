@@ -6,89 +6,66 @@
     <title>تسجيل الدخول - منصة الدحيح</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <style>
-        /* --- تنسيقات صفحة الدخول --- */
-        :root { --primary-blue: #0A2647; --accent-orange: #FFC800; --bg-light: #F8F9FA; --text-dark: #212529; --text-grey: #6c757d; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); color: var(--text-dark); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        :root { --primary-blue: #0A2647; --accent-orange: #FFC800; --bg-light: #F8F9FA; --text-dark: #212529; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .login-container { background: white; padding: 40px 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
-        .login-logo { font-size: 2.2rem; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .login-logo .material-icons { font-size: 40px; margin-left: 8px; color: var(--accent-orange); }
-        .login-title { font-size: 1.4rem; color: var(--primary-blue); margin-bottom: 15px; }
-        .login-subtitle { color: var(--text-grey); font-size: 1rem; margin-bottom: 35px; line-height: 1.5; }
-        
-        .input-group { margin-bottom: 25px; position: relative; }
-        .login-input { width: 100%; padding: 18px 50px 18px 20px; border: 2px solid var(--accent-orange); border-radius: 15px; font-family: inherit; font-size: 1.1rem; transition: all 0.3s ease; background: rgba(255, 200, 0, 0.05); color: var(--primary-blue); font-weight: 700; letter-spacing: 1px; text-align: center; text-transform: uppercase; }
-        .login-input:focus { border-color: var(--primary-blue); background: white; outline: none; box-shadow: 0 0 0 4px rgba(10, 38, 71, 0.1); }
-        .input-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--accent-orange); opacity: 1; font-size: 28px; }
-        
-        .login-btn { width: 100%; padding: 18px; border: none; border-radius: 15px; background: var(--primary-blue); color: white; font-size: 1.1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform 0.2s, background 0.3s; box-shadow: 0 4px 15px rgba(10, 38, 71, 0.2); }
-        .login-btn:active { transform: scale(0.98); }
-        
-        .message-box { padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 0.95rem; display: none; }
-        .error-msg { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
-        .success-msg { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
-        .help-text { margin-top: 30px; font-size: 0.9rem; color: var(--text-grey); }
-        .help-text a { color: var(--primary-blue); font-weight: 700; text-decoration: none; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+        .login-input { width: 100%; padding: 18px; border: 2px solid var(--accent-orange); border-radius: 15px; font-size: 1.1rem; text-align: center; text-transform: uppercase; margin-bottom: 20px; font-weight: bold; color: var(--primary-blue); }
+        .login-btn { width: 100%; padding: 18px; background: var(--primary-blue); color: white; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .message-box { padding: 15px; border-radius: 12px; margin-bottom: 20px; display: none; }
+        .error-msg { background: #ffebee; color: #c62828; }
+        .success-msg { background: #e8f5e9; color: #2e7d32; }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-logo"><span class="material-icons logo-icon">local_library</span>الدحيح</div>
-        <h2 class="login-title">تسجيل الدخول</h2>
-        <p class="login-subtitle">أدخل كود التفعيل الخاص بك للدخول إلى المنصة.</p>
-
-        <div id="errorBox" class="message-box error-msg"><span class="material-icons" style="vertical-align: middle; margin-left: 5px;">error_outline</span>الكود المدخل غير صحيح. حاول مرة أخرى.</div>
-        <div id="successBox" class="message-box success-msg"><span class="material-icons" style="vertical-align: middle; margin-left: 5px;">check_circle</span>كود صحيح! جاري الدخول للمنصة...</div>
-
-        <form id="loginForm" onsubmit="event.preventDefault(); validateLogin();">
-            <div class="input-group">
-                <span class="material-icons input-icon">vpn_key</span>
-                <input type="text" id="accessCode" class="login-input" placeholder="أدخل الكود هنا" required>
-            </div>
-            <button type="submit" class="login-btn">دخول للمنصة</button>
+        <h2 style="color:var(--primary-blue); margin-bottom:20px;">تسجيل الدخول</h2>
+        <div id="errorBox" class="message-box error-msg">الكود غير صحيح</div>
+        <div id="successBox" class="message-box success-msg">تم التعرف عليك! جاري الدخول...</div>
+        
+        <form onsubmit="event.preventDefault(); validateLogin();">
+            <input type="text" id="accessCode" class="login-input" placeholder="أدخل الكود هنا" required>
+            <button type="submit" class="login-btn">دخول</button>
         </form>
-
-        <p class="help-text">
-            تواجه مشكلة في الدخول؟ 
-            <a href="https://t.me/Hidden2003A" target="_blank">تواصل مع الدعم</a>
-        </p>
     </div>
 
     <script>
+        // === قاعدة بيانات الطلاب (أنت اللي بتكتب الأكواد والأسماء هنا) ===
+        const studentDatabase = {
+            "DAHEEH123": "محمد أحمد",
+            "TOP2024": "سارة علي",
+            "CODE55": "يوسف محمود",
+            // ضيف أي عدد طلاب هنا بنفس الطريقة
+            // "الكود": "الاسم اللي هيظهر ع العلامة المائية"
+        };
+
         function validateLogin() {
-            const codeInput = document.getElementById('accessCode');
+            const codeInput = document.getElementById('accessCode').value.toUpperCase();
             const errorBox = document.getElementById('errorBox');
             const successBox = document.getElementById('successBox');
-            const loginBtn = document.querySelector('.login-btn');
             
-            const CORRECT_CODE = "DAHEEH123";
+            // البحث عن الكود في قاعدة البيانات
+            if (studentDatabase[codeInput]) {
+                // الكود صح وموجود
+                const studentName = studentDatabase[codeInput];
+                
+                successBox.innerHTML = `أهلاً بك يا ${studentName}، جاري الدخول...`;
+                successBox.style.display = 'block';
+                errorBox.style.display = 'none';
+                
+                // حفظ البيانات في المتصفح
+                localStorage.setItem('isLoggedInDaheeh', 'true');
+                localStorage.setItem('studentName', studentName); // حفظنا الاسم عشان نستخدمه في العلامة المائية
+                localStorage.setItem('studentCode', codeInput);
 
-            errorBox.style.display = 'none'; successBox.style.display = 'none';
-            loginBtn.innerHTML = 'جاري التحقق...'; loginBtn.style.opacity = '0.8';
-
-            setTimeout(() => {
-                if (codeInput.value.toUpperCase() === CORRECT_CODE) {
-                    successBox.style.display = 'block';
-                    loginBtn.innerHTML = 'تم الدخول بنجاح ✓';
-                    loginBtn.style.background = '#2e7d32';
-                    localStorage.setItem('isLoggedInDaheeh', 'true');
-                    setTimeout(() => {
-                        window.location.href = 'index.html'; 
-                    }, 1500);
-                } else {
-                    errorBox.style.display = 'block';
-                    loginBtn.innerHTML = 'دخول للمنصة';
-                    loginBtn.style.background = 'var(--primary-blue)';
-                    loginBtn.style.opacity = '1';
-                    codeInput.style.animation = 'shake 0.5s';
-                    setTimeout(() => codeInput.style.animation = '', 500);
-                }
-            }, 1000);
+                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+            } else {
+                // الكود غلط
+                errorBox.style.display = 'block';
+                successBox.style.display = 'none';
+            }
         }
     </script>
 </body>
 </html>
-
