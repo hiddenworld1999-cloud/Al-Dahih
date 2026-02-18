@@ -10,9 +10,9 @@
 /* RESET */
 *{
 box-sizing:border-box;
+font-family:Arial,sans-serif;
 margin:0;
 padding:0;
-font-family:Arial,sans-serif;
 }
 
 body{
@@ -20,19 +20,6 @@ background:#0D0D0D;
 color:#F5F5F5;
 min-height:100vh;
 user-select:none;
-}
-
-/* العلامة المائية */
-body::before{
-content:"DAHEEH PLATFORM";
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%) rotate(-30deg);
-font-size:70px;
-font-weight:bold;
-color:rgba(255,255,255,0.03);
-pointer-events:none;
 }
 
 /* APP BAR */
@@ -46,6 +33,8 @@ padding:0 20px;
 position:fixed;
 top:0;
 width:100%;
+z-index:10;
+box-shadow:0 2px 6px rgba(0,0,0,0.5);
 }
 
 .app-bar h1{
@@ -53,14 +42,19 @@ font-size:20px;
 color:#FFB800;
 }
 
-.actions span{
-margin-left:10px;
+.app-bar .actions{
+display:flex;
+gap:15px;
+}
+
+.app-bar .actions span{
 cursor:pointer;
+font-size:18px;
 }
 
 /* CONTAINER */
 .container{
-padding:80px 20px;
+padding:80px 20px 20px;
 max-width:1000px;
 margin:auto;
 }
@@ -86,34 +80,49 @@ transform:translateY(-8px);
 box-shadow:0 10px 25px rgba(255,184,0,0.5);
 }
 
-.icon{
+.card .icon{
 font-size:40px;
-margin-bottom:10px;
+margin-bottom:15px;
 color:#FFB800;
+}
+
+.card h2{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:14px;
+color:#AAAAAA;
 }
 
 /* BOTTOM NAV */
 .bottom-nav{
 position:fixed;
 bottom:0;
+left:0;
 width:100%;
 height:60px;
 background:#1A1A1A;
 display:flex;
 justify-content:space-around;
 align-items:center;
+box-shadow:0 -2px 6px rgba(0,0,0,0.5);
 }
 
 .bottom-nav div{
-cursor:pointer;
+display:flex;
+flex-direction:column;
+align-items:center;
 font-size:12px;
-text-align:center;
+cursor:pointer;
 }
 
-.bottom-nav span{
-display:block;
+.bottom-nav div span{
 font-size:18px;
+margin-bottom:2px;
 }
+
 </style>
 </head>
 
@@ -128,41 +137,40 @@ font-size:18px;
 </div>
 </div>
 
-<!-- CONTENT -->
+<!-- MAIN -->
 <div class="container">
-
 <h2>اختر المادة</h2>
 
 <div class="cards">
 
-<div class="card" onclick="openSubject('programming.html')">
+<div class="card" onclick="openPage('programming.html')">
 <div class="icon">💻</div>
 <h2>تصميم برامج الحاسب</h2>
 <p>ابدأ رحلتك مع البرمجة</p>
 </div>
 
-<div class="card" onclick="openSubject('network.html')">
+<div class="card" onclick="openPage('network.html')">
 <div class="icon">🖥️</div>
-<h2>البنية التحتية</h2>
-<p>أساسيات الشبكات</p>
+<h2>البنية التحتية للتكنولوجيا</h2>
+<p>معرفة أسس الشبكات والأنظمة</p>
 </div>
 
-<div class="card" onclick="openSubject('management.html')">
+<div class="card" onclick="openPage('management.html')">
 <div class="icon">📊</div>
 <h2>الإدارة الإستراتيجية</h2>
-<p>تطوير مهارات الإدارة</p>
+<p>تطوير مهارات اتخاذ القرار</p>
 </div>
 
-<div class="card" onclick="openSubject('economics.html')">
+<div class="card" onclick="openPage('economics.html')">
 <div class="icon">💰</div>
 <h2>الاقتصاد الكلي</h2>
-<p>فهم الاقتصاد</p>
+<p>فهم السوق والاقتصاد العالمي</p>
 </div>
 
-<div class="card" onclick="openSubject('statistics.html')">
+<div class="card" onclick="openPage('statistics.html')">
 <div class="icon">📈</div>
 <h2>الإحصاء التطبيقي</h2>
-<p>تحليل البيانات</p>
+<p>تحليل البيانات واتخاذ القرار</p>
 </div>
 
 </div>
@@ -170,46 +178,44 @@ font-size:18px;
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-<div onclick="goHome()"><span>🏠</span>الرئيسية</div>
-<div onclick="openCategories()"><span>📚</span>الفئات</div>
-<div onclick="openSearch()"><span>🔍</span>بحث</div>
-<div onclick="openLibrary()"><span>📖</span>مكتبتي</div>
+
+<div onclick="openPage('index.html')">
+<span>🏠</span>
+الرئيسية
+</div>
+
+<div onclick="alert('صفحة الفئات قريبا')">
+<span>📚</span>
+الفئات
+</div>
+
+<div onclick="alert('صفحة البحث قريبا')">
+<span>🔍</span>
+بحث
+</div>
+
+<div onclick="alert('مكتبتي قريبا')">
+<span>📖</span>
+مكتبتي
+</div>
+
 </div>
 
 <script>
 
-/* فتح مادة */
-function openSubject(page){
-window.location=page;
+/* فتح الصفحات */
+function openPage(page){
+window.location.href=page;
 }
 
-/* شريط تحت */
-function goHome(){
-window.location="index.html";
-}
-
-function openCategories(){
-alert("صفحة الفئات قريبا");
-}
-
-function openSearch(){
-alert("صفحة البحث قريبا");
-}
-
-function openLibrary(){
-alert("مكتبتي قريبا");
-}
-
-/* حماية */
+/* الحماية */
 document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("selectstart",e=>e.preventDefault());
 
-document.onkeydown=function(e){
-if(
-e.keyCode==123 ||
-(e.ctrlKey&&e.shiftKey&&e.keyCode==73) ||
-(e.ctrlKey&&e.keyCode==85)
-){return false;}
-};
+document.addEventListener("keydown",e=>{
+if(e.ctrlKey && ['c','s','p','u'].includes(e.key.toLowerCase()))
+e.preventDefault();
+});
 
 </script>
 
