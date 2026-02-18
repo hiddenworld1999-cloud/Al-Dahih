@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تطبيق الدحيح المتكامل</title>
+    <title>تطبيق الدحيح المتكامل - المصحح</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
         /* --- المتغيرات والتنسيقات الأساسية (CSS) --- */
@@ -18,6 +18,27 @@
             --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
+        /* --- تصحيح الأيقونات --- */
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;  /* الحجم الافتراضي */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            /* دعم لمتصفحات الويب */
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+        }
+
+        /* --- باقي التنسيقات (كما كانت) --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'IBM Plex Sans Arabic', sans-serif;
@@ -27,13 +48,10 @@
             overflow-x: hidden;
         }
 
-        /* --- إخفاء وإظهار الصفحات --- */
         .page-section { display: none; animation: fadeIn 0.3s ease; }
         .page-section.active { display: block; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- الهيدر والعناصر المشتركة --- */
         .app-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 20px; background: white; position: sticky; top: 0; z-index: 100;
@@ -41,72 +59,59 @@
         }
         .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; }
         .logo-icon { margin-left: 8px; color: var(--accent-orange); font-size: 28px; }
+        .profile-icon { color: var(--primary-blue); font-size: 28px; opacity: 0.8; }
+
+        .hero-section { padding: 20px 20px 30px 20px; background: white; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .welcome-text { margin-bottom: 20px; }
+        .welcome-text h2 { font-size: 1.6rem; color: var(--primary-blue); }
+        .welcome-text p { color: var(--text-grey); font-size: 0.95rem; margin-top: 5px;}
+
+        .search-bar-container { position: relative; width: 100%; }
+        .search-input { width: 100%; padding: 14px 45px 14px 20px; border: none; border-radius: 15px; background: var(--bg-light); font-size: 0.95rem; color: var(--text-dark); box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); }
+        .search-icon-inside { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); opacity: 0.6; }
+
         .container { padding: 0 20px; }
         .section-title { font-size: 1.1rem; margin: 25px 0 15px 0; color: var(--primary-blue); display: flex; justify-content: space-between;}
 
-        /* --- البطاقات --- */
-        .continue-learning-card {
-            background: white; border-radius: 18px; padding: 12px; display: flex; align-items: center;
-            box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.04); position: relative; overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .continue-learning-card::before {
-            content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 6px;
-            background: var(--accent-orange); border-top-right-radius: 18px; border-bottom-right-radius: 18px;
-        }
-        .cl-image { width: 70px; height: 70px; border-radius: 14px; object-fit: cover; margin-left: 15px; }
+        .continue-learning-card { background: white; border-radius: 18px; padding: 12px; display: flex; align-items: center; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.04); position: relative; overflow: hidden; margin-bottom: 20px; cursor: pointer; }
+        .continue-learning-card::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 6px; background: var(--accent-orange); border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
+        .cl-image { width: 70px; height: 70px; border-radius: 14px; object-fit: cover; margin-left: 15px; border: 1px solid #eee; }
         .cl-content { flex: 1; padding-left: 10px; }
         .cl-title { font-size: 0.95rem; margin-bottom: 4px; color: var(--primary-blue); font-weight: 700;}
         .cl-subtitle { font-size: 0.8rem; color: var(--text-grey); margin-bottom: 8px; }
-        .progress-bar-bg { width: 100%; height: 5px; background: #e9ecef; border-radius: 10px; overflow: hidden; }
+        .progress-container { display: flex; align-items: center; font-size: 0.75rem; color: var(--text-grey); font-weight: 500; }
+        .progress-bar-bg { flex: 1; height: 5px; background: #e9ecef; border-radius: 10px; margin-left: 10px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: var(--accent-orange); border-radius: 10px; }
+        .cl-play-btn { color: var(--primary-blue); font-size: 32px; opacity: 0.9; }
 
-        .course-card-vertical {
-            background: white; border-radius: 18px; overflow: hidden; margin-bottom: 18px;
-            box-shadow: var(--card-shadow); display: flex; border: 1px solid rgba(0,0,0,0.04);
-            cursor: pointer; transition: transform 0.2s;
-        }
+        .course-card-vertical { background: white; border-radius: 18px; overflow: hidden; margin-bottom: 18px; box-shadow: var(--card-shadow); display: flex; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: transform 0.2s; }
         .course-card-vertical:active { transform: scale(0.98); background-color: #fcfcfc; }
-        .cc-v-image { width: 110px; height: 100%; object-fit: cover; }
+        .cc-v-image-container { width: 110px; position: relative; }
+        .cc-v-image { width: 100%; height: 100%; object-fit: cover; }
         .cc-v-content { padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px; }
         .cc-v-title { font-size: 1rem; font-weight: 700; color: var(--primary-blue); line-height: 1.3; }
         .cc-v-instructor { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; margin-top: 5px; }
+        .cc-v-instructor .material-icons { font-size: 16px; margin-left: 4px; opacity: 0.7; }
+        .cc-v-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
         .price-tag { color: var(--primary-blue); font-weight: 700; font-size: 1rem; }
         .rating-badge { background: rgba(255, 200, 0, 0.15); color: #d4a600; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; }
+        .rating-badge .material-icons { font-size: 16px; margin-left: 4px; }
 
-        /* --- شريط البحث --- */
-        .hero-section { padding: 20px 20px 30px 20px; background: white; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .search-input { width: 100%; padding: 14px 45px 14px 20px; border: none; border-radius: 15px; background: var(--bg-light); font-size: 0.95rem; }
-        .search-container { position: relative; margin-top: 15px; }
-        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); opacity: 0.6; }
-
-        /* --- شريط التنقل السفلي --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 200;
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #adb5bd; transition: 0.3s; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 200; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #adb5bd; transition: all 0.3s ease; font-weight: 500; position: relative; cursor: pointer; }
         .nav-item.active { color: var(--primary-blue); font-weight: 700; }
-        .nav-item .material-icons-round { font-size: 26px; margin-bottom: 4px; }
-        .nav-item.active .material-icons-round { color: var(--primary-blue); }
+        .nav-item .material-icons { font-size: 26px; margin-bottom: 4px; }
+        .nav-item.active::after { content: ''; position: absolute; top: -6px; width: 6px; height: 6px; background: var(--accent-orange); border-radius: 50%; }
 
-        /* --- صفحة مشغل الفيديو (Player Page) --- */
         .player-header { padding: 15px; display: flex; align-items: center; background: white; }
         .back-btn { font-size: 24px; color: var(--primary-blue); cursor: pointer; padding: 5px; }
-        .video-placeholder {
-            width: 100%; aspect-ratio: 16/9; background: #000; display: flex;
-            justify-content: center; align-items: center; position: relative;
-        }
+        .video-placeholder { width: 100%; aspect-ratio: 16/9; background: #000; display: flex; justify-content: center; align-items: center; position: relative; }
         .play-icon-overlay { font-size: 60px; color: white; opacity: 0.8; }
         .player-content { padding: 20px; }
         .lesson-title { font-size: 1.2rem; margin-bottom: 10px; color: var(--primary-blue); }
         .tab-menu { display: flex; border-bottom: 1px solid #eee; margin-bottom: 20px; }
         .tab-item { padding: 10px 20px; color: var(--text-grey); cursor: pointer; border-bottom: 3px solid transparent; }
         .tab-item.active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); font-weight: 700; }
-
-        /* رسالة عدم وجود نتائج */
         .no-results { text-align: center; padding: 40px; color: var(--text-grey); display: none; }
     </style>
 </head>
@@ -114,20 +119,20 @@
 
     <header class="app-header" id="mainHeader">
         <div class="logo-text">
-            <span class="material-icons-round logo-icon">local_library</span>
+            <span class="material-icons logo-icon">local_library</span>
             الدحيح
         </div>
-        <span class="material-icons-round" style="color:var(--primary-blue); font-size: 28px;">account_circle</span>
+        <span class="material-icons profile-icon">account_circle</span>
     </header>
 
     <div id="page-home" class="page-section active">
         <section class="hero-section">
-            <div style="margin-bottom: 15px;">
-                <h2 style="color:var(--primary-blue)">مرحباً، يا دحيح 👋</h2>
-                <p style="color:var(--text-grey); font-size:0.9rem">جاهز لجرعة تركيز اليوم؟</p>
+            <div class="welcome-text">
+                <h2>مرحباً، يا دحيح 👋</h2>
+                <p>جاهز لجرعة تركيز اليوم؟</p>
             </div>
-            <div class="search-container">
-                <span class="material-icons-round search-icon">search</span>
+            <div class="search-bar-container">
+                <span class="material-icons search-icon-inside">search</span>
                 <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن مادة (مثال: حاسب، اقتصاد)...">
             </div>
         </section>
@@ -135,19 +140,19 @@
         <div class="container">
             <h3 class="section-title">استمر في التعلم</h3>
             <div class="continue-learning-card" onclick="openPlayer('last')">
-                <img src="https://placehold.co/100x100/0A2647/FFC800?text=AI" class="cl-image">
+                <img src="https://placehold.co/140x140/0A2647/FFC800?text=AI" alt="Course Thumbtail" class="cl-image">
                 <div class="cl-content">
                     <h4 class="cl-title">مقدمة في الذكاء الاصطناعي</h4>
                     <p class="cl-subtitle">الوحدة 3: المعادلات التفاضلية</p>
-                    <div style="display:flex; align-items:center; gap:10px; font-size:0.75rem; color:#666">
+                    <div class="progress-container">
                         <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%;"></div></div>
                         <span>45%</span>
                     </div>
                 </div>
-                <span class="material-icons-round" style="color:var(--primary-blue); font-size:32px">play_circle_filled</span>
+                <span class="material-icons cl-play-btn">play_circle_filled</span>
             </div>
 
-            <h3 class="section-title">المواد الدراسية <span style="font-size:0.8rem; color:var(--accent-orange)">عرض الكل</span></h3>
+            <h3 class="section-title">المواد الدراسية <span style="font-size:0.8rem; color:var(--accent-orange); cursor: pointer;">عرض الكل</span></h3>
             
             <div id="coursesListContainer"></div>
             <div id="noResultsMsg" class="no-results">لا توجد مواد تطابق بحثك 😔</div>
@@ -158,7 +163,7 @@
         <div class="container">
             <h3 class="section-title">دوراتي المسجلة</h3>
             <div style="text-align:center; padding:50px 0; color:#999;">
-                <span class="material-icons-round" style="font-size:60px; margin-bottom:10px;">school</span>
+                <span class="material-icons" style="font-size:60px; margin-bottom:10px; color: var(--primary-blue); opacity: 0.5;">school</span>
                 <p>أنت مشترك في 3 دورات حالياً</p>
             </div>
         </div>
@@ -166,12 +171,12 @@
 
     <div id="page-player" class="page-section" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:300; display:none;">
         <div class="player-header">
-            <span class="material-icons-round back-btn" onclick="closePlayer()">arrow_forward</span>
+            <span class="material-icons back-btn" onclick="closePlayer()">arrow_forward</span>
             <span style="margin-right:15px; font-weight:700; color:var(--primary-blue)">مشاهدة الدرس</span>
         </div>
         
         <div class="video-placeholder">
-            <span class="material-icons-round play-icon-overlay">play_circle_outline</span>
+            <span class="material-icons play-icon-overlay">play_circle_outline</span>
             <div style="position:absolute; bottom:10px; left:10px; background:rgba(0,0,0,0.6); color:white; padding:2px 8px; border-radius:4px; font-size:0.8rem">10:45</div>
         </div>
 
@@ -196,7 +201,7 @@
                 </ul>
             </div>
             
-            <button style="width:100%; background:var(--primary-blue); color:white; border:none; padding:15px; border-radius:12px; margin-top:30px; font-size:1rem; font-weight:bold;">
+            <button style="width:100%; background:var(--primary-blue); color:white; border:none; padding:15px; border-radius:12px; margin-top:30px; font-size:1rem; font-weight:bold; cursor: pointer;">
                 تحميل ملفات الدرس (PDF)
             </button>
         </div>
@@ -204,19 +209,18 @@
 
     <nav class="bottom-nav" id="bottomNav">
         <div class="nav-item active" onclick="switchTab('home', this)">
-            <span class="material-icons-round">home_filled</span>
-            <span>الرئيسية</span>
+            <span class="material-icons">home</span> <span>الرئيسية</span>
         </div>
         <div class="nav-item" onclick="switchTab('courses', this)">
-            <span class="material-icons-round">menu_book</span>
+            <span class="material-icons">menu_book</span>
             <span>دوراتي</span>
         </div>
-        <div class="nav-item" onclick="focusSearch()">
-            <span class="material-icons-round">search</span>
+        <div class="nav-item" onclick="switchTab('search', this)">
+            <span class="material-icons">search</span>
             <span>بحث</span>
         </div>
         <div class="nav-item" onclick="alert('صفحة الملف الشخصي قيد التطوير')">
-            <span class="material-icons-round">person</span>
+            <span class="material-icons">person</span>
             <span>حسابي</span>
         </div>
     </nav>
@@ -238,28 +242,25 @@
         // 2. دالة لرسم الكورسات في الصفحة
         function renderCourses(courses) {
             coursesContainer.innerHTML = ''; // مسح المحتوى الحالي
-            
             if (courses.length === 0) {
-                noResultsMsg.style.display = 'block';
-                return;
+                noResultsMsg.style.display = 'block'; return;
             } else {
                 noResultsMsg.style.display = 'none';
             }
-
             courses.forEach(course => {
                 const cardHTML = `
                 <div class="course-card-vertical" onclick="openPlayer(${course.id})">
-                    <div style="width:110px; min-width:110px;">
+                    <div class="cc-v-image-container">
                         <img src="${course.img}" class="cc-v-image">
                     </div>
                     <div class="cc-v-content">
                         <div>
                             <h4 class="cc-v-title">${course.title}</h4>
-                            <p class="cc-v-instructor"><span class="material-icons-round" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p>
+                            <p class="cc-v-instructor"><span class="material-icons" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                        <div class="cc-v-footer">
                             <span class="price-tag">${course.price}</span>
-                            <span class="rating-badge"><span class="material-icons-round" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span>
+                            <span class="rating-badge"><span class="material-icons" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span>
                         </div>
                     </div>
                 </div>
@@ -285,19 +286,15 @@
             });
             
             // إظهار الصفحة المطلوبة
-            if(tabName === 'home') document.getElementById('page-home').classList.add('active');
+            if(tabName === 'home' || tabName === 'search') {
+                 document.getElementById('page-home').classList.add('active');
+                 if(tabName === 'search') document.getElementById('searchInput').focus();
+            }
             if(tabName === 'courses') document.getElementById('page-courses').classList.add('active');
 
             // تحديث ألوان الأزرار السفلية
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             if(element) element.classList.add('active');
-        }
-
-        function focusSearch() {
-            switchTab('home', document.querySelectorAll('.nav-item')[0]); // الذهاب للرئيسية
-            document.getElementById('searchInput').focus(); // التركيز في مربع البحث
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            document.querySelectorAll('.nav-item')[2].classList.add('active');
         }
 
         // 5. نظام فتح وإغلاق الفيديو
@@ -309,24 +306,24 @@
                 course = coursesData.find(c => c.id === courseId);
             }
             
-            // تعبئة البيانات في صفحة المشغل
+            // تعبئة البيانات وإظهار المشغل
             document.getElementById('playerCourseTitle').innerText = course.title;
             document.getElementById('playerInstructor').innerText = course.instructor;
-            
-            // إظهار صفحة المشغل (فوق كل شيء)
             const playerPage = document.getElementById('page-player');
             playerPage.style.display = 'block';
             playerPage.style.animation = 'fadeIn 0.3s ease';
-            
             // إخفاء القائمة السفلية
             document.getElementById('bottomNav').style.display = 'none';
+            // إخفاء الهيدر العلوي
+            document.getElementById('mainHeader').style.display = 'none';
         }
 
         function closePlayer() {
             const playerPage = document.getElementById('page-player');
             playerPage.style.display = 'none';
-            // إظهار القائمة السفلية
+            // إظهار القائمة السفلية والهيدر
             document.getElementById('bottomNav').style.display = 'flex';
+            document.getElementById('mainHeader').style.display = 'flex';
         }
 
         // --- التشغيل الأولي ---
