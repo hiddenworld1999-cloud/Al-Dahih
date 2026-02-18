@@ -1,39 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بحث</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-<div class="app-bar">
-  <h1>🔍 بحث</h1>
-  <div class="actions">
-    <span onclick="navigate('index.html')">🏠</span>
-  </div>
-</div>
-
-<div class="container">
-  <h2>البحث عن الحلقات أو الفئات</h2>
-  <input type="text" placeholder="ابحث عن مادة أو حلقة..." style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:20px;">
-  
-  <h3>بحث شائع</h3>
-  <div class="cards">
-    <div class="card" onclick="alert('بحث: الذكاء الاصطناعي')">🧠<h2>الذكاء الاصطناعي</h2></div>
-    <div class="card" onclick="alert('بحث: الانفجار العظيم')">💥<h2>الانفجار العظيم</h2></div>
-    <div class="card" onclick="alert('بحث: مصر القديمة')">🏺<h2>مصر القديمة</h2></div>
-  </div>
-</div>
-
-<div class="bottom-nav">
-  <div onclick="navigate('index.html')"><span>🏠</span>الرئيسية</div>
-  <div onclick="navigate('categories.html')"><span>📚</span>الفئات</div>
-  <div onclick="navigate('search.html')"><span>🔍</span>بحث</div>
-  <div onclick="navigate('library.html')"><span>📖</span>مكتبتي</div>
-</div>
-
-<script src="js/scripts.js"></script>
-</body>
-</html>
