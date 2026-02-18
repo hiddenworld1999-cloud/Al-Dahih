@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        /* --- تنسيقات صفحة الدخول (مبسطة للحقل الواحد) --- */
+        /* --- تنسيقات صفحة الدخول --- */
         :root { --primary-blue: #0A2647; --accent-orange: #FFC800; --bg-light: #F8F9FA; --text-dark: #212529; --text-grey: #6c757d; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); color: var(--text-dark); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -18,7 +18,6 @@
         .login-title { font-size: 1.4rem; color: var(--primary-blue); margin-bottom: 15px; }
         .login-subtitle { color: var(--text-grey); font-size: 1rem; margin-bottom: 35px; line-height: 1.5; }
         
-        /* تنسيق حقل الكود الوحيد */
         .input-group { margin-bottom: 25px; position: relative; }
         .login-input { width: 100%; padding: 18px 50px 18px 20px; border: 2px solid var(--accent-orange); border-radius: 15px; font-family: inherit; font-size: 1.1rem; transition: all 0.3s ease; background: rgba(255, 200, 0, 0.05); color: var(--primary-blue); font-weight: 700; letter-spacing: 1px; text-align: center; text-transform: uppercase; }
         .login-input:focus { border-color: var(--primary-blue); background: white; outline: none; box-shadow: 0 0 0 4px rgba(10, 38, 71, 0.1); }
@@ -52,7 +51,10 @@
             <button type="submit" class="login-btn">دخول للمنصة</button>
         </form>
 
-        <p class="help-text">تواجه مشكلة في الدخول؟ <a href="#" onclick="alert('تواصل مع إدارة المنصة للحصول على المساعدة.')">تواصل مع الدعم</a></p>
+        <p class="help-text">
+            تواجه مشكلة في الدخول؟ 
+            <a href="https://t.me/Hidden2003A" target="_blank">تواصل مع الدعم</a>
+        </p>
     </div>
 
     <script>
@@ -62,7 +64,6 @@
             const successBox = document.getElementById('successBox');
             const loginBtn = document.querySelector('.login-btn');
             
-            // --- الكود الصحيح (قم بتغييره كما تريد) ---
             const CORRECT_CODE = "DAHEEH123";
 
             errorBox.style.display = 'none'; successBox.style.display = 'none';
@@ -70,22 +71,14 @@
 
             setTimeout(() => {
                 if (codeInput.value.toUpperCase() === CORRECT_CODE) {
-                    // --- حالة النجاح ---
                     successBox.style.display = 'block';
                     loginBtn.innerHTML = 'تم الدخول بنجاح ✓';
                     loginBtn.style.background = '#2e7d32';
-                    
-                    // حفظ علامة الدخول في المتصفح
                     localStorage.setItem('isLoggedInDaheeh', 'true');
-
-                    // التحويل لصفحة التطبيق الرئيسية (index.html)
                     setTimeout(() => {
-                        // هذا السطر هو المسؤول عن الربط
                         window.location.href = 'index.html'; 
                     }, 1500);
-
                 } else {
-                    // --- حالة الخطأ ---
                     errorBox.style.display = 'block';
                     loginBtn.innerHTML = 'دخول للمنصة';
                     loginBtn.style.background = 'var(--primary-blue)';
@@ -93,7 +86,7 @@
                     codeInput.style.animation = 'shake 0.5s';
                     setTimeout(() => codeInput.style.animation = '', 500);
                 }
-            }, 1000); // تقليل وقت الانتظار قليلاً
+            }, 1000);
         }
     </script>
 </body>
