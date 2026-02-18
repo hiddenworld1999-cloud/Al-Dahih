@@ -1,4 +1,14 @@
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+    // التحقق من تسجيل الدخول
+    if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const studentName = localStorage.getItem('studentName') || 'طالب الدحيح';
+
+    // الداتا
     const coursesData = [
         { id: 1, title: "تصميم برامج الحاسب", instructor: "د. تامر البرمجيات", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Code" },
         { id: 2, title: "البنية التحتية للتكنولوجيا", instructor: "م. علي الشبكات", rating: "4.7", img: "https://placehold.co/200x300/FFC800/0A2647?text=Network" },
@@ -7,136 +17,66 @@
         { id: 5, title: "الإحصاء التطبيقي", instructor: "د. رانيا الأرقام", rating: "4.8", img: "https://placehold.co/200x300/0A2647/FFC800?text=Stats" }
     ];
 
-    // ==========================
-    // دالة إنشاء صورة بعلامة مائية
-    // ==========================
-    function createWatermarkedImage(imageUrl, studentName) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous"; // مهم للصورة الخارجية
+    const container = document.getElementById('coursesListContainer');
 
-            img.onload = function () {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
+    function renderCourses(courses) {
+        container.innerHTML = '';
+        courses.forEach(course => {
+            const card = document.createElement('div');
+            card.className = 'course-card-vertical';
+            card.onclick = () => openPlayer(course.id);
 
-                canvas.width = img.width;
-                canvas.height = img.height;
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'cc-v-image-container';
+            imgContainer.style.position = 'relative';
 
-                // رسم الصورة
-                ctx.drawImage(img, 0, 0);
+            const img = document.createElement('img');
+            img.src = course.img;
+            img.className = 'cc-v-image';
 
-                if (studentName) {
-                    // إعدادات العلامة المائية
-                    ctx.font = "bold 40px Arial";
-                    ctx.fillStyle = "rgba(0,0,0,0.15)";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.rotate(-Math.PI / 6);
+            // إضافة العلامة المائية
+            const watermark = document.createElement('div');
+            watermark.innerText = studentName;
+            watermark.style.position = 'absolute';
+            watermark.style.bottom = '8px';
+            watermark.style.right = '8px';
+            watermark.style.fontSize = '12px';
+            watermark.style.color = 'rgba(255,255,255,0.6)';
+            watermark.style.background = 'rgba(0,0,0,0.15)';
+            watermark.style.padding = '2px 5px';
+            watermark.style.borderRadius = '4px';
+            watermark.style.pointerEvents = 'none';
+            watermark.style.fontWeight = '700';
 
-                    // كتابة الاسم
-                    ctx.fillText(studentName, 0, 0);
-                }
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(watermark);
 
-                resolve(canvas.toDataURL());
-            };
+            const content = document.createElement('div');
+            content.className = 'cc-v-content';
+            content.innerHTML = `
+                <div>
+                    <h4 class="cc-v-title">${course.title}</h4>
+                    <p class="cc-v-instructor"><span class="material-icons" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p>
+                </div>
+                <div class="cc-v-footer">
+                    <span class="rating-badge"><span class="material-icons" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span>
+                </div>
+            `;
 
-            img.src = imageUrl;
+            card.appendChild(imgContainer);
+            card.appendChild(content);
+            container.appendChild(card);
         });
     }
 
-    // ==========================
-    // عرض المواد مع العلامة المائية
-    // ==========================
-    async function renderCourses(courses) {
-        const container = document.getElementById('coursesListContainer');
-        container.innerHTML = '';
+    renderCourses(coursesData);
 
-        const studentName = localStorage.getItem('studentName') || 'طالب الدحيح';
-
-        for (const course of courses) {
-            let watermarkedImg = course.img;
-
-            // إضافة العلامة المائية
-            if (studentName) {
-                watermarkedImg = await createWatermarkedImage(course.img, studentName);
-            }
-
-            container.innerHTML += `
-                <div class="course-card-vertical" onclick="openPlayer(${course.id})">
-                    <div class="cc-v-image-container">
-                        <img src="${watermarkedImg}" class="cc-v-image">
-                    </div>
-                    <div class="cc-v-content">
-                        <div>
-                            <h4 class="cc-v-title">${course.title}</h4>
-                            <p class="cc-v-instructor"><span class="material-icons" style="font-size:16px; margin-left:4px">person</span> ${course.instructor}</p>
-                        </div>
-                        <div class="cc-v-footer">
-                            <span class="rating-badge"><span class="material-icons" style="font-size:16px; margin-left:2px">star</span> ${course.rating}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-    }
-
-    // ==========================
-    // فلترة البحث
-    // ==========================
+    // البحث
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filtered = coursesData.filter(c => c.title.toLowerCase().includes(searchTerm));
+        const filtered = coursesData.filter(c => c.title.includes(searchTerm));
         renderCourses(filtered);
     });
-
-    // ==========================
-    // التبديل بين الصفحات
-    // ==========================
-    function switchTab(tabName, element) {
-        document.querySelectorAll('.page-section').forEach(p => { if(p.id !== 'page-player') p.classList.remove('active'); });
-        document.getElementById('page-' + tabName).classList.add('active');
-        if(tabName === 'search') document.getElementById('searchInput').focus();
-        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        if(element) element.classList.add('active');
-    }
-
-    // ==========================
-    // فتح وإغلاق مشغل الدورة
-    // ==========================
-    function openPlayer(id) {
-        const c = coursesData.find(x => x.id === id);
-        document.getElementById('playerCourseTitle').innerText = c.title;
-        document.getElementById('playerInstructor').innerText = c.instructor;
-        document.getElementById('page-player').style.display = 'block';
-        document.getElementById('bottomNav').style.display = 'none';
-        document.getElementById('mainHeader').style.display = 'none';
-    }
-
-    function closePlayer() {
-        document.getElementById('page-player').style.display = 'none';
-        document.getElementById('bottomNav').style.display = 'flex';
-        document.getElementById('mainHeader').style.display = 'flex';
-    }
-
-    // ==========================
-    // تسجيل الخروج
-    // ==========================
-    function logout() {
-        localStorage.removeItem('isLoggedInDaheeh');
-        window.location.href = 'login.html';
-    }
-
-    // ==========================
-    // حفظ اسم الطالب إذا لم يكن موجود
-    // ==========================
-    if (!localStorage.getItem('studentName')) {
-        localStorage.setItem('studentName', 'طالب الدحيح');
-    }
-
-    // ==========================
-    // تنفيذ العرض
-    // ==========================
-    renderCourses(coursesData);
+});
 </script>
