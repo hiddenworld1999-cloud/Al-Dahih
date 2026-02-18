@@ -193,15 +193,22 @@
                 if (codeInput.value.toUpperCase() === CORRECT_CODE) {
                     // حالة النجاح
                     successBox.style.display = 'block';
-                    loginBtn.innerHTML = 'تم التفعيل بنجاح ✓';
+                    loginBtn.innerHTML = 'تم التفعيل بنجاح ✓، جاري التحويل...';
                     loginBtn.style.background = '#2e7d32';
                     loginBtn.style.color = 'white';
                     
-                    // هنا يتم توجيه الطالب للصفحة الرئيسية للتطبيق
+                    // --- التعديل الجديد: حفظ حالة الدخول والتحويل ---
+                    
+                    // 1. حفظ "علامة" في متصفح المستخدم بأنه سجل الدخول بنجاح
+                    localStorage.setItem('isLoggedInDaheeh', 'true');
+
+                    // 2. الانتظار ثانية ونصف ثم التحويل لصفحة التطبيق الرئيسية
                     setTimeout(() => {
-                        alert('سيتم نقلك الآن إلى الصفحة الرئيسية للتطبيق (في النظام الحقيقي).');
-                        // window.location.href = 'main-app.html'; // مثال على التوجيه
-                    }, 2000);
+                        // تأكد أن اسم الملف الثاني هو app.html
+                        window.location.href = 'app.html'; 
+                    }, 1500);
+
+                    // ---------------------------
 
                 } else {
                     // حالة الخطأ
