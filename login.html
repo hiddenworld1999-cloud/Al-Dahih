@@ -75,11 +75,12 @@
                     loginBtn.innerHTML = 'تم الدخول بنجاح ✓';
                     loginBtn.style.background = '#2e7d32';
                     
-                    // حفظ علامة الدخول
+                    // حفظ علامة الدخول في المتصفح
                     localStorage.setItem('isLoggedInDaheeh', 'true');
 
                     // التحويل لصفحة التطبيق الرئيسية (index.html)
                     setTimeout(() => {
+                        // هذا السطر هو المسؤول عن الربط
                         window.location.href = 'index.html'; 
                     }, 1500);
 
@@ -92,7 +93,7 @@
                     codeInput.style.animation = 'shake 0.5s';
                     setTimeout(() => codeInput.style.animation = '', 500);
                 }
-            }, 1000);
+            }, 1000); // تقليل وقت الانتظار قليلاً
         }
     </script>
 </body>
