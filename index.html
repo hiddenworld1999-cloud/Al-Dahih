@@ -7,14 +7,13 @@
             window.location.href = 'login.html';
         }
 
-        // 2. منع كليك يمين (Right Click)
+        // 2. منع كليك يمين
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // 3. منع اختصارات الكيبورد (Print Screen, Save, Copy)
+        // 3. منع اختصارات الكيبورد
         document.addEventListener('keydown', function(e) {
-            // منع PrintScreen, Ctrl+S, Ctrl+C, Ctrl+P
             if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) {
-                alert('عذراً، هذا المحتوى محمي بحقوق الملكية.');
+                alert('عذراً، هذا المحتوى محمي.');
                 e.preventDefault();
             }
         });
@@ -34,7 +33,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 80px; overflow-x: hidden; 
-            user-select: none; /* منع تحديد النصوص */ -webkit-user-select: none; 
+            user-select: none; -webkit-user-select: none; 
         }
         
         .page-section { display: none; animation: fadeIn 0.3s ease; }
@@ -100,17 +99,16 @@
         .qb-btn-no-answers { background: white; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
         .qb-btn-icon { font-size: 28px; }
 
-        /* === تنسيقات الحماية والعلامة المائية (المعدلة لتكون أوضح) === */
+        /* === تنسيقات الحماية والعلامة المائية (الناعمة والمدمجة) === */
         
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,1); z-index: 500; display: none; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; }
         
         .protected-image-container { position: relative; max-width: 100%; max-height: 80vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* الصورة نفسها (محمية) */
         .protected-image-container img { 
             max-width: 100%; max-height: 80vh; 
-            pointer-events: none; /* يمنع التفاعل مع الصورة نهائياً */
-            -webkit-user-drag: none; /* يمنع السحب */
+            pointer-events: none; 
+            -webkit-user-drag: none; 
         }
 
         /* طبقة العلامة المائية */
@@ -119,22 +117,23 @@
             pointer-events: none;
             display: flex; 
             flex-wrap: wrap; 
-            justify-content: center; /* توسيط العناصر */
-            align-content: center;   /* توسيط العناصر عمودياً */
+            justify-content: center; 
+            align-content: center;
             overflow: hidden; 
             z-index: 10;
         }
 
-        /* نص العلامة المائية - تعديل لجعله أوضح */
+        /* تنسيق العلامة المائية الجديد (ناعم ومدمج) */
         .watermark-text {
-            color: rgba(255, 255, 255, 0.7); /* لون أبيض أكثر وضوحاً */
-            font-size: 24px; /* تكبير الخط */
-            font-weight: 800; /* خط عريض جداً */
-            transform: rotate(-45deg); /* ميلان بزاوية 45 */
-            padding: 50px; /* مسافات واسعة */
+            /* لون رمادي خفيف جداً يدمج مع الخلفية */
+            color: rgba(0, 0, 0, 0.12); 
+            font-size: 22px; 
+            font-weight: 700; 
+            transform: rotate(-45deg); 
+            padding: 60px; /* مسافات واسعة عشان ميكونش زحمة */
             white-space: nowrap;
-            /* ظل قوي للنص عشان يبان لو الخلفية بيضاء أو سوداء */
-            text-shadow: 0 0 5px #000000, 0 0 10px #000000; 
+            /* شيلنا الـ Shadow عشان متبقاش محددة */
+            text-shadow: none; 
         }
 
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 12px 30px; border-radius: 25px; margin-top: 20px; font-weight: bold; cursor: pointer; z-index: 600; }
@@ -216,8 +215,7 @@
     </nav>
 
     <script>
-        // === 1. بيانات المواد (5 مواد كاملة) ===
-        // هام: غير أسماء الصور (coding_answers.jpg) لأسماء صورك الحقيقية
+        // === 1. بيانات المواد ===
         const coursesData = [
             { 
                 id: 1, title: "تصميم برامج الحاسب", instructor: "د. تامر البرمجيات", rating: "4.8", 
@@ -246,12 +244,11 @@
             }
         ];
 
-        // === 2. بيانات الطالب المسجل ===
+        // === 2. بيانات الطالب ===
         const studentName = localStorage.getItem('studentName') || "طالب";
         const studentCode = localStorage.getItem('studentCode') || "---";
         let currentCourse = null;
 
-        // تحديث بيانات صفحة البروفايل
         document.getElementById('profileName').innerText = studentName;
         document.getElementById('profileCode').innerText = "كود: " + studentCode;
 
@@ -306,30 +303,23 @@
             document.getElementById('mainHeader').style.display = 'flex';
         }
 
-        // === 7. عرض الصور المحمية بالعلامة المائية (معدلة لتكون أوضح) ===
+        // === 7. عرض الصور المحمية (العلامة المائية الهادئة) ===
         function showProtectedImage(type) {
             const imageName = currentCourse.files[type];
             const modal = document.getElementById('imageModal');
             const img = document.getElementById('modalImage');
             const watermarkContainer = document.getElementById('watermarkOverlay');
 
-            // 1. تعيين الصورة
             img.src = imageName;
-            
-            // 2. معالجة خطأ عدم وجود الصورة
             img.onerror = function() {
                 alert('عذراً، لم يتم رفع صورة لهذه المادة بعد (' + imageName + ')');
                 closeImageModal();
             };
 
-            // 3. توليد العلامة المائية
-            watermarkContainer.innerHTML = ''; // مسح القديم
-            
-            // النص اللي هيظهر: الاسم + الكود
+            // توليد العلامة المائية
+            watermarkContainer.innerHTML = ''; 
             const watermarkText = `${studentName} - ${studentCode}`;
-            
-            // كبرنا الخط وخلينا التباين عالي في CSS
-            const repeatCount = 100; // عدد مرات التكرار
+            const repeatCount = 100; 
 
             for (let i = 0; i < repeatCount; i++) {
                 const span = document.createElement('div');
@@ -350,7 +340,6 @@
             window.location.href = 'login.html';
         }
 
-        // تشغيل الكود
         renderCourses(coursesData);
     </script>
 </body>
