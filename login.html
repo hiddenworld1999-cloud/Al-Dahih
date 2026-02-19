@@ -33,6 +33,16 @@
         .help-text a { color: var(--primary-blue); font-weight: 700; text-decoration: none; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
     </style>
+
+    <script>
+        // منع كليك يمين واختصارات النسخ في صفحة الدخول كمان
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'u' || e.key === 'i'))) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="login-container">
