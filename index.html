@@ -76,8 +76,17 @@
         .images-scroll-container { flex: 1; overflow-y: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; }
         .protected-img { max-width: 100%; margin-bottom: 15px; border-radius: 8px; pointer-events: none; -webkit-user-drag: none; }
 
+        /* العلامة المائية الهادية والمدمجة */
         .watermark-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; overflow: hidden; z-index: 600; }
-        .watermark-text { color: rgba(255, 255, 255, 0.4); font-size: 24px; font-weight: 800; transform: rotate(-45deg); padding: 50px; white-space: nowrap; text-shadow: 0 0 5px #000; }
+        .watermark-text { 
+            color: rgba(0, 0, 0, 0.12); /* لون رمادي شفاف جداً مدمج */
+            font-size: 22px; 
+            font-weight: 700; 
+            transform: rotate(-45deg); 
+            padding: 60px; /* مسافات واسعة */
+            white-space: nowrap; 
+            text-shadow: none; /* شيلنا الظل الأسود تماماً */
+        }
     </style>
 </head>
 <body>
@@ -161,8 +170,8 @@
                 instructor: "د. تامر البرمجيات", 
                 img: "https://placehold.co/200x300/0A2647/FFC800?text=Code", 
                 files: { 
-                    answers: { prefix: "coding_ans_", count: 10 },    // هيدور على الصور من coding_ans_1.jpg لحد 10
-                    questions: { prefix: "coding_q_", count: 10 }     // هيدور على الصور من coding_q_1.jpg لحد 10
+                    answers: { prefix: "coding_ans_", count: 10 },    
+                    questions: { prefix: "coding_q_", count: 10 }     
                 }
             },
             { 
