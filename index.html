@@ -81,7 +81,7 @@
         .completed-badge { display: none; background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; width: fit-content; }
         .course-card-vertical.is-completed .completed-badge { display: flex; align-items: center; gap: 4px; }
 
-        /* === تنسيقات صفحة حسابي (الاحترافية) === */
+        /* === تنسيقات صفحة حسابي === */
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 20px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 20px; box-shadow: var(--card-shadow); }
         .profile-header-card::after { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(255, 200, 0, 0.1); border-radius: 50%; }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 3px solid var(--accent-orange); }
@@ -254,13 +254,13 @@
                     <span class="material-icons" style="color: var(--text-grey);">chevron_left</span>
                 </div>
 
-                <div class="settings-item" onclick="window.open('https://t.me/Hidden2003A', '_blank')">
+                <a href="https://t.me/Hidden2003A" class="settings-item" style="text-decoration: none; color: inherit;">
                     <div class="settings-item-right">
                         <div class="settings-icon" style="background: #2196f3;"><span class="material-icons">support_agent</span></div>
                         <span class="settings-text">تواصل مع الدعم الفني</span>
                     </div>
                     <span class="material-icons" style="color: var(--text-grey);">chevron_left</span>
-                </div>
+                </a>
             </div>
 
             <button class="logout-btn-new" onclick="logout()">
