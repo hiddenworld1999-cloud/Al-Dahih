@@ -17,7 +17,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق الدحيح - الرئيسي</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
@@ -42,7 +42,6 @@
         .container { padding: 0 20px; }
         .section-title { font-size: 1.1rem; margin: 25px 0 15px 0; color: var(--primary-blue); }
         
-        /* بطاقة أحدث الإضافات */
         .recently-added-card { background: white; border-radius: 18px; padding: 15px; display: flex; align-items: center; box-shadow: var(--card-shadow); margin-bottom: 20px; cursor: pointer; }
         .ra-icon-container { width: 60px; height: 60px; background: rgba(255, 200, 0, 0.15); border-radius: 14px; display: flex; justify-content: center; align-items: center; margin-left: 15px; color: var(--accent-orange); }
         .ra-content { flex: 1; }
@@ -69,23 +68,28 @@
         .qb-btn-answers { background: var(--accent-orange); color: var(--primary-blue); }
         .qb-btn-no-answers { background: white; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
 
-        /* === تنسيقات المذكرة === */
+        /* === تنسيقات المذكرة الجديدة === */
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 500; display: none; flex-direction: column; }
         .modal-header { padding: 15px; background: #000; display: flex; justify-content: space-between; align-items: center; z-index: 601; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; }
-        .images-scroll-container { flex: 1; overflow-y: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .protected-img { max-width: 100%; margin-bottom: 15px; border-radius: 8px; pointer-events: none; -webkit-user-drag: none; }
+        
+        .images-scroll-container { flex: 1; overflow-y: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; background: #222; /* خلفية غامقة عشان الصور تبان */ }
+        .protected-img { max-width: 100%; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; }
 
-        /* العلامة المائية الهادية والمدمجة */
+        /* === العلامة المائية المدمجة الاحترافية === */
         .watermark-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; overflow: hidden; z-index: 600; }
+        
         .watermark-text { 
-            color: rgba(0, 0, 0, 0.12); /* لون رمادي شفاف جداً مدمج */
-            font-size: 22px; 
-            font-weight: 700; 
+            /* اللون الرمادي المتوسط مع Overlay هو سر الدمج */
+            color: rgba(128, 128, 128, 0.5); 
+            font-size: 20px; 
+            font-weight: 900; /* خط سميك جداً عشان الدمج يبان */
             transform: rotate(-45deg); 
-            padding: 60px; /* مسافات واسعة */
+            padding: 80px; /* وسعنا المسافات */
             white-space: nowrap; 
-            text-shadow: none; /* شيلنا الظل الأسود تماماً */
+            
+            /* هذه الخاصية السحرية التي تدمج النص مع الصورة */
+            mix-blend-mode: overlay; 
         }
     </style>
 </head>
@@ -161,7 +165,7 @@
 
     <script>
         // ==========================================
-        // === بيانات المواد الـ 5 كاملة بالنظام الذكي ===
+        // === بيانات المواد (النظام الذكي) ===
         // ==========================================
         const coursesData = [
             { 
