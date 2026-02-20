@@ -142,21 +142,30 @@
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: var(--primary-blue); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
         .pomo-controls button.pomo-reset { background: #d32f2f; }
+        
+        /* تأثيرات زر الموسيقى الجديد */
+        .music-active { color: var(--accent-orange) !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
     <header class="app-header" id="mainHeader">
         <div class="logo-text"><span class="material-icons logo-icon">local_library</span>الدحيح</div>
         <div class="header-icons">
+            <span class="material-icons" id="musicToggle" style="color:var(--title-color); font-size: 28px; cursor:pointer;" onclick="toggleMusic()">music_off</span>
             <span class="material-icons" id="darkModeToggle" style="color:var(--title-color); font-size: 28px; cursor:pointer;" onclick="toggleDarkMode()">dark_mode</span>
             <span class="material-icons" style="color:var(--title-color); font-size: 28px; cursor:pointer;" onclick="switchTab('profile', document.querySelectorAll('.nav-item')[4])">account_circle</span>
         </div>
     </header>
 
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="news-ticker">
         <span class="material-icons">campaign</span>
         <marquee direction="right" scrollamount="5">
-            🔥 تم تحديث صفحة حسابك الشخصي لتكون أكثر احترافية.. ادخل شوف الإنجازات دلوقتي! 🚀
+            🎧 جديد: وضع التركيز! اضغط على أيقونة الموسيقى في الأعلى واستمتع بالمذاكرة. 🚀
         </marquee>
     </div>
 
@@ -310,6 +319,29 @@
     </nav>
 
     <script>
+        // === تشغيل الموسيقى ===
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggle');
+        
+        // ظبط الصوت على النص عشان مايكونش عالي
+        bgMusic.volume = 0.5;
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicBtn.innerText = 'music_note';
+                    musicBtn.classList.add('music-active');
+                }).catch(error => {
+                    alert("المتصفح منع التشغيل التلقائي. اضغط موافق لتشغيل الموسيقى.");
+                    bgMusic.play();
+                });
+            } else {
+                bgMusic.pause();
+                musicBtn.innerText = 'music_off';
+                musicBtn.classList.remove('music-active');
+            }
+        }
+
         // === تجهيز بيانات الطالب والتحفيز ===
         const studentFullName = localStorage.getItem('studentName') || "دحيح";
         const studentFirstName = studentFullName.split(' ')[0]; 
