@@ -35,6 +35,8 @@
             --border-color: #e9ecef;
             --calc-bg: #f8f9fa;
             --calc-btn: #ffffff;
+            --filter-bg: #e9ecef;
+            --filter-text: #495057;
         }
 
         body.dark-mode {
@@ -48,12 +50,13 @@
             --border-color: #333;
             --calc-bg: #2d2d2d;
             --calc-btn: #3e3e3e;
+            --filter-bg: #333;
+            --filter-text: #E8EAED;
         }
 
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s; }
         
-        /* تغيير الخط بناءً على لغة التطبيق */
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 80px; overflow-x: hidden; user-select: none; -webkit-user-select: none; }
         html[lang="en"] body { font-family: 'Poppins', sans-serif; }
 
@@ -61,17 +64,15 @@
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* الهيدر وشريط الأخبار */
+        /* الهيدر */
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-card); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--title-color); display: flex; align-items: center; }
-        /* تصليح اتجاه الأيقونات حسب اللغة */
         html[dir="rtl"] .logo-icon { margin-left: 8px; }
         html[dir="ltr"] .logo-icon { margin-right: 8px; }
         html[dir="rtl"] .search-icon-inside { right: 15px; }
         html[dir="ltr"] .search-icon-inside { left: 15px; }
         html[dir="rtl"] .settings-item-right { gap: 15px; }
         html[dir="ltr"] .settings-item-right { gap: 15px; }
-        
         .logo-icon { color: var(--accent-orange); font-size: 28px; }
         .header-icons { display: flex; align-items: center; gap: 12px; }
         
@@ -80,11 +81,18 @@
         .news-ticker marquee { color: #0A2647; font-weight: 700; font-size: 0.95rem; padding-top: 3px; }
 
         /* الشاشة الرئيسية */
-        .hero-section { padding: 20px 20px 30px 20px; background: var(--bg-card); border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .hero-section { padding: 20px 20px 10px 20px; background: var(--bg-card); border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .welcome-text { margin-bottom: 15px; }
         .search-input { width: 100%; padding: 14px 45px; border: none; border-radius: 15px; background: var(--bg-main); color: var(--text-main); font-size: 0.95rem; }
         .search-input::placeholder { color: var(--text-grey); }
         .search-container { position: relative; }
         .search-icon-inside { position: absolute; top: 50%; transform: translateY(-50%); color: var(--title-color); opacity: 0.6; }
+        
+        /* === ستايل الفلاتر (التصنيفات) الجديد === */
+        .categories-wrapper { margin-top: 20px; overflow-x: auto; white-space: nowrap; padding-bottom: 10px; -ms-overflow-style: none; scrollbar-width: none; }
+        .categories-wrapper::-webkit-scrollbar { display: none; }
+        .cat-btn { display: inline-block; padding: 8px 20px; background: var(--filter-bg); color: var(--filter-text); border-radius: 20px; margin-inline-end: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; }
+        .cat-btn.active { background: var(--primary-blue); color: white; box-shadow: 0 4px 10px rgba(10, 38, 71, 0.3); }
         
         .container { padding: 0 20px; }
         .section-title { font-size: 1.1rem; margin: 25px 0 15px 0; color: var(--title-color); }
@@ -96,7 +104,7 @@
         .completed-badge { display: none; background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; width: fit-content; }
         .course-card-vertical.is-completed .completed-badge { display: flex; align-items: center; gap: 4px; }
 
-        /* === تنسيقات صفحة حسابي === */
+        /* صفحة الحساب */
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 20px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 20px; box-shadow: var(--card-shadow); }
         .profile-header-card::after { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(255, 200, 0, 0.1); border-radius: 50%; }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 3px solid var(--accent-orange); }
@@ -122,7 +130,7 @@
 
         .player-header { padding: 15px; display: flex; align-items: center; background: var(--bg-card); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .back-btn { font-size: 24px; color: var(--title-color); cursor: pointer; padding: 5px; margin-inline-end: 15px; }
-        html[dir="ltr"] .back-btn { transform: rotate(180deg); } /* عكس السهم في الإنجليزي */
+        html[dir="ltr"] .back-btn { transform: rotate(180deg); }
         .course-details-header { padding: 25px 20px; background: var(--bg-card); margin-bottom: 25px; }
         .qb-button { padding: 20px; border-radius: 16px; border: none; font-family: inherit; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; width: 100%; margin-bottom: 15px; box-shadow: var(--card-shadow); transition: all 0.3s; text-align: start; }
         .qb-btn-answers { background: var(--accent-orange); color: #0A2647; }
@@ -134,7 +142,6 @@
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.05rem; line-height: 1.8; outline: none; }
         .notebook-textarea::placeholder { color: var(--text-grey); opacity: 0.6; }
 
-        /* المذكرة والزووم والعداد والآلة الحاسبة */
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 500; display: none; flex-direction: column; }
         .modal-header { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 601; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; }
@@ -158,7 +165,6 @@
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: var(--primary-blue); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
         .pomo-controls button.pomo-reset { background: #d32f2f; }
-        
         .music-active { color: var(--accent-orange) !important; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
@@ -221,8 +227,8 @@
     <div class="news-ticker">
         <span class="material-icons">campaign</span>
         <marquee direction="right" scrollamount="5">
-            <span data-ar="🎧 جديد: تم إضافة دعم اللغتين العربية والإنجليزية لراحة جميع الطلاب! 🚀" data-en="🎧 New: English and Arabic support added for all students! 🚀">
-                🎧 جديد: تم إضافة دعم اللغتين العربية والإنجليزية لراحة جميع الطلاب! 🚀
+            <span data-ar="🎧 جديد: تم إضافة تصنيفات المواد لتسهيل الوصول! 🚀" data-en="🎧 New: Course categories added for easy access! 🚀">
+                🎧 جديد: تم إضافة تصنيفات المواد لتسهيل الوصول! 🚀
             </span>
         </marquee>
     </div>
@@ -250,9 +256,17 @@
                 <h2 style="color: var(--title-color);"><span data-ar="مرحباً، يا " data-en="Welcome, ">مرحباً، يا </span><span id="welcomeName">دحيح</span> 👋</h2>
                 <p id="motivationQuote" style="color: var(--text-grey); font-weight: 500; font-size: 0.95rem; margin-top: 8px; line-height: 1.5;"></p>
             </div>
-            <div class="search-container" style="margin-top: 15px;">
+            <div class="search-container">
                 <span class="material-icons search-icon-inside">search</span>
                 <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن مادة..." data-ph-ar="ابحث عن مادة..." data-ph-en="Search for a course...">
+            </div>
+
+            <div class="categories-wrapper">
+                <span class="cat-btn active" onclick="filterCourses('all', this)" data-ar="الكل" data-en="All">الكل</span>
+                <span class="cat-btn" onclick="filterCourses('cs', this)" data-ar="حاسب آلي" data-en="CS">حاسب آلي</span>
+                <span class="cat-btn" onclick="filterCourses('management', this)" data-ar="إدارة" data-en="Management">إدارة</span>
+                <span class="cat-btn" onclick="filterCourses('economics', this)" data-ar="اقتصاد" data-en="Economics">اقتصاد</span>
+                <span class="cat-btn" onclick="filterCourses('stats', this)" data-ar="إحصاء" data-en="Statistics">إحصاء</span>
             </div>
         </section>
         
@@ -353,7 +367,6 @@
         </div>
         <div class="container">
             <h3 class="section-title" data-ar="اختر طريقة المذاكرة" data-en="Choose Study Method">اختر طريقة المذاكرة</h3>
-            
             <button class="qb-button qb-btn-answers" onclick="showProtectedImage('answers')">
                 <div>
                     <div style="margin-bottom: 5px;" data-ar="أسئلة بالإجابات" data-en="With Answers">أسئلة بالإجابات</div>
@@ -361,7 +374,6 @@
                 </div>
                 <span class="material-icons">fact_check</span>
             </button>
-            
             <button class="qb-button qb-btn-no-answers" onclick="showProtectedImage('questions')">
                 <div>
                     <div style="margin-bottom: 5px;" data-ar="أسئلة بدون إجابات" data-en="Without Answers">أسئلة بدون إجابات</div>
@@ -369,7 +381,6 @@
                 </div>
                 <span class="material-icons">quiz</span>
             </button>
-            
             <button id="completeCourseBtn" class="qb-button" onclick="toggleCourseCompletion()" style="margin-top: 25px;">
                 <div><div id="completeBtnText">تحديد كمادة مكتملة</div></div>
                 <span class="material-icons" id="completeBtnIcon">radio_button_unchecked</span>
@@ -409,21 +420,14 @@
         }
 
         function applyLanguage() {
-            // تغيير اتجاه الموقع ولغته
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
             document.documentElement.lang = currentLang;
-
-            // تغيير كل النصوص اللي ليها data-ar و data-en
             document.querySelectorAll('[data-ar]').forEach(el => {
                 el.innerText = el.getAttribute(`data-${currentLang}`);
             });
-
-            // تغيير نصوص الـ Placeholder للمربعات
             document.querySelectorAll('[data-ph-ar]').forEach(el => {
                 el.placeholder = el.getAttribute(`data-ph-${currentLang}`);
             });
-
-            // إعادة رسم المكونات اللي بتعتمد على الـ JS
             renderCourses(coursesData);
             setRandomQuote();
             if(currentCourse) updateCompletionUI();
@@ -434,7 +438,6 @@
             const modal = document.getElementById('calculatorModal');
             modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
         }
-
         function appendCalc(val) { document.getElementById('calcDisplay').value += val; }
         function clearCalc() { document.getElementById('calcDisplay').value = ''; }
         function calculateResult() {
@@ -521,16 +524,35 @@
             }, 800); 
         });
 
-        // === بيانات المواد (تمت إضافة الإنجليزي) ===
+        // === بيانات المواد (مع التصنيفات) ===
+        // التصنيفات: cs, management, economics, stats
         const coursesData = [
-            { id: 1, titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_coding.jpg", files: { answers: { prefix: "coding_ans_", count: 10 }, questions: { prefix: "coding_q_", count: 10 } } },
-            { id: 2, titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_network.jpg", files: { answers: { prefix: "net_ans_", count: 15 }, questions: { prefix: "net_q_", count: 15 } } },
-            { id: 3, titleAr: "الإدارة الإستراتيجية", titleEn: "Strategic Management", instructorAr: "د. ولاء سامی", instructorEn: "Dr. Walaa", img: "cover_management.jpg", files: { answers: { prefix: "strat_ans_", count: 10 }, questions: { prefix: "strat_q_", count: 10 } } },
-            { id: 4, titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", instructorAr: "د.هبة الله سمير", instructorEn: "Dr. Heba", img: "cover_economics.jpg", files: { answers: { prefix: "macro_ans_", count: 20 }, questions: { prefix: "macro_q_", count: 20 } } },
-            { id: 5, titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", instructorAr: "د. میرفت خليفه", instructorEn: "Dr. Mervat", img: "cover_statistics.jpg", files: { answers: { prefix: "stat_ans_", count: 12 }, questions: { prefix: "stat_q_", count: 12 } } }
+            { id: 1, category: 'cs', titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_coding.jpg", files: { answers: { prefix: "coding_ans_", count: 10 }, questions: { prefix: "coding_q_", count: 10 } } },
+            { id: 2, category: 'cs', titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_network.jpg", files: { answers: { prefix: "net_ans_", count: 15 }, questions: { prefix: "net_q_", count: 15 } } },
+            { id: 3, category: 'management', titleAr: "الإدارة الإستراتيجية", titleEn: "Strategic Management", instructorAr: "د. ولاء سامی", instructorEn: "Dr. Walaa", img: "cover_management.jpg", files: { answers: { prefix: "strat_ans_", count: 10 }, questions: { prefix: "strat_q_", count: 10 } } },
+            { id: 4, category: 'economics', titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", instructorAr: "د.هبة الله سمير", instructorEn: "Dr. Heba", img: "cover_economics.jpg", files: { answers: { prefix: "macro_ans_", count: 20 }, questions: { prefix: "macro_q_", count: 20 } } },
+            { id: 5, category: 'stats', titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", instructorAr: "د. میرفت خليفه", instructorEn: "Dr. Mervat", img: "cover_statistics.jpg", files: { answers: { prefix: "stat_ans_", count: 12 }, questions: { prefix: "stat_q_", count: 12 } } }
         ];
 
         let currentCourse = null;
+        let activeFilter = 'all';
+
+        // دالة الفلتر الجديدة
+        function filterCourses(category, btn) {
+            activeFilter = category;
+            
+            // تحديث شكل الزراير
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            // تصفية المواد
+            if (category === 'all') {
+                renderCourses(coursesData);
+            } else {
+                const filtered = coursesData.filter(c => c.category === category);
+                renderCourses(filtered);
+            }
+        }
 
         function updateCompletedCountBadge() {
             let count = 0;
@@ -544,6 +566,10 @@
         const container = document.getElementById('coursesListContainer');
         function renderCourses(list) {
             container.innerHTML = '';
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-grey);">لا توجد مواد في هذا التصنيف</div>`;
+                return;
+            }
             list.forEach(course => {
                 const isCompleted = localStorage.getItem('completed_' + course.id) === 'true';
                 const completedClass = isCompleted ? 'is-completed' : '';
@@ -567,9 +593,13 @@
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            renderCourses(coursesData.filter(c => 
+            // البحث بيتم في المواد المعروضة حالياً (المفلترة)
+            const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter);
+            
+            const filtered = baseData.filter(c => 
                 c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term)
-            ));
+            );
+            renderCourses(filtered);
         });
 
         function switchTab(tabName, element) {
@@ -604,7 +634,11 @@
             const key = 'completed_' + currentCourse.id;
             localStorage.setItem(key, localStorage.getItem(key) === 'true' ? 'false' : 'true');
             updateCompletionUI();
-            renderCourses(coursesData); 
+            
+            // تحديث القائمة الخلفية عشان لما يرجع يلاقي العلامة ظهرت
+            if(activeFilter === 'all') renderCourses(coursesData);
+            else filterCourses(activeFilter, null);
+            
             updateCompletedCountBadge(); 
         }
 
