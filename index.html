@@ -33,6 +33,8 @@
             --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
             --nav-inactive: #adb5bd;
             --border-color: #e9ecef;
+            --calc-bg: #f8f9fa;
+            --calc-btn: #ffffff;
         }
 
         body.dark-mode {
@@ -44,6 +46,8 @@
             --card-shadow: 0 4px 12px rgba(0,0,0,0.5);
             --nav-inactive: #5f6368;
             --border-color: #333;
+            --calc-bg: #2d2d2d;
+            --calc-btn: #3e3e3e;
         }
 
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
@@ -91,14 +95,12 @@
         .stat-item:last-child { border-left: none; }
         .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--title-color); }
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
-        
         .settings-list { background: var(--bg-card); border-radius: 18px; padding: 5px 0; box-shadow: var(--card-shadow); }
         .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .settings-item:last-child { border-bottom: none; }
         .settings-item-right { display: flex; align-items: center; gap: 15px; }
         .settings-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: white; }
         .settings-text { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
-        
         .logout-btn-new { width: 100%; padding: 16px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: 2px solid rgba(211, 47, 47, 0.2); border-radius: 15px; font-weight: 700; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: background 0.2s; }
         .logout-btn-new:active { background: rgba(211, 47, 47, 0.2); }
         body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1E1E1E, #2d2d2d); border: 1px solid #333; }
@@ -146,17 +148,56 @@
         /* تأثيرات زر الموسيقى الجديد */
         .music-active { color: var(--accent-orange) !important; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        /* === ستايل الآلة الحاسبة === */
+        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 500; display: none; border: 1px solid var(--border-color); }
+        .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .calc-title { font-weight: bold; color: var(--title-color); display: flex; align-items: center; gap: 5px; }
+        .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--title-color); font-family: monospace; margin-bottom: 15px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text-main); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s; }
+        .calc-btn:active { transform: scale(0.95); }
+        .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
+        .calc-btn.eq { background: var(--accent-orange); color: var(--primary-blue); grid-column: span 2; }
+        .calc-btn.clr { background: #ffebee; color: #d32f2f; }
     </style>
 </head>
 <body>
     <header class="app-header" id="mainHeader">
         <div class="logo-text"><span class="material-icons logo-icon">local_library</span>الدحيح</div>
         <div class="header-icons">
-            <span class="material-icons" id="musicToggle" style="color:var(--title-color); font-size: 28px; cursor:pointer;" onclick="toggleMusic()">music_off</span>
-            <span class="material-icons" id="darkModeToggle" style="color:var(--title-color); font-size: 28px; cursor:pointer;" onclick="toggleDarkMode()">dark_mode</span>
-            <span class="material-icons" style="color:var(--title-color); font-size: 28px; cursor:pointer;" onclick="switchTab('profile', document.querySelectorAll('.nav-item')[4])">account_circle</span>
+            <span class="material-icons" onclick="toggleCalculator()" style="color:var(--title-color); font-size: 26px; cursor:pointer;">calculate</span>
+            <span class="material-icons" id="musicToggle" style="color:var(--title-color); font-size: 26px; cursor:pointer;" onclick="toggleMusic()">music_off</span>
+            <span class="material-icons" id="darkModeToggle" style="color:var(--title-color); font-size: 26px; cursor:pointer;" onclick="toggleDarkMode()">dark_mode</span>
+            <span class="material-icons" style="color:var(--title-color); font-size: 26px; cursor:pointer;" onclick="switchTab('profile', document.querySelectorAll('.nav-item')[4])">account_circle</span>
         </div>
     </header>
+
+    <div id="calculatorModal" class="calculator-modal">
+        <div class="calc-header">
+            <span class="calc-title"><span class="material-icons" style="font-size:20px;">calculate</span> آلة حاسبة</span>
+            <span class="material-icons" onclick="toggleCalculator()" style="cursor:pointer; color:var(--text-grey);">close</span>
+        </div>
+        <input type="text" id="calcDisplay" class="calc-display" readonly>
+        <div class="calc-grid">
+            <button class="calc-btn clr" onclick="clearCalc()">C</button>
+            <button class="calc-btn op" onclick="appendCalc('/')">/</button>
+            <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+            <button class="calc-btn" onclick="appendCalc('7')">7</button>
+            <button class="calc-btn" onclick="appendCalc('8')">8</button>
+            <button class="calc-btn" onclick="appendCalc('9')">9</button>
+            <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+            <button class="calc-btn" onclick="appendCalc('4')">4</button>
+            <button class="calc-btn" onclick="appendCalc('5')">5</button>
+            <button class="calc-btn" onclick="appendCalc('6')">6</button>
+            <button class="calc-btn eq" onclick="calculateResult()">=</button>
+            <button class="calc-btn" onclick="appendCalc('1')">1</button>
+            <button class="calc-btn" onclick="appendCalc('2')">2</button>
+            <button class="calc-btn" onclick="appendCalc('3')">3</button>
+            <button class="calc-btn" onclick="appendCalc('0')">0</button>
+        </div>
+    </div>
 
     <audio id="bgMusic" loop>
         <source src="music.mp3" type="audio/mpeg">
@@ -165,7 +206,7 @@
     <div class="news-ticker">
         <span class="material-icons">campaign</span>
         <marquee direction="right" scrollamount="5">
-            🎧 جديد: وضع التركيز! اضغط على أيقونة الموسيقى في الأعلى واستمتع بالمذاكرة. 🚀
+            🎧 جديد: تم إضافة آلة حاسبة سريعة لمساعدتك في العمليات الحسابية.. جربها من الشريط العلوي! 🧮
         </marquee>
     </div>
 
@@ -319,11 +360,35 @@
     </nav>
 
     <script>
+        // === وظائف الآلة الحاسبة ===
+        function toggleCalculator() {
+            const modal = document.getElementById('calculatorModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function appendCalc(val) {
+            document.getElementById('calcDisplay').value += val;
+        }
+
+        function clearCalc() {
+            document.getElementById('calcDisplay').value = '';
+        }
+
+        function calculateResult() {
+            try {
+                // استخدام دالة آمنة لحساب الناتج
+                const result = eval(document.getElementById('calcDisplay').value);
+                document.getElementById('calcDisplay').value = result;
+            } catch (e) {
+                document.getElementById('calcDisplay').value = 'Error';
+                setTimeout(clearCalc, 1000);
+            }
+        }
+
         // === تشغيل الموسيقى ===
         const bgMusic = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicToggle');
         
-        // ظبط الصوت على النص عشان مايكونش عالي
         bgMusic.volume = 0.5;
 
         function toggleMusic() {
