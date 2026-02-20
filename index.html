@@ -68,28 +68,50 @@
         .qb-btn-answers { background: var(--accent-orange); color: var(--primary-blue); }
         .qb-btn-no-answers { background: white; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
 
-        /* === تنسيقات المذكرة الجديدة === */
+        /* === تنسيقات المذكرة === */
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 500; display: none; flex-direction: column; }
         .modal-header { padding: 15px; background: #000; display: flex; justify-content: space-between; align-items: center; z-index: 601; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; }
         
-        .images-scroll-container { flex: 1; overflow-y: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; background: #222; /* خلفية غامقة عشان الصور تبان */ }
-        .protected-img { max-width: 100%; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; }
+        /* هنا التغيير المهم: جعلنا الحاوية relative عشان العلامة المائية تلزق فيها */
+        .images-scroll-container { 
+            flex: 1; 
+            overflow-y: auto; 
+            width: 100%; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            position: relative; /* ده بيخلي العلامة المائية تتحرك بالنسبة للصفحة دي */
+            background: #f0f0f0; 
+        }
+        
+        .protected-img { max-width: 100%; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; }
 
-        /* === العلامة المائية المدمجة الاحترافية === */
-        .watermark-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; overflow: hidden; z-index: 600; }
+        /* === العلامة المائية المدمجة المتحركة مع السكرول === */
+        .watermark-overlay { 
+            position: absolute; /* بدل fixed عشان تتحرك مع الصور */
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            /* height: مش هنحدد طول عشان تطول مع الصور براحتها */
+            pointer-events: none; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-content: flex-start; /* تبدأ من فوق */
+            overflow: hidden; 
+            z-index: 600; 
+        }
         
         .watermark-text { 
-            /* اللون الرمادي المتوسط مع Overlay هو سر الدمج */
-            color: rgba(128, 128, 128, 0.5); 
-            font-size: 20px; 
-            font-weight: 900; /* خط سميك جداً عشان الدمج يبان */
+            color: rgba(0, 0, 0, 0.10); /* خفيف جداً */
+            font-size: 24px; 
+            font-weight: 900; 
             transform: rotate(-45deg); 
-            padding: 80px; /* وسعنا المسافات */
+            padding: 80px; 
             white-space: nowrap; 
-            
-            /* هذه الخاصية السحرية التي تدمج النص مع الصورة */
-            mix-blend-mode: overlay; 
+            text-shadow: none; 
         }
     </style>
 </head>
@@ -151,9 +173,8 @@
         </div>
         
         <div class="images-scroll-container" id="imagesWrapper">
-            </div>
-
-        <div id="watermarkOverlay" class="watermark-overlay"></div>
+            <div id="watermarkOverlay" class="watermark-overlay"></div>
+        </div>
     </div>
 
     <nav class="bottom-nav" id="bottomNav">
@@ -165,7 +186,7 @@
 
     <script>
         // ==========================================
-        // === بيانات المواد (النظام الذكي) ===
+        // === بيانات المواد ===
         // ==========================================
         const coursesData = [
             { 
@@ -276,7 +297,10 @@
             const imagesWrapper = document.getElementById('imagesWrapper');
             const watermarkContainer = document.getElementById('watermarkOverlay');
 
-            imagesWrapper.innerHTML = ''; 
+            // تنظيف الحاوية ولكن ترك العلامة المائية
+            // نقوم بإزالة الصور فقط
+            const images = imagesWrapper.querySelectorAll('img');
+            images.forEach(img => img.remove());
             
             for (let i = 1; i <= fileData.count; i++) {
                 const imgName = fileData.prefix + i + '.jpg'; 
@@ -292,12 +316,14 @@
                     imgElement.style.color = "white";
                 };
                 
-                imagesWrapper.appendChild(imgElement);
+                // إضافة الصورة قبل العلامة المائية عشان الترتيب
+                imagesWrapper.insertBefore(imgElement, watermarkContainer);
             }
 
             watermarkContainer.innerHTML = ''; 
             const watermarkText = `${studentName} - ${studentCode}`;
-            for (let i = 0; i < 100; i++) {
+            // زودنا العدد شوية عشان يغطي لو الصور طويلة أوي
+            for (let i = 0; i < 200; i++) {
                 const span = document.createElement('div');
                 span.className = 'watermark-text';
                 span.innerText = watermarkText;
