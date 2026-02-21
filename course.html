@@ -25,10 +25,12 @@
         :root { 
             --primary: #0A2647; --accent: #FFC800; --bg: #F8F9FA; --card: #fff; --text: #212529; --grey: #6c757d;
             --calc-bg: #f8f9fa; --calc-btn: #ffffff;
+            --quiz-option-bg: #f1f3f5;
         }
         body.dark-mode { 
             --bg: #121212; --card: #1E1E1E; --text: #E8EAED; --grey: #9AA0A6; --primary: #FFC800;
             --calc-bg: #2d2d2d; --calc-btn: #3e3e3e;
+            --quiz-option-bg: #2d2d2d;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s; }
@@ -90,6 +92,7 @@
         /* الكويز */
         .quiz-opt { padding: 15px; background: var(--quiz-option-bg); border: 2px solid transparent; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
         .quiz-opt:hover { background: rgba(10, 38, 71, 0.05); }
+        .quiz-opt.selected { border-color: var(--primary); background: rgba(10, 38, 71, 0.1); }
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
@@ -263,7 +266,7 @@
     </div>
 
     <script>
-        // === داتا المواد مدمجة لسهولة الاستخدام ===
+        // 1. الداتا الشاملة لكل المواد (بديل ملف data.js)
         const allCourses = {
             1: { 
                 titleAr: "تصميم برامج الحاسب", titleEn: "Software Design",
@@ -271,13 +274,20 @@
                 midtermFiles: { prefix: "coding_mid_", count: 5 }, 
                 finalFiles: { prefix: "coding_final_", count: 8 }, 
                 summaries: {
-                    1: `<h3>محاضرة 1: أساسيات البرمجة</h3>
+                    1: `<h3>ملخص المحاضرة الأولى: أساسيات البرمجة</h3>
                         <ul>
-                            <li>دورة حياة البرمجيات: تحليل، تصميم، برمجة، اختبار.</li>
-                            <li>الخوارزمية: خطوات مرتبة للحل.</li>
-                            <li>خرائط التدفق: بيضاوي (بداية)، مستطيل (معالجة)، معين (قرار).</li>
+                            <li><strong>دورة حياة البرمجيات:</strong> تحليل، تصميم، برمجة، اختبار، نشر، صيانة.</li>
+                            <li><strong>الخوارزمية:</strong> خطوات مرتبة منطقياً لحل مشكلة.</li>
+                            <li><strong>خرائط التدفق (Flowcharts):</strong>
+                                <ul>
+                                    <li>البيضاوي: بداية / نهاية.</li>
+                                    <li>متوازي الأضلاع: إدخال / إخراج.</li>
+                                    <li>المستطيل: عملية معالجة.</li>
+                                    <li>المعين: اتخاذ قرار (شرط).</li>
+                                </ul>
+                            </li>
                         </ul>`,
-                    2: `<h3>محاضرة 2</h3><p>قريباً...</p>`
+                    2: `<h3>المحاضرة الثانية</h3><p>قريباً...</p>`
                 },
                 quiz: [
                     { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
@@ -290,9 +300,12 @@
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    1: `<div style='text-align:center; padding:20px;'>
-                          <span class="material-icons" style="font-size:48px; color:var(--accent);">pending</span>
-                          <h3 style="margin-top:10px;">في انتظار ملخص الباوربوينت ⏳</h3>
+                    // كود عرض ملف الـ PDF مباشرة للمحاضرة الأولى
+                    1: `<div style="width: 100%; height: 600px;">
+                          <h3 style="color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--accent); display:inline-block;">عرض المحاضرة الأولى (PDF)</h3>
+                          <iframe src="net_lec1.pdf" width="100%" height="100%" style="border:none; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                              <p>عذراً، المتصفح لا يدعم عرض PDF. تأكد من وجود الملف.</p>
+                          </iframe>
                         </div>`
                 },
                 quiz: []
@@ -302,7 +315,7 @@
             5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, quiz: [] }
         };
 
-        // إعدادات أساسية واللغة
+        // 2. إعدادات المادة واللغة
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
         const params = new URLSearchParams(window.location.search);
         const courseId = params.get('id'); 
@@ -329,7 +342,7 @@
         if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } 
         else { applyLanguage(); }
 
-        // الوظائف العامة (دارك مود، موسيقى، آلة حاسبة)
+        // 3. الوظائف العامة (دارك مود، موسيقى، آلة حاسبة، بومودورو)
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
         if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
 
@@ -341,7 +354,6 @@
         function clearCalc() { document.getElementById('calcDisplay').value = ''; }
         function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
 
-        // بومودورو
         let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
         function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
         function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
@@ -349,7 +361,7 @@
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
         updatePomoDisplay();
 
-        // وظائف المادة (ملخصات، كويز، صور)
+        // 4. وظائف المادة (ملخصات، صور، كويز)
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function openModal(type) {
@@ -371,7 +383,6 @@
             document.getElementById('contentModal').style.display = 'flex';
         }
 
-        // عرض الصور والميدترم مع العلامة المائية
         let currentZoom = 100;
         function zoomImages(change) { currentZoom += change; if(currentZoom<50) currentZoom=50; if(currentZoom>300) currentZoom=300; document.getElementById('imagesWrapper').style.width = currentZoom + '%'; }
         
@@ -399,7 +410,6 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // الكويز
         let currentQ = 0; let score = 0;
         function openQuiz() {
             if (!course.quiz || course.quiz.length === 0) { alert(currentLang==='en'?"No quiz available!":"لا توجد أسئلة لهذه المادة بعد!"); return; }
