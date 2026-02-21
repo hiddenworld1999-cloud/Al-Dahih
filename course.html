@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script>
+        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) {
+                alert('عذراً، هذا المحتوى محمي.');
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تفاصيل المادة - الدحيح</title>
@@ -8,63 +21,158 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        /* نفس ألوان وتصميم التطبيق عشان يبقى متناسق */
-        :root { --primary: #0A2647; --accent: #FFC800; --bg: #F8F9FA; --card: #fff; --text: #212529; --grey: #6c757d; }
-        body.dark-mode { --bg: #121212; --card: #1E1E1E; --text: #E8EAED; --grey: #9AA0A6; --primary: #FFC800; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        /* === المتغيرات الذكية === */
+        :root { 
+            --primary: #0A2647; --accent: #FFC800; --bg: #F8F9FA; --card: #fff; --text: #212529; --grey: #6c757d;
+            --calc-bg: #f8f9fa; --calc-btn: #ffffff;
+        }
+        body.dark-mode { 
+            --bg: #121212; --card: #1E1E1E; --text: #E8EAED; --grey: #9AA0A6; --primary: #FFC800;
+            --calc-bg: #2d2d2d; --calc-btn: #3e3e3e;
+        }
         
-        /* الهيدر */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s; }
+        body { margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; user-select: none; }
+        html[lang="en"] body { font-family: 'Poppins', sans-serif; }
+        .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
+
+        /* الهيدر الاحترافي */
         .course-header { background: var(--card); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .back-btn { font-size: 24px; cursor: pointer; color: var(--text); }
-        .header-title { font-weight: 700; font-size: 1.1rem; }
+        .back-btn { font-size: 26px; cursor: pointer; color: var(--text); }
+        html[dir="ltr"] .back-btn { transform: rotate(180deg); }
+        .header-icons { display: flex; align-items: center; gap: 12px; }
+        .music-active { color: var(--accent) !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
         /* تفاصيل المادة */
         .hero-banner { padding: 30px 20px; background: var(--card); text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 25px; }
-        .course-title { font-size: 1.5rem; color: var(--primary); margin: 0 0 5px 0; font-weight: 900; }
+        .course-title { font-size: 1.4rem; color: var(--primary); margin: 0 0 5px 0; font-weight: 900; }
         .course-prof { color: var(--grey); font-size: 0.95rem; }
         
         /* الأزرار */
         .container { padding: 0 20px; }
-        .section-label { margin: 25px 0 15px 0; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; font-size: 1rem; }
-        .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; background: var(--card); color: var(--text); }
+        .section-label { margin: 25px 0 15px 0; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; font-size: 1rem; border-bottom: 2px dashed rgba(0,0,0,0.1); padding-bottom: 8px; }
+        body.dark-mode .section-label { border-bottom: 2px dashed rgba(255,255,255,0.1); }
+        
+        .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; background: var(--card); color: var(--text); text-align: start; }
         .btn-card:active { transform: scale(0.98); }
-        
-        /* ألوان خاصة للأزرار */
-        .btn-summary { border-right: 5px solid #2196f3; }
-        .btn-midterm { border-right: 5px solid #ff9800; }
-        .btn-final { border-right: 5px solid #f44336; }
-        .btn-quiz { border-right: 5px solid #4caf50; }
-        
+        .btn-summary { border-inline-end: 5px solid #2196f3; }
+        .btn-midterm { border-inline-end: 5px solid #ff9800; }
+        .btn-final { border-inline-end: 5px solid #f44336; }
+        .btn-quiz { border-inline-end: 5px solid #4caf50; }
         .btn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); }
-        
-        /* النوافذ المنبثقة (Modals) */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: none; flex-direction: column; }
-        .modal-head { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        body.dark-mode .btn-icon { background: rgba(255,255,255,0.05); }
+
+        /* النوافذ (Modals) */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: none; flex-direction: column; overflow: hidden; }
+        .modal-head { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
         .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
         
-        /* المحتوى الداخلي */
-        .lecture-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
-        .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); }
-        .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; }
+        /* الملخصات */
+        .lecture-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); font-weight: bold; font-size: 1.05rem; }
+        .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 15px; padding: 20px; }
+        .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
+        .content-view ul { padding-inline-start: 20px; }
+        .content-view li { margin-bottom: 8px; }
+
+        /* عارض الصور والعلامة المائية (المدمجة) */
+        .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: none; flex-direction: column; }
+        .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 1501; border-bottom: 1px solid #333; }
+        .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
+        .zoom-controls { display: flex; gap: 15px; background: #333; padding: 5px 15px; border-radius: 20px; }
+        .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
+        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #f0f0f0; }
+        .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; transition: width 0.2s ease; }
+        .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; }
+        .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
+        .watermark-text { color: rgba(0, 0, 0, 0.15); font-size: 26px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; user-select: none; }
         
-        /* عارض الصور */
-        .img-container { width: 100%; margin-bottom: 15px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .img-container img { width: 100%; display: block; }
-        
-        /* كويز */
-        .quiz-opt { padding: 15px; background: var(--card); border: 2px solid transparent; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        /* الكويز */
+        .quiz-opt { padding: 15px; background: var(--quiz-option-bg); border: 2px solid transparent; border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 1rem; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+        .quiz-opt:hover { background: rgba(10, 38, 71, 0.05); }
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
+        
+        /* الآلة الحاسبة */
+        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000; display: none; border: 1px solid var(--border-color); direction: ltr; }
+        .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
+        .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text); transition: background 0.2s; }
+        .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: #0A2647; }
+        .calc-btn.eq { background: var(--accent); color: #0A2647; grid-column: span 2; }
+        
+        /* البومودورو */
+        .pomodoro-container { position: fixed; bottom: 30px; z-index: 400; display: flex; flex-direction: column; align-items: center; }
+        html[dir="rtl"] .pomodoro-container { left: 20px; align-items: flex-end; } html[dir="ltr"] .pomodoro-container { right: 20px; align-items: flex-end; }
+        .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s; }
+        .pomo-timer { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: var(--card-shadow); margin-bottom: 15px; border: 2px solid var(--accent); width: 180px; text-align: center; display: none; }
+        .pomo-header { font-size: 0.9rem; color: var(--primary); font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .pomo-time { font-size: 2.2rem; font-weight: 900; color: #0A2647; margin-bottom: 15px; direction: ltr; font-family: monospace; }
+        body.dark-mode .pomo-time { color: var(--primary); }
+        .pomo-controls { display: flex; justify-content: center; gap: 10px; }
+        .pomo-controls button { background: #0A2647; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
     </style>
 </head>
 <body>
 
     <header class="course-header">
-        <span class="material-icons back-btn" onclick="goBack()">arrow_forward</span>
-        <span class="header-title">خيارات المادة</span>
-        <span style="width: 24px;"></span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="material-icons back-btn" onclick="window.location.href='index.html'">arrow_forward</span>
+        </div>
+        <div class="header-icons">
+            <span class="material-icons" onclick="toggleLanguage()" style="color:var(--text); cursor:pointer;">language</span>
+            <span class="material-icons" onclick="toggleCalculator()" style="color:var(--text); cursor:pointer;">calculate</span>
+            <span class="material-icons" id="musicToggle" onclick="toggleMusic()" style="color:var(--text); cursor:pointer;">music_off</span>
+            <span class="material-icons" id="darkModeToggle" onclick="toggleDarkMode()" style="color:var(--text); cursor:pointer;">dark_mode</span>
+        </div>
     </header>
+
+    <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+
+    <div id="calculatorModal" class="calculator-modal">
+        <div class="calc-header">
+            <span class="calc-title"><span class="material-icons" style="font-size:20px;">calculate</span> <span data-ar="آلة حاسبة" data-en="Calculator">آلة حاسبة</span></span>
+            <span class="material-icons" onclick="toggleCalculator()" style="cursor:pointer; color:var(--grey);">close</span>
+        </div>
+        <input type="text" id="calcDisplay" class="calc-display" readonly>
+        <div class="calc-grid">
+            <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
+            <button class="calc-btn op" onclick="appendCalc('/')">/</button>
+            <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+            <button class="calc-btn" onclick="appendCalc('7')">7</button>
+            <button class="calc-btn" onclick="appendCalc('8')">8</button>
+            <button class="calc-btn" onclick="appendCalc('9')">9</button>
+            <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+            <button class="calc-btn" onclick="appendCalc('4')">4</button>
+            <button class="calc-btn" onclick="appendCalc('5')">5</button>
+            <button class="calc-btn" onclick="appendCalc('6')">6</button>
+            <button class="calc-btn eq" onclick="calculateResult()">=</button>
+            <button class="calc-btn" onclick="appendCalc('1')">1</button>
+            <button class="calc-btn" onclick="appendCalc('2')">2</button>
+            <button class="calc-btn" onclick="appendCalc('3')">3</button>
+            <button class="calc-btn" onclick="appendCalc('0')">0</button>
+        </div>
+    </div>
+
+    <div class="pomodoro-container">
+        <div id="pomodoroTimer" class="pomo-timer">
+            <div class="pomo-header">
+                <span data-ar="مؤقت المذاكرة" data-en="Study Timer">مؤقت المذاكرة</span>
+                <span class="material-icons" onclick="togglePomodoro()" style="cursor:pointer; font-size:20px;">close</span>
+            </div>
+            <div class="pomo-time" id="pomoTimeDisplay">25:00</div>
+            <div class="pomo-controls">
+                <button onclick="startPomodoro()" id="pomoStartBtn" data-ar="بدأ" data-en="Start">بدأ</button>
+                <button onclick="resetPomodoro()" style="background:#d32f2f;" data-ar="إعادة" data-en="Reset">إعادة</button>
+            </div>
+        </div>
+        <button class="pomo-fab" onclick="togglePomodoro()">
+            <span class="material-icons" style="font-size: 28px;">timer</span>
+        </button>
+    </div>
 
     <div class="hero-banner">
         <h1 class="course-title" id="courseTitle">جاري التحميل...</h1>
@@ -72,38 +180,39 @@
     </div>
 
     <div class="container">
-        <div class="section-label"><span class="material-icons">menu_book</span> ملخصات المحاضرات</div>
+        
+        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</span></div>
         <button class="btn-card btn-summary" onclick="openModal('summary')">
             <div>
-                <div style="font-weight:900;">ملخصات المحاضرات</div>
-                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;">الزبدة والخلاصة هنا</div>
+                <div style="font-weight:900;" data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</div>
+                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الزبدة والخلاصة هنا" data-en="The essence is here">الزبدة والخلاصة هنا</div>
             </div>
             <div class="btn-icon" style="color:#2196f3;"><span class="material-icons">description</span></div>
         </button>
 
-        <div class="section-label"><span class="material-icons">assignment</span> الامتحانات والأسئلة</div>
+        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات والأسئلة" data-en="Exams and Questions">الامتحانات والأسئلة</span></div>
         
         <button class="btn-card btn-midterm" onclick="openImages('midterm')">
             <div>
-                <div>أسئلة الميدترم</div>
-                <div style="font-size:0.8rem; opacity:0.7;">امتحانات نص السنة</div>
+                <div data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
+                <div style="font-size:0.8rem; opacity:0.7;" data-ar="امتحانات نص السنة" data-en="Mid-year exams">امتحانات نص السنة</div>
             </div>
             <div class="btn-icon" style="color:#ff9800;"><span class="material-icons">history_edu</span></div>
         </button>
 
         <button class="btn-card btn-final" onclick="openImages('final')">
             <div>
-                <div>أسئلة الفاينل</div>
-                <div style="font-size:0.8rem; opacity:0.7;">امتحانات آخر السنة</div>
+                <div data-ar="أسئلة الفاينل" data-en="Final Exams">أسئلة الفاينل</div>
+                <div style="font-size:0.8rem; opacity:0.7;" data-ar="امتحانات آخر السنة" data-en="End-of-year exams">امتحانات آخر السنة</div>
             </div>
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
 
-        <div class="section-label"><span class="material-icons">touch_app</span> اختبر نفسك</div>
+        <div class="section-label"><span class="material-icons">touch_app</span> <span data-ar="اختبر نفسك" data-en="Test Yourself">اختبر نفسك</span></div>
         <button class="btn-card btn-quiz" onclick="openQuiz()">
             <div>
-                <div>اختبار إلكتروني</div>
-                <div style="font-size:0.8rem; opacity:0.7;">حل وشوف نتيجتك فوراً</div>
+                <div data-ar="اختبار إلكتروني" data-en="Interactive Quiz">اختبار إلكتروني</div>
+                <div style="font-size:0.8rem; opacity:0.7;" data-ar="حل وشوف نتيجتك فوراً" data-en="Solve and see your result">حل وشوف نتيجتك فوراً</div>
             </div>
             <div class="btn-icon" style="color:#4caf50;"><span class="material-icons">quiz</span></div>
         </button>
@@ -111,48 +220,56 @@
 
     <div id="summaryModal" class="modal">
         <div class="modal-head">
-            <span class="material-icons" onclick="closeModal('summaryModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
-            <span style="font-weight:bold;">قائمة المحاضرات</span>
-            <span></span>
+            <span class="material-icons close-arrow" onclick="closeModal('summaryModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span style="font-weight:bold;" data-ar="قائمة المحاضرات" data-en="Lectures List">قائمة المحاضرات</span>
+            <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="summaryList"></div>
     </div>
 
     <div id="contentModal" class="modal">
         <div class="modal-head">
-            <span class="material-icons" onclick="closeModal('contentModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span class="material-icons close-arrow" onclick="closeModal('contentModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
             <span style="font-weight:bold;" id="contentTitle">المحاضرة</span>
-            <span></span>
+            <span style="width: 28px;"></span>
         </div>
-        <div class="modal-body content-view" id="contentBody"></div>
-    </div>
-
-    <div id="imageModal" class="modal">
-        <div class="modal-head">
-            <span class="material-icons" onclick="closeModal('imageModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
-            <span style="font-weight:bold;" id="imgTitle">الصور</span>
-            <span></span>
+        <div class="modal-body">
+            <div class="content-view" id="contentBody"></div>
         </div>
-        <div class="modal-body" id="imgBody" style="background:#eee;"></div>
     </div>
 
     <div id="quizModal" class="modal">
         <div class="modal-head">
-            <span class="material-icons" onclick="closeModal('quizModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
-            <span style="font-weight:bold;">اختبار تفاعلي</span>
-            <span></span>
+            <span class="material-icons close-arrow" onclick="closeModal('quizModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span style="font-weight:bold;" data-ar="اختبار تفاعلي" data-en="Interactive Quiz">اختبار تفاعلي</span>
+            <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="quizBody"></div>
     </div>
 
+    <div id="imageViewer" class="img-viewer">
+        <div class="img-head">
+            <button class="close-img-btn" onclick="closeImageViewer()" data-ar="رجوع للخلف" data-en="Go Back">رجوع للخلف</button>
+            <div class="zoom-controls">
+                <span class="material-icons" onclick="zoomImages(20)">zoom_in</span>
+                <span class="material-icons" onclick="zoomImages(-20)">zoom_out</span>
+            </div>
+        </div>
+        <div class="images-scroll-container">
+            <div id="imagesWrapper" class="images-wrapper">
+                <div id="watermarkOverlay" class="watermark-overlay"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // === 1. داتا المواد كلها (عدل هنا براحتك) ===
+        // === داتا المواد مدمجة لسهولة الاستخدام ===
         const allCourses = {
-            1: { // مادة 1: تصميم البرامج
-                name: "تصميم برامج الحاسب",
-                prof: "د. شيماء عبد الرؤوف",
-                midtermFiles: { prefix: "coding_mid_", count: 5 }, // أسماء صور الميدترم
-                finalFiles: { prefix: "coding_final_", count: 8 }, // أسماء صور الفاينل
+            1: { 
+                titleAr: "تصميم برامج الحاسب", titleEn: "Software Design",
+                profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa",
+                midtermFiles: { prefix: "coding_mid_", count: 5 }, 
+                finalFiles: { prefix: "coding_final_", count: 8 }, 
                 summaries: {
                     1: `<h3>محاضرة 1: أساسيات البرمجة</h3>
                         <ul>
@@ -163,149 +280,173 @@
                     2: `<h3>محاضرة 2</h3><p>قريباً...</p>`
                 },
                 quiz: [
-                    { q: "الشكل البيضاوي في خرائط التدفق يمثل؟", opts: ["بداية/نهاية", "معالجة", "إدخال"], ans: 0 },
-                    { q: "أول مرحلة في تطوير البرمجيات؟", opts: ["البرمجة", "التحليل", "التصميم"], ans: 1 }
+                    { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
+                    { qAr: "أول مرحلة في تطوير البرمجيات؟", qEn: "First step in SDLC?", optsAr: ["البرمجة", "التحليل", "التصميم"], optsEn: ["Coding", "Analysis", "Design"], ans: 1 }
                 ]
             },
-            2: { // مادة 2
-                name: "البنية التحتية للتكنولوجيا",
-                prof: "د. شيماء عبد الرؤوف",
+            2: { 
+                titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure",
+                profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa",
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    1: `<div style='text-align:center; padding:20px;'><h3>في انتظار ملخص الباوربوينت ⏳</h3></div>`
+                    1: `<div style='text-align:center; padding:20px;'>
+                          <span class="material-icons" style="font-size:48px; color:var(--accent);">pending</span>
+                          <h3 style="margin-top:10px;">في انتظار ملخص الباوربوينت ⏳</h3>
+                        </div>`
                 },
                 quiz: []
             },
-            3: { name: "الإدارة الاستراتيجية", prof: "د. ولاء سامي", summaries: {}, quiz: [] },
-            4: { name: "الاقتصاد الكلي", prof: "د. هبة الله سمير", summaries: {}, quiz: [] },
-            5: { name: "الإحصاء التطبيقي", prof: "د. ميرفت خليفة", summaries: {}, quiz: [] }
+            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, quiz: [] },
+            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, quiz: [] },
+            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, quiz: [] }
         };
 
-        // === 2. كود التشغيل (ما تجيش جنبه عشان ما يبوظش) ===
-        
-        // جلب رقم المادة من الرابط (URL)
+        // إعدادات أساسية واللغة
+        let currentLang = localStorage.getItem('daheehLang') || 'ar';
         const params = new URLSearchParams(window.location.search);
         const courseId = params.get('id'); 
         const course = allCourses[courseId];
 
-        // لو مفيش مادة، ارجع للرئيسية
-        if (!course) {
-            alert("حدث خطأ! العودة للرئيسية...");
-            window.location.href = 'index.html';
-        } else {
-            // عرض بيانات المادة
-            document.getElementById('courseTitle').innerText = course.name;
-            document.getElementById('courseProf').innerText = course.prof;
+        function applyLanguage() {
+            document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
+            document.documentElement.lang = currentLang;
+            document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
+            document.querySelectorAll('.close-arrow').forEach(el => { el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; });
+            
+            if (course) {
+                document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr;
+                document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr;
+            }
         }
 
-        function goBack() { window.history.back(); }
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            localStorage.setItem('daheehLang', currentLang);
+            applyLanguage();
+        }
+
+        if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } 
+        else { applyLanguage(); }
+
+        // الوظائف العامة (دارك مود، موسيقى، آلة حاسبة)
+        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
+        if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
+
+        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
+        function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
+
+        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+        function appendCalc(v) { document.getElementById('calcDisplay').value += v; }
+        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
+        function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
+
+        // بومودورو
+        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
+        function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
+        function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
+        function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
+        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+        updatePomoDisplay();
+
+        // وظائف المادة (ملخصات، كويز، صور)
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // فتح الملخصات
         function openModal(type) {
             if (type === 'summary') {
-                const list = document.getElementById('summaryList');
-                list.innerHTML = '';
-                // عمل 8 زراير للمحاضرات
+                const list = document.getElementById('summaryList'); list.innerHTML = '';
                 for (let i = 1; i <= 8; i++) {
-                    list.innerHTML += `
-                    <div class="lecture-item" onclick="showLecture(${i})">
-                        <span>المحاضرة ${i}</span>
-                        <span class="material-icons" style="color:var(--grey)">chevron_left</span>
-                    </div>`;
+                    const txt = currentLang === 'en' ? `Lecture ${i}` : `المحاضرة ${i}`;
+                    const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left';
+                    list.innerHTML += `<div class="lecture-item" onclick="showLecture(${i})"><span>${txt}</span><span class="material-icons" style="color:var(--grey)">${arr}</span></div>`;
                 }
                 document.getElementById('summaryModal').style.display = 'flex';
             }
         }
 
-        // عرض محتوى المحاضرة
         function showLecture(num) {
-            const content = course.summaries[num] || "<p style='text-align:center; color:gray;'>لا يوجد ملخص لهذه المحاضرة بعد.</p>";
-            document.getElementById('contentTitle').innerText = "المحاضرة " + num;
+            const content = course.summaries[num] || (currentLang === 'en' ? "<p>No summary available yet.</p>" : "<p>لا يوجد ملخص متاح حالياً.</p>");
+            document.getElementById('contentTitle').innerText = currentLang === 'en' ? `Lecture ${num}` : `المحاضرة ${num}`;
             document.getElementById('contentBody').innerHTML = content;
             document.getElementById('contentModal').style.display = 'flex';
         }
 
-        // فتح الصور (ميدترم / فاينل)
+        // عرض الصور والميدترم مع العلامة المائية
+        let currentZoom = 100;
+        function zoomImages(change) { currentZoom += change; if(currentZoom<50) currentZoom=50; if(currentZoom>300) currentZoom=300; document.getElementById('imagesWrapper').style.width = currentZoom + '%'; }
+        
         function openImages(type) {
             const files = type === 'midterm' ? course.midtermFiles : course.finalFiles;
-            const container = document.getElementById('imgBody');
-            const title = document.getElementById('imgTitle');
+            if (!files || !files.prefix) { alert(currentLang==='en'?"No files added yet!":"لم يتم إضافة ملفات بعد!"); return; }
             
-            title.innerText = type === 'midterm' ? "أسئلة الميدترم" : "أسئلة الفاينل";
-            container.innerHTML = '';
-
-            if (!files || !files.prefix) {
-                container.innerHTML = "<p style='text-align:center; padding:20px;'>لا توجد صور حالياً.</p>";
-            } else {
-                for (let i = 1; i <= files.count; i++) {
-                    container.innerHTML += `
-                    <div class="img-container">
-                        <img src="${files.prefix}${i}.jpg" onerror="this.style.display='none'">
-                    </div>`;
-                }
+            const wrapper = document.getElementById('imagesWrapper');
+            const watermark = document.getElementById('watermarkOverlay');
+            currentZoom = 100; wrapper.style.width = '100%';
+            
+            wrapper.querySelectorAll('img').forEach(img => img.remove());
+            
+            for (let i = 1; i <= files.count; i++) {
+                const img = document.createElement('img'); img.src = files.prefix + i + '.jpg'; img.className = 'protected-img';
+                wrapper.insertBefore(img, watermark);
             }
-            document.getElementById('imageModal').style.display = 'flex';
+            
+            const sName = localStorage.getItem('studentName') || "Student";
+            const sCode = localStorage.getItem('studentCode') || "000";
+            watermark.innerHTML = '';
+            for(let i=0; i<400; i++) { watermark.innerHTML += `<div class="watermark-text">${sName} - ${sCode}</div>`; }
+            
+            document.getElementById('imageViewer').style.display = 'flex';
         }
+        function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
         // الكويز
-        let currentQ = 0;
-        let score = 0;
+        let currentQ = 0; let score = 0;
         function openQuiz() {
-            if (!course.quiz || course.quiz.length === 0) {
-                alert("لم يتم إضافة أسئلة لهذه المادة بعد.");
-                return;
-            }
-            currentQ = 0; score = 0;
-            showQuestion();
-            document.getElementById('quizModal').style.display = 'flex';
+            if (!course.quiz || course.quiz.length === 0) { alert(currentLang==='en'?"No quiz available!":"لا توجد أسئلة لهذه المادة بعد!"); return; }
+            currentQ = 0; score = 0; showQuestion(); document.getElementById('quizModal').style.display = 'flex';
         }
 
         function showQuestion() {
-            const q = course.quiz[currentQ];
-            const body = document.getElementById('quizBody');
+            const q = course.quiz[currentQ]; const body = document.getElementById('quizBody');
             let optsHtml = '';
-            
-            q.opts.forEach((opt, idx) => {
-                optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})">${opt}</div>`;
+            const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+            opts.forEach((opt, idx) => {
+                optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})">
+                                <span>${opt}</span><span class="material-icons opt-icon" style="display:none;"></span>
+                             </div>`;
             });
-
-            body.innerHTML = `
-                <div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">سؤال ${currentQ + 1} من ${course.quiz.length}</div>
-                <h3 style="margin-bottom:20px;">${q.q}</h3>
-                <div>${optsHtml}</div>
-            `;
+            const qText = currentLang === 'en' ? q.qEn : q.qAr;
+            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${course.quiz.length}` : `سؤال ${currentQ + 1} من ${course.quiz.length}`;
+            
+            body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div>
+                              <h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
         }
 
         function checkAnswer(el, chosen, correct) {
-            // منع الضغط تاني
             const all = document.querySelectorAll('.quiz-opt');
-            all.forEach(d => d.onclick = null);
+            all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
+            const icon = el.querySelector('.opt-icon'); icon.style.display = 'block';
 
-            if (chosen === correct) {
-                el.classList.add('correct');
-                score++;
-            } else {
-                el.classList.add('wrong');
-                all[correct].classList.add('correct'); // نور الصح
+            if (chosen === correct) { el.classList.add('correct'); icon.innerText = 'check_circle'; score++; } 
+            else { 
+                el.classList.add('wrong'); icon.innerText = 'cancel'; 
+                all[correct].classList.add('correct'); all[correct].querySelector('.opt-icon').innerText = 'check_circle'; all[correct].querySelector('.opt-icon').style.display = 'block';
             }
 
-            // زرار التالي
             setTimeout(() => {
                 currentQ++;
-                if (currentQ < course.quiz.length) {
-                    showQuestion();
-                } else {
+                if (currentQ < course.quiz.length) { showQuestion(); } 
+                else {
+                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
+                    const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
                     document.getElementById('quizBody').innerHTML = `
                         <div style="text-align:center; padding:30px;">
-                            <h2>النتيجة النهائية</h2>
-                            <h1 style="font-size:3rem; color:var(--accent);">${score} / ${course.quiz.length}</h1>
-                            <button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">إنهاء</button>
-                        </div>
-                    `;
+                            <h2>${resTitle}</h2>
+                            <h1 style="font-size:3.5rem; color:var(--accent); margin: 20px 0;">${score} / ${course.quiz.length}</h1>
+                            <button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button>
+                        </div>`;
                 }
-            }, 1500);
+            }, 1800);
         }
     </script>
 </body>
