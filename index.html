@@ -101,6 +101,7 @@
         .completed-badge { display: none; background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; width: fit-content; }
         .course-card-vertical.is-completed .completed-badge { display: flex; align-items: center; gap: 4px; }
 
+        /* صفحة الحساب */
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 20px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 20px; box-shadow: var(--card-shadow); }
         .profile-header-card::after { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(255, 200, 0, 0.1); border-radius: 50%; }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 3px solid var(--accent-orange); }
@@ -116,6 +117,7 @@
         .settings-text { font-weight: 600; font-size: 0.95rem; color: var(--text-main); margin-inline-start: 15px; }
         .logout-btn-new { width: 100%; padding: 16px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: 2px solid rgba(211, 47, 47, 0.2); border-radius: 15px; font-weight: 700; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: background 0.2s; }
 
+        /* الشريط السفلي والبنك والكشكول */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 12px 5px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 200; border-top-left-radius: 20px; border-top-right-radius: 20px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--nav-inactive); flex: 1; cursor: pointer; }
         .nav-item.active { color: var(--title-color); font-weight: 700; }
@@ -131,12 +133,14 @@
         .qb-btn-summary { background: #E3F2FD; color: #0D47A1; border: 2px solid #90CAF9; }
         body.dark-mode .qb-btn-summary { background: rgba(13, 71, 161, 0.2); color: #90CAF9; border: 2px solid #1976D2; }
 
+        /* الكشكول */
         .notebook-container { background: var(--bg-card); border-radius: 18px; padding: 20px; box-shadow: var(--card-shadow); margin-top: 15px; height: calc(100vh - 220px); display: flex; flex-direction: column; }
         .notebook-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .save-indicator { font-size: 0.85rem; color: #2e7d32; display: flex; align-items: center; gap: 5px; opacity: 0; transition: opacity 0.3s; font-weight: bold; }
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.05rem; line-height: 1.8; outline: none; }
         .notebook-textarea::placeholder { color: var(--text-grey); opacity: 0.6; }
 
+        /* عارض الصور والعلامة المائية (تم الإصلاح) */
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 500; display: none; flex-direction: column; }
         .modal-header { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 601; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; }
@@ -144,7 +148,11 @@
         .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
         .images-scroll-container { flex: 1; overflow-y: auto; overflow-x: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; background: #f0f0f0; }
         .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; transition: width 0.2s ease; }
-        
+        /* إصلاح العلامة المائية */
+        .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; bottom: 0; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 600; }
+        .watermark-text { color: rgba(0, 0, 0, 0.13); font-size: 24px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; }
+
+        /* نافذة الملخصات */
         .summary-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 500; display: none; flex-direction: column; overflow: hidden; }
         .summary-header { padding: 15px 20px; background: var(--primary-blue); display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 501; }
         .summary-body { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg-main); }
@@ -153,7 +161,7 @@
         .lecture-content-view h3 { color: var(--primary-blue); border-bottom: 2px solid var(--accent-orange); padding-bottom: 10px; margin-bottom: 15px; }
         body.dark-mode .lecture-content-view h3 { color: var(--accent-orange); }
 
-        /* === ستايل الاختبار التفاعلي (جديد) === */
+        /* الاختبار التفاعلي */
         .quiz-container { background: var(--bg-card); padding: 25px; border-radius: 20px; box-shadow: var(--card-shadow); margin-top: 10px; }
         .quiz-progress { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem; color: var(--text-grey); font-weight: bold; }
         .quiz-question { font-size: 1.2rem; font-weight: bold; color: var(--title-color); margin-bottom: 25px; line-height: 1.5; }
@@ -166,6 +174,7 @@
         .quiz-result-box { text-align: center; padding: 30px 10px; }
         .quiz-score { font-size: 3rem; font-weight: 900; color: var(--accent-orange); margin: 15px 0; }
 
+        /* المؤقت والباقي */
         .pomodoro-container { position: fixed; bottom: 90px; z-index: 400; display: flex; flex-direction: column; align-items: center; }
         html[dir="rtl"] .pomodoro-container { left: 20px; align-items: flex-end; } html[dir="ltr"] .pomodoro-container { right: 20px; align-items: flex-end; }
         .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent-orange); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s; }
@@ -348,8 +357,8 @@
 
             <button class="qb-button qb-btn-answers" onclick="showProtectedImage('answers')">
                 <div>
-                    <div style="margin-bottom: 5px;" data-ar="مذكرات المراجعة" data-en="Study Notes">مذكرات المراجعة</div>
-                    <div style="font-size: 0.85rem; opacity: 0.8;" data-ar="أسئلة مجابة وصور للمذاكرة" data-en="Answered questions for studying">أسئلة مجابة وصور للمذاكرة</div>
+                    <div style="margin-bottom: 5px;" data-ar="أسئلة بالإجابات" data-en="Questions with Answers">أسئلة بالإجابات</div>
+                    <div style="font-size: 0.85rem; opacity: 0.8;" data-ar="للمذاكرة والفهم العميق" data-en="For studying and deep understanding">للمذاكرة والفهم العميق</div>
                 </div>
                 <span class="material-icons">fact_check</span>
             </button>
@@ -385,8 +394,7 @@
             <span style="width: 28px;"></span>
         </div>
         <div class="summary-body">
-            <div class="quiz-container" id="quizContainerBox">
-                </div>
+            <div class="quiz-container" id="quizContainerBox"></div>
         </div>
     </div>
 
@@ -478,6 +486,7 @@
             1: `<h3>ملخص المحاضرة الأولى: أساسيات برمجة الحاسب</h3>
                 <ul>
                     <li><strong>دورة حياة البرمجيات:</strong> 6 خطوات (تحليل، تصميم، برمجة، اختبار، نشر، صيانة).</li>
+                    <li><strong>تحديد المشكلة:</strong> لازم نحدد (الهدف، المدخلات، المخرجات).</li>
                     <li><strong>الخوارزمية:</strong> خطوات مرتبة لحل مشكلة (تنسب للخوارزمي).</li>
                 </ul>
                 <h3>رموز خرائط التدفق:</h3>
@@ -550,7 +559,6 @@
         }
 
         function selectQuizAnswer(btnElement, selectedIdx, correctIdx) {
-            // منع اختيار أكثر من إجابة
             const allOptions = document.querySelectorAll('.quiz-option');
             allOptions.forEach(opt => { opt.onclick = null; opt.style.pointerEvents = 'none'; });
 
@@ -564,7 +572,6 @@
             } else {
                 btnElement.classList.add('wrong');
                 icon.innerText = 'cancel';
-                // إظهار الإجابة الصحيحة
                 allOptions[correctIdx].classList.add('correct');
                 allOptions[correctIdx].querySelector('.opt-icon').innerText = 'check_circle';
                 allOptions[correctIdx].querySelector('.opt-icon').style.display = 'block';
