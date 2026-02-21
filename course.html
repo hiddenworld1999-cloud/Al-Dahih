@@ -80,7 +80,7 @@
         .content-view ul { padding-inline-start: 20px; }
         .content-view li { margin-bottom: 8px; }
 
-        /* عارض الصور والعلامة المائية (المدمجة) */
+        /* عارض الصور والعلامة المائية */
         .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: none; flex-direction: column; }
         .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 1501; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
@@ -186,18 +186,16 @@
     </div>
 
     <div class="container">
-        
-        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</span></div>
+        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="محتوى المادة" data-en="Course Content">محتوى المادة</span></div>
         <button class="btn-card btn-summary" onclick="openModal('summary')">
             <div>
-                <div style="font-weight:900;" data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</div>
-                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الزبدة والخلاصة هنا" data-en="The essence is here">الزبدة والخلاصة هنا</div>
+                <div style="font-weight:900;" data-ar="المحاضرات والاختبارات" data-en="Lectures & Quizzes">المحاضرات والاختبارات</div>
+                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الشرح وأسئلة كل محاضرة" data-en="Explanation and quiz for each lecture">الشرح وأسئلة كل محاضرة</div>
             </div>
             <div class="btn-icon" style="color:#2196f3;"><span class="material-icons">description</span></div>
         </button>
 
-        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات والأسئلة" data-en="Exams and Questions">الامتحانات والأسئلة</span></div>
-        
+        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات السابقة" data-en="Previous Exams">الامتحانات السابقة</span></div>
         <button class="btn-card btn-midterm" onclick="openImages('midterm')">
             <div>
                 <div data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
@@ -213,7 +211,6 @@
             </div>
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
-
     </div>
 
     <div id="summaryModal" class="modal">
@@ -236,10 +233,10 @@
         </div>
     </div>
 
-    <div id="quizModal" class="modal">
+    <div id="quizModal" class="modal" style="z-index: 2000;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="closeModal('quizModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
-            <span style="font-weight:bold;" data-ar="اختبار تفاعلي" data-en="Interactive Quiz">اختبار تفاعلي</span>
+            <span style="font-weight:bold;" data-ar="اختبار المحاضرة" data-en="Lecture Quiz">اختبار المحاضرة</span>
             <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="quizBody"></div>
@@ -261,7 +258,7 @@
     </div>
 
     <script>
-        // 1. الداتا الشاملة (تم تحديث قسم الأسئلة ليكون داخل lectureQuizzes لكل محاضرة)
+        // 1. الداتا الشاملة (تم تجهيز كل المواد باختبارات المحاضرات)
         const allCourses = {
             1: { 
                 titleAr: "تصميم برامج الحاسب", titleEn: "Software Design",
@@ -284,13 +281,12 @@
                         </ul>`,
                     2: `<h3>المحاضرة الثانية</h3><p>قريباً...</p>`
                 },
-                // === أسئلة المحاضرات (تجربة) ===
                 lectureQuizzes: {
                     1: [
                         { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
                         { qAr: "أول مرحلة في تطوير البرمجيات؟", qEn: "First step in SDLC?", optsAr: ["البرمجة", "التحليل", "التصميم"], optsEn: ["Coding", "Analysis", "Design"], ans: 1 }
                     ],
-                    2: [] // مكان لأسئلة المحاضرة 2
+                    2: [] 
                 }
             },
             2: { 
@@ -299,22 +295,36 @@
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    1: `<div style="width: 100%; height: 600px;">
-                          <h3 style="color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--accent); display:inline-block;">عرض المحاضرة الأولى (PDF)</h3>
-                          <iframe src="net_lec1.pdf" width="100%" height="100%" style="border:none; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                              <p>عذراً، المتصفح لا يدعم عرض PDF. تأكد من وجود الملف.</p>
-                          </iframe>
+                    // === حل سحري لملف الـ PDF على الموبايل ===
+                    1: `<div style="text-align:center; padding:20px;">
+                          <span class="material-icons" style="font-size:60px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
+                          <h3 style="color:var(--primary); margin-bottom:10px;">ملف المحاضرة الأولى</h3>
+                          <p style="color:var(--grey); margin-bottom:25px; line-height:1.6;">ملف الـ PDF جاهز، اضغط على الزر بالأسفل لفتحه وقراءته بوضوح.</p>
+                          <button onclick="window.open('net_lec1.pdf', '_blank')" class="btn-card" style="justify-content:center; background:#2196f3; color:white; border:none;">
+                              <span class="material-icons" style="margin-left:10px;">visibility</span> عرض الملف
+                          </button>
                         </div>`
                 },
-                // === تم إضافة مكان الأسئلة للمادة الثانية ===
+                // === أسئلة تجريبية للمحاضرة الأولى عشان الزرار يظهر ===
                 lectureQuizzes: {
-                    1: [], // ضيف أسئلة المحاضرة الأولى هنا
+                    1: [
+                        { qAr: "من المكونات الأساسية للبنية التحتية؟", qEn: "A core component of IT infrastructure?", optsAr: ["الأجهزة (Hardware)", "الألوان", "الصور"], optsEn: ["Hardware", "Colors", "Images"], ans: 0 }
+                    ],
                     2: []
                 }
             },
-            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, lectureQuizzes: { 1: [], 2: [] } },
-            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, lectureQuizzes: { 1: [], 2: [] } },
-            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: { 1: [], 2: [] } }
+            3: { 
+                titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", 
+                summaries: {}, lectureQuizzes: { 1: [], 2: [] } 
+            },
+            4: { 
+                titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", 
+                summaries: {}, lectureQuizzes: { 1: [], 2: [] } 
+            },
+            5: { 
+                titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", 
+                summaries: {}, lectureQuizzes: { 1: [], 2: [] } 
+            }
         };
 
         // 2. إعدادات المادة واللغة
@@ -378,15 +388,15 @@
             }
         }
 
-        // === دالة عرض المحاضرة + زرار الاختبار (تم التحديث لكل المواد) ===
+        // === دالة عرض المحاضرة + زرار الاختبار ===
         function showLecture(num) {
-            const content = course.summaries[num] || (currentLang === 'en' ? "<p>No summary available yet.</p>" : "<p>لا يوجد ملخص متاح حالياً.</p>");
+            const content = course.summaries[num] || (currentLang === 'en' ? "<p>No content available yet.</p>" : "<p>لا يوجد محتوى متاح حالياً.</p>");
             
             let htmlContent = `<div class="content-view">
                                 ${content}
                                </div>`;
                                
-            // فحص إذا كان فيه أسئلة للمحاضرة دي، نضيف الزرار
+            // الكود هيظهر الزرار أوتوماتيك لو المحاضرة دي فيها أسئلة في أي مادة
             if(course.lectureQuizzes && course.lectureQuizzes[num] && course.lectureQuizzes[num].length > 0) {
                 const btnText = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
                 htmlContent += `<button class="btn-lecture-quiz" onclick="openQuiz(${num})">
@@ -426,15 +436,10 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // === الكويز المخصص للمحاضرة ===
+        // === الكويز المخصص للمحاضرات ===
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
 
         function openQuiz(lectureNum) {
-            if (!course.lectureQuizzes || !course.lectureQuizzes[lectureNum] || course.lectureQuizzes[lectureNum].length === 0) { 
-                alert(currentLang==='en'?"No quiz available for this lecture!":"لا توجد أسئلة لهذه المحاضرة!"); return; 
-            }
-            
-            // تحميل أسئلة المحاضرة المحددة فقط
             activeQuizQuestions = course.lectureQuizzes[lectureNum];
             currentQ = 0; score = 0; 
             showQuestion(); 
