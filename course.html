@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تفاصيل المادة - الدحيح</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* نفس ألوان وتصميم التطبيق عشان يبقى متناسق */
+        :root { --primary: #0A2647; --accent: #FFC800; --bg: #F8F9FA; --card: #fff; --text: #212529; --grey: #6c757d; }
+        body.dark-mode { --bg: #121212; --card: #1E1E1E; --text: #E8EAED; --grey: #9AA0A6; --primary: #FFC800; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        
+        /* الهيدر */
+        .course-header { background: var(--card); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .back-btn { font-size: 24px; cursor: pointer; color: var(--text); }
+        .header-title { font-weight: 700; font-size: 1.1rem; }
+        
+        /* تفاصيل المادة */
+        .hero-banner { padding: 30px 20px; background: var(--card); text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 25px; }
+        .course-title { font-size: 1.5rem; color: var(--primary); margin: 0 0 5px 0; font-weight: 900; }
+        .course-prof { color: var(--grey); font-size: 0.95rem; }
+        
+        /* الأزرار */
+        .container { padding: 0 20px; }
+        .section-label { margin: 25px 0 15px 0; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+        .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; background: var(--card); color: var(--text); }
+        .btn-card:active { transform: scale(0.98); }
+        
+        /* ألوان خاصة للأزرار */
+        .btn-summary { border-right: 5px solid #2196f3; }
+        .btn-midterm { border-right: 5px solid #ff9800; }
+        .btn-final { border-right: 5px solid #f44336; }
+        .btn-quiz { border-right: 5px solid #4caf50; }
+        
+        .btn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); }
+        
+        /* النوافذ المنبثقة (Modals) */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: none; flex-direction: column; }
+        .modal-head { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+        
+        /* المحتوى الداخلي */
+        .lecture-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
+        .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); }
+        .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; }
+        
+        /* عارض الصور */
+        .img-container { width: 100%; margin-bottom: 15px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .img-container img { width: 100%; display: block; }
+        
+        /* كويز */
+        .quiz-opt { padding: 15px; background: var(--card); border: 2px solid transparent; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
+        .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
+    </style>
+</head>
+<body>
+
+    <header class="course-header">
+        <span class="material-icons back-btn" onclick="goBack()">arrow_forward</span>
+        <span class="header-title">خيارات المادة</span>
+        <span style="width: 24px;"></span>
+    </header>
+
+    <div class="hero-banner">
+        <h1 class="course-title" id="courseTitle">جاري التحميل...</h1>
+        <p class="course-prof" id="courseProf">...</p>
+    </div>
+
+    <div class="container">
+        <div class="section-label"><span class="material-icons">menu_book</span> ملخصات المحاضرات</div>
+        <button class="btn-card btn-summary" onclick="openModal('summary')">
+            <div>
+                <div style="font-weight:900;">ملخصات المحاضرات</div>
+                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;">الزبدة والخلاصة هنا</div>
+            </div>
+            <div class="btn-icon" style="color:#2196f3;"><span class="material-icons">description</span></div>
+        </button>
+
+        <div class="section-label"><span class="material-icons">assignment</span> الامتحانات والأسئلة</div>
+        
+        <button class="btn-card btn-midterm" onclick="openImages('midterm')">
+            <div>
+                <div>أسئلة الميدترم</div>
+                <div style="font-size:0.8rem; opacity:0.7;">امتحانات نص السنة</div>
+            </div>
+            <div class="btn-icon" style="color:#ff9800;"><span class="material-icons">history_edu</span></div>
+        </button>
+
+        <button class="btn-card btn-final" onclick="openImages('final')">
+            <div>
+                <div>أسئلة الفاينل</div>
+                <div style="font-size:0.8rem; opacity:0.7;">امتحانات آخر السنة</div>
+            </div>
+            <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
+        </button>
+
+        <div class="section-label"><span class="material-icons">touch_app</span> اختبر نفسك</div>
+        <button class="btn-card btn-quiz" onclick="openQuiz()">
+            <div>
+                <div>اختبار إلكتروني</div>
+                <div style="font-size:0.8rem; opacity:0.7;">حل وشوف نتيجتك فوراً</div>
+            </div>
+            <div class="btn-icon" style="color:#4caf50;"><span class="material-icons">quiz</span></div>
+        </button>
+    </div>
+
+    <div id="summaryModal" class="modal">
+        <div class="modal-head">
+            <span class="material-icons" onclick="closeModal('summaryModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span style="font-weight:bold;">قائمة المحاضرات</span>
+            <span></span>
+        </div>
+        <div class="modal-body" id="summaryList"></div>
+    </div>
+
+    <div id="contentModal" class="modal">
+        <div class="modal-head">
+            <span class="material-icons" onclick="closeModal('contentModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span style="font-weight:bold;" id="contentTitle">المحاضرة</span>
+            <span></span>
+        </div>
+        <div class="modal-body content-view" id="contentBody"></div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <div class="modal-head">
+            <span class="material-icons" onclick="closeModal('imageModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span style="font-weight:bold;" id="imgTitle">الصور</span>
+            <span></span>
+        </div>
+        <div class="modal-body" id="imgBody" style="background:#eee;"></div>
+    </div>
+
+    <div id="quizModal" class="modal">
+        <div class="modal-head">
+            <span class="material-icons" onclick="closeModal('quizModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
+            <span style="font-weight:bold;">اختبار تفاعلي</span>
+            <span></span>
+        </div>
+        <div class="modal-body" id="quizBody"></div>
+    </div>
+
+    <script>
+        // === 1. داتا المواد كلها (عدل هنا براحتك) ===
+        const allCourses = {
+            1: { // مادة 1: تصميم البرامج
+                name: "تصميم برامج الحاسب",
+                prof: "د. شيماء عبد الرؤوف",
+                midtermFiles: { prefix: "coding_mid_", count: 5 }, // أسماء صور الميدترم
+                finalFiles: { prefix: "coding_final_", count: 8 }, // أسماء صور الفاينل
+                summaries: {
+                    1: `<h3>محاضرة 1: أساسيات البرمجة</h3>
+                        <ul>
+                            <li>دورة حياة البرمجيات: تحليل، تصميم، برمجة، اختبار.</li>
+                            <li>الخوارزمية: خطوات مرتبة للحل.</li>
+                            <li>خرائط التدفق: بيضاوي (بداية)، مستطيل (معالجة)، معين (قرار).</li>
+                        </ul>`,
+                    2: `<h3>محاضرة 2</h3><p>قريباً...</p>`
+                },
+                quiz: [
+                    { q: "الشكل البيضاوي في خرائط التدفق يمثل؟", opts: ["بداية/نهاية", "معالجة", "إدخال"], ans: 0 },
+                    { q: "أول مرحلة في تطوير البرمجيات؟", opts: ["البرمجة", "التحليل", "التصميم"], ans: 1 }
+                ]
+            },
+            2: { // مادة 2
+                name: "البنية التحتية للتكنولوجيا",
+                prof: "د. شيماء عبد الرؤوف",
+                midtermFiles: { prefix: "net_mid_", count: 3 },
+                finalFiles: { prefix: "net_final_", count: 5 },
+                summaries: {
+                    1: `<div style='text-align:center; padding:20px;'><h3>في انتظار ملخص الباوربوينت ⏳</h3></div>`
+                },
+                quiz: []
+            },
+            3: { name: "الإدارة الاستراتيجية", prof: "د. ولاء سامي", summaries: {}, quiz: [] },
+            4: { name: "الاقتصاد الكلي", prof: "د. هبة الله سمير", summaries: {}, quiz: [] },
+            5: { name: "الإحصاء التطبيقي", prof: "د. ميرفت خليفة", summaries: {}, quiz: [] }
+        };
+
+        // === 2. كود التشغيل (ما تجيش جنبه عشان ما يبوظش) ===
+        
+        // جلب رقم المادة من الرابط (URL)
+        const params = new URLSearchParams(window.location.search);
+        const courseId = params.get('id'); 
+        const course = allCourses[courseId];
+
+        // لو مفيش مادة، ارجع للرئيسية
+        if (!course) {
+            alert("حدث خطأ! العودة للرئيسية...");
+            window.location.href = 'index.html';
+        } else {
+            // عرض بيانات المادة
+            document.getElementById('courseTitle').innerText = course.name;
+            document.getElementById('courseProf').innerText = course.prof;
+        }
+
+        function goBack() { window.history.back(); }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // فتح الملخصات
+        function openModal(type) {
+            if (type === 'summary') {
+                const list = document.getElementById('summaryList');
+                list.innerHTML = '';
+                // عمل 8 زراير للمحاضرات
+                for (let i = 1; i <= 8; i++) {
+                    list.innerHTML += `
+                    <div class="lecture-item" onclick="showLecture(${i})">
+                        <span>المحاضرة ${i}</span>
+                        <span class="material-icons" style="color:var(--grey)">chevron_left</span>
+                    </div>`;
+                }
+                document.getElementById('summaryModal').style.display = 'flex';
+            }
+        }
+
+        // عرض محتوى المحاضرة
+        function showLecture(num) {
+            const content = course.summaries[num] || "<p style='text-align:center; color:gray;'>لا يوجد ملخص لهذه المحاضرة بعد.</p>";
+            document.getElementById('contentTitle').innerText = "المحاضرة " + num;
+            document.getElementById('contentBody').innerHTML = content;
+            document.getElementById('contentModal').style.display = 'flex';
+        }
+
+        // فتح الصور (ميدترم / فاينل)
+        function openImages(type) {
+            const files = type === 'midterm' ? course.midtermFiles : course.finalFiles;
+            const container = document.getElementById('imgBody');
+            const title = document.getElementById('imgTitle');
+            
+            title.innerText = type === 'midterm' ? "أسئلة الميدترم" : "أسئلة الفاينل";
+            container.innerHTML = '';
+
+            if (!files || !files.prefix) {
+                container.innerHTML = "<p style='text-align:center; padding:20px;'>لا توجد صور حالياً.</p>";
+            } else {
+                for (let i = 1; i <= files.count; i++) {
+                    container.innerHTML += `
+                    <div class="img-container">
+                        <img src="${files.prefix}${i}.jpg" onerror="this.style.display='none'">
+                    </div>`;
+                }
+            }
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        // الكويز
+        let currentQ = 0;
+        let score = 0;
+        function openQuiz() {
+            if (!course.quiz || course.quiz.length === 0) {
+                alert("لم يتم إضافة أسئلة لهذه المادة بعد.");
+                return;
+            }
+            currentQ = 0; score = 0;
+            showQuestion();
+            document.getElementById('quizModal').style.display = 'flex';
+        }
+
+        function showQuestion() {
+            const q = course.quiz[currentQ];
+            const body = document.getElementById('quizBody');
+            let optsHtml = '';
+            
+            q.opts.forEach((opt, idx) => {
+                optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})">${opt}</div>`;
+            });
+
+            body.innerHTML = `
+                <div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">سؤال ${currentQ + 1} من ${course.quiz.length}</div>
+                <h3 style="margin-bottom:20px;">${q.q}</h3>
+                <div>${optsHtml}</div>
+            `;
+        }
+
+        function checkAnswer(el, chosen, correct) {
+            // منع الضغط تاني
+            const all = document.querySelectorAll('.quiz-opt');
+            all.forEach(d => d.onclick = null);
+
+            if (chosen === correct) {
+                el.classList.add('correct');
+                score++;
+            } else {
+                el.classList.add('wrong');
+                all[correct].classList.add('correct'); // نور الصح
+            }
+
+            // زرار التالي
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < course.quiz.length) {
+                    showQuestion();
+                } else {
+                    document.getElementById('quizBody').innerHTML = `
+                        <div style="text-align:center; padding:30px;">
+                            <h2>النتيجة النهائية</h2>
+                            <h1 style="font-size:3rem; color:var(--accent);">${score} / ${course.quiz.length}</h1>
+                            <button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">إنهاء</button>
+                        </div>
+                    `;
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
