@@ -70,11 +70,8 @@
         
         /* الهيدر */
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-card); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        
-        /* تم إصلاح الشعار ليكون بجانب الأيقونة بشكل سليم */
         .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--title-color); display: flex; align-items: center; gap: 8px; }
         .logo-icon { color: var(--accent-orange); font-size: 28px; margin: 0 !important; }
-        
         .header-icons { display: flex; align-items: center; gap: 15px; }
         html[dir="rtl"] .search-icon-inside { right: 15px; } html[dir="ltr"] .search-icon-inside { left: 15px; }
         
@@ -115,8 +112,6 @@
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
         
         .settings-list { background: var(--bg-card); border-radius: 18px; padding: 5px 0; box-shadow: var(--card-shadow); }
-        
-        /* تم إصلاح القائمة الخاصة بالإعدادات هنا جذرياً لتكون أفقية دائماً */
         .settings-item { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .settings-item:last-child { border-bottom: none; }
         .settings-item-right { display: flex; flex-direction: row; align-items: center; gap: 15px; }
@@ -148,17 +143,24 @@
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.05rem; line-height: 1.8; outline: none; }
         .notebook-textarea::placeholder { color: var(--text-grey); opacity: 0.6; }
 
-        /* عارض الصور والعلامة المائية (محمية ومضبوطة) */
+        /* === عارض الصور والعلامة المائية المدمجة بالورقة === */
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 500; display: none; flex-direction: column; }
         .modal-header { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 601; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .zoom-controls { display: flex; gap: 15px; background: #333; padding: 5px 15px; border-radius: 20px; }
         .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
-        .images-scroll-container { flex: 1; overflow-y: auto; overflow-x: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; background: #f0f0f0; }
-        .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; transition: width 0.2s ease; }
         
-        .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; bottom: 0; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 600; }
-        .watermark-text { color: rgba(0, 0, 0, 0.13); font-size: 24px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; }
+        .images-scroll-container { flex: 1; overflow-y: auto; overflow-x: auto; width: 100%; padding: 10px; background: #f0f0f0; }
+        
+        /* الصندوق اللي بيلم الصور والعلامة المائية مع بعض عشان يندمجوا */
+        .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; transition: width 0.2s ease; }
+        
+        .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; }
+        
+        /* العلامة المائية بقت Absolute جوه الـ Wrapper مش Fixed، عشان تنزل مع الصور لنهاية المذكرة */
+        .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
+        .watermark-text { color: rgba(0, 0, 0, 0.15); font-size: 26px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; user-select: none; }
+        body.dark-mode .watermark-text { color: rgba(255, 255, 255, 0.2); }
 
         /* نافذة الملخصات */
         .summary-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 500; display: none; flex-direction: column; overflow: hidden; }
@@ -336,16 +338,10 @@
             </div>
             <div class="settings-list">
                 <div class="settings-item" onclick="toggleDarkMode()">
-                    <div class="settings-item-right">
-                        <div class="settings-icon" style="background: var(--title-color);"><span class="material-icons">dark_mode</span></div>
-                        <span class="settings-text" data-ar="تفعيل الوضع الليلي" data-en="Dark Mode">تفعيل الوضع الليلي</span>
-                    </div>
+                    <div class="settings-item-right"><div class="settings-icon" style="background: var(--title-color);"><span class="material-icons">dark_mode</span></div><span class="settings-text" data-ar="تفعيل الوضع الليلي" data-en="Dark Mode">تفعيل الوضع الليلي</span></div>
                 </div>
                 <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end" class="settings-item" style="text-decoration: none; color: inherit;">
-                    <div class="settings-item-right">
-                        <div class="settings-icon" style="background: #2196f3;"><span class="material-icons">support_agent</span></div>
-                        <span class="settings-text" data-ar="تواصل مع الدعم الفني" data-en="Contact Support">تواصل مع الدعم الفني</span>
-                    </div>
+                    <div class="settings-item-right"><div class="settings-icon" style="background: #2196f3;"><span class="material-icons">support_agent</span></div><span class="settings-text" data-ar="تواصل مع الدعم الفني" data-en="Contact Support">تواصل مع الدعم الفني</span></div>
                     <span class="material-icons" style="color: var(--text-grey);">chevron_left</span>
                 </a>
             </div>
@@ -421,8 +417,10 @@
                 <span class="material-icons" onclick="zoomImages(-20)">zoom_out</span>
             </div>
         </div>
-        <div class="images-scroll-container" id="imagesWrapper">
-            <div id="watermarkOverlay" class="watermark-overlay"></div>
+        <div class="images-scroll-container" id="imagesScrollBox">
+            <div id="imagesWrapper" class="images-wrapper">
+                <div id="watermarkOverlay" class="watermark-overlay"></div>
+            </div>
         </div>
     </div>
 
@@ -633,77 +631,4 @@
                     <div class="cc-v-content">
                         <div>
                             <div class="completed-badge"><span class="material-icons" style="font-size:14px; margin-inline-end: 4px;">check_circle</span> ${compText}</div>
-                            <h4 style="color:var(--title-color); font-size:1rem;">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4>
-                            <p style="color:var(--text-grey); font-size:0.85rem; margin-top:5px;">${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p>
-                        </div>
-                    </div>
-                </div>`;
-            });
-        }
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase(); const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter);
-            renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term)));
-        });
-
-        function switchTab(tabName, element) {
-            document.querySelectorAll('.page-section').forEach(p => { if(p.id !== 'page-player') p.classList.remove('active'); });
-            document.getElementById('page-' + tabName).classList.add('active');
-            if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); }
-            if(tabName === 'profile') updateCompletedCountBadge();
-        }
-
-        function openPlayer(id) {
-            currentCourse = coursesData.find(c => c.id === id);
-            document.getElementById('playerCourseTitle').innerText = currentLang === 'en' ? currentCourse.titleEn : currentCourse.titleAr;
-            document.getElementById('playerInstructor').innerText = currentLang === 'en' ? currentCourse.instructorEn : currentCourse.instructorAr;
-            document.getElementById('page-player').style.display = 'block'; document.getElementById('bottomNav').style.display = 'none'; document.getElementById('mainHeader').style.display = 'none'; document.querySelector('.news-ticker').style.display = 'none';
-            updateCompletionUI(); 
-        }
-
-        function closePlayer() { document.getElementById('page-player').style.display = 'none'; document.getElementById('bottomNav').style.display = 'flex'; document.getElementById('mainHeader').style.display = 'flex'; document.querySelector('.news-ticker').style.display = 'flex'; }
-        
-        function toggleCourseCompletion() {
-            const key = 'completed_' + currentCourse.id; localStorage.setItem(key, localStorage.getItem(key) === 'true' ? 'false' : 'true');
-            updateCompletionUI(); if(activeFilter === 'all') renderCourses(coursesData); else filterCourses(activeFilter, null); updateCompletedCountBadge(); 
-        }
-
-        function updateCompletionUI() {
-            const isCompleted = localStorage.getItem('completed_' + currentCourse.id) === 'true';
-            const btn = document.getElementById('completeCourseBtn'); const text = document.getElementById('completeBtnText'); const icon = document.getElementById('completeBtnIcon');
-            if(isCompleted) { btn.style.background = '#e8f5e9'; btn.style.color = '#2e7d32'; btn.style.border = '2px solid #2e7d32'; text.innerText = currentLang === 'en' ? 'Course Completed' : 'تم إنجاز المادة بنجاح'; icon.innerText = 'task_alt'; } 
-            else { btn.style.background = 'transparent'; btn.style.color = 'var(--text-grey)'; btn.style.border = '2px solid var(--text-grey)'; text.innerText = currentLang === 'en' ? 'Mark as Completed' : 'تحديد كمادة مكتملة'; icon.innerText = 'radio_button_unchecked'; }
-        }
-
-        function showProtectedImage(type) {
-            const fileData = currentCourse.files[type]; 
-            const modal = document.getElementById('imageModal');
-            const imagesWrapper = document.getElementById('imagesWrapper');
-            const watermarkContainer = document.getElementById('watermarkOverlay');
-            imagesWrapper.querySelectorAll('img').forEach(img => img.remove());
-            
-            for (let i = 1; i <= fileData.count; i++) {
-                const imgElement = document.createElement('img'); imgElement.src = fileData.prefix + i + '.jpg'; imgElement.className = 'protected-img'; imgElement.style.width = '100%'; 
-                imgElement.onerror = function() { imgElement.alt = 'Error'; imgElement.style.border = "1px solid red"; imgElement.style.padding = "20px"; };
-                imagesWrapper.insertBefore(imgElement, watermarkContainer);
-            }
-            watermarkContainer.innerHTML = ''; 
-            const watermarkText = `${studentFullName} - ${studentCode}`;
-            for (let i = 0; i < 200; i++) { const span = document.createElement('div'); span.className = 'watermark-text'; span.innerText = watermarkText; watermarkContainer.appendChild(span); }
-            modal.style.display = 'flex';
-        }
-
-        let currentZoomLevel = 100; function zoomImages(change) { currentZoomLevel += change; if (currentZoomLevel < 50) currentZoomLevel = 50; if (currentZoomLevel > 300) currentZoomLevel = 300; document.querySelectorAll('.protected-img').forEach(img => { img.style.width = currentZoomLevel + '%'; }); }
-        function closeImageModal() { document.getElementById('imageModal').style.display = 'none'; }
-        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
-
-        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
-        function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
-        function togglePomodoro() { let timerDiv = document.getElementById('pomodoroTimer'); timerDiv.style.display = timerDiv.style.display === 'none' ? 'block' : 'none'; }
-        function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
-        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
-
-        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); 
-    </script>
-</body>
-</html>
+                            <h4 style="color:var(--title-color); font-size:1rem;">${currentLang === 'en' ? course.titleEn : course.titleAr}
