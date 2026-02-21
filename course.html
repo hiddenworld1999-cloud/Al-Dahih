@@ -61,7 +61,10 @@
         .btn-summary { border-inline-end: 5px solid #2196f3; }
         .btn-midterm { border-inline-end: 5px solid #ff9800; }
         .btn-final { border-inline-end: 5px solid #f44336; }
-        .btn-quiz { border-inline-end: 5px solid #4caf50; }
+        
+        /* زرار الاختبار داخل المحاضرة */
+        .btn-lecture-quiz { width: 100%; margin-top: 20px; padding: 15px; background: var(--accent); color: #0A2647; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
         .btn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); }
         body.dark-mode .btn-icon { background: rgba(255,255,255,0.05); }
 
@@ -211,14 +214,6 @@
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
 
-        <div class="section-label"><span class="material-icons">touch_app</span> <span data-ar="اختبر نفسك" data-en="Test Yourself">اختبر نفسك</span></div>
-        <button class="btn-card btn-quiz" onclick="openQuiz()">
-            <div>
-                <div data-ar="اختبار إلكتروني" data-en="Interactive Quiz">اختبار إلكتروني</div>
-                <div style="font-size:0.8rem; opacity:0.7;" data-ar="حل وشوف نتيجتك فوراً" data-en="Solve and see your result">حل وشوف نتيجتك فوراً</div>
-            </div>
-            <div class="btn-icon" style="color:#4caf50;"><span class="material-icons">quiz</span></div>
-        </button>
     </div>
 
     <div id="summaryModal" class="modal">
@@ -266,7 +261,7 @@
     </div>
 
     <script>
-        // 1. الداتا الشاملة لكل المواد (بديل ملف data.js)
+        // 1. الداتا الشاملة (تم تحديث قسم الأسئلة ليكون داخل lectureQuizzes لكل محاضرة)
         const allCourses = {
             1: { 
                 titleAr: "تصميم برامج الحاسب", titleEn: "Software Design",
@@ -289,10 +284,15 @@
                         </ul>`,
                     2: `<h3>المحاضرة الثانية</h3><p>قريباً...</p>`
                 },
-                quiz: [
-                    { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
-                    { qAr: "أول مرحلة في تطوير البرمجيات؟", qEn: "First step in SDLC?", optsAr: ["البرمجة", "التحليل", "التصميم"], optsEn: ["Coding", "Analysis", "Design"], ans: 1 }
-                ]
+                // === هنا التعديل: الأسئلة بقت مربوطة برقم المحاضرة ===
+                lectureQuizzes: {
+                    1: [
+                        { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
+                        { qAr: "أول مرحلة في تطوير البرمجيات؟", qEn: "First step in SDLC?", optsAr: ["البرمجة", "التحليل", "التصميم"], optsEn: ["Coding", "Analysis", "Design"], ans: 1 }
+                    ],
+                    // ضيف أسئلة المحاضرة التانية هنا لو عايز
+                    2: [] 
+                }
             },
             2: { 
                 titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure",
@@ -300,7 +300,6 @@
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    // كود عرض ملف الـ PDF مباشرة للمحاضرة الأولى
                     1: `<div style="width: 100%; height: 600px;">
                           <h3 style="color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--accent); display:inline-block;">عرض المحاضرة الأولى (PDF)</h3>
                           <iframe src="net_lec1.pdf" width="100%" height="100%" style="border:none; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
@@ -308,11 +307,11 @@
                           </iframe>
                         </div>`
                 },
-                quiz: []
+                lectureQuizzes: {}
             },
-            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, quiz: [] },
-            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, quiz: [] },
-            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, quiz: [] }
+            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, lectureQuizzes: {} },
+            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, lectureQuizzes: {} },
+            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: {} }
         };
 
         // 2. إعدادات المادة واللغة
@@ -342,7 +341,7 @@
         if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } 
         else { applyLanguage(); }
 
-        // 3. الوظائف العامة (دارك مود، موسيقى، آلة حاسبة، بومودورو)
+        // 3. الوظائف العامة
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
         if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
 
@@ -361,7 +360,7 @@
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
         updatePomoDisplay();
 
-        // 4. وظائف المادة (ملخصات، صور، كويز)
+        // 4. وظائف المادة
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function openModal(type) {
@@ -376,10 +375,24 @@
             }
         }
 
+        // === دالة عرض المحاضرة + زرار الاختبار ===
         function showLecture(num) {
             const content = course.summaries[num] || (currentLang === 'en' ? "<p>No summary available yet.</p>" : "<p>لا يوجد ملخص متاح حالياً.</p>");
+            
+            let htmlContent = `<div class="content-view">
+                                ${content}
+                               </div>`;
+                               
+            // فحص إذا كان فيه أسئلة للمحاضرة دي، نضيف الزرار
+            if(course.lectureQuizzes && course.lectureQuizzes[num] && course.lectureQuizzes[num].length > 0) {
+                const btnText = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
+                htmlContent += `<button class="btn-lecture-quiz" onclick="openQuiz(${num})">
+                                    <span class="material-icons">quiz</span> ${btnText}
+                                </button>`;
+            }
+
             document.getElementById('contentTitle').innerText = currentLang === 'en' ? `Lecture ${num}` : `المحاضرة ${num}`;
-            document.getElementById('contentBody').innerHTML = content;
+            document.getElementById('contentBody').innerHTML = htmlContent;
             document.getElementById('contentModal').style.display = 'flex';
         }
 
@@ -410,14 +423,24 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        let currentQ = 0; let score = 0;
-        function openQuiz() {
-            if (!course.quiz || course.quiz.length === 0) { alert(currentLang==='en'?"No quiz available!":"لا توجد أسئلة لهذه المادة بعد!"); return; }
-            currentQ = 0; score = 0; showQuestion(); document.getElementById('quizModal').style.display = 'flex';
+        // === الكويز المخصص للمحاضرة ===
+        let currentQ = 0; let score = 0; let activeQuizQuestions = [];
+
+        function openQuiz(lectureNum) {
+            if (!course.lectureQuizzes || !course.lectureQuizzes[lectureNum] || course.lectureQuizzes[lectureNum].length === 0) { 
+                alert(currentLang==='en'?"No quiz available for this lecture!":"لا توجد أسئلة لهذه المحاضرة!"); return; 
+            }
+            
+            // تحميل أسئلة المحاضرة المحددة فقط
+            activeQuizQuestions = course.lectureQuizzes[lectureNum];
+            currentQ = 0; score = 0; 
+            showQuestion(); 
+            document.getElementById('quizModal').style.display = 'flex';
         }
 
         function showQuestion() {
-            const q = course.quiz[currentQ]; const body = document.getElementById('quizBody');
+            const q = activeQuizQuestions[currentQ]; 
+            const body = document.getElementById('quizBody');
             let optsHtml = '';
             const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
             opts.forEach((opt, idx) => {
@@ -426,7 +449,7 @@
                              </div>`;
             });
             const qText = currentLang === 'en' ? q.qEn : q.qAr;
-            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${course.quiz.length}` : `سؤال ${currentQ + 1} من ${course.quiz.length}`;
+            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${activeQuizQuestions.length}` : `سؤال ${currentQ + 1} من ${activeQuizQuestions.length}`;
             
             body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div>
                               <h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
@@ -445,14 +468,14 @@
 
             setTimeout(() => {
                 currentQ++;
-                if (currentQ < course.quiz.length) { showQuestion(); } 
+                if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
                 else {
                     const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
                     const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
                     document.getElementById('quizBody').innerHTML = `
                         <div style="text-align:center; padding:30px;">
                             <h2>${resTitle}</h2>
-                            <h1 style="font-size:3.5rem; color:var(--accent); margin: 20px 0;">${score} / ${course.quiz.length}</h1>
+                            <h1 style="font-size:3.5rem; color:var(--accent); margin: 20px 0;">${score} / ${activeQuizQuestions.length}</h1>
                             <button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button>
                         </div>`;
                 }
