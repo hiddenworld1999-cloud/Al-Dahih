@@ -284,14 +284,13 @@
                         </ul>`,
                     2: `<h3>المحاضرة الثانية</h3><p>قريباً...</p>`
                 },
-                // === هنا التعديل: الأسئلة بقت مربوطة برقم المحاضرة ===
+                // === أسئلة المحاضرات (تجربة) ===
                 lectureQuizzes: {
                     1: [
                         { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
                         { qAr: "أول مرحلة في تطوير البرمجيات؟", qEn: "First step in SDLC?", optsAr: ["البرمجة", "التحليل", "التصميم"], optsEn: ["Coding", "Analysis", "Design"], ans: 1 }
                     ],
-                    // ضيف أسئلة المحاضرة التانية هنا لو عايز
-                    2: [] 
+                    2: [] // مكان لأسئلة المحاضرة 2
                 }
             },
             2: { 
@@ -307,11 +306,15 @@
                           </iframe>
                         </div>`
                 },
-                lectureQuizzes: {}
+                // === تم إضافة مكان الأسئلة للمادة الثانية ===
+                lectureQuizzes: {
+                    1: [], // ضيف أسئلة المحاضرة الأولى هنا
+                    2: []
+                }
             },
-            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, lectureQuizzes: {} },
-            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, lectureQuizzes: {} },
-            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: {} }
+            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, lectureQuizzes: { 1: [], 2: [] } },
+            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, lectureQuizzes: { 1: [], 2: [] } },
+            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: { 1: [], 2: [] } }
         };
 
         // 2. إعدادات المادة واللغة
@@ -375,7 +378,7 @@
             }
         }
 
-        // === دالة عرض المحاضرة + زرار الاختبار ===
+        // === دالة عرض المحاضرة + زرار الاختبار (تم التحديث لكل المواد) ===
         function showLecture(num) {
             const content = course.summaries[num] || (currentLang === 'en' ? "<p>No summary available yet.</p>" : "<p>لا يوجد ملخص متاح حالياً.</p>");
             
