@@ -80,7 +80,7 @@
         .content-view ul { padding-inline-start: 20px; }
         .content-view li { margin-bottom: 8px; }
 
-        /* عارض الصور والعلامة المائية */
+        /* عارض الصور والعلامة المائية (المدمجة) */
         .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: none; flex-direction: column; }
         .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 1501; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
@@ -186,6 +186,7 @@
     </div>
 
     <div class="container">
+        
         <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="محتوى المادة" data-en="Course Content">محتوى المادة</span></div>
         <button class="btn-card btn-summary" onclick="openModal('summary')">
             <div>
@@ -258,36 +259,15 @@
     </div>
 
     <script>
-        // 1. الداتا الشاملة (تم تجهيز كل المواد باختبارات المحاضرات)
+        // === الداتا الشاملة (تم إفراغ محتوى المادة الأولى بناءً على طلبك) ===
         const allCourses = {
             1: { 
                 titleAr: "تصميم برامج الحاسب", titleEn: "Software Design",
                 profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa",
                 midtermFiles: { prefix: "coding_mid_", count: 5 }, 
                 finalFiles: { prefix: "coding_final_", count: 8 }, 
-                summaries: {
-                    1: `<h3>ملخص المحاضرة الأولى: أساسيات البرمجة</h3>
-                        <ul>
-                            <li><strong>دورة حياة البرمجيات:</strong> تحليل، تصميم، برمجة، اختبار، نشر، صيانة.</li>
-                            <li><strong>الخوارزمية:</strong> خطوات مرتبة منطقياً لحل مشكلة.</li>
-                            <li><strong>خرائط التدفق (Flowcharts):</strong>
-                                <ul>
-                                    <li>البيضاوي: بداية / نهاية.</li>
-                                    <li>متوازي الأضلاع: إدخال / إخراج.</li>
-                                    <li>المستطيل: عملية معالجة.</li>
-                                    <li>المعين: اتخاذ قرار (شرط).</li>
-                                </ul>
-                            </li>
-                        </ul>`,
-                    2: `<h3>المحاضرة الثانية</h3><p>قريباً...</p>`
-                },
-                lectureQuizzes: {
-                    1: [
-                        { qAr: "الشكل البيضاوي في خرائط التدفق يمثل؟", qEn: "What does oval shape represent?", optsAr: ["بداية/نهاية", "معالجة", "إدخال"], optsEn: ["Start/End", "Process", "Input"], ans: 0 },
-                        { qAr: "أول مرحلة في تطوير البرمجيات؟", qEn: "First step in SDLC?", optsAr: ["البرمجة", "التحليل", "التصميم"], optsEn: ["Coding", "Analysis", "Design"], ans: 1 }
-                    ],
-                    2: [] 
-                }
+                summaries: {}, // فاضية لحد ما تعمله
+                lectureQuizzes: {} // فاضية لحد ما تعمله
             },
             2: { 
                 titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure",
@@ -295,7 +275,6 @@
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    // === حل سحري لملف الـ PDF على الموبايل ===
                     1: `<div style="text-align:center; padding:20px;">
                           <span class="material-icons" style="font-size:60px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
                           <h3 style="color:var(--primary); margin-bottom:10px;">ملف المحاضرة الأولى</h3>
@@ -305,7 +284,6 @@
                           </button>
                         </div>`
                 },
-                // === أسئلة تجريبية للمحاضرة الأولى عشان الزرار يظهر ===
                 lectureQuizzes: {
                     1: [
                         { qAr: "من المكونات الأساسية للبنية التحتية؟", qEn: "A core component of IT infrastructure?", optsAr: ["الأجهزة (Hardware)", "الألوان", "الصور"], optsEn: ["Hardware", "Colors", "Images"], ans: 0 }
@@ -313,21 +291,12 @@
                     2: []
                 }
             },
-            3: { 
-                titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", 
-                summaries: {}, lectureQuizzes: { 1: [], 2: [] } 
-            },
-            4: { 
-                titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", 
-                summaries: {}, lectureQuizzes: { 1: [], 2: [] } 
-            },
-            5: { 
-                titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", 
-                summaries: {}, lectureQuizzes: { 1: [], 2: [] } 
-            }
+            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, lectureQuizzes: { 1: [], 2: [] } },
+            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, lectureQuizzes: { 1: [], 2: [] } },
+            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: { 1: [], 2: [] } }
         };
 
-        // 2. إعدادات المادة واللغة
+        // إعدادات المادة واللغة
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
         const params = new URLSearchParams(window.location.search);
         const courseId = params.get('id'); 
@@ -354,7 +323,7 @@
         if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } 
         else { applyLanguage(); }
 
-        // 3. الوظائف العامة
+        // الوظائف العامة
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
         if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
 
@@ -373,7 +342,7 @@
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
         updatePomoDisplay();
 
-        // 4. وظائف المادة
+        // وظائف المادة
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function openModal(type) {
@@ -388,15 +357,14 @@
             }
         }
 
-        // === دالة عرض المحاضرة + زرار الاختبار ===
+        // عرض المحاضرة + زرار الاختبار
         function showLecture(num) {
-            const content = course.summaries[num] || (currentLang === 'en' ? "<p>No content available yet.</p>" : "<p>لا يوجد محتوى متاح حالياً.</p>");
+            const content = course.summaries[num] || (currentLang === 'en' ? "<p>No content available yet.</p>" : "<p style='text-align:center; color:var(--grey);'>لا يوجد محتوى متاح حالياً.</p>");
             
             let htmlContent = `<div class="content-view">
                                 ${content}
                                </div>`;
                                
-            // الكود هيظهر الزرار أوتوماتيك لو المحاضرة دي فيها أسئلة في أي مادة
             if(course.lectureQuizzes && course.lectureQuizzes[num] && course.lectureQuizzes[num].length > 0) {
                 const btnText = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
                 htmlContent += `<button class="btn-lecture-quiz" onclick="openQuiz(${num})">
@@ -436,7 +404,7 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // === الكويز المخصص للمحاضرات ===
+        // الكويز
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
 
         function openQuiz(lectureNum) {
