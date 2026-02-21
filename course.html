@@ -187,16 +187,17 @@
 
     <div class="container">
         
-        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="محتوى المادة" data-en="Course Content">محتوى المادة</span></div>
+        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</span></div>
         <button class="btn-card btn-summary" onclick="openModal('summary')">
             <div>
-                <div style="font-weight:900;" data-ar="المحاضرات والاختبارات" data-en="Lectures & Quizzes">المحاضرات والاختبارات</div>
-                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الشرح وأسئلة كل محاضرة" data-en="Explanation and quiz for each lecture">الشرح وأسئلة كل محاضرة</div>
+                <div style="font-weight:900;" data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</div>
+                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الزبدة والخلاصة هنا" data-en="The essence is here">الزبدة والخلاصة هنا</div>
             </div>
             <div class="btn-icon" style="color:#2196f3;"><span class="material-icons">description</span></div>
         </button>
 
-        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات السابقة" data-en="Previous Exams">الامتحانات السابقة</span></div>
+        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات والأسئلة" data-en="Exams and Questions">الامتحانات والأسئلة</span></div>
+        
         <button class="btn-card btn-midterm" onclick="openImages('midterm')">
             <div>
                 <div data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
@@ -212,6 +213,7 @@
             </div>
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
+
     </div>
 
     <div id="summaryModal" class="modal">
@@ -259,15 +261,15 @@
     </div>
 
     <script>
-        // === الداتا الشاملة (تم إفراغ محتوى المادة الأولى بناءً على طلبك) ===
+        // 1. الداتا الشاملة
         const allCourses = {
             1: { 
                 titleAr: "تصميم برامج الحاسب", titleEn: "Software Design",
                 profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa",
                 midtermFiles: { prefix: "coding_mid_", count: 5 }, 
                 finalFiles: { prefix: "coding_final_", count: 8 }, 
-                summaries: {}, // فاضية لحد ما تعمله
-                lectureQuizzes: {} // فاضية لحد ما تعمله
+                summaries: {}, // فاضية
+                lectureQuizzes: {} // فاضية
             },
             2: { 
                 titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure",
@@ -284,9 +286,79 @@
                           </button>
                         </div>`
                 },
+                // === أسئلة المحاضرة الأولى (مادة البنية التحتية) ===
                 lectureQuizzes: {
                     1: [
-                        { qAr: "من المكونات الأساسية للبنية التحتية؟", qEn: "A core component of IT infrastructure?", optsAr: ["الأجهزة (Hardware)", "الألوان", "الصور"], optsEn: ["Hardware", "Colors", "Images"], ans: 0 }
+                        {
+                            qAr: "ما هي المكونات الخمسة الأساسية للنظام البيئي للبنية التحتية لتكنولوجيا المعلومات؟",
+                            qEn: "What are the 5 core components of the IT Infrastructure ecosystem?",
+                            optsAr: ["الإنترنت، الحواسيب، الهواتف، الطابعات، والماسحات الضوئية", "المكونات المادية، البرمجية، الشبكات، المكونات البشرية، ومستلزمات أخرى", "أنظمة التشغيل، البرامج التطبيقية، قواعد البيانات، الخوادم، والشبكات", "الإدخال، الإخراج، المعالجة، التخزين، واللوحة الأم"],
+                            optsEn: ["Internet, PCs, Phones, Printers, Scanners", "Hardware, Software, Networks, People, Others", "OS, Apps, DB, Servers, Networks", "Input, Output, Processing, Storage, Motherboard"],
+                            ans: 1
+                        },
+                        {
+                            qAr: "وحدة الحساب والمنطق (ALU) هي المسؤولة عن إدارة تدفق البيانات وتعمل كـ 'شرطي المرور' داخل المعالج.",
+                            qEn: "ALU is responsible for managing data flow and acts as a 'traffic cop' inside the processor.",
+                            optsAr: ["صح", "خطأ"],
+                            optsEn: ["True", "False"],
+                            ans: 1
+                        },
+                        {
+                            qAr: "ما هو الجزء الذي يُعتبر 'العمود الفقري' للحاسب، حيث يربط أجزاء الحاسب الداخلية ببعضها وينسق العمل بينها؟",
+                            qEn: "What part is considered the 'backbone' of the computer, connecting internal parts?",
+                            optsAr: ["وحدة المعالجة المركزية (CPU)", "القرص الصلب (Hard Disk)", "اللوحة الأم (Motherboard)", "مكبرات الصوت"],
+                            optsEn: ["CPU", "Hard Disk", "Motherboard", "Speakers"],
+                            ans: 2
+                        },
+                        {
+                            qAr: "أنظمة التشغيل (مثل Windows و Linux و OS X) تُصنف كبرامج تطبيقية متخصصة.",
+                            qEn: "Operating systems (like Windows, Linux, OS X) are classified as specialized application software.",
+                            optsAr: ["صح", "خطأ"],
+                            optsEn: ["True", "False"],
+                            ans: 1
+                        },
+                        {
+                            qAr: "من هو الشخص المسؤول عن دراسة الجدوى ووضع المخططات للنظام ضمن المكونات البشرية؟",
+                            qEn: "Who is responsible for feasibility studies and system charting within human components?",
+                            optsAr: ["مدير قاعدة البيانات (DB Manager)", "مصمم النظم (System Designer)", "محلل النظم (Systems Analyst)", "المبرمج (Programmer)"],
+                            optsEn: ["DB Manager", "System Designer", "Systems Analyst", "Programmer"],
+                            ans: 2
+                        },
+                        {
+                            qAr: "البنية التحتية السحابية (Cloud) تتميز بأنها توفر تحكماً كاملاً ولكن بصعوبة في التوسع.",
+                            qEn: "Cloud infrastructure is characterized by providing full control but with difficulty in scaling.",
+                            optsAr: ["صح", "خطأ"],
+                            optsEn: ["True", "False"],
+                            ans: 1
+                        },
+                        {
+                            qAr: "أي من الأجهزة التالية يُصنف كأداة إدخال (Input) للبيانات إلى الحاسوب؟",
+                            qEn: "Which of the following devices is classified as an input tool for data to the computer?",
+                            optsAr: ["الشاشة", "الماسح الضوئي (Scanner)", "الطابعة", "مكبرات الصوت"],
+                            optsEn: ["Monitor", "Scanner", "Printer", "Speakers"],
+                            ans: 1
+                        },
+                        {
+                            qAr: "تساعد الشبكات الحاسوبية في تبادل البيانات ومشاركة الموارد، مما يؤدي إلى تقليل الاعتماد على الورق.",
+                            qEn: "Computer networks help exchange data and share resources, reducing reliance on paper.",
+                            optsAr: ["صح", "خطأ"],
+                            optsEn: ["True", "False"],
+                            ans: 0
+                        },
+                        {
+                            qAr: "ما هو دور 'أخصائي الصيانة' في المكونات البشرية للبنية التحتية؟",
+                            qEn: "What is the role of the 'Maintenance Specialist' in the human components of infrastructure?",
+                            optsAr: ["تحويل التصاميم إلى كود برمجي", "إدخال البيانات اللازمة لتشغيل النظام", "وضع المخططات للنظام", "إصلاح الأعطال الميكانيكية والإلكترونية"],
+                            optsEn: ["Coding designs", "Data entry", "System charting", "Fixing mechanical/electronic faults"],
+                            ans: 3
+                        },
+                        {
+                            qAr: "أي مما يلي يُعد من متطلبات 'البيئة الحاضنة' (مستلزمات أخرى) لعمل البنية التحتية بشكل سليم؟",
+                            qEn: "Which of the following is a requirement of the 'Incubating Environment' (other supplies) for infrastructure to work properly?",
+                            optsAr: ["توفير نظام تبريد وإمدادات طاقة احتياطية وحماية فيزيائية", "توفير أنظمة تشغيل حديثة وبرامج متخصصة", "توفير شبكات اتصالات فائقة السرعة", "تدريب المستخدمين والفنيين"],
+                            optsEn: ["Cooling, backup power, physical security", "Modern OS & specialized software", "High-speed networks", "User training"],
+                            ans: 0
+                        }
                     ],
                     2: []
                 }
@@ -296,7 +368,7 @@
             5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: { 1: [], 2: [] } }
         };
 
-        // إعدادات المادة واللغة
+        // 2. إعدادات المادة واللغة
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
         const params = new URLSearchParams(window.location.search);
         const courseId = params.get('id'); 
@@ -323,7 +395,7 @@
         if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } 
         else { applyLanguage(); }
 
-        // الوظائف العامة
+        // 3. الوظائف العامة
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
         if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
 
@@ -342,7 +414,7 @@
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
         updatePomoDisplay();
 
-        // وظائف المادة
+        // 4. وظائف المادة
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function openModal(type) {
@@ -404,7 +476,7 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // الكويز
+        // === الكويز المخصص للمحاضرات ===
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
 
         function openQuiz(lectureNum) {
