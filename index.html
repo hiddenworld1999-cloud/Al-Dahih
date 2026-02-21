@@ -631,4 +631,106 @@
                     <div class="cc-v-content">
                         <div>
                             <div class="completed-badge"><span class="material-icons" style="font-size:14px; margin-inline-end: 4px;">check_circle</span> ${compText}</div>
-                            <h4 style="color:var(--title-color); font-size:1rem;">${currentLang === 'en' ? course.titleEn : course.titleAr}
+                            <h4 style="color:var(--title-color); font-size:1rem;">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4>
+                            <p style="color:var(--text-grey); font-size:0.85rem; margin-top:5px;">${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase(); const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter);
+            renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term)));
+        });
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.page-section').forEach(p => { if(p.id !== 'page-player') p.classList.remove('active'); });
+            document.getElementById('page-' + tabName).classList.add('active');
+            if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); }
+            if(tabName === 'profile') updateCompletedCountBadge();
+        }
+
+        function openPlayer(id) {
+            currentCourse = coursesData.find(c => c.id === id);
+            document.getElementById('playerCourseTitle').innerText = currentLang === 'en' ? currentCourse.titleEn : currentCourse.titleAr;
+            document.getElementById('playerInstructor').innerText = currentLang === 'en' ? currentCourse.instructorEn : currentCourse.instructorAr;
+            document.getElementById('page-player').style.display = 'block'; document.getElementById('bottomNav').style.display = 'none'; document.getElementById('mainHeader').style.display = 'none'; document.querySelector('.news-ticker').style.display = 'none';
+            updateCompletionUI(); 
+        }
+
+        function closePlayer() { document.getElementById('page-player').style.display = 'none'; document.getElementById('bottomNav').style.display = 'flex'; document.getElementById('mainHeader').style.display = 'flex'; document.querySelector('.news-ticker').style.display = 'flex'; }
+        
+        function toggleCourseCompletion() {
+            const key = 'completed_' + currentCourse.id; localStorage.setItem(key, localStorage.getItem(key) === 'true' ? 'false' : 'true');
+            updateCompletionUI(); if(activeFilter === 'all') renderCourses(coursesData); else filterCourses(activeFilter, null); updateCompletedCountBadge(); 
+        }
+
+        function updateCompletionUI() {
+            const isCompleted = localStorage.getItem('completed_' + currentCourse.id) === 'true';
+            const btn = document.getElementById('completeCourseBtn'); const text = document.getElementById('completeBtnText'); const icon = document.getElementById('completeBtnIcon');
+            if(isCompleted) { btn.style.background = '#e8f5e9'; btn.style.color = '#2e7d32'; btn.style.border = '2px solid #2e7d32'; text.innerText = currentLang === 'en' ? 'Course Completed' : 'تم إنجاز المادة بنجاح'; icon.innerText = 'task_alt'; } 
+            else { btn.style.background = 'transparent'; btn.style.color = 'var(--text-grey)'; btn.style.border = '2px solid var(--text-grey)'; text.innerText = currentLang === 'en' ? 'Mark as Completed' : 'تحديد كمادة مكتملة'; icon.innerText = 'radio_button_unchecked'; }
+        }
+
+        // ============================================
+        // الزووم والعلامة المائية المدمجة (تم التطوير)
+        let currentZoomLevel = 100; 
+        
+        // التعديل هنا: الزووم بيطبق على الصندوق اللي جواه الصور والعلامة المائية مع بعض عشان يكبروا سوا!
+        function zoomImages(change) { 
+            currentZoomLevel += change; 
+            if (currentZoomLevel < 50) currentZoomLevel = 50; 
+            if (currentZoomLevel > 300) currentZoomLevel = 300; 
+            document.getElementById('imagesWrapper').style.width = currentZoomLevel + '%'; 
+        }
+
+        function showProtectedImage(type) {
+            const fileData = currentCourse.files[type]; 
+            const modal = document.getElementById('imageModal');
+            const imagesWrapper = document.getElementById('imagesWrapper');
+            const watermarkContainer = document.getElementById('watermarkOverlay');
+            
+            currentZoomLevel = 100;
+            imagesWrapper.style.width = '100%'; // تصفير الزووم مع كل فتحة جديدة
+            
+            imagesWrapper.querySelectorAll('img').forEach(img => img.remove());
+            
+            for (let i = 1; i <= fileData.count; i++) {
+                const imgElement = document.createElement('img'); 
+                imgElement.src = fileData.prefix + i + '.jpg'; 
+                imgElement.className = 'protected-img'; 
+                imgElement.style.width = '100%'; 
+                imgElement.onerror = function() { imgElement.alt = 'Error'; imgElement.style.border = "1px solid red"; imgElement.style.padding = "20px"; };
+                
+                // إدراج الصور قبل العلامة المائية عشان تفضل العلامة فوقهم
+                imagesWrapper.insertBefore(imgElement, watermarkContainer);
+            }
+            
+            watermarkContainer.innerHTML = ''; 
+            const watermarkText = `${studentFullName} - ${studentCode}`;
+            
+            // تم زيادة العدد لـ 400 لضمان تغطية كل الصفحات مهما كان طول المذكرة
+            for (let i = 0; i < 400; i++) { 
+                const span = document.createElement('div'); 
+                span.className = 'watermark-text'; 
+                span.innerText = watermarkText; 
+                watermarkContainer.appendChild(span); 
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeImageModal() { document.getElementById('imageModal').style.display = 'none'; }
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+
+        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
+        function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
+        function togglePomodoro() { let timerDiv = document.getElementById('pomodoroTimer'); timerDiv.style.display = timerDiv.style.display === 'none' ? 'block' : 'none'; }
+        function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
+        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+
+        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); 
+    </script>
+</body>
+</html>
