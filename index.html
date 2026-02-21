@@ -70,11 +70,13 @@
         
         /* الهيدر */
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-card); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--title-color); display: flex; align-items: center; }
-        html[dir="rtl"] .logo-icon { margin-left: 8px; } html[dir="ltr"] .logo-icon { margin-right: 8px; }
+        
+        /* تم إصلاح الشعار ليكون بجانب الأيقونة بشكل سليم */
+        .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--title-color); display: flex; align-items: center; gap: 8px; }
+        .logo-icon { color: var(--accent-orange); font-size: 28px; margin: 0 !important; }
+        
+        .header-icons { display: flex; align-items: center; gap: 15px; }
         html[dir="rtl"] .search-icon-inside { right: 15px; } html[dir="ltr"] .search-icon-inside { left: 15px; }
-        .logo-icon { color: var(--accent-orange); font-size: 28px; }
-        .header-icons { display: flex; align-items: center; gap: 12px; }
         
         .news-ticker { background: var(--accent-orange); display: flex; align-items: center; padding: 8px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .news-ticker .material-icons { color: #0A2647; font-size: 22px; margin: 0 10px; }
@@ -111,10 +113,16 @@
         .stat-item:first-child { border-inline-start: none; }
         .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--title-color); }
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
+        
         .settings-list { background: var(--bg-card); border-radius: 18px; padding: 5px 0; box-shadow: var(--card-shadow); }
-        .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
-        .settings-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: white; }
-        .settings-text { font-weight: 600; font-size: 0.95rem; color: var(--text-main); margin-inline-start: 15px; }
+        
+        /* تم إصلاح القائمة الخاصة بالإعدادات هنا جذرياً لتكون أفقية دائماً */
+        .settings-item { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+        .settings-item:last-child { border-bottom: none; }
+        .settings-item-right { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+        .settings-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: white; flex-shrink: 0; margin: 0; }
+        .settings-text { font-weight: 600; font-size: 0.95rem; color: var(--text-main); margin: 0; padding: 0; }
+        
         .logout-btn-new { width: 100%; padding: 16px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: 2px solid rgba(211, 47, 47, 0.2); border-radius: 15px; font-weight: 700; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: background 0.2s; }
 
         /* الشريط السفلي والبنك والكشكول */
@@ -140,7 +148,7 @@
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.05rem; line-height: 1.8; outline: none; }
         .notebook-textarea::placeholder { color: var(--text-grey); opacity: 0.6; }
 
-        /* عارض الصور والعلامة المائية (تم الإصلاح) */
+        /* عارض الصور والعلامة المائية (محمية ومضبوطة) */
         .image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 500; display: none; flex-direction: column; }
         .modal-header { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 601; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; }
@@ -148,7 +156,7 @@
         .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
         .images-scroll-container { flex: 1; overflow-y: auto; overflow-x: auto; width: 100%; padding: 10px; display: flex; flex-direction: column; align-items: center; position: relative; background: #f0f0f0; }
         .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; transition: width 0.2s ease; }
-        /* إصلاح العلامة المائية */
+        
         .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; bottom: 0; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 600; }
         .watermark-text { color: rgba(0, 0, 0, 0.13); font-size: 24px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; }
 
@@ -174,7 +182,7 @@
         .quiz-result-box { text-align: center; padding: 30px 10px; }
         .quiz-score { font-size: 3rem; font-weight: 900; color: var(--accent-orange); margin: 15px 0; }
 
-        /* المؤقت والباقي */
+        /* المؤقت والآلة الحاسبة */
         .pomodoro-container { position: fixed; bottom: 90px; z-index: 400; display: flex; flex-direction: column; align-items: center; }
         html[dir="rtl"] .pomodoro-container { left: 20px; align-items: flex-end; } html[dir="ltr"] .pomodoro-container { right: 20px; align-items: flex-end; }
         .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent-orange); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s; }
@@ -183,6 +191,7 @@
         .pomo-time { font-size: 2.2rem; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; direction: ltr; font-family: monospace; }
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: var(--primary-blue); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
+        
         .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 500; display: none; border: 1px solid var(--border-color); direction: ltr; }
         .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .calc-title { font-weight: bold; color: var(--title-color); display: flex; align-items: center; gap: 5px; }
@@ -327,10 +336,16 @@
             </div>
             <div class="settings-list">
                 <div class="settings-item" onclick="toggleDarkMode()">
-                    <div class="settings-item-right"><div class="settings-icon" style="background: var(--title-color);"><span class="material-icons">dark_mode</span></div><span class="settings-text" data-ar="تفعيل الوضع الليلي" data-en="Dark Mode">تفعيل الوضع الليلي</span></div>
+                    <div class="settings-item-right">
+                        <div class="settings-icon" style="background: var(--title-color);"><span class="material-icons">dark_mode</span></div>
+                        <span class="settings-text" data-ar="تفعيل الوضع الليلي" data-en="Dark Mode">تفعيل الوضع الليلي</span>
+                    </div>
                 </div>
                 <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end" class="settings-item" style="text-decoration: none; color: inherit;">
-                    <div class="settings-item-right"><div class="settings-icon" style="background: #2196f3;"><span class="material-icons">support_agent</span></div><span class="settings-text" data-ar="تواصل مع الدعم الفني" data-en="Contact Support">تواصل مع الدعم الفني</span></div>
+                    <div class="settings-item-right">
+                        <div class="settings-icon" style="background: #2196f3;"><span class="material-icons">support_agent</span></div>
+                        <span class="settings-text" data-ar="تواصل مع الدعم الفني" data-en="Contact Support">تواصل مع الدعم الفني</span>
+                    </div>
                     <span class="material-icons" style="color: var(--text-grey);">chevron_left</span>
                 </a>
             </div>
@@ -519,29 +534,24 @@
             body.innerHTML = `<div class="lecture-content-view" style="display:block;">${content}</div>`;
         }
 
-        // === نظام الاختبار التفاعلي (الجديد) ===
-        let currentQuizIndex = 0;
-        let quizScore = 0;
+        // === نظام الاختبار التفاعلي ===
+        let currentQuizIndex = 0; let quizScore = 0;
         
         function openQuizModal() {
             if (!currentCourse.quiz || currentCourse.quiz.length === 0) {
                 alert(currentLang === 'en' ? "No quiz available for this course yet!" : "عذراً، لم يتم إضافة أسئلة تفاعلية لهذه المادة بعد.");
                 return;
             }
-            currentQuizIndex = 0;
-            quizScore = 0;
+            currentQuizIndex = 0; quizScore = 0;
             document.getElementById('quizModal').style.display = 'flex';
             renderQuizQuestion();
         }
 
-        function closeQuizModal() {
-            document.getElementById('quizModal').style.display = 'none';
-        }
+        function closeQuizModal() { document.getElementById('quizModal').style.display = 'none'; }
 
         function renderQuizQuestion() {
             const container = document.getElementById('quizContainerBox');
             const qData = currentCourse.quiz[currentQuizIndex];
-            
             let optionsHtml = '';
             qData.options.forEach((opt, idx) => {
                 optionsHtml += `<button class="quiz-option" onclick="selectQuizAnswer(this, ${idx}, ${qData.answer})">
@@ -549,7 +559,6 @@
                                     <span class="material-icons opt-icon" style="display:none;"></span>
                                 </button>`;
             });
-
             container.innerHTML = `
                 <div class="quiz-progress">${currentLang === 'en' ? 'Question' : 'السؤال'} ${currentQuizIndex + 1} / ${currentCourse.quiz.length}</div>
                 <div class="quiz-question">${qData.q}</div>
@@ -561,22 +570,16 @@
         function selectQuizAnswer(btnElement, selectedIdx, correctIdx) {
             const allOptions = document.querySelectorAll('.quiz-option');
             allOptions.forEach(opt => { opt.onclick = null; opt.style.pointerEvents = 'none'; });
-
-            const icon = btnElement.querySelector('.opt-icon');
-            icon.style.display = 'block';
+            const icon = btnElement.querySelector('.opt-icon'); icon.style.display = 'block';
 
             if (selectedIdx === correctIdx) {
-                btnElement.classList.add('correct');
-                icon.innerText = 'check_circle';
-                quizScore++;
+                btnElement.classList.add('correct'); icon.innerText = 'check_circle'; quizScore++;
             } else {
-                btnElement.classList.add('wrong');
-                icon.innerText = 'cancel';
+                btnElement.classList.add('wrong'); icon.innerText = 'cancel';
                 allOptions[correctIdx].classList.add('correct');
                 allOptions[correctIdx].querySelector('.opt-icon').innerText = 'check_circle';
                 allOptions[correctIdx].querySelector('.opt-icon').style.display = 'block';
             }
-
             document.getElementById('quizNextBtn').style.display = 'block';
             if (currentQuizIndex === currentCourse.quiz.length - 1) {
                 document.getElementById('quizNextBtn').innerText = currentLang === 'en' ? 'Show Result' : 'عرض النتيجة';
@@ -585,11 +588,7 @@
 
         function nextQuizQuestion() {
             currentQuizIndex++;
-            if (currentQuizIndex < currentCourse.quiz.length) {
-                renderQuizQuestion();
-            } else {
-                showQuizResult();
-            }
+            if (currentQuizIndex < currentCourse.quiz.length) { renderQuizQuestion(); } else { showQuizResult(); }
         }
 
         function showQuizResult() {
