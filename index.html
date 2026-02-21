@@ -33,6 +33,8 @@
             --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
             --nav-inactive: #adb5bd;
             --border-color: #e9ecef;
+            --calc-bg: #f8f9fa;
+            --calc-btn: #ffffff;
             --filter-bg: #e9ecef;
             --filter-text: #495057;
         }
@@ -46,6 +48,8 @@
             --card-shadow: 0 4px 12px rgba(0,0,0,0.5);
             --nav-inactive: #5f6368;
             --border-color: #333;
+            --calc-bg: #2d2d2d;
+            --calc-btn: #3e3e3e;
             --filter-bg: #333;
             --filter-text: #E8EAED;
         }
@@ -64,7 +68,12 @@
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-card); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .logo-text { font-size: 1.3rem; font-weight: 700; color: var(--title-color); display: flex; align-items: center; gap: 8px; }
         .logo-icon { color: var(--accent-orange); font-size: 28px; margin: 0 !important; }
+        
         .header-icons { display: flex; align-items: center; gap: 15px; }
+        .music-active { color: var(--accent-orange) !important; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        html[dir="rtl"] .search-icon-inside { right: 15px; } html[dir="ltr"] .search-icon-inside { left: 15px; }
         
         .news-ticker { background: var(--accent-orange); display: flex; align-items: center; padding: 8px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .news-ticker .material-icons { color: #0A2647; font-size: 22px; margin: 0 10px; }
@@ -77,7 +86,6 @@
         .search-input::placeholder { color: var(--text-grey); }
         .search-container { position: relative; }
         .search-icon-inside { position: absolute; top: 50%; transform: translateY(-50%); color: var(--title-color); opacity: 0.6; }
-        html[dir="rtl"] .search-icon-inside { right: 15px; } html[dir="ltr"] .search-icon-inside { left: 15px; }
         
         /* الفلاتر */
         .categories-wrapper { margin-top: 20px; overflow-x: auto; white-space: nowrap; padding-bottom: 10px; -ms-overflow-style: none; scrollbar-width: none; }
@@ -128,7 +136,7 @@
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.05rem; line-height: 1.8; outline: none; }
         .notebook-textarea::placeholder { color: var(--text-grey); opacity: 0.6; }
 
-        /* المؤقت */
+        /* المؤقت والآلة الحاسبة */
         .pomodoro-container { position: fixed; bottom: 90px; z-index: 400; display: flex; flex-direction: column; align-items: center; }
         html[dir="rtl"] .pomodoro-container { left: 20px; align-items: flex-end; } html[dir="ltr"] .pomodoro-container { right: 20px; align-items: flex-end; }
         .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent-orange); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s; }
@@ -137,6 +145,16 @@
         .pomo-time { font-size: 2.2rem; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; direction: ltr; font-family: monospace; }
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: var(--primary-blue); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
+        
+        /* مودال الآلة الحاسبة */
+        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 500; display: none; border: 1px solid var(--border-color); direction: ltr; }
+        .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .calc-title { font-weight: bold; color: var(--title-color); display: flex; align-items: center; gap: 5px; }
+        .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--title-color); font-family: monospace; margin-bottom: 15px; outline: none; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text-main); transition: background 0.2s; }
+        .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
+        .calc-btn.eq { background: var(--accent-orange); color: var(--primary-blue); grid-column: span 2; }
     </style>
 </head>
 <body>
@@ -147,9 +165,39 @@
         </div>
         <div class="header-icons">
             <span class="material-icons" onclick="toggleLanguage()" style="color:var(--title-color); font-size: 26px; cursor:pointer;">language</span>
+            <span class="material-icons" onclick="toggleCalculator()" style="color:var(--title-color); font-size: 26px; cursor:pointer;">calculate</span>
+            <span class="material-icons" id="musicToggle" style="color:var(--title-color); font-size: 26px; cursor:pointer;" onclick="toggleMusic()">music_off</span>
             <span class="material-icons" id="darkModeToggle" style="color:var(--title-color); font-size: 26px; cursor:pointer;" onclick="toggleDarkMode()">dark_mode</span>
         </div>
     </header>
+
+    <div id="calculatorModal" class="calculator-modal">
+        <div class="calc-header">
+            <span class="calc-title"><span class="material-icons" style="font-size:20px;">calculate</span> <span data-ar="آلة حاسبة" data-en="Calculator">آلة حاسبة</span></span>
+            <span class="material-icons" onclick="toggleCalculator()" style="cursor:pointer; color:var(--text-grey);">close</span>
+        </div>
+        <input type="text" id="calcDisplay" class="calc-display" readonly>
+        <div class="calc-grid">
+            <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
+            <button class="calc-btn op" onclick="appendCalc('/')">/</button>
+            <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+            <button class="calc-btn" onclick="appendCalc('7')">7</button>
+            <button class="calc-btn" onclick="appendCalc('8')">8</button>
+            <button class="calc-btn" onclick="appendCalc('9')">9</button>
+            <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+            <button class="calc-btn" onclick="appendCalc('4')">4</button>
+            <button class="calc-btn" onclick="appendCalc('5')">5</button>
+            <button class="calc-btn" onclick="appendCalc('6')">6</button>
+            <button class="calc-btn eq" onclick="calculateResult()">=</button>
+            <button class="calc-btn" onclick="appendCalc('1')">1</button>
+            <button class="calc-btn" onclick="appendCalc('2')">2</button>
+            <button class="calc-btn" onclick="appendCalc('3')">3</button>
+            <button class="calc-btn" onclick="appendCalc('0')">0</button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
     <div class="news-ticker">
         <span class="material-icons">campaign</span>
@@ -281,7 +329,6 @@
             document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
             document.querySelectorAll('[data-ph-ar]').forEach(el => { el.placeholder = el.getAttribute(`data-ph-${currentLang}`); });
             
-            // إعادة رسم المواد باللغة الجديدة
             renderCourses(activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter));
             setRandomQuote(); 
         }
@@ -297,8 +344,23 @@
         const quotesEn = [`"Studying now is better than regret later, ${studentFirstName}!"`, `"Success isn't an accident.. Keep going!"`];
         function setRandomQuote() { document.getElementById('motivationQuote').innerText = currentLang === 'en' ? quotesEn[Math.floor(Math.random() * quotesEn.length)] : quotesAr[Math.floor(Math.random() * quotesAr.length)]; }
 
+        // === الوظائف المضافة ===
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
         if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
+
+        // الآلة الحاسبة
+        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+        function appendCalc(v) { document.getElementById('calcDisplay').value += v; }
+        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
+        function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
+
+        // الموسيقى
+        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
+        function toggleMusic() { 
+            const btn = document.getElementById('musicToggle'); 
+            if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } 
+            else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } 
+        }
 
         const notebookInput = document.getElementById('studentNotebook'); const saveIndicator = document.getElementById('saveIndicator'); let typingTimer;
         if (localStorage.getItem('daheehNotebook')) { notebookInput.value = localStorage.getItem('daheehNotebook'); }
@@ -319,7 +381,6 @@
 
         const container = document.getElementById('coursesListContainer');
         function renderCourses(list) {
-            if(!container) return;
             container.innerHTML = '';
             if (!list || list.length === 0) { container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-grey);">لا توجد مواد</div>`; return; }
             list.forEach(course => {
