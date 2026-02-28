@@ -88,10 +88,10 @@
         .zoom-controls { display: flex; gap: 15px; background: #333; padding: 5px 15px; border-radius: 20px; }
         .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
         .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #f0f0f0; text-align: center; }
-        .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; transition: width 0.2s ease; }
-        .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; }
+        .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; transition: width 0.2s ease; padding-top: 15px; }
+        .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; position: relative; }
         
-        /* العلامة المائية */
+        /* العلامة المائية الشاملة */
         .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
         .watermark-text { color: rgba(0, 0, 0, 0.15); font-size: 26px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; user-select: none; }
         
@@ -265,7 +265,10 @@
             <button class="close-img-btn" onclick="closePdfViewer()" data-ar="إنهاء القراءة" data-en="Close PDF">إنهاء القراءة</button>
             <span style="color: white; font-weight: bold; font-size: 0.9rem;" data-ar="ملف المحاضرة" data-en="Lecture PDF">ملف المحاضرة</span>
             <div style="width: 80px;"></div> </div>
-        <div class="images-scroll-container" id="pdfContainer" style="background: #e9ecef; padding: 10px;">
+        <div class="images-scroll-container" style="background: #e9ecef;">
+            <div id="pdfWrapper" class="images-wrapper" style="padding-top: 15px;">
+                <div id="pdfWatermarkOverlay" class="watermark-overlay"></div>
+            </div>
         </div>
     </div>
 
@@ -289,7 +292,7 @@
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    // === زرار جديد بيفتح الـ PDF جوه التطبيق باستخدام مكتبة pdf.js ===
+                    // === زرار جديد بيفتح الـ PDF جوه التطبيق باستخدام مكتبة pdf.js ومدمج عليه العلامة المائية ===
                     1: `<div style="text-align:center; padding:30px 10px;">
                           <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
                           <h3 style="color:var(--primary); margin-bottom:10px;">ملف المحاضرة الأولى</h3>
@@ -375,7 +378,6 @@
             }
         }
 
-        // عرض المحاضرة + زرار الاختبار
         function showLecture(num) {
             const content = course.summaries[num] || (currentLang === 'en' ? "<p>No content available yet.</p>" : "<p style='text-align:center; color:var(--grey);'>لا يوجد محتوى متاح حالياً.</p>");
             let htmlContent = `<div class="content-view">${content}</div>`;
@@ -418,34 +420,51 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // === دالة عرض الـ PDF السحرية ===
+        // === دالة عرض الـ PDF السحرية والمحمية بالعلامة المائية ===
         function openPdfViewerInsideApp(pdfUrl) {
-            const container = document.getElementById('pdfContainer');
-            container.innerHTML = `<div style="padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem;">
-                                      <span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>
-                                      جاري تحضير المحاضرة...
-                                   </div>`;
+            const wrapper = document.getElementById('pdfWrapper');
+            const watermark = document.getElementById('pdfWatermarkOverlay');
+            
+            // تنظيف الحاوية من الملفات القديمة
+            wrapper.querySelectorAll('canvas').forEach(c => c.remove());
+            wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
+
+            // إظهار رسالة التحميل
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading-msg';
+            loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;";
+            loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>جاري تحضير المحاضرة وحمايتها...`;
+            wrapper.insertBefore(loadingDiv, watermark);
+
             document.getElementById('pdfViewer').style.display = 'flex';
+
+            // زرع العلامة المائية فوق الـ PDF
+            const sName = localStorage.getItem('studentName') || "Student";
+            const sCode = localStorage.getItem('studentCode') || "000";
+            watermark.innerHTML = '';
+            for(let i=0; i<800; i++) { // زودنا العدد عشان يغطي ملف الـ PDF الطويل
+                watermark.innerHTML += `<div class="watermark-text">${sName} - ${sCode}</div>`; 
+            }
 
             // استدعاء ملف الـ PDF ورسمه
             pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
-                container.innerHTML = ''; // مسح رسالة التحميل
+                loadingDiv.remove(); // إزالة رسالة التحميل
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
-                        // تكبير جودة الصفحة عشان الموبايل
-                        const viewport = page.getViewport({ scale: 1.5 });
+                        const viewport = page.getViewport({ scale: 1.5 }); // جودة ممتازة للموبايل
                         
-                        // إنشاء لوحة رسم (Canvas) لكل صفحة
                         const canvas = document.createElement('canvas');
                         canvas.style.display = 'block';
                         canvas.style.margin = '0 auto 15px auto';
                         canvas.style.maxWidth = '100%';
                         canvas.style.borderRadius = '8px';
                         canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
+                        canvas.style.position = 'relative'; // مهم جداً عشان يفضل تحت العلامة المائية
+                        canvas.style.zIndex = '1';
                         
                         canvas.height = viewport.height;
                         canvas.width = viewport.width;
-                        container.appendChild(canvas);
+                        wrapper.insertBefore(canvas, watermark);
 
                         const renderContext = {
                             canvasContext: canvas.getContext('2d'),
@@ -455,10 +474,7 @@
                     });
                 }
             }).catch(error => {
-                container.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;">
-                                          <span class="material-icons" style="font-size:40px;">error_outline</span><br>
-                                          عذراً، تعذر تحميل الملف.<br>تأكد من رفع ملف الباوربوينت بصيغة (net_lec1.pdf) بجوار هذا الملف.
-                                       </div>`;
+                loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>عذراً، تعذر تحميل الملف.<br>تأكد من رفع ملف الباوربوينت بصيغة (net_lec1.pdf) بجوار هذا الملف.</div>`;
             });
         }
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
