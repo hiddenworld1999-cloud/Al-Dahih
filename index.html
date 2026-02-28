@@ -11,6 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق الدحيح - الرئيسية</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -32,11 +33,13 @@
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 120px; overflow-x: hidden; user-select: none; }
-        html[lang="en"] body { font-family: sans-serif; }
 
         .page-section { display: none; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .page-section.active { display: block; }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* شارة النقاط */
+        .xp-badge { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); padding: 4px 10px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; box-shadow: 0 2px 8px rgba(255,200,0,0.2); }
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
@@ -58,7 +61,7 @@
         body.dark-mode .premium-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .hero-decor { position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .hero-decor-2 { position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(33,150,243,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
-        .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 5px; position: relative; z-index: 2; }
+        .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .welcome-text p { color: rgba(255,255,255,0.8); font-weight: 500; font-size: 0.95rem; position: relative; z-index: 2; line-height: 1.6; }
 
         .search-container { position: relative; margin: -10px 20px 20px; z-index: 10; }
@@ -107,10 +110,11 @@
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
         body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 4px solid var(--accent-orange); }
+        
         .profile-stats-box { display: flex; justify-content: space-around; background: var(--bg-card); padding: 20px 10px; border-radius: 20px; margin-top: -25px; position: relative; z-index: 3; box-shadow: var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
         .stat-item { text-align: center; flex: 1; border-inline-start: 1px solid var(--border-color); }
         .stat-item:first-child { border-inline-start: none; }
-        .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--title-color); }
+        .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--primary-blue); }
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
         
         .settings-list { background: var(--bg-card); border-radius: 20px; padding: 5px 0; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); }
@@ -149,7 +153,7 @@
     <header class="app-header" id="mainHeader">
         <div class="logo-text">
             <span class="material-icons logo-icon">auto_awesome</span>
-            <span data-ar="الدحيح" data-en="El-Daheeh">الدحيح</span>
+            الدحيح
         </div>
         <div class="header-icons">
             <span class="material-icons" onclick="toggleLanguage()" title="تغيير اللغة">language</span>
@@ -203,20 +207,27 @@
     </div>
 
     <div id="page-home" class="page-section active">
+        
         <div class="hero-wrapper">
             <div class="premium-hero">
                 <div class="hero-decor"></div>
                 <div class="hero-decor-2"></div>
                 <div class="welcome-text">
-                    <h2><span data-ar="أهلاً بك، يا " data-en="Welcome, ">أهلاً بك، يا </span><span id="welcomeName" style="color: var(--accent-orange);">دحيح</span></h2>
+                    <h2>
+                        <span data-ar="أهلاً بك، يا " data-en="Welcome, ">أهلاً بك، يا </span>
+                        <span id="welcomeName" style="color: var(--accent-orange);">دحيح</span>
+                        <span class="xp-badge" id="heroXP">⭐ 0 XP</span>
+                    </h2>
                     <p id="motivationQuote"></p>
                 </div>
             </div>
         </div>
+
         <div class="search-container">
             <span class="material-icons search-icon-inside">search</span>
             <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن مادة..." data-ph-ar="ابحث عن مادة..." data-ph-en="Search for a course...">
         </div>
+
         <div class="categories-wrapper">
             <button class="cat-btn active" onclick="filterCourses('all', this)" data-ar="الكل" data-en="All">الكل</button>
             <button class="cat-btn" onclick="filterCourses('cs', this)" data-ar="حاسب آلي" data-en="CS">حاسب آلي</button>
@@ -224,6 +235,7 @@
             <button class="cat-btn" onclick="filterCourses('economics', this)" data-ar="اقتصاد" data-en="Economics">اقتصاد</button>
             <button class="cat-btn" onclick="filterCourses('stats', this)" data-ar="إحصاء" data-en="Statistics">إحصاء</button>
         </div>
+        
         <div class="container">
             <h3 class="section-title" data-ar="المسارات الدراسية" data-en="Learning Paths">المسارات الدراسية</h3>
             <div id="coursesListContainer"></div>
@@ -250,7 +262,7 @@
             <div class="notebook-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                     <span style="color: var(--text-grey); font-size: 0.85rem;" data-ar="حفظ تلقائي سحابي.." data-en="Auto-saving..">حفظ تلقائي سحابي..</span>
-                    <span id="saveIndicator" style="color:#2e7d32; display:none; align-items:center; gap:4px; font-weight:bold; font-size:0.85rem;"><span class="material-icons" style="font-size: 16px;">cloud_done</span> <span data-ar="تم الحفظ" data-en="Saved">تم الحفظ</span></span>
+                    <span id="saveIndicator" style="color:#2e7d32; display:none; align-items:center; gap:4px; font-weight:bold; font-size:0.85rem;"><span class="material-icons" style="font-size: 16px;">cloud_done</span> <span data-ar="تم الحفظ (+1 XP)" data-en="Saved (+1 XP)">تم الحفظ (+1 XP)</span></span>
                 </div>
                 <textarea id="studentNotebook" class="notebook-textarea" placeholder="دون أهم النقاط هنا لتراجعها قبل الامتحان..." data-ph-ar="دون أهم النقاط هنا لتراجعها قبل الامتحان..." data-ph-en="Write important points here to review before exams..."></textarea>
             </div>
@@ -266,9 +278,9 @@
             </div>
             
             <div class="profile-stats-box">
-                <div class="stat-item"><div class="stat-value">5</div><div class="stat-label" data-ar="مواد مسجلة" data-en="Enrolled">مواد مسجلة</div></div>
+                <div class="stat-item"><div class="stat-value" id="profileXP" style="color: var(--primary-blue);">0</div><div class="stat-label" data-ar="النقاط" data-en="Points">النقاط</div></div>
                 <div class="stat-item"><div class="stat-value" id="completedCountBadge" style="color:#2196F3;">0</div><div class="stat-label" data-ar="مكتمل" data-en="Completed">مكتمل</div></div>
-                <div class="stat-item"><div class="stat-value" style="color: var(--accent-orange);">VIP</div><div class="stat-label" data-ar="العضوية" data-en="Plan">العضوية</div></div>
+                <div class="stat-item"><div class="stat-value" id="profileLevel" style="color: var(--accent-orange);">طالب</div><div class="stat-label" data-ar="المستوى" data-en="Level">المستوى</div></div>
             </div>
             
             <div class="settings-list">
@@ -287,7 +299,7 @@
                 </a>
             </div>
             
-            <button class="logout-btn-new" onclick="logout()">
+            <button class="logout-btn-new" onclick="safeLogout()">
                 <span class="material-icons">logout</span> <span data-ar="تسجيل الخروج آمن" data-en="Secure Logout">تسجيل الخروج آمن</span>
             </button>
         </div>
@@ -311,7 +323,6 @@
     </div>
 
     <script>
-        // === بيانات المواد مع اللغتين ===
         const coursesData = [
             { id: 1, category: 'cs', titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_coding.jpg" },
             { id: 2, category: 'cs', titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_network.jpg" },
@@ -328,34 +339,46 @@
         const quotesAr = [`"النجاح بيليق عليك يا ${studentFirstName}.. كمل فرم!"`, `"تعب المذاكرة دلوقتي أحسن مليون مرة من ندم النتيجة بعدين."`];
         const quotesEn = [`"Success looks good on you, ${studentFirstName}!"`, `"Pain of studying is better than pain of regret."`];
 
-        // === محرك الترجمة ===
+        // === نظام النقاط والمستويات (Gamification XP) ===
+        function getLevelName(xp) {
+            if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد';
+            if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح';
+            if (xp < 600) return currentLang === 'en' ? 'Genius' : 'عبقري';
+            return currentLang === 'en' ? 'Legend' : 'أسطورة';
+        }
+
+        function addXP(amount) {
+            let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0;
+            currentXP += amount;
+            localStorage.setItem('daheehXP', currentXP);
+            updateXPDisplay();
+        }
+
+        function updateXPDisplay() {
+            let xp = parseInt(localStorage.getItem('daheehXP')) || 0;
+            let level = getLevelName(xp);
+            
+            if(document.getElementById('heroXP')) document.getElementById('heroXP').innerText = `⭐ ${xp} XP`;
+            if(document.getElementById('profileXP')) document.getElementById('profileXP').innerText = xp;
+            if(document.getElementById('profileLevel')) document.getElementById('profileLevel').innerText = level;
+        }
+
+        // محرك الترجمة
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
-        
         function applyLanguage() {
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
             document.documentElement.lang = currentLang;
-            
-            // تغيير النصوص
             document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
             document.querySelectorAll('[data-ph-ar]').forEach(el => { el.placeholder = el.getAttribute(`data-ph-${currentLang}`); });
-            
-            // تحديث الكود في الحساب
             document.getElementById('profileCode').innerText = (currentLang === 'en' ? "ID: " : "الكود: ") + (localStorage.getItem('studentCode') || "---");
-            
-            // تحديث المقولة التحفيزية
             document.getElementById('motivationQuote').innerText = currentLang === 'en' ? quotesEn[Math.floor(Math.random() * quotesEn.length)] : quotesAr[Math.floor(Math.random() * quotesAr.length)];
-            
-            // إعادة رسم الكروت عشان العناوين تتغير
             renderCourses(activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter));
+            updateXPDisplay(); // تحديث اسم المستوى باللغة
         }
 
-        function toggleLanguage() { 
-            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
-            localStorage.setItem('daheehLang', currentLang); 
-            applyLanguage();
-        }
+        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
 
-        // === باقي الوظائف ===
+        // الدارك مود
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
             const isDark = document.body.classList.contains('dark-mode');
@@ -363,8 +386,7 @@
             document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
         }
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
-            document.body.classList.add('dark-mode'); 
-            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
+            document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
         } else {
             document.getElementById('darkModeToggle').innerText = 'light_mode'; 
         }
@@ -375,15 +397,21 @@
         function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { 
-            const btn = document.getElementById('musicToggle'); 
-            if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } 
-            else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } 
-        }
+        function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
 
+        // الكشكول (إضافة نقطة XP عند الكتابة بذكاء)
         const notebookInput = document.getElementById('studentNotebook'); const saveIndicator = document.getElementById('saveIndicator'); let typingTimer;
         if (localStorage.getItem('daheehNotebook')) { notebookInput.value = localStorage.getItem('daheehNotebook'); }
-        notebookInput.addEventListener('input', function() { clearTimeout(typingTimer); saveIndicator.style.display = 'none'; typingTimer = setTimeout(() => { localStorage.setItem('daheehNotebook', notebookInput.value); saveIndicator.style.display = 'flex'; setTimeout(() => { saveIndicator.style.display = 'none'; }, 2000); }, 800); });
+        notebookInput.addEventListener('input', function() { 
+            clearTimeout(typingTimer); saveIndicator.style.display = 'none'; 
+            typingTimer = setTimeout(() => { 
+                localStorage.setItem('daheehNotebook', notebookInput.value); 
+                saveIndicator.style.display = 'flex'; 
+                // إعطاء +1 XP للطالب كل ما يكتب ويحفظ
+                if(notebookInput.value.trim().length > 5) addXP(1);
+                setTimeout(() => { saveIndicator.style.display = 'none'; }, 2000); 
+            }, 800); 
+        });
 
         let activeFilter = 'all';
         function filterCourses(category, btn) { activeFilter = category; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); if (category === 'all') renderCourses(coursesData); else renderCourses(coursesData.filter(c => c.category === category)); }
@@ -418,17 +446,22 @@
         document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter); renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term))); });
 
         function switchTab(tabName, element) { document.querySelectorAll('.page-section').forEach(p => { p.classList.remove('active'); }); document.getElementById('page-' + tabName).classList.add('active'); if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); } if(tabName === 'profile') updateCompletedCountBadge(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+        
+        // === الخروج الآمن (لا يمسح النقاط) ===
+        function safeLogout() { 
+            localStorage.removeItem('isLoggedInDaheeh'); 
+            // سيحتفظ المتصفح بالنقاط، الكشكول، والدارك مود
+            window.location.href = 'login.html'; 
+        }
 
-        // البومودورو
         let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
         function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
         function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
         function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // تشغيل الوظائف عند فتح الصفحة
-        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge();
+        // تهيئة الصفحة
+        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay();
     </script>
 </body>
 </html>
