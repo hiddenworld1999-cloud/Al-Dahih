@@ -15,18 +15,30 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
+        /* === المتغيرات الموحدة بين المادة والرئيسية === */
         :root { 
-            --primary-blue: #0A2647; --accent-orange: #FFC800; 
-            --bg-main: #f4f7f6; --bg-card: #ffffff; --text-main: #1e293b; --text-grey: #64748b;
-            --card-shadow: 0 8px 24px rgba(0,0,0,0.04); --border-color: rgba(0,0,0,0.05);
-            --filter-bg: #e2e8f0; --calc-bg: #f8f9fa; --calc-btn: #ffffff;
+            --primary-blue: #0A2647; 
+            --accent-orange: #FFC800; 
+            --bg-main: #f4f7f6; 
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-grey: #64748b;
+            --card-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            --border-color: rgba(0,0,0,0.05);
+            --filter-bg: #e2e8f0;
         }
 
+        /* === الدارك مود هنا بقى بالظبط زي المادة === */
         body.dark-mode {
-            --primary-blue: #FFC800; --accent-orange: #FFC800;
-            --bg-main: #121212; --bg-card: #1E1E1E; --text-main: #E8EAED; --text-grey: #9AA0A6;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.3); --border-color: rgba(255,255,255,0.05);
-            --filter-bg: #2d2d2d; --calc-bg: #2d2d2d; --calc-btn: #3e3e3e;
+            --primary-blue: #FFC800; 
+            --accent-orange: #FFC800;
+            --bg-main: #121212; 
+            --bg-card: #1E1E1E; 
+            --text-main: #E8EAED; 
+            --text-grey: #9AA0A6;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            --border-color: rgba(255,255,255,0.05);
+            --filter-bg: #2d2d2d;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
@@ -37,18 +49,18 @@
         .page-section.active { display: block; }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* الهيدر */
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-card); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; }
         .logo-icon { color: var(--accent-orange); font-size: 28px; }
         .header-icons { display: flex; align-items: center; gap: 15px; }
-        .header-icons .material-icons { color: var(--text-main); font-size: 26px; cursor: pointer; transition: 0.2s; }
-        .music-active { color: var(--accent-orange) !important; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .header-icons .material-icons { color: var(--text-main); font-size: 26px; cursor: pointer; }
 
         .news-ticker { background: var(--accent-orange); display: flex; align-items: center; padding: 8px 15px; }
         .news-ticker .material-icons { color: #0A2647; font-size: 20px; margin: 0 10px; }
         .news-ticker marquee { color: #0A2647; font-weight: 700; font-size: 0.9rem; }
 
+        /* الرئيسية */
         .hero-wrapper { padding: 20px 20px 0; }
         .premium-hero { background: var(--bg-card); border-radius: 24px; padding: 25px 20px; box-shadow: var(--card-shadow); margin-bottom: 20px; border: 1px solid var(--border-color); }
         .welcome-text h2 { color: var(--primary-blue); font-size: 1.6rem; font-weight: 900; margin-bottom: 5px; }
@@ -71,7 +83,7 @@
         
         .premium-course-card { background: var(--bg-card); border-radius: 20px; padding: 12px; display: flex; gap: 15px; margin-bottom: 18px; box-shadow: var(--card-shadow); cursor: pointer; border: 1px solid var(--border-color); }
         .premium-course-card:active { transform: scale(0.98); }
-        .card-img-wrapper { width: 90px; height: 90px; flex-shrink: 0; border-radius: 14px; overflow: hidden; position: relative; background: rgba(0,0,0,0.05); display:flex; justify-content:center; align-items:center; }
+        .card-img-wrapper { width: 90px; height: 90px; flex-shrink: 0; border-radius: 14px; overflow: hidden; position: relative; }
         .p-course-img { width: 100%; height: 100%; object-fit: cover; }
         .p-course-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .badge { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; width: fit-content; margin-bottom: 6px; }
@@ -80,11 +92,13 @@
         .p-course-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
         .p-course-prof { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; gap: 4px; }
 
+        /* === الشريط السفلي === */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 12px 5px; border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 200; border-top: 1px solid var(--border-color); }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: var(--text-grey); flex: 1; cursor: pointer; font-weight: 600; gap: 3px; transition: 0.3s; }
         .nav-item.active { color: var(--primary-blue); }
         body.dark-mode .nav-item.active { color: var(--accent-orange); }
 
+        /* === صفحة الحساب (تم حل مشكلة الأيقونات) === */
         .profile-header-card { background: var(--primary-blue); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
         body.dark-mode .profile-header-card { background: #1E1E1E; border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; border: 4px solid var(--accent-orange); }
@@ -94,6 +108,7 @@
         .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--primary-blue); }
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
         
+        /* حل مشكلة الأيقونات هنا */
         .settings-list { background: var(--bg-card); border-radius: 20px; padding: 5px 0; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); }
         .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .settings-item:last-child { border-bottom: none; }
@@ -105,14 +120,15 @@
         .notebook-container { background: var(--bg-card); border-radius: 24px; padding: 25px; box-shadow: var(--card-shadow); height: calc(100vh - 250px); display: flex; flex-direction: column; border: 1px solid var(--border-color); }
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.1rem; line-height: 1.8; outline: none; }
         
+        /* === البومودورو (تم رفعه لأعلى عشان مايغطيش الناف بار) === */
         .pomodoro-container { position: fixed; bottom: 80px; z-index: 400; display: flex; flex-direction: column; align-items: center; left: 20px; }
         .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent-orange); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; }
         .pomo-timer { background: var(--bg-card); padding: 15px; border-radius: 20px; box-shadow: var(--card-shadow); margin-bottom: 15px; border: 2px solid var(--accent-orange); width: 200px; text-align: center; display: none; }
         
         .calculator-modal { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 500; display: none; border: 1px solid var(--border-color); direction: ltr; }
-        .calc-display { width: 100%; height: 65px; background: var(--calc-bg); border: none; border-radius: 16px; font-size: 2rem; text-align: right; padding: 10px 15px; color: var(--primary-blue); font-family: monospace; margin-bottom: 15px; outline: none; }
+        .calc-display { width: 100%; height: 65px; background: var(--bg-main); border: none; border-radius: 16px; font-size: 2rem; text-align: right; padding: 10px 15px; color: var(--primary-blue); font-family: monospace; margin-bottom: 15px; outline: none; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn { padding: 18px 0; border: none; border-radius: 14px; font-size: 1.3rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text-main); }
+        .calc-btn { padding: 18px 0; border: none; border-radius: 14px; font-size: 1.3rem; font-weight: bold; cursor: pointer; background: var(--bg-main); color: var(--text-main); }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
@@ -123,10 +139,7 @@
     <header class="app-header" id="mainHeader">
         <div class="logo-text"><span class="material-icons logo-icon">auto_awesome</span> الدحيح</div>
         <div class="header-icons">
-            <span class="material-icons" onclick="toggleLanguage()" title="تغيير اللغة">language</span>
-            <span class="material-icons" onclick="toggleCalculator()" title="الآلة الحاسبة">calculate</span>
-            <span class="material-icons" id="musicToggle" onclick="toggleMusic()" title="الموسيقى">music_off</span>
-            <span class="material-icons" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي">dark_mode</span>
+            <span class="material-icons" onclick="toggleDarkMode()" id="darkModeToggle">dark_mode</span>
         </div>
     </header>
 
@@ -278,14 +291,6 @@
         const quotes = [`"النجاح بيليق عليك يا ${studentFirstName}.. كمل فرم!"`, `"تعب المذاكرة دلوقتي أحسن مليون مرة من ندم النتيجة بعدين."`];
         document.getElementById('motivationQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
 
-        let currentLang = localStorage.getItem('daheehLang') || 'ar';
-        function toggleLanguage() { 
-            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
-            localStorage.setItem('daheehLang', currentLang); 
-            document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
-            document.documentElement.lang = currentLang;
-        }
-
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
         if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'light_mode'; }
 
@@ -293,9 +298,6 @@
         function appendCalc(v) { document.getElementById('calcDisplay').value += v; }
         function clearCalc() { document.getElementById('calcDisplay').value = ''; }
         function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
-
-        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
 
         const notebookInput = document.getElementById('studentNotebook'); const saveIndicator = document.getElementById('saveIndicator'); let typingTimer;
         if (localStorage.getItem('daheehNotebook')) { notebookInput.value = localStorage.getItem('daheehNotebook'); }
@@ -314,13 +316,9 @@
                 const compText = isCompleted ? 'مكتملة' : 'متاحة الآن';
                 const badgeClass = isCompleted ? 'badge-completed' : 'badge-new';
                 const iconHtml = isCompleted ? '<span class="material-icons" style="font-size:12px;">done_all</span>' : '';
-                
-                /* === حل التهنيج الجذري في حالة عدم وجود الصورة === */
                 container.innerHTML += `
                 <div class="premium-course-card" onclick="window.location.href='course.html?id=${course.id}'">
-                    <div class="card-img-wrapper">
-                        <img src="${course.img}" class="p-course-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x100?text=Course'">
-                    </div>
+                    <div class="card-img-wrapper"><img src="${course.img}" class="p-course-img" onerror="this.src='cover_coding.jpg'"></div>
                     <div class="p-course-info">
                         <span class="badge ${badgeClass}">${iconHtml} ${compText}</span>
                         <h4 class="p-course-title">${course.titleAr}</h4>
