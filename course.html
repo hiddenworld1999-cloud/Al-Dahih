@@ -17,8 +17,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تفاصيل المادة - الدحيح</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <style>
         /* === المتغيرات الذكية === */
@@ -77,18 +80,18 @@
         .lecture-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); font-weight: bold; font-size: 1.05rem; }
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 15px; padding: 20px; }
         .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
-        .content-view ul { padding-inline-start: 20px; }
-        .content-view li { margin-bottom: 8px; }
-
-        /* عارض الصور والعلامة المائية (المدمجة) */
+        
+        /* عارض الصور (للميدترم والفاينل) وعارض الـ PDF */
         .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: none; flex-direction: column; }
         .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 1501; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
         .zoom-controls { display: flex; gap: 15px; background: #333; padding: 5px 15px; border-radius: 20px; }
         .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
-        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #f0f0f0; }
+        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #f0f0f0; text-align: center; }
         .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; transition: width 0.2s ease; }
         .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; }
+        
+        /* العلامة المائية */
         .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
         .watermark-text { color: rgba(0, 0, 0, 0.15); font-size: 26px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; user-select: none; }
         
@@ -99,7 +102,7 @@
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
-        /* الآلة الحاسبة */
+        /* الآلة الحاسبة والبومودورو */
         .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 2000; display: none; border: 1px solid var(--border-color); direction: ltr; }
         .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
@@ -109,7 +112,6 @@
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: #0A2647; }
         .calc-btn.eq { background: var(--accent); color: #0A2647; grid-column: span 2; }
         
-        /* البومودورو */
         .pomodoro-container { position: fixed; bottom: 30px; z-index: 400; display: flex; flex-direction: column; align-items: center; }
         html[dir="rtl"] .pomodoro-container { left: 20px; align-items: flex-end; } html[dir="ltr"] .pomodoro-container { right: 20px; align-items: flex-end; }
         .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.2s; }
@@ -187,17 +189,16 @@
 
     <div class="container">
         
-        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</span></div>
+        <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="محتوى المادة" data-en="Course Content">محتوى المادة</span></div>
         <button class="btn-card btn-summary" onclick="openModal('summary')">
             <div>
-                <div style="font-weight:900;" data-ar="ملخصات المحاضرات" data-en="Lecture Summaries">ملخصات المحاضرات</div>
-                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الزبدة والخلاصة هنا" data-en="The essence is here">الزبدة والخلاصة هنا</div>
+                <div style="font-weight:900;" data-ar="المحاضرات والاختبارات" data-en="Lectures & Quizzes">المحاضرات والاختبارات</div>
+                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الشرح وأسئلة كل محاضرة" data-en="Explanation and quiz for each lecture">الشرح وأسئلة كل محاضرة</div>
             </div>
             <div class="btn-icon" style="color:#2196f3;"><span class="material-icons">description</span></div>
         </button>
 
-        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات والأسئلة" data-en="Exams and Questions">الامتحانات والأسئلة</span></div>
-        
+        <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات السابقة" data-en="Previous Exams">الامتحانات السابقة</span></div>
         <button class="btn-card btn-midterm" onclick="openImages('midterm')">
             <div>
                 <div data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
@@ -213,7 +214,6 @@
             </div>
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
-
     </div>
 
     <div id="summaryModal" class="modal">
@@ -260,7 +260,19 @@
         </div>
     </div>
 
+    <div id="pdfViewer" class="img-viewer" style="z-index: 2500;">
+        <div class="img-head">
+            <button class="close-img-btn" onclick="closePdfViewer()" data-ar="إنهاء القراءة" data-en="Close PDF">إنهاء القراءة</button>
+            <span style="color: white; font-weight: bold; font-size: 0.9rem;" data-ar="ملف المحاضرة" data-en="Lecture PDF">ملف المحاضرة</span>
+            <div style="width: 80px;"></div> </div>
+        <div class="images-scroll-container" id="pdfContainer" style="background: #e9ecef; padding: 10px;">
+        </div>
+    </div>
+
     <script>
+        // إعداد مكتبة عرض الـ PDF
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
         // 1. الداتا الشاملة
         const allCourses = {
             1: { 
@@ -268,8 +280,8 @@
                 profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa",
                 midtermFiles: { prefix: "coding_mid_", count: 5 }, 
                 finalFiles: { prefix: "coding_final_", count: 8 }, 
-                summaries: {}, // فاضية
-                lectureQuizzes: {} // فاضية
+                summaries: {}, 
+                lectureQuizzes: {}
             },
             2: { 
                 titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure",
@@ -277,88 +289,30 @@
                 midtermFiles: { prefix: "net_mid_", count: 3 },
                 finalFiles: { prefix: "net_final_", count: 5 },
                 summaries: {
-                    1: `<div style="text-align:center; padding:20px;">
-                          <span class="material-icons" style="font-size:60px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
+                    // === زرار جديد بيفتح الـ PDF جوه التطبيق باستخدام مكتبة pdf.js ===
+                    1: `<div style="text-align:center; padding:30px 10px;">
+                          <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
                           <h3 style="color:var(--primary); margin-bottom:10px;">ملف المحاضرة الأولى</h3>
-                          <p style="color:var(--grey); margin-bottom:25px; line-height:1.6;">ملف الـ PDF جاهز، اضغط على الزر بالأسفل لفتحه وقراءته بوضوح.</p>
-                          <button onclick="window.open('net_lec1.pdf', '_blank')" class="btn-card" style="justify-content:center; background:#2196f3; color:white; border:none;">
-                              <span class="material-icons" style="margin-left:10px;">visibility</span> عرض الملف
+                          <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;">
+                              محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا مباشرة بدون الخروج من التطبيق.
+                          </p>
+                          <button onclick="openPdfViewerInsideApp('net_lec1.pdf')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; box-shadow:0 4px 15px rgba(10,38,71,0.3);">
+                              <span class="material-icons" style="margin-left:10px;">chrome_reader_mode</span> اقرأ المحاضرة الآن
                           </button>
                         </div>`
                 },
-                // === أسئلة المحاضرة الأولى (مادة البنية التحتية) ===
                 lectureQuizzes: {
                     1: [
-                        {
-                            qAr: "ما هي المكونات الخمسة الأساسية للنظام البيئي للبنية التحتية لتكنولوجيا المعلومات؟",
-                            qEn: "What are the 5 core components of the IT Infrastructure ecosystem?",
-                            optsAr: ["الإنترنت، الحواسيب، الهواتف، الطابعات، والماسحات الضوئية", "المكونات المادية، البرمجية، الشبكات، المكونات البشرية، ومستلزمات أخرى", "أنظمة التشغيل، البرامج التطبيقية، قواعد البيانات، الخوادم، والشبكات", "الإدخال، الإخراج، المعالجة، التخزين، واللوحة الأم"],
-                            optsEn: ["Internet, PCs, Phones, Printers, Scanners", "Hardware, Software, Networks, People, Others", "OS, Apps, DB, Servers, Networks", "Input, Output, Processing, Storage, Motherboard"],
-                            ans: 1
-                        },
-                        {
-                            qAr: "وحدة الحساب والمنطق (ALU) هي المسؤولة عن إدارة تدفق البيانات وتعمل كـ 'شرطي المرور' داخل المعالج.",
-                            qEn: "ALU is responsible for managing data flow and acts as a 'traffic cop' inside the processor.",
-                            optsAr: ["صح", "خطأ"],
-                            optsEn: ["True", "False"],
-                            ans: 1
-                        },
-                        {
-                            qAr: "ما هو الجزء الذي يُعتبر 'العمود الفقري' للحاسب، حيث يربط أجزاء الحاسب الداخلية ببعضها وينسق العمل بينها؟",
-                            qEn: "What part is considered the 'backbone' of the computer, connecting internal parts?",
-                            optsAr: ["وحدة المعالجة المركزية (CPU)", "القرص الصلب (Hard Disk)", "اللوحة الأم (Motherboard)", "مكبرات الصوت"],
-                            optsEn: ["CPU", "Hard Disk", "Motherboard", "Speakers"],
-                            ans: 2
-                        },
-                        {
-                            qAr: "أنظمة التشغيل (مثل Windows و Linux و OS X) تُصنف كبرامج تطبيقية متخصصة.",
-                            qEn: "Operating systems (like Windows, Linux, OS X) are classified as specialized application software.",
-                            optsAr: ["صح", "خطأ"],
-                            optsEn: ["True", "False"],
-                            ans: 1
-                        },
-                        {
-                            qAr: "من هو الشخص المسؤول عن دراسة الجدوى ووضع المخططات للنظام ضمن المكونات البشرية؟",
-                            qEn: "Who is responsible for feasibility studies and system charting within human components?",
-                            optsAr: ["مدير قاعدة البيانات (DB Manager)", "مصمم النظم (System Designer)", "محلل النظم (Systems Analyst)", "المبرمج (Programmer)"],
-                            optsEn: ["DB Manager", "System Designer", "Systems Analyst", "Programmer"],
-                            ans: 2
-                        },
-                        {
-                            qAr: "البنية التحتية السحابية (Cloud) تتميز بأنها توفر تحكماً كاملاً ولكن بصعوبة في التوسع.",
-                            qEn: "Cloud infrastructure is characterized by providing full control but with difficulty in scaling.",
-                            optsAr: ["صح", "خطأ"],
-                            optsEn: ["True", "False"],
-                            ans: 1
-                        },
-                        {
-                            qAr: "أي من الأجهزة التالية يُصنف كأداة إدخال (Input) للبيانات إلى الحاسوب؟",
-                            qEn: "Which of the following devices is classified as an input tool for data to the computer?",
-                            optsAr: ["الشاشة", "الماسح الضوئي (Scanner)", "الطابعة", "مكبرات الصوت"],
-                            optsEn: ["Monitor", "Scanner", "Printer", "Speakers"],
-                            ans: 1
-                        },
-                        {
-                            qAr: "تساعد الشبكات الحاسوبية في تبادل البيانات ومشاركة الموارد، مما يؤدي إلى تقليل الاعتماد على الورق.",
-                            qEn: "Computer networks help exchange data and share resources, reducing reliance on paper.",
-                            optsAr: ["صح", "خطأ"],
-                            optsEn: ["True", "False"],
-                            ans: 0
-                        },
-                        {
-                            qAr: "ما هو دور 'أخصائي الصيانة' في المكونات البشرية للبنية التحتية؟",
-                            qEn: "What is the role of the 'Maintenance Specialist' in the human components of infrastructure?",
-                            optsAr: ["تحويل التصاميم إلى كود برمجي", "إدخال البيانات اللازمة لتشغيل النظام", "وضع المخططات للنظام", "إصلاح الأعطال الميكانيكية والإلكترونية"],
-                            optsEn: ["Coding designs", "Data entry", "System charting", "Fixing mechanical/electronic faults"],
-                            ans: 3
-                        },
-                        {
-                            qAr: "أي مما يلي يُعد من متطلبات 'البيئة الحاضنة' (مستلزمات أخرى) لعمل البنية التحتية بشكل سليم؟",
-                            qEn: "Which of the following is a requirement of the 'Incubating Environment' (other supplies) for infrastructure to work properly?",
-                            optsAr: ["توفير نظام تبريد وإمدادات طاقة احتياطية وحماية فيزيائية", "توفير أنظمة تشغيل حديثة وبرامج متخصصة", "توفير شبكات اتصالات فائقة السرعة", "تدريب المستخدمين والفنيين"],
-                            optsEn: ["Cooling, backup power, physical security", "Modern OS & specialized software", "High-speed networks", "User training"],
-                            ans: 0
-                        }
+                        { qAr: "ما هي المكونات الخمسة الأساسية للنظام البيئي للبنية التحتية لتكنولوجيا المعلومات؟", qEn: "What are the 5 core components of the IT Infrastructure ecosystem?", optsAr: ["الإنترنت، الحواسيب، الهواتف، الطابعات، والماسحات الضوئية", "المكونات المادية، البرمجية، الشبكات، المكونات البشرية، ومستلزمات أخرى", "أنظمة التشغيل، البرامج التطبيقية، قواعد البيانات، الخوادم، والشبكات", "الإدخال، الإخراج، المعالجة، التخزين، واللوحة الأم"], optsEn: ["Internet, PCs, Phones, Printers", "Hardware, Software, Networks, People, Others", "OS, Apps, DB, Servers, Networks", "Input, Output, Processing, Storage"], ans: 1 },
+                        { qAr: "وحدة الحساب والمنطق (ALU) هي المسؤولة عن إدارة تدفق البيانات وتعمل كـ 'شرطي المرور' داخل المعالج.", qEn: "ALU is responsible for managing data flow and acts as a 'traffic cop' inside the processor.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 1 },
+                        { qAr: "ما هو الجزء الذي يُعتبر 'العمود الفقري' للحاسب، حيث يربط أجزاء الحاسب الداخلية ببعضها وينسق العمل بينها؟", qEn: "What part is considered the 'backbone' of the computer, connecting internal parts?", optsAr: ["وحدة المعالجة المركزية (CPU)", "القرص الصلب (Hard Disk)", "اللوحة الأم (Motherboard)", "مكبرات الصوت"], optsEn: ["CPU", "Hard Disk", "Motherboard", "Speakers"], ans: 2 },
+                        { qAr: "أنظمة التشغيل (مثل Windows و Linux و OS X) تُصنف كبرامج تطبيقية متخصصة.", qEn: "Operating systems (like Windows, Linux, OS X) are classified as specialized application software.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 1 },
+                        { qAr: "من هو الشخص المسؤول عن دراسة الجدوى ووضع المخططات للنظام ضمن المكونات البشرية؟", qEn: "Who is responsible for feasibility studies and system charting within human components?", optsAr: ["مدير قاعدة البيانات (DB Manager)", "مصمم النظم (System Designer)", "محلل النظم (Systems Analyst)", "المبرمج (Programmer)"], optsEn: ["DB Manager", "System Designer", "Systems Analyst", "Programmer"], ans: 2 },
+                        { qAr: "البنية التحتية السحابية (Cloud) تتميز بأنها توفر تحكماً كاملاً ولكن بصعوبة في التوسع.", qEn: "Cloud infrastructure is characterized by providing full control but with difficulty in scaling.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 1 },
+                        { qAr: "أي من الأجهزة التالية يُصنف كأداة إدخال (Input) للبيانات إلى الحاسوب؟", qEn: "Which of the following devices is classified as an input tool for data to the computer?", optsAr: ["الشاشة", "الماسح الضوئي (Scanner)", "الطابعة", "مكبرات الصوت"], optsEn: ["Monitor", "Scanner", "Printer", "Speakers"], ans: 1 },
+                        { qAr: "تساعد الشبكات الحاسوبية في تبادل البيانات ومشاركة الموارد، مما يؤدي إلى تقليل الاعتماد على الورق.", qEn: "Computer networks help exchange data and share resources, reducing reliance on paper.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 0 },
+                        { qAr: "ما هو دور 'أخصائي الصيانة' في المكونات البشرية للبنية التحتية؟", qEn: "What is the role of the 'Maintenance Specialist' in the human components of infrastructure?", optsAr: ["تحويل التصاميم إلى كود برمجي", "إدخال البيانات اللازمة لتشغيل النظام", "وضع المخططات للنظام", "إصلاح الأعطال الميكانيكية والإلكترونية"], optsEn: ["Coding designs", "Data entry", "System charting", "Fixing mechanical/electronic faults"], ans: 3 },
+                        { qAr: "أي مما يلي يُعد من متطلبات 'البيئة الحاضنة' (مستلزمات أخرى) لعمل البنية التحتية بشكل سليم؟", qEn: "Which of the following is a requirement of the 'Incubating Environment' for infrastructure to work properly?", optsAr: ["توفير نظام تبريد وإمدادات طاقة احتياطية وحماية فيزيائية", "توفير أنظمة تشغيل حديثة وبرامج متخصصة", "توفير شبكات اتصالات فائقة السرعة", "تدريب المستخدمين والفنيين"], optsEn: ["Cooling, backup power, physical security", "Modern OS & specialized software", "High-speed networks", "User training"], ans: 0 }
                     ],
                     2: []
                 }
@@ -379,21 +333,13 @@
             document.documentElement.lang = currentLang;
             document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
             document.querySelectorAll('.close-arrow').forEach(el => { el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; });
-            
             if (course) {
                 document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr;
                 document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr;
             }
         }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            localStorage.setItem('daheehLang', currentLang);
-            applyLanguage();
-        }
-
-        if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } 
-        else { applyLanguage(); }
+        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
+        if (!course) { alert("حدث خطأ!"); window.location.href = 'index.html'; } else { applyLanguage(); }
 
         // 3. الوظائف العامة
         function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('daheehDarkMode', document.body.classList.contains('dark-mode')); document.getElementById('darkModeToggle').innerText = document.body.classList.contains('dark-mode') ? 'light_mode' : 'dark_mode'; }
@@ -432,10 +378,7 @@
         // عرض المحاضرة + زرار الاختبار
         function showLecture(num) {
             const content = course.summaries[num] || (currentLang === 'en' ? "<p>No content available yet.</p>" : "<p style='text-align:center; color:var(--grey);'>لا يوجد محتوى متاح حالياً.</p>");
-            
-            let htmlContent = `<div class="content-view">
-                                ${content}
-                               </div>`;
+            let htmlContent = `<div class="content-view">${content}</div>`;
                                
             if(course.lectureQuizzes && course.lectureQuizzes[num] && course.lectureQuizzes[num].length > 0) {
                 const btnText = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
@@ -449,6 +392,7 @@
             document.getElementById('contentModal').style.display = 'flex';
         }
 
+        // عرض الصور للميدترم والفاينل
         let currentZoom = 100;
         function zoomImages(change) { currentZoom += change; if(currentZoom<50) currentZoom=50; if(currentZoom>300) currentZoom=300; document.getElementById('imagesWrapper').style.width = currentZoom + '%'; }
         
@@ -459,7 +403,6 @@
             const wrapper = document.getElementById('imagesWrapper');
             const watermark = document.getElementById('watermarkOverlay');
             currentZoom = 100; wrapper.style.width = '100%';
-            
             wrapper.querySelectorAll('img').forEach(img => img.remove());
             
             for (let i = 1; i <= files.count; i++) {
@@ -471,14 +414,58 @@
             const sCode = localStorage.getItem('studentCode') || "000";
             watermark.innerHTML = '';
             for(let i=0; i<400; i++) { watermark.innerHTML += `<div class="watermark-text">${sName} - ${sCode}</div>`; }
-            
             document.getElementById('imageViewer').style.display = 'flex';
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // === الكويز المخصص للمحاضرات ===
-        let currentQ = 0; let score = 0; let activeQuizQuestions = [];
+        // === دالة عرض الـ PDF السحرية ===
+        function openPdfViewerInsideApp(pdfUrl) {
+            const container = document.getElementById('pdfContainer');
+            container.innerHTML = `<div style="padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem;">
+                                      <span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>
+                                      جاري تحضير المحاضرة...
+                                   </div>`;
+            document.getElementById('pdfViewer').style.display = 'flex';
 
+            // استدعاء ملف الـ PDF ورسمه
+            pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
+                container.innerHTML = ''; // مسح رسالة التحميل
+                for (let num = 1; num <= pdfDoc.numPages; num++) {
+                    pdfDoc.getPage(num).then(page => {
+                        // تكبير جودة الصفحة عشان الموبايل
+                        const viewport = page.getViewport({ scale: 1.5 });
+                        
+                        // إنشاء لوحة رسم (Canvas) لكل صفحة
+                        const canvas = document.createElement('canvas');
+                        canvas.style.display = 'block';
+                        canvas.style.margin = '0 auto 15px auto';
+                        canvas.style.maxWidth = '100%';
+                        canvas.style.borderRadius = '8px';
+                        canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
+                        
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        container.appendChild(canvas);
+
+                        const renderContext = {
+                            canvasContext: canvas.getContext('2d'),
+                            viewport: viewport
+                        };
+                        page.render(renderContext);
+                    });
+                }
+            }).catch(error => {
+                container.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;">
+                                          <span class="material-icons" style="font-size:40px;">error_outline</span><br>
+                                          عذراً، تعذر تحميل الملف.<br>تأكد من رفع ملف الباوربوينت بصيغة (net_lec1.pdf) بجوار هذا الملف.
+                                       </div>`;
+            });
+        }
+        function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
+
+
+        // الكويز
+        let currentQ = 0; let score = 0; let activeQuizQuestions = [];
         function openQuiz(lectureNum) {
             activeQuizQuestions = course.lectureQuizzes[lectureNum];
             currentQ = 0; score = 0; 
