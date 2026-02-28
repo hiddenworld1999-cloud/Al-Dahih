@@ -4,38 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تسجيل الدخول - منصة الدحيح</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        /* --- تنسيقات صفحة الدخول --- */
-        :root { --primary-blue: #0A2647; --accent-orange: #FFC800; --bg-light: #F8F9FA; --text-dark: #212529; --text-grey: #6c757d; }
+        /* --- المتغيرات والتنسيقات الأساسية --- */
+        :root { 
+            --primary-blue: #0A2647; 
+            --accent-orange: #FFC800; 
+            --bg-light: #f0f4f8; 
+            --text-dark: #1a1a1a; 
+            --text-grey: #6c757d; 
+            --error-color: #d32f2f;
+            --success-color: #2e7d32;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-light); color: var(--text-dark); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .login-container { background: white; padding: 40px 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
-        .login-logo { font-size: 2.2rem; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .login-logo .material-icons { font-size: 40px; margin-left: 8px; color: var(--accent-orange); }
-        .login-title { font-size: 1.4rem; color: var(--primary-blue); margin-bottom: 15px; }
-        .login-subtitle { color: var(--text-grey); font-size: 1rem; margin-bottom: 35px; line-height: 1.5; }
         
-        .input-group { margin-bottom: 25px; position: relative; }
-        .login-input { width: 100%; padding: 18px 50px 18px 20px; border: 2px solid var(--accent-orange); border-radius: 15px; font-family: inherit; font-size: 1.1rem; transition: all 0.3s ease; background: rgba(255, 200, 0, 0.05); color: var(--primary-blue); font-weight: 700; letter-spacing: 1px; text-align: center; text-transform: uppercase; }
-        .login-input:focus { border-color: var(--primary-blue); background: white; outline: none; box-shadow: 0 0 0 4px rgba(10, 38, 71, 0.1); }
-        .input-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--accent-orange); opacity: 1; font-size: 28px; }
+        body { 
+            font-family: 'IBM Plex Sans Arabic', sans-serif; 
+            background-color: var(--bg-light); 
+            color: var(--text-dark); 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            position: relative;
+            overflow: hidden; /* لمنع السكرول بسبب أشكال الخلفية */
+        }
+
+        /* --- أشكال الديكور في الخلفية (لمسة احترافية) --- */
+        .bg-shape { position: absolute; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.7; }
+        .shape-1 { top: -10%; right: -10%; width: 350px; height: 350px; background: rgba(10, 38, 71, 0.15); animation: float 6s ease-in-out infinite; }
+        .shape-2 { bottom: -10%; left: -10%; width: 300px; height: 300px; background: rgba(255, 200, 0, 0.2); animation: float 8s ease-in-out infinite reverse; }
+
+        @keyframes float { 
+            0% { transform: translateY(0px) rotate(0deg); } 
+            50% { transform: translateY(20px) rotate(5deg); } 
+            100% { transform: translateY(0px) rotate(0deg); } 
+        }
+
+        /* --- صندوق تسجيل الدخول --- */
+        .login-container { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px);
+            padding: 45px 30px; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 2px 15px rgba(0,0,0,0.03); 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.8);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- اللوجو والنصوص --- */
+        .login-logo { font-size: 2.2rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .logo-icon { font-size: 42px !important; margin-left: 10px; color: var(--accent-orange); animation: bounce 2s infinite; }
         
-        .login-btn { width: 100%; padding: 18px; border: none; border-radius: 15px; background: var(--primary-blue); color: white; font-size: 1.1rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: transform 0.2s, background 0.3s; box-shadow: 0 4px 15px rgba(10, 38, 71, 0.2); }
-        .login-btn:active { transform: scale(0.98); }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+
+        .login-title { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 10px; font-weight: 700; }
+        .login-subtitle { color: var(--text-grey); font-size: 0.95rem; margin-bottom: 35px; line-height: 1.6; padding: 0 10px; }
         
-        .message-box { padding: 15px; border-radius: 12px; margin-bottom: 25px; font-size: 0.95rem; display: none; }
-        .error-msg { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
-        .success-msg { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
-        .help-text { margin-top: 30px; font-size: 0.9rem; color: var(--text-grey); }
-        .help-text a { color: var(--primary-blue); font-weight: 700; text-decoration: none; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+        /* --- حقل الإدخال --- */
+        .input-group { margin-bottom: 25px; position: relative; text-align: right; }
+        .input-label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 600; color: var(--primary-blue); padding-right: 5px; }
+        
+        .login-input { 
+            width: 100%; 
+            padding: 16px 45px 16px 15px; 
+            border: 2px solid #e1e4e8; 
+            border-radius: 16px; 
+            font-family: inherit; 
+            font-size: 1.15rem; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            background: #f8fafc; 
+            color: var(--primary-blue); 
+            font-weight: 700; 
+            text-align: center; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+        }
+        .login-input::placeholder { color: #adb5bd; font-weight: 500; letter-spacing: 0; font-size: 0.95rem; }
+        .login-input:focus { 
+            border-color: var(--primary-blue); 
+            background: white; 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(10, 38, 71, 0.1); 
+        }
+        .input-icon { position: absolute; right: 15px; top: 43px; color: var(--text-grey); font-size: 24px; transition: color 0.3s; }
+        .login-input:focus + .input-icon { color: var(--primary-blue); }
+        
+        /* --- زر الدخول --- */
+        .login-btn { 
+            width: 100%; 
+            padding: 16px; 
+            border: none; 
+            border-radius: 16px; 
+            background: var(--primary-blue); 
+            color: white; 
+            font-size: 1.15rem; 
+            font-weight: 700; 
+            font-family: inherit; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 8px 20px rgba(10, 38, 71, 0.25); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-btn:hover { background: #071b33; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(10, 38, 71, 0.3); }
+        .login-btn:active { transform: translateY(1px); box-shadow: 0 5px 10px rgba(10, 38, 71, 0.2); }
+        .login-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        /* زرار الدوران أثناء التحميل */
+        .spinner { animation: spin 1s linear infinite; font-size: 22px; display: none; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- الرسائل المنبثقة --- */
+        .message-box { 
+            padding: 14px 15px; 
+            border-radius: 12px; 
+            margin-bottom: 25px; 
+            font-size: 0.95rem; 
+            font-weight: 600;
+            display: none; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .error-msg { background: #fef2f2; color: var(--error-color); border: 1px solid #fecaca; }
+        .success-msg { background: #f0fdf4; color: var(--success-color); border: 1px solid #bbf7d0; }
+        
+        /* --- رابط الدعم الفني --- */
+        .help-text { margin-top: 30px; font-size: 0.9rem; color: var(--text-grey); font-weight: 500; }
+        .help-text a { 
+            color: var(--primary-blue); 
+            font-weight: 700; 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .help-text a:hover { background: rgba(10, 38, 71, 0.05); }
+
+        /* هزة الخطأ */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+        .shake-animation { animation: shake 0.4s ease-in-out; border-color: var(--error-color) !important; }
     </style>
 
     <script>
-        // منع كليك يمين واختصارات النسخ في صفحة الدخول كمان
+        // كود حماية الصفحة
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'u' || e.key === 'i'))) {
@@ -45,356 +180,206 @@
     </script>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-logo"><span class="material-icons logo-icon">local_library</span>الدحيح</div>
-        <h2 class="login-title">تسجيل الدخول</h2>
-        <p class="login-subtitle">أدخل كود التفعيل الخاص بك للدخول إلى المنصة.</p>
 
-        <div id="errorBox" class="message-box error-msg"><span class="material-icons" style="vertical-align: middle; margin-left: 5px;">error_outline</span>الكود المدخل غير صحيح.</div>
-        <div id="successBox" class="message-box success-msg"><span class="material-icons" style="vertical-align: middle; margin-left: 5px;">check_circle</span>تم التحقق بنجاح!</div>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="login-container">
+        <div class="login-logo">
+            <span class="material-icons logo-icon">local_library</span>
+            الدحيح
+        </div>
+        
+        <h2 class="login-title">أهلاً بك يا بطل 🚀</h2>
+        <p class="login-subtitle">يرجى إدخال كود التفعيل الخاص بك للوصول إلى المحتوى الدراسي.</p>
+
+        <div id="errorBox" class="message-box error-msg">
+            <span class="material-icons">error_outline</span>
+            <span id="errorText">الكود المدخل غير صحيح.</span>
+        </div>
+        
+        <div id="successBox" class="message-box success-msg">
+            <span class="material-icons">check_circle</span>
+            <span id="successText">تم التحقق بنجاح!</span>
+        </div>
 
         <form id="loginForm" onsubmit="event.preventDefault(); validateLogin();">
             <div class="input-group">
+                <label class="input-label" for="accessCode">كود التفعيل:</label>
+                <input type="text" id="accessCode" class="login-input" placeholder="مثال: A1B2" required autocomplete="off" autocorrect="off" spellcheck="false">
                 <span class="material-icons input-icon">vpn_key</span>
-                <input type="text" id="accessCode" class="login-input" placeholder="أدخل الكود هنا" required>
             </div>
-            <button type="submit" class="login-btn">دخول للمنصة</button>
+            
+            <button type="submit" class="login-btn" id="submitBtn">
+                <span id="btnText">تأكيد الدخول</span>
+                <span class="material-icons spinner" id="btnSpinner">autorenew</span>
+            </button>
         </form>
 
         <p class="help-text">
-            تواجه مشكلة في الدخول؟ 
-            <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end">تواصل مع الدعم</a>
+            تواجه مشكلة أو لا تملك كود؟ <br>
+            <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end">
+                <span class="material-icons" style="font-size: 18px; color: #229ED9;">telegram</span>
+                تواصل مع الدعم الفني
+            </a>
         </p>
     </div>
 
     <script>
-        // === قاعدة بيانات الطلاب (أضف الأكواد والأسماء هنا) ===
+        // === قاعدة بيانات الطلاب الخاصة بك (كاملة وبدون تعديل) ===
         const studentDatabase = {
-  "M3N9": "منة الله أحمد محمد",
-  "A7Y2": "Hidden world" , 
-  "H1B4": "حبيبة محمد فاروق" , 
-  "S8K5": "سارة خالد محمد",
-  "N2S7": "نجلاء سيد عبد الحميد",
-  "E4F1": "إسراء فرح أحمد",
-  "D6Y3": "دنيا ياسر يوسف",
-  "A1M8": "آلاء مجدي سيد",
-  "M9L2": "منة الله محسن محمد",
-  "A5G4": "عبد الرحمن جاد الكريم",
-  "A2N6": "عبد الرحمن ناصر إبراهيم",
-  "M7F3": "محمد محمود فودة",
-  "Z4K1": "زينب أحمد كامل",
-  "A8K5": "آلاء خالد عقيل",
-  "M6A2": "ملك أحمد سعيد",
-  "G3M8": "جنا موسى هاشم",
-  "R5S1": "رغد شحاته علي",
-  "A9I2": "عمرو عبد السلام إبراهيم",
-  "S2Y6": "سمر يحيى زكريا",
-  "S1S8": "شهد سامي صلاح",
-  "A3S7": "أحمد شريف عواد",
-  "T8R5": "تبارك رجب سيد",
-  "H5I9": "هايدي عزت إبراهيم",
-  "M2T6": "منة تامر عبد الحميد",
-  "H1A3": "هدير أحمد إبراهيم",
-  "Y7B2": "يوستينا أيمن بطرس",
-  "H3A6": "هشام أمير سيد",
-  "S9H4": "شروق حمادة سمير",
-  "S6M1": "سعيد مجدي الشحات",
-  "F8A3": "فاطمة أحمد أبازيد",
-  "M1M5": "محمود محمد جمال",
-  "A4K2": "أحمد كمال",
-  "Y5M7": "يوسف محمد سامي",
-  "A3M9": "أحمد محمد شحات",
-  "A7M1": "أحمد محمد أحمد",
-  "M2A8": "ملك أشرف إبراهيم",
-  "M9B5": "منة بصري السعدي",
-  "H2Y4": "هدي حسين يوسف",
-  "Z3A6": "زياد أحمد عبد التواب",
-  "R1T9": "رحمة طارق",
-  "S5M3": "سندس محمد سيد",
-  "F6Z2": "فاطمة الزهراء محمد سيد",
-  "M2A9": "منة الله أحمد محمد",
-  "S4M6": "شهد محمد مختار",
-  "Y4M7": "يوسف محمد سامي",
-  "A3S9": "أحمد شريف عواد",
-  "H2H5": "حبيبة هشام السيد",
-  "Y2K3": "يوسف خالد",
-  "N4A5": "ندا أشرف",
-  "H5F1": "هنا فؤاد صديق",
-  "K7H2": "كريم حسام",
-  "S8K5": "سارة خالد محمد" , 
-"E1H3": "إسراء حسام حنفي",
-  "B2M4": "بسنت محمد ابوزيد",
-  "H3Y6": "حنان ياسر كمال",
-  "W4M7": "وعد محمد محمد جمال",
-  "S5I8": "شيماء سعيد ابراهيم" , 
-  "A3E7": "الاء أشرف عبدة هدية" ,
- "C1S2": "وصال أحمد رجب",
-"M7S1": "محمد سعد" ,  
-"N5M2": "ندي محمد علي",
-  "A7H4": "اسماء حامد عبدالحميد",
-  "H3A9": "حبيبه احمد محمد",
-  "M6H1": "منه هاني محمود",
-  "E8S5": "إسراء سامي فهمي",
-  "M4H7": "محمود هاني عبد اللطيف" , 
-"A6S2": "أسيل مهند حلاق",
-  "M8H4": "منه هاني احمد",
-  "N3A7": "نسمة عبدالعظيم",
-  "F5L9": "فادي لاونديوس",
-  "M1B6": "منه عبد الباسط نادي",
-  "G7M2": "جنة محمد محمد غريب",
-  "H9A3": "حبيبة عبد العزيز محمد", 
-  "D4A9": "دنيا عاشور عبد المعز" , 
-"A4R9": "احمد رجب ابراهيم",
-  "N7D2": "نور الدين شاهين",
-  "R5M8": "رحمة محمود",
-  "A9A3": "امال عبدالرحمن عبدالله",
-  "Y6A1": "ياسمين اشرف",
-  "N2A7": "نور عبدالمقصود عبدالهادي",
-  "B8A4": "بركات أحمد السيد",
-  "E3M6": "اسراء محمد",
-  "M1F9": "مريم مجدي فكري", 
-"M8A2": "مصطفى احمد",
-"Y3M7": "يوسف محمد علي",
-"A6T9": "احمد العطار",
-"H5M1": "هاجر محمد محمد",
-"M4A8": "محمد عادل",
-"S9W2": "شهد وليد خليفه",
-"S2M6": "شهد محمود عبدالحفيظ",
-"A7R3": "احمد ربيع عبد المنعم",
-"M1N5": "محمد ناصر احمد",
-"S6M9": "سهيله محمد صبحي صابر",
-"M3E7": "منى عصام فؤاد",
-"Y8A4": "يارا عبدالعزيز سعيد محمد",
-"S4S1": "سيد صبري السيد",
-"M9A6": "منة احمد سيد", 
-"S8L4": "شهد محمود سالم", 
-"A9M4": "امانى مصطفى محمد",
-"F2Z7": "فاطمه الزهراء هاني",
-"A6A1": "عبدالله احمد عشري",
-"M8K3": "محمد محمود كمال الدين",
-"M5S9": "مريم سيد شوقي",
-"M1H6": "ملك حسين محمد",
-"R7H2": "رحاب حمدي محمد",
-"A4G8": "عبد الرحمن جاد الكريم",
-"B3A5": "بسمه احمد ابراهيم",
-"A9M2": "عبدالرحمن محمد مرسي" , 
-"D7M2": "دميانه مدحت كمال",
-"Y5S8": "يحيي سيد احمد",
-"Y9A2": "يوسف عاطف" , 
-"R7M4": "رحمة محمد" , 
-"R8A1": "عبدالرحمن محمد",
-"A9K3": "أحمد خالد محمد",
-"S7Y2": "شمس أيمن ابوزيد",
-"A2H8": "آلاء حسين",
-"H6R4": "هاجر ربيع محمد",
-"M3A7": "محمد أحمد صالح",
-"D4T5": "دينا عطية محمد",
-"B9H1": "عبدالحليم السيد حسن" , 
-"M8E2": "محمد إيهاب محمد شاكر",
-"H9M6": "هايدي معطي عبد النعيم",
-"M7S4": "محمود السيد أحمد",
-"M2F8": "محمد فوزي عامر",
-"H4A3": "هاجر حمدي عبد التواب",
-"M9K5": "ملك خالد مرزوق" , 
-"H3S9": "هبه سليمان محمد" , 
-"F2H7": "شهد محمد",
-"M5S8": "أحمد محمد شحات",
-"S3K4": "سماح أحمد",
-"G7Y2": "جني وليد",
-"A6M9": "أحمد معتصم محمد",
-"I4A5": "إبراهيم العيسوي الشوادفي",
-"J8M3": "جومانا ملاك وديع",
-"M3E9": "مريم عزت محمد",
-"Y9Y2": "يوسف ياسر سعيد",
-"A5H7": "أحمد محمود عبد الحفيظ",
-"M2K4": "ملك إبراهيم عباس",
-"S7A8": "شهد أحمد عبد المحسن",
-"N4E3": "نادر عيد سعيد مدكور",
-"Y6M1": "يوسف محمد عبد السميع عبدالله",
-"A3M8": "آلاء محمد عبد المنعم",
-"E8R2": "إسراء محمد عبد العظيم",
-"M7N3": "منة الله أمين سيد",
-"R3M5": "Reham Mohsen",
-"M9E7": "مريم أحمد محمود",
-"H5A9": "هاجر معيوف داخيل",
-"G6A2": "جورج عاطف أدور منسي",
-"A8E4": "آيه عطية أحمد",
-"B3H6": "بدور حسين السيد",
-"R7A3": "رنا أحمد منير",
-"A4M7": "أسماء محمد لولي",
-"M1T2": "مصطفى عادل",
-"H8M3": "حماد محمد محمد",
-"C9J4": "چوڤاني باسم زغلول",
-"G4N8": "چنى محمد عنتر" , 
-"A1Y1": "Hidden world " , 
-"D2M5": "دارين مصطفى كمال", 
-"N1R3": "نرمين هشام عزب",
-"H5H2": "حورية ايهاب محمد",
-"R2B4": "روان بشير" , 
-"R4M1": "ريم جمال" , 
-"N1S3": "نانسي" , 
-"Z7M4": "زينب محمد", 
-"R8H2": "رحمه حسين" , 
-"S7H4": "سلفانا هاني اندراوس",
-"A5H9": "آية عطية أحمد حسين",
-"S3K8": "شهد خالد جمعة",
-"J6F2": "جون فادي كمال",
-"M8B4": "مريم إبراهيم عباس",
-"R4F7": "رحمه فؤاد محمد",
-"A2M6": "عبدالحميد محمد عبدالحميد",
-"N9E3": "ندى أحمد عيد",
-"E5M8": "إيمان معتز", 
-"A9G6": "أمنية محمد غريب" , 
-"Y4H8": "ياسمين الحلفاوي",
-"H6I3": "حنين إبراهيم فكري",
-"F9K2": "فرح فريد كامل",
-"B5S7": "بسملة شعبان أحمد",
-"S8H4": "شهد حسن إبراهيم",
-"A7T6": "أمنية توكل عبداللطيف",
-"H2Y9": "هدير ياسر متولي",
-"S3A5": "شهد أحمد شريف", 
-"K3A7": "كريم عمرو", 
-"O9R4": "اسامه رضا" , 
-"M8N4": "مينا منصور", 
-"R5M7": "روان محمود",
-"E3Y2": "إيمان يوسف كمال",
-"Y6I3": "يوستينا عماد إسحاق",
-"J3Y9": "جني يحيى سيد",
-"S4A2": "شهد علي محمد",
-"M7T1": "مارتينا",
-"S8M4": "شهد محمد سامي",
-"Y2K9": "ياسمين خالد حامد",
-"F6M1": "فتحي محمود فتحي",
-"A9M5": "احمد محي علي علي" , 
-"M4R2": "منه رضا علي عامر", 
-"M5B9": "محمد إبراهيم رفعت", 
-"N6H8": "نيره محمد حداد", 
-"H7J2": "هاله جلال عصمت",
-"R6S4": "رنا رضا شعبان",
-"S9M5": "سما محمد علي",
-"M8H7": "منه الله هشام صبحي", 
-"H4M8": "هاجر محسن",
-"M6M3": "مي معتز" , 
-"A2H9": "آلاء حسام",
-"S7A9": "سما علاء", 
-"F7M2": "فهد محمود" , 
-"T9A2": "تقي أشرف",
-"S9Z1": "سوزان",
-"Z8F3": "منة الله فتحي السيد",
-"R6M8": "رنا محمود مصطفى",
-"M8O4": "مهرائيل أسامة نجيب",
-"M2Y7": "ميار",
-"M5A1": "منة عرفة جلال",
-"R9W3": "روان محمود",
-"J4S6": "جنى سامح محمد" , 
-"H7S4": "حبيبة سيد" , 
-"F9T4": "فاطمة فتحي محمود",
-"H4S8": "Hager Salem Yakout",
-"M7F2": "محمد فرج أحمد",
-"S6K9": "سمير خالد محمد",
-"R3A7": "ريمون رأفت عجايبي", 
-"H8A6": "حبيبه عاطف",
-"D9E4": "دنيا إيهاب سمير",
-"F3A8": "فرح علي فاروق" , 
-"M9M3": "محمد محمد راشد", 
-"M9N7": "محمد ناصر محمد" , 
-"S4A9": "سلمي احمد عبد المقصود",
-"F8Y3": "فرح ياسر", 
-"E9Z4": "ايمان محمود زكريا",  
-"Y9R8": "يوسف محمد رمضان" , 
-"K8S2": "كريم سيد احمد",
-"M6H9": "محمد احمد محمد سيد حسن",
-"K5E7": "خديجه ايهاب محمد",
-"M3A4": "محمد اشرف", 
-  "S3M7": "شيماء محمود نعيم",
-  "D5S2": "ديفيد سمير",
-  "A2S8": "عادل سامي" , 
-"J5A8": "جني أمير",
-"M4M9": "مريم محمد",
-"M3A7": "محمد عبد المقصود محمد",
-"M9N4": "محمد ناصر جمعة",
-"N2M8": "نورا محمد غريب", 
-"S8B4": "سارة بكر عبدالفتاح", 
-"S7E9": "شهد عصام",
-"M4H2": "منه محمد", 
-"S3M8": "شهد محمد", 
-"R2M6": "رنا محمد", 
-"S1S9": "سلسبيل احمد", 
-"A1M3": "أسماء ماهر", 
-"M3O1": "مريم اسامه", 
-"F4A7": "فرح علي فاروق", 
-"N7A4": "ناجي احمد",
-"A5K9": "احمد خالد", 
-"N9G7": "نهي جمال سامي", 
-"S8H6": "سيف الدين هشام سعد",
-"M4K9": "ملك محمد" , 
-"B7M4": "بسمله محمود" , 
-"M8S3": "مصطفي سمير نبيل" , 
-"B6A9": "بسنت محمود عبد الغني", 
-"R6H8": "ريم حسام الدين مصطفى", 
-"H2B7": "هبه" , 
-"S9R2": "شروق محمد عبد الرحمن", 
-"D8A3": "دعاء مدبولى عبدالعظيم" , 
-"R4A6": "رحمه احمد", 
-"D7R2": "داليا رامي" , 
-"D3A8": "دعاء احمد عبده", 
-"Q7M2": "أميره وليد احمد" , 
-"D7K2": "دنيا سيد", 
-"Y7S4": "ياسمين السعيد السيد" ,  
-"T6R9": "تهاني رجب حسن",  
-"R8S6": "رقيه صلاح احمد" ,  
-"M7A6": "محمد عبده"
-};
+            "M3N9": "منة الله أحمد محمد", "A7Y2": "Hidden world", "H1B4": "حبيبة محمد فاروق", 
+            "S8K5": "سارة خالد محمد", "N2S7": "نجلاء سيد عبد الحميد", "E4F1": "إسراء فرح أحمد", 
+            "D6Y3": "دنيا ياسر يوسف", "A1M8": "آلاء مجدي سيد", "M9L2": "منة الله محسن محمد", 
+            "A5G4": "عبد الرحمن جاد الكريم", "A2N6": "عبد الرحمن ناصر إبراهيم", "M7F3": "محمد محمود فودة", 
+            "Z4K1": "زينب أحمد كامل", "A8K5": "آلاء خالد عقيل", "M6A2": "ملك أحمد سعيد", 
+            "G3M8": "جنا موسى هاشم", "R5S1": "رغد شحاته علي", "A9I2": "عمرو عبد السلام إبراهيم", 
+            "S2Y6": "سمر يحيى زكريا", "S1S8": "شهد سامي صلاح", "A3S7": "أحمد شريف عواد", 
+            "T8R5": "تبارك رجب سيد", "H5I9": "هايدي عزت إبراهيم", "M2T6": "منة تامر عبد الحميد", 
+            "H1A3": "هدير أحمد إبراهيم", "Y7B2": "يوستينا أيمن بطرس", "H3A6": "هشام أمير سيد", 
+            "S9H4": "شروق حمادة سمير", "S6M1": "سعيد مجدي الشحات", "F8A3": "فاطمة أحمد أبازيد", 
+            "M1M5": "محمود محمد جمال", "A4K2": "أحمد كمال", "Y5M7": "يوسف محمد سامي", 
+            "A3M9": "أحمد محمد شحات", "A7M1": "أحمد محمد أحمد", "M2A8": "ملك أشرف إبراهيم", 
+            "M9B5": "منة بصري السعدي", "H2Y4": "هدي حسين يوسف", "Z3A6": "زياد أحمد عبد التواب", 
+            "R1T9": "رحمة طارق", "S5M3": "سندس محمد سيد", "F6Z2": "فاطمة الزهراء محمد سيد", 
+            "M2A9": "منة الله أحمد محمد", "S4M6": "شهد محمد مختار", "Y4M7": "يوسف محمد سامي", 
+            "A3S9": "أحمد شريف عواد", "H2H5": "حبيبة هشام السيد", "Y2K3": "يوسف خالد", 
+            "N4A5": "ندا أشرف", "H5F1": "هنا فؤاد صديق", "K7H2": "كريم حسام", 
+            "E1H3": "إسراء حسام حنفي", "B2M4": "بسنت محمد ابوزيد", "H3Y6": "حنان ياسر كمال", 
+            "W4M7": "وعد محمد محمد جمال", "S5I8": "شيماء سعيد ابراهيم", "A3E7": "الاء أشرف عبدة هدية", 
+            "C1S2": "وصال أحمد رجب", "M7S1": "محمد سعد", "N5M2": "ندي محمد علي", 
+            "A7H4": "اسماء حامد عبدالحميد", "H3A9": "حبيبه احمد محمد", "M6H1": "منه هاني محمود", 
+            "E8S5": "إسراء سامي فهمي", "M4H7": "محمود هاني عبد اللطيف", "A6S2": "أسيل مهند حلاق", 
+            "M8H4": "منه هاني احمد", "N3A7": "نسمة عبدالعظيم", "F5L9": "فادي لاونديوس", 
+            "M1B6": "منه عبد الباسط نادي", "G7M2": "جنة محمد محمد غريب", "H9A3": "حبيبة عبد العزيز محمد", 
+            "D4A9": "دنيا عاشور عبد المعز", "A4R9": "احمد رجب ابراهيم", "N7D2": "نور الدين شاهين", 
+            "R5M8": "رحمة محمود", "A9A3": "امال عبدالرحمن عبدالله", "Y6A1": "ياسمين اشرف", 
+            "N2A7": "نور عبدالمقصود عبدالهادي", "B8A4": "بركات أحمد السيد", "E3M6": "اسراء محمد", 
+            "M1F9": "مريم مجدي فكري", "M8A2": "مصطفى احمد", "Y3M7": "يوسف محمد علي", 
+            "A6T9": "احمد العطار", "H5M1": "هاجر محمد محمد", "M4A8": "محمد عادل", 
+            "S9W2": "شهد وليد خليفه", "S2M6": "شهد محمود عبدالحفيظ", "A7R3": "احمد ربيع عبد المنعم", 
+            "M1N5": "محمد ناصر احمد", "S6M9": "سهيله محمد صبحي صابر", "M3E7": "منى عصام فؤاد", 
+            "Y8A4": "يارا عبدالعزيز سعيد محمد", "S4S1": "سيد صبري السيد", "M9A6": "منة احمد سيد", 
+            "S8L4": "شهد محمود سالم", "A9M4": "امانى مصطفى محمد", "F2Z7": "فاطمه الزهراء هاني", 
+            "A6A1": "عبدالله احمد عشري", "M8K3": "محمد محمود كمال الدين", "M5S9": "مريم سيد شوقي", 
+            "M1H6": "ملك حسين محمد", "R7H2": "رحاب حمدي محمد", "A4G8": "عبد الرحمن جاد الكريم", 
+            "B3A5": "بسمه احمد ابراهيم", "A9M2": "عبدالرحمن محمد مرسي", "D7M2": "دميانه مدحت كمال", 
+            "Y5S8": "يحيي سيد احمد", "Y9A2": "يوسف عاطف", "R7M4": "رحمة محمد", 
+            "R8A1": "عبدالرحمن محمد", "A9K3": "أحمد خالد محمد", "S7Y2": "شمس أيمن ابوزيد", 
+            "A2H8": "آلاء حسين", "H6R4": "هاجر ربيع محمد", "M3A7": "محمد أحمد صالح", 
+            "D4T5": "دينا عطية محمد", "B9H1": "عبدالحليم السيد حسن", "M8E2": "محمد إيهاب محمد شاكر", 
+            "H9M6": "هايدي معطي عبد النعيم", "M7S4": "محمود السيد أحمد", "M2F8": "محمد فوزي عامر", 
+            "H4A3": "هاجر حمدي عبد التواب", "M9K5": "ملك خالد مرزوق", "H3S9": "هبه سليمان محمد", 
+            "F2H7": "شهد محمد", "M5S8": "أحمد محمد شحات", "S3K4": "سماح أحمد", 
+            "G7Y2": "جني وليد", "A6M9": "أحمد معتصم محمد", "I4A5": "إبراهيم العيسوي الشوادفي", 
+            "J8M3": "جومانا ملاك وديع", "M3E9": "مريم عزت محمد", "Y9Y2": "يوسف ياسر سعيد", 
+            "A5H7": "أحمد محمود عبد الحفيظ", "M2K4": "ملك إبراهيم عباس", "S7A8": "شهد أحمد عبد المحسن", 
+            "N4E3": "نادر عيد سعيد مدكور", "Y6M1": "يوسف محمد عبد السميع عبدالله", "A3M8": "آلاء محمد عبد المنعم", 
+            "E8R2": "إسراء محمد عبد العظيم", "M7N3": "منة الله أمين سيد", "R3M5": "Reham Mohsen", 
+            "M9E7": "مريم أحمد محمود", "H5A9": "هاجر معيوف داخيل", "G6A2": "جورج عاطف أدور منسي", 
+            "A8E4": "آيه عطية أحمد", "B3H6": "بدور حسين السيد", "R7A3": "رنا أحمد منير", 
+            "A4M7": "أسماء محمد لولي", "M1T2": "مصطفى عادل", "H8M3": "حماد محمد محمد", 
+            "C9J4": "چوڤاني باسم زغلول", "G4N8": "چنى محمد عنتر", "A1Y1": "Hidden world ", 
+            "D2M5": "دارين مصطفى كمال", "N1R3": "نرمين هشام عزب", "H5H2": "حورية ايهاب محمد", 
+            "R2B4": "روان بشير", "R4M1": "ريم جمال", "N1S3": "نانسي", 
+            "Z7M4": "زينب محمد", "R8H2": "رحمه حسين", "S7H4": "سلفانا هاني اندراوس", 
+            "A5H9": "آية عطية أحمد حسين", "S3K8": "شهد خالد جمعة", "J6F2": "جون فادي كمال", 
+            "M8B4": "مريم إبراهيم عباس", "R4F7": "رحمه فؤاد محمد", "A2M6": "عبدالحميد محمد عبدالحميد", 
+            "N9E3": "ندى أحمد عيد", "E5M8": "إيمان معتز", "A9G6": "أمنية محمد غريب", 
+            "Y4H8": "ياسمين الحلفاوي", "H6I3": "حنين إبراهيم فكري", "F9K2": "فرح فريد كامل", 
+            "B5S7": "بسملة شعبان أحمد", "S8H4": "شهد حسن إبراهيم", "A7T6": "أمنية توكل عبداللطيف", 
+            "H2Y9": "هدير ياسر متولي", "S3A5": "شهد أحمد شريف", "K3A7": "كريم عمرو", 
+            "O9R4": "اسامه رضا", "M8N4": "مينا منصور", "R5M7": "روان محمود", 
+            "E3Y2": "إيمان يوسف كمال", "Y6I3": "يوستينا عماد إسحاق", "J3Y9": "جني يحيى سيد", 
+            "S4A2": "شهد علي محمد", "M7T1": "مارتينا", "S8M4": "شهد محمد سامي", 
+            "Y2K9": "ياسمين خالد حامد", "F6M1": "فتحي محمود فتحي", "A9M5": "احمد محي علي علي", 
+            "M4R2": "منه رضا علي عامر", "M5B9": "محمد إبراهيم رفعت", "N6H8": "نيره محمد حداد", 
+            "H7J2": "هاله جلال عصمت", "R6S4": "رنا رضا شعبان", "S9M5": "سما محمد علي", 
+            "M8H7": "منه الله هشام صبحي", "H4M8": "هاجر محسن", "M6M3": "مي معتز", 
+            "A2H9": "آلاء حسام", "S7A9": "سما علاء", "F7M2": "فهد محمود", 
+            "T9A2": "تقي أشرف", "S9Z1": "سوزان", "Z8F3": "منة الله فتحي السيد", 
+            "R6M8": "رنا محمود مصطفى", "M8O4": "مهرائيل أسامة نجيب", "M2Y7": "ميار", 
+            "M5A1": "منة عرفة جلال", "R9W3": "روان محمود", "J4S6": "جنى سامح محمد", 
+            "H7S4": "حبيبة سيد", "F9T4": "فاطمة فتحي محمود", "H4S8": "Hager Salem Yakout", 
+            "M7F2": "محمد فرج أحمد", "S6K9": "سمير خالد محمد", "R3A7": "ريمون رأفت عجايبي", 
+            "H8A6": "حبيبه عاطف", "D9E4": "دنيا إيهاب سمير", "F3A8": "فرح علي فاروق", 
+            "M9M3": "محمد محمد راشد", "M9N7": "محمد ناصر محمد", "S4A9": "سلمي احمد عبد المقصود", 
+            "F8Y3": "فرح ياسر", "E9Z4": "ايمان محمود زكريا", "Y9R8": "يوسف محمد رمضان", 
+            "K8S2": "كريم سيد احمد", "M6H9": "محمد احمد محمد سيد حسن", "K5E7": "خديجه ايهاب محمد", 
+            "M3A4": "محمد اشرف", "S3M7": "شيماء محمود نعيم", "D5S2": "ديفيد سمير", 
+            "A2S8": "عادل سامي", "J5A8": "جني أمير", "M4M9": "مريم محمد", 
+            "M3A7": "محمد عبد المقصود محمد", "M9N4": "محمد ناصر جمعة", "N2M8": "نورا محمد غريب", 
+            "S8B4": "سارة بكر عبدالفتاح", "S7E9": "شهد عصام", "M4H2": "منه محمد", 
+            "S3M8": "شهد محمد", "R2M6": "رنا محمد", "S1S9": "سلسبيل احمد", 
+            "A1M3": "أسماء ماهر", "M3O1": "مريم اسامه", "F4A7": "فرح علي فاروق", 
+            "N7A4": "ناجي احمد", "A5K9": "احمد خالد", "N9G7": "نهي جمال سامي", 
+            "S8H6": "سيف الدين هشام سعد", "M4K9": "ملك محمد", "B7M4": "بسمله محمود", 
+            "M8S3": "مصطفي سمير نبيل", "B6A9": "بسنت محمود عبد الغني", "R6H8": "ريم حسام الدين مصطفى", 
+            "H2B7": "هبه", "S9R2": "شروق محمد عبد الرحمن", "D8A3": "دعاء مدبولى عبدالعظيم", 
+            "R4A6": "رحمه احمد", "D7R2": "داليا رامي", "D3A8": "دعاء احمد عبده", 
+            "Q7M2": "أميره وليد احمد", "D7K2": "دنيا سيد", "Y7S4": "ياسمين السعيد السيد", 
+            "T6R9": "تهاني رجب حسن", "R8S6": "رقيه صلاح احمد", "M7A6": "محمد عبده"
+        };
 
         function validateLogin() {
             const codeInput = document.getElementById('accessCode');
-            const userCode = codeInput.value.toUpperCase().trim(); // تنظيف المسافات وتحويل لحروف كبيرة
+            const userCode = codeInput.value.toUpperCase().trim();
             const errorBox = document.getElementById('errorBox');
             const successBox = document.getElementById('successBox');
-            const loginBtn = document.querySelector('.login-btn');
+            const successText = document.getElementById('successText');
             
-            // إعادة تعيين الحالة
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
+            // 1. تنظيف واجهة الأخطاء القديمة
             errorBox.style.display = 'none'; 
             successBox.style.display = 'none';
-            loginBtn.innerHTML = 'جاري التحقق...'; 
-            loginBtn.style.opacity = '0.8';
+            codeInput.classList.remove('shake-animation');
+            
+            // 2. تفعيل حالة التحميل (Loading State)
+            btn.disabled = true;
+            btnText.innerText = 'جاري التحقق...';
+            btnSpinner.style.display = 'inline-block';
 
+            // 3. محاكاة الاتصال بالسيرفر (تأخير ثانية لواقعية التصميم)
             setTimeout(() => {
-                // التحقق من وجود الكود في قاعدة البيانات
+                
                 if (studentDatabase[userCode]) {
                     // --- حالة النجاح ---
-                    const studentName = studentDatabase[userCode]; // جلب الاسم المرتبط بالكود
+                    const studentName = studentDatabase[userCode].split(' ')[0]; // جلب الاسم الأول فقط
                     
-                    successBox.innerHTML = `<span class="material-icons" style="vertical-align: middle; margin-left: 5px;">check_circle</span>أهلاً بك يا ${studentName}!`;
-                    successBox.style.display = 'block';
+                    btnSpinner.style.display = 'none';
+                    btnText.innerText = 'تم الدخول بنجاح ✓';
+                    btn.style.background = 'var(--success-color)';
                     
-                    loginBtn.innerHTML = 'تم الدخول بنجاح ✓';
-                    loginBtn.style.background = '#2e7d32';
+                    successText.innerText = `أهلاً بك يا ${studentName}!`;
+                    successBox.style.display = 'flex';
                     
-                    // 1. حفظ حالة الدخول
+                    // حفظ البيانات محلياً
                     localStorage.setItem('isLoggedInDaheeh', 'true');
-                    // 2. حفظ اسم الطالب (عشان العلامة المائية)
-                    localStorage.setItem('studentName', studentName);
-                    // 3. حفظ كود الطالب (عشان العلامة المائية)
+                    localStorage.setItem('studentName', studentDatabase[userCode]); // حفظ الاسم كامل
                     localStorage.setItem('studentCode', userCode);
 
-                    // التحويل لصفحة التطبيق
+                    // الانتقال للصفحة الرئيسية بعد ثانية ونص
                     setTimeout(() => {
                         window.location.href = 'index.html'; 
                     }, 1500);
 
                 } else {
                     // --- حالة الخطأ ---
-                    errorBox.style.display = 'block';
-                    loginBtn.innerHTML = 'دخول للمنصة';
-                    loginBtn.style.background = 'var(--primary-blue)';
-                    loginBtn.style.opacity = '1';
+                    btn.disabled = false;
+                    btnSpinner.style.display = 'none';
+                    btnText.innerText = 'تأكيد الدخول';
                     
-                    // اهتزاز الحقل
-                    codeInput.style.animation = 'shake 0.5s';
-                    setTimeout(() => codeInput.style.animation = '', 500);
+                    errorBox.style.display = 'flex';
+                    
+                    // تشغيل حركة الهزة
+                    codeInput.classList.add('shake-animation');
+                    codeInput.value = ''; // تفريغ الخانة
+                    codeInput.focus();
                 }
-            }, 1000);
+            }, 1200); // 1.2 ثانية تأخير للشياكة
         }
     </script>
 </body>
