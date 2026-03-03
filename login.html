@@ -258,7 +258,7 @@
             btnSpinner.style.display = 'inline-block';
 
             // 3. الاتصال بقاعدة بيانات جوجل شيت
-            fetch(`${SCRIPT_URL}?code=${userCode}`)
+            fetch(`${SCRIPT_URL}?action=login&code=${userCode}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
