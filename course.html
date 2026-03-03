@@ -69,14 +69,11 @@
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 15px; padding: 20px; }
         .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
         
-        .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: none; flex-direction: column; }
-        .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 1501; border-bottom: 1px solid #333; }
+        .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2500; display: none; flex-direction: column; }
+        .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 2501; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
-        .zoom-controls { display: flex; gap: 15px; background: #333; padding: 5px 15px; border-radius: 20px; }
-        .zoom-controls .material-icons { color: white; font-size: 26px; cursor: pointer; }
-        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #f0f0f0; text-align: center; }
-        .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; transition: width 0.2s ease; padding-top: 15px; }
-        .protected-img { width: 100%; height: auto; margin-bottom: 15px; border-radius: 4px; pointer-events: none; -webkit-user-drag: none; display: block; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1; position: relative; }
+        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #e9ecef; text-align: center; }
+        .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; padding-top: 15px; }
         
         .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
         .watermark-text { color: rgba(0, 0, 0, 0.15); font-size: 26px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; text-shadow: none; user-select: none; }
@@ -169,7 +166,7 @@
         </button>
 
         <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات السابقة" data-en="Previous Exams">الامتحانات السابقة</span></div>
-        <button class="btn-card btn-midterm" onclick="openImages('midterm')">
+        <button class="btn-card btn-midterm" onclick="openExam('midterm')">
             <div>
                 <div style="font-weight:900;" data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
                 <div style="font-size:0.8rem; opacity:0.7;" data-ar="امتحانات نص السنة" data-en="Mid-year exams">امتحانات نص السنة</div>
@@ -177,7 +174,7 @@
             <div class="btn-icon" style="color:#ff9800;"><span class="material-icons">history_edu</span></div>
         </button>
 
-        <button class="btn-card btn-final" onclick="openImages('final')">
+        <button class="btn-card btn-final" onclick="openExam('final')">
             <div>
                 <div style="font-weight:900;" data-ar="أسئلة الفاينل" data-en="Final Exams">أسئلة الفاينل</div>
                 <div style="font-size:0.8rem; opacity:0.7;" data-ar="امتحانات آخر السنة" data-en="End-of-year exams">امتحانات آخر السنة</div>
@@ -198,7 +195,7 @@
     <div id="contentModal" class="modal">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="closeModal('contentModal')" style="cursor:pointer; font-size:28px;">arrow_forward</span>
-            <span style="font-weight:bold;" id="contentTitle">المحاضرة</span>
+            <span style="font-weight:bold;" id="contentTitle">المحتوى</span>
             <span style="width: 28px;"></span>
         </div>
         <div class="modal-body"><div class="content-view" id="contentBody"></div></div>
@@ -213,37 +210,26 @@
         <div class="modal-body" id="quizBody"></div>
     </div>
 
-    <div id="imageViewer" class="img-viewer">
-        <div class="img-head">
-            <button class="close-img-btn" onclick="closeImageViewer()" data-ar="رجوع للخلف" data-en="Go Back">رجوع للخلف</button>
-            <div class="zoom-controls">
-                <span class="material-icons" onclick="zoomImages(20)">zoom_in</span><span class="material-icons" onclick="zoomImages(-20)">zoom_out</span>
-            </div>
-        </div>
-        <div class="images-scroll-container"><div id="imagesWrapper" class="images-wrapper"><div id="watermarkOverlay" class="watermark-overlay"></div></div></div>
-    </div>
-
-    <div id="pdfViewer" class="img-viewer" style="z-index: 2500;">
+    <div id="pdfViewer" class="img-viewer">
         <div class="img-head">
             <button class="close-img-btn" onclick="closePdfViewer()" data-ar="إنهاء القراءة" data-en="Close PDF">إنهاء القراءة</button>
-            <span style="color: white; font-weight: bold; font-size: 0.9rem;" data-ar="ملف المحاضرة" data-en="Lecture PDF">ملف المحاضرة</span>
+            <span style="color: white; font-weight: bold; font-size: 0.9rem;" data-ar="ملف المحتوى" data-en="Content PDF">ملف المحتوى</span>
             <div style="width: 80px;"></div>
         </div>
-        <div class="images-scroll-container" style="background: #e9ecef;">
-            <div id="pdfWrapper" class="images-wrapper" style="padding-top: 15px;"><div id="pdfWatermarkOverlay" class="watermark-overlay"></div></div>
+        <div class="images-scroll-container">
+            <div id="pdfWrapper" class="images-wrapper"><div id="pdfWatermarkOverlay" class="watermark-overlay"></div></div>
         </div>
     </div>
 
     <script>
-        // === رابط جوجل شيت السحري الخاص بك ===
+        // === رابط جوجل شيت السحري ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // الداتا الأساسية للمواد (للاسم والبروفيسور والامتحانات فقط - الكويزات أصبحت في جوجل شيت)
         const allCourses = {
-            1: { titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "coding_mid_", count: 5 }, finalFiles: { prefix: "coding_final_", count: 8 } },
-            2: { titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "net_mid_", count: 3 }, finalFiles: { prefix: "net_final_", count: 5 } },
+            1: { titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa" },
+            2: { titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa" },
             3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa" },
             4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba" },
             5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat" }
@@ -254,7 +240,6 @@
         const course = allCourses[courseId];
         if (!course) window.location.href = 'index.html';
 
-        // === نظام النقاط (Gamification XP) ===
         function getLevelName(xp) {
             if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد';
             if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح';
@@ -273,7 +258,6 @@
             if(document.getElementById('courseXP')) document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`;
         }
 
-        // === محرك الترجمة ===
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
         function applyLanguage() {
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
@@ -311,20 +295,17 @@
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         
-        // --- دالة إظهار قائمة المحاضرات (من جوجل شيت) ---
+        // --- دالة إظهار المحاضرات ---
         function openModal(type) {
             if (type === 'summary') {
                 const list = document.getElementById('summaryList'); 
-                
-                // 1. إظهار حالة التحميل (Loading)
                 list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);">
                                     <span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span>
                                     <p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p>
                                   </div>`;
                 document.getElementById('summaryModal').style.display = 'flex';
-                applyLanguage(); // تطبيق الترجمة على نص التحميل
+                applyLanguage();
 
-                // 2. الاتصال بسيرفر جوجل لجلب المحاضرات
                 fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -332,8 +313,7 @@
                         if (data.success && data.lectures.length > 0) {
                             data.lectures.forEach((lec, index) => {
                                 const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left';
-                                const lectureNumber = index + 1; // لترتيب المحاضرات
-                                
+                                const lectureNumber = index + 1; 
                                 list.innerHTML += `
                                 <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
                                     <span>${lec.name}</span>
@@ -346,69 +326,99 @@
                                                 <p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p>
                                               </div>`;
                         }
-                        applyLanguage(); // تطبيق الترجمة على القائمة بعد التوليد
+                        applyLanguage(); 
                     })
                     .catch(error => {
-                        list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;">
-                                            <span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span>
-                                            <p data-ar="حدث خطأ في الاتصال. تأكد من الإنترنت." data-en="Connection error. Check your internet.">حدث خطأ في الاتصال. تأكد من الإنترنت.</p>
-                                          </div>`;
+                        list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="حدث خطأ في الاتصال." data-en="Connection error.">حدث خطأ في الاتصال.</p></div>`;
                         applyLanguage();
                     });
             }
         }
 
-        // --- دالة عرض المحاضرة (الجديدة والديناميكية) ---
+        // --- دالة عرض المحاضرات ---
         function showDynamicLecture(lectureName, fileName, num) {
             const btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
-            
             let htmlContent = `
                 <div class="content-view" style="text-align:center; padding:30px 10px;">
                     <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
                     <h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3>
                     <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" 
-                       data-ar="محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا." 
-                       data-en="Lecture content is available in PDF format. Click the button to read it here.">
-                       محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا.
+                       data-ar="محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه." data-en="Content available in PDF. Click to open.">
+                       محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه.
                     </p>
                     <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
                         <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
-                        <span data-ar="اقرأ المحاضرة الآن" data-en="Read Lecture Now">اقرأ المحاضرة الآن</span>
+                        <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
                     </button>
-                    
-                    <button class="btn-lecture-quiz" onclick="openQuiz(${num})">
-                        <span class="material-icons">quiz</span> <span>${btnTxt}</span>
-                    </button>
+                    <button class="btn-lecture-quiz" onclick="openQuiz(${num})"><span class="material-icons">quiz</span> <span>${btnTxt}</span></button>
                 </div>`;
-            
             document.getElementById('contentTitle').innerText = lectureName; 
             document.getElementById('contentBody').innerHTML = htmlContent; 
             document.getElementById('contentModal').style.display = 'flex';
             applyLanguage();
         }
 
-        let currentZoom = 100; function zoomImages(change) { currentZoom += change; if(currentZoom<50) currentZoom=50; if(currentZoom>300) currentZoom=300; document.getElementById('imagesWrapper').style.width = currentZoom + '%'; }
-        function openImages(type) {
-            const files = type === 'midterm' ? course.midtermFiles : course.finalFiles;
-            if (!files || !files.prefix) { alert(currentLang==='en'?"No files added yet!":"لم يتم إضافة ملفات بعد!"); return; }
-            const wrapper = document.getElementById('imagesWrapper'); const watermark = document.getElementById('watermarkOverlay'); currentZoom = 100; wrapper.style.width = '100%';
-            wrapper.querySelectorAll('img').forEach(img => img.remove());
-            for (let i = 1; i <= files.count; i++) { const img = document.createElement('img'); img.src = files.prefix + i + '.jpg'; img.className = 'protected-img'; wrapper.insertBefore(img, watermark); }
-            const sName = localStorage.getItem('studentName') || "Student"; const sCode = localStorage.getItem('studentCode') || "000";
-            watermark.innerHTML = ''; for(let i=0; i<400; i++) { watermark.innerHTML += `<div class="watermark-text">${sName} - ${sCode}</div>`; }
-            document.getElementById('imageViewer').style.display = 'flex';
-        }
-        function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
+        // --- دالة جلب وعرض الامتحانات الذكية (الميد والفاينل كـ PDF) 🚀 ---
+        function openExam(type) {
+            const body = document.getElementById('contentBody');
+            const title = type === 'midterm' ? (currentLang === 'en' ? 'Midterm Exam' : 'أسئلة الميدترم') : (currentLang === 'en' ? 'Final Exam' : 'أسئلة الفاينل');
+            
+            document.getElementById('contentTitle').innerText = title;
+            
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);">
+                                <span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span>
+                                <h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3>
+                              </div>`;
+            document.getElementById('contentModal').style.display = 'flex';
+            applyLanguage();
 
-        // --- دالة عرض الـ PDF (مع العلامة المائية) ---
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final;
+                        
+                        if(fileName) {
+                            body.innerHTML = `
+                                <div class="content-view" style="text-align:center; padding:30px 10px;">
+                                    <span class="material-icons" style="font-size:70px; color:#ff9800; margin-bottom:15px;">picture_as_pdf</span>
+                                    <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
+                                    <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;"
+                                       data-ar="الامتحان متوفر بصيغة PDF. اضغط للفتح." data-en="Exam available in PDF. Click to open.">
+                                       الامتحان متوفر بصيغة PDF. اضغط للفتح.
+                                    </p>
+                                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%;">
+                                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
+                                        <span data-ar="افتح الامتحان الآن" data-en="Open Exam Now">افتح الامتحان الآن</span>
+                                    </button>
+                                </div>`;
+                        } else {
+                            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);">
+                                                <span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">find_in_page</span>
+                                                <h3 data-ar="لا يوجد امتحان متاح!" data-en="No Exam Available">لا يوجد امتحان متاح!</h3>
+                                                <p style="margin-top:10px;" data-ar="لم يتم إضافة ملف هذا الامتحان حتى الآن." data-en="The exam file has not been uploaded yet.">لم يتم إضافة ملف هذا الامتحان حتى الآن.</p>
+                                              </div>`;
+                        }
+                        applyLanguage();
+                    }
+                })
+                .catch(err => {
+                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;">
+                                        <span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span>
+                                        <h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection Error">حدث خطأ في الاتصال!</h3>
+                                      </div>`;
+                    applyLanguage();
+                });
+        }
+
+        // --- دالة عرض الـ PDF الموحدة لكل التطبيق ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
-            const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير المحاضرة...'}`; wrapper.insertBefore(loadingDiv, watermark);
+            const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; wrapper.insertBefore(loadingDiv, watermark);
             document.getElementById('pdfViewer').style.display = 'flex';
             
-            // إضافة نقاط مكافأة لفتح المحاضرة (10 XP)
-            addXP(10);
+            addXP(10); // نقاط للتشجيع
 
             const sName = localStorage.getItem('studentName') || "Student"; const sCode = localStorage.getItem('studentCode') || "000";
             watermark.innerHTML = ''; for(let i=0; i<800; i++) { watermark.innerHTML += `<div class="watermark-text" style="color:rgba(0,0,0,0.15);">${sName} - ${sCode}</div>`; }
@@ -427,45 +437,27 @@
         }
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
 
+        // --- نظام الكويزات ---
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
         
-        // --- دالة إظهار الكويز من جوجل شيت ---
         function openQuiz(lectureNum) { 
             const body = document.getElementById('quizBody');
-            
-            // 1. شاشة التحميل
-            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);">
-                                <span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span>
-                                <h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3>
-                              </div>`;
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
             document.getElementById('quizModal').style.display = 'flex';
             applyLanguage();
 
-            // 2. جلب الأسئلة من جوجل شيت
             fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${lectureNum}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.questions.length > 0) {
-                        activeQuizQuestions = data.questions;
-                        currentQ = 0; 
-                        score = 0; 
-                        showQuestion(); // بدأ الكويز
+                        activeQuizQuestions = data.questions; currentQ = 0; score = 0; showQuestion();
                     } else {
-                        // لو مفيش أسئلة للمحاضرة دي في الشيت
-                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);">
-                                            <span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span>
-                                            <h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3>
-                                            <p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار لهذه المحاضرة حتى الآن." data-en="No quiz has been added for this lecture yet.">لم يتم إضافة اختبار لهذه المحاضرة حتى الآن.</p>
-                                          </div>`;
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار لهذه المحاضرة حتى الآن." data-en="No quiz has been added for this lecture yet.">لم يتم إضافة اختبار لهذه المحاضرة حتى الآن.</p></div>`;
                         applyLanguage();
                     }
                 })
                 .catch(error => {
-                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;">
-                                        <span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span>
-                                        <h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3>
-                                        <p data-ar="تأكد من اتصالك بالإنترنت وحاول مرة أخرى." data-en="Check your internet connection and try again.">تأكد من اتصالك بالإنترنت وحاول مرة أخرى.</p>
-                                      </div>`;
+                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3></div>`;
                     applyLanguage();
                 });
         }
@@ -488,13 +480,10 @@
                 currentQ++;
                 if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
                 else { 
-                    // إضافة نقاط مكافأة (10 نقاط لكل إجابة صحيحة)
                     if(score > 0) addXP(score * 10);
-                    
                     const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
                     const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
                     const xpReward = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
-                    
                     document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:#4caf50; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${score > 0 ? xpReward : ''}</p><button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
                 }
             }, 1500);
