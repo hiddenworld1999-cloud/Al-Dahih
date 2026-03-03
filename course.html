@@ -58,7 +58,8 @@
         .btn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); }
         body.dark-mode .btn-icon { background: rgba(255,255,255,0.05); }
 
-        .btn-lecture-quiz { width: 100%; margin-top: 20px; padding: 15px; background: var(--accent); color: #0A2647; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; }
+        .btn-lecture-quiz { width: 100%; margin-top: 20px; padding: 15px; background: var(--accent); color: #0A2647; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; transition: 0.3s; }
+        .btn-lecture-quiz:active { transform: scale(0.96); }
         
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: none; flex-direction: column; overflow: hidden; }
         .modal-head { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
@@ -239,29 +240,13 @@
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // الداتا الأساسية للمواد (للاسم والبروفيسور والكويزات والامتحانات)
+        // الداتا الأساسية للمواد (للاسم والبروفيسور والامتحانات فقط - الكويزات أصبحت في جوجل شيت)
         const allCourses = {
-            1: { titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "coding_mid_", count: 5 }, finalFiles: { prefix: "coding_final_", count: 8 }, lectureQuizzes: {} },
-            2: { 
-                titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "net_mid_", count: 3 }, finalFiles: { prefix: "net_final_", count: 5 },
-                lectureQuizzes: { 
-                    1: [
-                        { qAr: "ما هي المكونات الخمسة الأساسية للنظام البيئي للبنية التحتية لتكنولوجيا المعلومات؟", qEn: "What are the 5 core components of the IT Infrastructure ecosystem?", optsAr: ["الإنترنت، الحواسيب، الهواتف، الطابعات", "المكونات المادية، البرمجية، الشبكات، المكونات البشرية، ومستلزمات أخرى", "أنظمة التشغيل، البرامج التطبيقية، قواعد البيانات", "الإدخال، الإخراج، المعالجة، التخزين"], optsEn: ["Internet, PCs, Phones", "Hardware, Software, Networks, People, Others", "OS, Apps, DB", "Input, Output, Processing"], ans: 1 },
-                        { qAr: "وحدة الحساب والمنطق (ALU) هي المسؤولة عن إدارة تدفق البيانات وتعمل كـ 'شرطي المرور' داخل المعالج.", qEn: "ALU is responsible for managing data flow and acts as a 'traffic cop' inside the processor.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 1 },
-                        { qAr: "ما هو الجزء الذي يُعتبر 'العمود الفقري' للحاسب، حيث يربط أجزاء الحاسب الداخلية ببعضها وينسق العمل بينها؟", qEn: "What part is considered the 'backbone' of the computer, connecting internal parts?", optsAr: ["وحدة المعالجة المركزية (CPU)", "القرص الصلب (Hard Disk)", "اللوحة الأم (Motherboard)", "مكبرات الصوت"], optsEn: ["CPU", "Hard Disk", "Motherboard", "Speakers"], ans: 2 },
-                        { qAr: "أنظمة التشغيل (مثل Windows و Linux و OS X) تُصنف كبرامج تطبيقية متخصصة.", qEn: "Operating systems (like Windows, Linux, OS X) are classified as specialized application software.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 1 },
-                        { qAr: "من هو الشخص المسؤول عن دراسة الجدوى ووضع المخططات للنظام ضمن المكونات البشرية؟", qEn: "Who is responsible for feasibility studies and system charting within human components?", optsAr: ["مدير قاعدة البيانات (DB Manager)", "مصمم النظم (System Designer)", "محلل النظم (Systems Analyst)", "المبرمج (Programmer)"], optsEn: ["DB Manager", "System Designer", "Systems Analyst", "Programmer"], ans: 2 },
-                        { qAr: "البنية التحتية السحابية (Cloud) تتميز بأنها توفر تحكماً كاملاً ولكن بصعوبة في التوسع.", qEn: "Cloud infrastructure is characterized by providing full control but with difficulty in scaling.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 1 },
-                        { qAr: "أي من الأجهزة التالية يُصنف كأداة إدخال (Input) للبيانات إلى الحاسوب؟", qEn: "Which of the following devices is classified as an input tool for data to the computer?", optsAr: ["الشاشة", "الماسح الضوئي (Scanner)", "الطابعة", "مكبرات الصوت"], optsEn: ["Monitor", "Scanner", "Printer", "Speakers"], ans: 1 },
-                        { qAr: "تساعد الشبكات الحاسوبية في تبادل البيانات ومشاركة الموارد، مما يؤدي إلى تقليل الاعتماد على الورق.", qEn: "Computer networks help exchange data and share resources, reducing reliance on paper.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 0 },
-                        { qAr: "ما هو دور 'أخصائي الصيانة' في المكونات البشرية للبنية التحتية؟", qEn: "What is the role of the 'Maintenance Specialist' in the human components of infrastructure?", optsAr: ["تحويل التصاميم إلى كود برمجي", "إدخال البيانات اللازمة لتشغيل النظام", "وضع المخططات للنظام", "إصلاح الأعطال الميكانيكية والإلكترونية"], optsEn: ["Coding designs", "Data entry", "System charting", "Fixing mechanical/electronic faults"], ans: 3 },
-                        { qAr: "أي مما يلي يُعد من متطلبات 'البيئة الحاضنة' (مستلزمات أخرى) لعمل البنية التحتية بشكل سليم؟", qEn: "Which of the following is a requirement of the 'Incubating Environment' for infrastructure to work properly?", optsAr: ["توفير نظام تبريد وإمدادات طاقة احتياطية وحماية فيزيائية", "توفير أنظمة تشغيل حديثة وبرامج متخصصة", "توفير شبكات اتصالات فائقة السرعة", "تدريب المستخدمين والفنيين"], optsEn: ["Cooling, backup power, physical security", "Modern OS & specialized software", "High-speed networks", "User training"], ans: 0 }
-                    ]
-                }
-            },
-            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", lectureQuizzes: {} },
-            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", lectureQuizzes: {} },
-            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", lectureQuizzes: {} }
+            1: { titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "coding_mid_", count: 5 }, finalFiles: { prefix: "coding_final_", count: 8 } },
+            2: { titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "net_mid_", count: 3 }, finalFiles: { prefix: "net_final_", count: 5 } },
+            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa" },
+            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba" },
+            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat" }
         };
 
         const params = new URLSearchParams(window.location.search);
@@ -375,6 +360,8 @@
 
         // --- دالة عرض المحاضرة (الجديدة والديناميكية) ---
         function showDynamicLecture(lectureName, fileName, num) {
+            const btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
+            
             let htmlContent = `
                 <div class="content-view" style="text-align:center; padding:30px 10px;">
                     <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
@@ -384,18 +371,16 @@
                        data-en="Lecture content is available in PDF format. Click the button to read it here.">
                        محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا.
                     </p>
-                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%;">
+                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
                         <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
                         <span data-ar="اقرأ المحاضرة الآن" data-en="Read Lecture Now">اقرأ المحاضرة الآن</span>
                     </button>
+                    
+                    <button class="btn-lecture-quiz" onclick="openQuiz(${num})">
+                        <span class="material-icons">quiz</span> <span>${btnTxt}</span>
+                    </button>
                 </div>`;
             
-            // إضافة زر الكويز لو موجود في البيانات المحلية
-            if(course.lectureQuizzes && course.lectureQuizzes[num] && course.lectureQuizzes[num].length > 0) { 
-                const btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
-                htmlContent += `<button class="btn-lecture-quiz" onclick="openQuiz(${num})"><span class="material-icons">quiz</span> ${btnTxt}</button>`; 
-            }
-
             document.getElementById('contentTitle').innerText = lectureName; 
             document.getElementById('contentBody').innerHTML = htmlContent; 
             document.getElementById('contentModal').style.display = 'flex';
@@ -415,7 +400,7 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
-        // --- دالة عرض الـ PDF (زي ما هي بالظبط مع العلامة المائية) ---
+        // --- دالة عرض الـ PDF (مع العلامة المائية) ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
@@ -443,7 +428,48 @@
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
 
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
-        function openQuiz(lectureNum) { activeQuizQuestions = course.lectureQuizzes[lectureNum]; currentQ = 0; score = 0; showQuestion(); document.getElementById('quizModal').style.display = 'flex'; }
+        
+        // --- دالة إظهار الكويز من جوجل شيت ---
+        function openQuiz(lectureNum) { 
+            const body = document.getElementById('quizBody');
+            
+            // 1. شاشة التحميل
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);">
+                                <span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span>
+                                <h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3>
+                              </div>`;
+            document.getElementById('quizModal').style.display = 'flex';
+            applyLanguage();
+
+            // 2. جلب الأسئلة من جوجل شيت
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${lectureNum}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.questions.length > 0) {
+                        activeQuizQuestions = data.questions;
+                        currentQ = 0; 
+                        score = 0; 
+                        showQuestion(); // بدأ الكويز
+                    } else {
+                        // لو مفيش أسئلة للمحاضرة دي في الشيت
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);">
+                                            <span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span>
+                                            <h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3>
+                                            <p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار لهذه المحاضرة حتى الآن." data-en="No quiz has been added for this lecture yet.">لم يتم إضافة اختبار لهذه المحاضرة حتى الآن.</p>
+                                          </div>`;
+                        applyLanguage();
+                    }
+                })
+                .catch(error => {
+                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;">
+                                        <span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span>
+                                        <h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3>
+                                        <p data-ar="تأكد من اتصالك بالإنترنت وحاول مرة أخرى." data-en="Check your internet connection and try again.">تأكد من اتصالك بالإنترنت وحاول مرة أخرى.</p>
+                                      </div>`;
+                    applyLanguage();
+                });
+        }
+        
         function showQuestion() {
             const q = activeQuizQuestions[currentQ]; const body = document.getElementById('quizBody'); let optsHtml = '';
             const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
@@ -452,6 +478,7 @@
             const qText = currentLang === 'en' ? q.qEn : q.qAr;
             body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div><h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
         }
+        
         function checkAnswer(el, chosen, correct) {
             const all = document.querySelectorAll('.quiz-opt'); all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
             const icon = el.querySelector('.opt-icon'); icon.style.display = 'block';
