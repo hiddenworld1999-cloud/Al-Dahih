@@ -234,20 +234,16 @@
     </div>
 
     <script>
+        // === رابط جوجل شيت السحري الخاص بك ===
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
+
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
+        // الداتا الأساسية للمواد (للاسم والبروفيسور والكويزات والامتحانات)
         const allCourses = {
-            1: { titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "coding_mid_", count: 5 }, finalFiles: { prefix: "coding_final_", count: 8 }, summaries: {}, lectureQuizzes: {} },
+            1: { titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "coding_mid_", count: 5 }, finalFiles: { prefix: "coding_final_", count: 8 }, lectureQuizzes: {} },
             2: { 
                 titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", profAr: "د. شيماء عبد الرؤوف", profEn: "Dr. Shaimaa", midtermFiles: { prefix: "net_mid_", count: 3 }, finalFiles: { prefix: "net_final_", count: 5 },
-                summaries: {
-                    1: `<div style="text-align:center; padding:30px 10px;">
-                          <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
-                          <h3 style="color:var(--primary); margin-bottom:10px;">ملف المحاضرة الأولى</h3>
-                          <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;">محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا.</p>
-                          <button onclick="openPdfViewerInsideApp('net_lec1.pdf')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem;"><span class="material-icons" style="margin-left:10px;">chrome_reader_mode</span> اقرأ المحاضرة الآن</button>
-                        </div>`
-                },
                 lectureQuizzes: { 
                     1: [
                         { qAr: "ما هي المكونات الخمسة الأساسية للنظام البيئي للبنية التحتية لتكنولوجيا المعلومات؟", qEn: "What are the 5 core components of the IT Infrastructure ecosystem?", optsAr: ["الإنترنت، الحواسيب، الهواتف، الطابعات", "المكونات المادية، البرمجية، الشبكات، المكونات البشرية، ومستلزمات أخرى", "أنظمة التشغيل، البرامج التطبيقية، قواعد البيانات", "الإدخال، الإخراج، المعالجة، التخزين"], optsEn: ["Internet, PCs, Phones", "Hardware, Software, Networks, People, Others", "OS, Apps, DB", "Input, Output, Processing"], ans: 1 },
@@ -260,12 +256,12 @@
                         { qAr: "تساعد الشبكات الحاسوبية في تبادل البيانات ومشاركة الموارد، مما يؤدي إلى تقليل الاعتماد على الورق.", qEn: "Computer networks help exchange data and share resources, reducing reliance on paper.", optsAr: ["صح", "خطأ"], optsEn: ["True", "False"], ans: 0 },
                         { qAr: "ما هو دور 'أخصائي الصيانة' في المكونات البشرية للبنية التحتية؟", qEn: "What is the role of the 'Maintenance Specialist' in the human components of infrastructure?", optsAr: ["تحويل التصاميم إلى كود برمجي", "إدخال البيانات اللازمة لتشغيل النظام", "وضع المخططات للنظام", "إصلاح الأعطال الميكانيكية والإلكترونية"], optsEn: ["Coding designs", "Data entry", "System charting", "Fixing mechanical/electronic faults"], ans: 3 },
                         { qAr: "أي مما يلي يُعد من متطلبات 'البيئة الحاضنة' (مستلزمات أخرى) لعمل البنية التحتية بشكل سليم؟", qEn: "Which of the following is a requirement of the 'Incubating Environment' for infrastructure to work properly?", optsAr: ["توفير نظام تبريد وإمدادات طاقة احتياطية وحماية فيزيائية", "توفير أنظمة تشغيل حديثة وبرامج متخصصة", "توفير شبكات اتصالات فائقة السرعة", "تدريب المستخدمين والفنيين"], optsEn: ["Cooling, backup power, physical security", "Modern OS & specialized software", "High-speed networks", "User training"], ans: 0 }
-                    ], 2: [] 
+                    ]
                 }
             },
-            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", summaries: {}, lectureQuizzes: {} },
-            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", summaries: {}, lectureQuizzes: {} },
-            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", summaries: {}, lectureQuizzes: {} }
+            3: { titleAr: "الإدارة الاستراتيجية", titleEn: "Strategic Management", profAr: "د. ولاء سامي", profEn: "Dr. Walaa", lectureQuizzes: {} },
+            4: { titleAr: "الاقتصاد الكلي", titleEn: "Macroeconomics", profAr: "د. هبة الله سمير", profEn: "Dr. Heba", lectureQuizzes: {} },
+            5: { titleAr: "الإحصاء التطبيقي", titleEn: "Applied Statistics", profAr: "د. ميرفت خليفة", profEn: "Dr. Mervat", lectureQuizzes: {} }
         };
 
         const params = new URLSearchParams(window.location.search);
@@ -329,26 +325,81 @@
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        // --- دالة إظهار قائمة المحاضرات (من جوجل شيت) ---
         function openModal(type) {
             if (type === 'summary') {
-                const list = document.getElementById('summaryList'); list.innerHTML = '';
-                for (let i = 1; i <= 8; i++) { 
-                    const txt = currentLang === 'en' ? `Lecture ${i}` : `المحاضرة ${i}`;
-                    const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left';
-                    list.innerHTML += `<div class="lecture-item" onclick="showLecture(${i})"><span>${txt}</span><span class="material-icons" style="color:var(--grey)">${arr}</span></div>`; 
-                }
+                const list = document.getElementById('summaryList'); 
+                
+                // 1. إظهار حالة التحميل (Loading)
+                list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);">
+                                    <span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span>
+                                    <p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p>
+                                  </div>`;
                 document.getElementById('summaryModal').style.display = 'flex';
+                applyLanguage(); // تطبيق الترجمة على نص التحميل
+
+                // 2. الاتصال بسيرفر جوجل لجلب المحاضرات
+                fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        list.innerHTML = ''; 
+                        if (data.success && data.lectures.length > 0) {
+                            data.lectures.forEach((lec, index) => {
+                                const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left';
+                                const lectureNumber = index + 1; // لترتيب المحاضرات
+                                
+                                list.innerHTML += `
+                                <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
+                                    <span>${lec.name}</span>
+                                    <span class="material-icons" style="color:var(--grey)">${arr}</span>
+                                </div>`;
+                            });
+                        } else {
+                            list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);">
+                                                <span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span>
+                                                <p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p>
+                                              </div>`;
+                        }
+                        applyLanguage(); // تطبيق الترجمة على القائمة بعد التوليد
+                    })
+                    .catch(error => {
+                        list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;">
+                                            <span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span>
+                                            <p data-ar="حدث خطأ في الاتصال. تأكد من الإنترنت." data-en="Connection error. Check your internet.">حدث خطأ في الاتصال. تأكد من الإنترنت.</p>
+                                          </div>`;
+                        applyLanguage();
+                    });
             }
         }
 
-        function showLecture(num) {
-            const content = course.summaries[num] || (currentLang === 'en' ? "<p style='text-align:center; color:var(--grey);'>No content available.</p>" : "<p style='text-align:center; color:var(--grey);'>لا يوجد محتوى متاح حالياً.</p>");
-            let htmlContent = `<div class="content-view">${content}</div>`;
+        // --- دالة عرض المحاضرة (الجديدة والديناميكية) ---
+        function showDynamicLecture(lectureName, fileName, num) {
+            let htmlContent = `
+                <div class="content-view" style="text-align:center; padding:30px 10px;">
+                    <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
+                    <h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3>
+                    <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" 
+                       data-ar="محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا." 
+                       data-en="Lecture content is available in PDF format. Click the button to read it here.">
+                       محتوى المحاضرة متوفر بصيغة PDF. اضغط على الزر لفتحه وقراءته هنا.
+                    </p>
+                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%;">
+                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
+                        <span data-ar="اقرأ المحاضرة الآن" data-en="Read Lecture Now">اقرأ المحاضرة الآن</span>
+                    </button>
+                </div>`;
+            
+            // إضافة زر الكويز لو موجود في البيانات المحلية
             if(course.lectureQuizzes && course.lectureQuizzes[num] && course.lectureQuizzes[num].length > 0) { 
                 const btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
                 htmlContent += `<button class="btn-lecture-quiz" onclick="openQuiz(${num})"><span class="material-icons">quiz</span> ${btnTxt}</button>`; 
             }
-            document.getElementById('contentTitle').innerText = currentLang === 'en' ? `Lecture ${num}` : `المحاضرة ${num}`; document.getElementById('contentBody').innerHTML = htmlContent; document.getElementById('contentModal').style.display = 'flex';
+
+            document.getElementById('contentTitle').innerText = lectureName; 
+            document.getElementById('contentBody').innerHTML = htmlContent; 
+            document.getElementById('contentModal').style.display = 'flex';
+            applyLanguage();
         }
 
         let currentZoom = 100; function zoomImages(change) { currentZoom += change; if(currentZoom<50) currentZoom=50; if(currentZoom>300) currentZoom=300; document.getElementById('imagesWrapper').style.width = currentZoom + '%'; }
@@ -364,6 +415,7 @@
         }
         function closeImageViewer() { document.getElementById('imageViewer').style.display = 'none'; }
 
+        // --- دالة عرض الـ PDF (زي ما هي بالظبط مع العلامة المائية) ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
