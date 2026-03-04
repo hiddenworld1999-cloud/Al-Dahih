@@ -69,8 +69,8 @@
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 15px; padding: 20px; }
         .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
         
-        .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2500; display: none; flex-direction: column; }
-        .img-head { padding: 15px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 2501; border-bottom: 1px solid #333; }
+        .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1500; display: none; flex-direction: column; }
+        .img-head { padding: 15px 20px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 1501; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
         .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #e9ecef; text-align: center; }
         .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; padding-top: 15px; }
@@ -213,8 +213,13 @@
     <div id="pdfViewer" class="img-viewer">
         <div class="img-head">
             <button class="close-img-btn" onclick="closePdfViewer()" data-ar="إنهاء القراءة" data-en="Close PDF">إنهاء القراءة</button>
-            <span style="color: white; font-weight: bold; font-size: 0.9rem;" data-ar="ملف المحتوى" data-en="Content PDF">ملف المحتوى</span>
-            <div style="width: 80px;"></div>
+            <span style="color: white; font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
+            
+            <div class="header-icons" style="gap: 15px;">
+                <span class="material-icons" onclick="toggleCalculator()" style="color: white; cursor: pointer;" title="الآلة الحاسبة">calculate</span>
+                <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: white; cursor: pointer;" title="الموسيقى">music_off</span>
+                <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: white; cursor: pointer;" title="المظهر الليلي">light_mode</span>
+            </div>
         </div>
         <div class="images-scroll-container">
             <div id="pdfWrapper" class="images-wrapper"><div id="pdfWatermarkOverlay" class="watermark-overlay"></div></div>
@@ -272,16 +277,41 @@
         }
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
 
+        // --- تحديث وظيفة الدارك مود عشان تسمّع في الشاشتين ---
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('daheehDarkMode', isDark); 
             document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
+            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode';
         }
-        if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; } else { document.getElementById('darkModeToggle').innerText = 'light_mode'; }
+        
+        if (localStorage.getItem('daheehDarkMode') === 'true') { 
+            document.body.classList.add('dark-mode'); 
+            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
+            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode';
+        } else { 
+            document.getElementById('darkModeToggle').innerText = 'light_mode'; 
+            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode';
+        }
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
+        
+        // --- تحديث وظيفة الموسيقى عشان تسمّع في الشاشتين ---
+        function toggleMusic() { 
+            const btn = document.getElementById('musicToggle'); 
+            const btnPdf = document.getElementById('musicTogglePdf');
+            
+            if (bgMusic.paused) { 
+                bgMusic.play(); 
+                btn.innerText = 'music_note'; btn.classList.add('music-active'); 
+                if(btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); }
+            } else { 
+                bgMusic.pause(); 
+                btn.innerText = 'music_off'; btn.classList.remove('music-active'); 
+                if(btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); }
+            } 
+        }
 
         function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
         function appendCalc(v) { document.getElementById('calcDisplay').value += v; } function clearCalc() { document.getElementById('calcDisplay').value = ''; }
@@ -295,7 +325,6 @@
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         
-        // --- دالة إظهار المحاضرات ---
         function openModal(type) {
             if (type === 'summary') {
                 const list = document.getElementById('summaryList'); 
@@ -335,7 +364,6 @@
             }
         }
 
-        // --- دالة عرض المحاضرات ---
         function showDynamicLecture(lectureName, fileName, num) {
             const btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
             let htmlContent = `
@@ -358,7 +386,6 @@
             applyLanguage();
         }
 
-        // --- دالة جلب وعرض الامتحانات الذكية (الميد والفاينل كـ PDF) 🚀 ---
         function openExam(type) {
             const body = document.getElementById('contentBody');
             const title = type === 'midterm' ? (currentLang === 'en' ? 'Midterm Exam' : 'أسئلة الميدترم') : (currentLang === 'en' ? 'Final Exam' : 'أسئلة الفاينل');
@@ -411,14 +438,13 @@
                 });
         }
 
-        // --- دالة عرض الـ PDF الموحدة لكل التطبيق ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
             const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; wrapper.insertBefore(loadingDiv, watermark);
             document.getElementById('pdfViewer').style.display = 'flex';
             
-            addXP(10); // نقاط للتشجيع
+            addXP(10); 
 
             const sName = localStorage.getItem('studentName') || "Student"; const sCode = localStorage.getItem('studentCode') || "000";
             watermark.innerHTML = ''; for(let i=0; i<800; i++) { watermark.innerHTML += `<div class="watermark-text" style="color:rgba(0,0,0,0.15);">${sName} - ${sCode}</div>`; }
@@ -437,7 +463,6 @@
         }
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
 
-        // --- نظام الكويزات ---
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
         
         function openQuiz(lectureNum) { 
