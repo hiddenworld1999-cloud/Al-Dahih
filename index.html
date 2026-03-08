@@ -38,7 +38,6 @@
         .page-section.active { display: block; }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* شارة النقاط */
         .xp-badge { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); padding: 4px 10px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; box-shadow: 0 2px 8px rgba(255,200,0,0.2); }
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
@@ -147,7 +146,6 @@
         body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
         
-        /* زرار لوحة الشرف */
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
         .btn-card:active { transform: scale(0.98); }
     </style>
@@ -323,6 +321,17 @@
         <div class="container" id="leaderboardBody" style="padding-top: 20px; padding-bottom: 40px;"></div>
     </div>
 
+    <div id="newsPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; box-shadow:0 15px 35px rgba(0,0,0,0.3); border: 1px solid var(--border-color); animation: slideUpFade 0.4s ease forwards;">
+            <span class="material-icons" style="font-size:60px; color:var(--accent-orange); margin-bottom:15px;">campaign</span>
+            <h3 style="color:var(--primary-blue); font-weight:900; margin-bottom:10px;" data-ar="خبر عاجل 🚀" data-en="Breaking News 🚀">خبر عاجل 🚀</h3>
+            <p id="newsPopupText" style="color:var(--text-main); line-height:1.6; margin-bottom:20px; font-weight:600; font-size:1.05rem;"></p>
+            <button onclick="closeNewsPopup()" class="btn-card" style="justify-content:center; background:var(--primary-blue); color:white; border:none; margin:0;">
+                <span data-ar="تمام، فهمت" data-en="Got it!">تمام، فهمت</span>
+            </button>
+        </div>
+    </div>
+
     <div class="bottom-nav-wrapper">
         <nav class="bottom-nav" id="bottomNav">
             <div class="nav-item active" onclick="switchTab('home', this)">
@@ -341,7 +350,7 @@
     </div>
 
     <script>
-        // === رابط السيرفر (Google Apps Script) ===
+        // === رابط السيرفر (تأكد إنه نفس رابط الـ Deploy بتاعك) ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         const coursesData = [
@@ -420,7 +429,7 @@
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
 
-        // === الكشكول السحابي الذكي ===
+        // === الكشكول السحابي ===
         const notebookInput = document.getElementById('studentNotebook'); 
         const saveIndicator = document.getElementById('saveIndicator'); 
         let typingTimer;
@@ -477,9 +486,6 @@
                         saveIndicator.style.color = '#2e7d32'; 
                         document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_done';
                         document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved to Cloud' : 'تم الحفظ سحابياً';
-                        
-                        // تم إزالة إضافة النقاط من هنا بناءً على طلبك
-                        
                         setTimeout(() => { saveIndicator.style.display = 'none'; }, 2500); 
                     }
                 })
@@ -492,7 +498,7 @@
             }, 1500); 
         });
 
-        // === لوحة الشرف (Leaderboard) ===
+        // === لوحة الشرف ===
         function openLeaderboard() {
             const modal = document.getElementById('leaderboardModal');
             const body = document.getElementById('leaderboardBody');
@@ -588,7 +594,40 @@
         function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
+        // === نظام الإشعارات الذكي (يقرأ أحدث خبر أوتوماتيك) ===
+        function checkLatestNews() {
+            fetch(`${SCRIPT_URL}?action=getLatestNews&code=${localStorage.getItem('studentCode')}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.success && data.news) {
+                    const newsMsgAr = `✨ تمت إضافة [ ${data.news} ] حديثاً للمنصة.. ادخل شوفها! 🚀`;
+                    const newsMsgEn = `✨ [ ${data.news} ] has been recently added.. Check it out! 🚀`;
+                    
+                    // 1. تحديث شريط الأخبار المتحرك فوق
+                    const marqueeSpan = document.querySelector('.news-ticker marquee span');
+                    if (marqueeSpan) {
+                        marqueeSpan.setAttribute('data-ar', newsMsgAr);
+                        marqueeSpan.setAttribute('data-en', newsMsgEn);
+                        marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr;
+                    }
+
+                    // 2. إظهار الإشعار المنبثق لو لسه مشافهوش
+                    const lastSeenTime = localStorage.getItem('daheehLastNewsTime');
+                    if(lastSeenTime != data.timestamp) { 
+                        document.getElementById('newsPopupText').innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr;
+                        document.getElementById('newsPopup').style.display = 'flex';
+                        localStorage.setItem('daheehLastNewsTime', data.timestamp); 
+                    }
+                }
+            })
+            .catch(err => console.log('No news updates found'));
+        }
+
+        function closeNewsPopup() { document.getElementById('newsPopup').style.display = 'none'; }
+
+        // تهيئة الصفحة
         applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay();
+        checkLatestNews(); // تشغيل فحص الأخبار أول ما الصفحة تفتح
     </script>
 </body>
 </html>
