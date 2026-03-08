@@ -353,11 +353,22 @@
                 document.getElementById('summaryModal').style.display = 'flex';
                 applyLanguage();
 
-                fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}`)
+                // التعديل الأمني: إرسال الكود للسيرفر
+                const studentCode = localStorage.getItem('studentCode') || '';
+
+                fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
                     .then(response => response.json())
                     .then(data => {
+                        // لو الكود مسروق أو مش متسجل، اطرده
+                        if (data.error === 'unauthorized') {
+                            alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
+                            localStorage.removeItem('isLoggedInDaheeh');
+                            window.location.href = 'login.html';
+                            return;
+                        }
+
                         list.innerHTML = ''; 
-                        if (data.success && data.lectures.length > 0) {
+                        if (data.success && data.lectures && data.lectures.length > 0) {
                             data.lectures.forEach((lec, index) => {
                                 const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left';
                                 const lectureNumber = index + 1; 
@@ -417,9 +428,20 @@
             document.getElementById('contentModal').style.display = 'flex';
             applyLanguage();
 
-            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}`)
+            // التعديل الأمني: إرسال الكود
+            const studentCode = localStorage.getItem('studentCode') || '';
+
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
                 .then(res => res.json())
                 .then(data => {
+                    // لو الكود مسروق أو مش متسجل، اطرده
+                    if (data.error === 'unauthorized') {
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
+                        localStorage.removeItem('isLoggedInDaheeh');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
                     if(data.success) {
                         const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final;
                         
@@ -466,7 +488,7 @@
             document.getElementById('pdfWrapper').style.width = pdfZoom + '%';
         }
 
-        // --- دالة عرض الـ PDF ---
+        // --- دالة عرض الـ PDF (محدثة بأقوى نظام حماية للعلامة المائية جوه الـ Canvas) ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
@@ -479,6 +501,9 @@
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
             wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
             
+            // مسح الـ HTML القديم بتاع العلامة المائية عشان مبقاش ليه لزمة
+            if (watermark) watermark.innerHTML = ''; 
+
             const loadingDiv = document.createElement('div'); 
             loadingDiv.className = 'loading-msg'; 
             loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
@@ -488,12 +513,10 @@
             
             addXP(10); 
 
+            // جلب الداتا عشان تترسم جوه المذكرة نفسها
             const sName = localStorage.getItem('studentName') || "Student"; 
             const sCode = localStorage.getItem('studentCode') || "000";
-            watermark.innerHTML = ''; 
-            for(let i=0; i<800; i++) { 
-                watermark.innerHTML += `<div class="watermark-text" style="color:rgba(0,0,0,0.15);">${sName} - ${sCode}</div>`; 
-            }
+            const watermarkText = `${sName} - ${sCode}`;
 
             pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
                 loadingDiv.remove();
@@ -503,7 +526,7 @@
                         const canvas = document.createElement('canvas'); 
                         canvas.style.display = 'block'; 
                         canvas.style.margin = '0 auto 15px auto'; 
-                        canvas.style.width = '100%'; // ده اللي بيخلي الزوم يشتغل صح
+                        canvas.style.width = '100%'; 
                         canvas.style.borderRadius = '8px'; 
                         canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; 
                         canvas.style.position = 'relative'; 
@@ -512,7 +535,25 @@
                         canvas.height = viewport.height; 
                         canvas.width = viewport.width; 
                         wrapper.insertBefore(canvas, watermark);
-                        page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
+                        
+                        const ctx = canvas.getContext('2d');
+                        
+                        page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
+                            // --- السحر هنا: رسم العلامة المائية فوق البيكسلات ---
+                            ctx.save();
+                            ctx.translate(canvas.width / 2, canvas.height / 2);
+                            ctx.rotate(-Math.PI / 4);
+                            ctx.font = "bold 40px 'IBM Plex Sans Arabic', sans-serif";
+                            ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+                            ctx.textAlign = "center";
+                            
+                            for (let x = -canvas.width; x < canvas.width * 2; x += 300) {
+                                for (let y = -canvas.height; y < canvas.height * 2; y += 300) {
+                                    ctx.fillText(watermarkText, x, y);
+                                }
+                            }
+                            ctx.restore();
+                        });
                     });
                 }
             }).catch(e => { 
@@ -531,10 +572,21 @@
             document.getElementById('quizModal').style.display = 'flex';
             applyLanguage();
 
-            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${lectureNum}`)
+            // التعديل الأمني: إرسال الكود
+            const studentCode = localStorage.getItem('studentCode') || '';
+
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${lectureNum}&code=${studentCode}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success && data.questions.length > 0) {
+                    // لو الكود مسروق أو مش متسجل، اطرده
+                    if (data.error === 'unauthorized') {
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
+                        localStorage.removeItem('isLoggedInDaheeh');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    if (data.success && data.questions && data.questions.length > 0) {
                         activeQuizQuestions = data.questions; currentQ = 0; score = 0; showQuestion();
                     } else {
                         body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار لهذه المحاضرة حتى الآن." data-en="No quiz has been added for this lecture yet.">لم يتم إضافة اختبار لهذه المحاضرة حتى الآن.</p></div>`;
