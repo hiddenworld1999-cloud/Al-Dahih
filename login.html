@@ -1,6 +1,59 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
+<script>
+        (function() {
+            // 1. هل ده تطبيق أندرويد؟ (AppCreator24 بيستخدم WebView)
+            var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
+            
+            // 2. هل ده آيفون فاتح كـ تطبيق من الشاشة الرئيسية؟ (PWA)
+            var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+            // لو مش فاتح من الأندرويد ولا فاتح من شاشة الآيفون (يعني معاه اللينك وبيفتحه من متصفح عادي)
+            if (!isAndroidApp && !isIOSStandalone) {
+                // نمسح صفحة تسجيل الدخول ونظهر شاشة الحماية
+                document.write(`
+                    <!DOCTYPE html>
+                    <html lang="ar" dir="rtl">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>تطبيق الدحيح</title>
+                        <style>
+                            body { background: #0A2647; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; text-align: center; padding: 20px; }
+                            .icon { font-size: 70px; margin-bottom: 20px; }
+                            .box { background: rgba(255,255,255,0.05); padding: 35px; border-radius: 24px; border: 1px solid rgba(255,200,0,0.3); max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+                            h2 { color: #FFC800; margin-bottom: 10px; font-weight: 900;}
+                            p { line-height: 1.6; color: #cbd5e1; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="box">
+                            <div class="icon">🛑</div>
+                            <h2>النظام محمي</h2>
+                            <p>عفواً، لا يمكن الدخول للمنصة عبر المتصفح العادي أو الكمبيوتر للحفاظ على سرية المحتوى.</p>
+                            
+                            <hr style="border-color:rgba(255,255,255,0.1); margin: 25px 0;">
+                            
+                            <div class="icon" style="font-size: 40px; margin-bottom:10px;">🍏</div>
+                            <h3 style="color:#2196f3; margin-bottom: 10px;">لمستخدمي الآيفون (iOS):</h3>
+                            <p style="font-size: 0.95rem;">لتشغيل التطبيق، اضغط على زر المشاركة <b>(Share)</b> بالأسفل ⬇️<br><br>ثم اختر<br><span style="background: white; color: black; padding: 5px 10px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 5px;">إضافة إلى الصفحة الرئيسية ➕</span><br><br>وبعدها افتح التطبيق من شاشة موبايلك.</p>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                document.close();
+                throw new Error('تم إيقاف تشغيل الموقع لأنه مفتوح في متصفح عادي.'); // توقيف أي أكواد تانية
+            }
+        })();
+    </script>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="الدحيح">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3048/3048122.png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تسجيل الدخول - منصة الدحيح</title>
