@@ -511,8 +511,6 @@
             wrapper.insertBefore(loadingDiv, watermark);
             document.getElementById('pdfViewer').style.display = 'flex';
             
-            addXP(10); 
-
             // جلب الداتا عشان تترسم جوه المذكرة نفسها
             const sName = localStorage.getItem('studentName') || "Student"; 
             const sCode = localStorage.getItem('studentCode') || "000";
@@ -613,17 +611,38 @@
             const icon = el.querySelector('.opt-icon'); icon.style.display = 'block';
             if (chosen === correct) { el.classList.add('correct'); icon.innerText = 'check_circle'; score++; } 
             else { el.classList.add('wrong'); icon.innerText = 'cancel'; all[correct].classList.add('correct'); all[correct].querySelector('.opt-icon').innerText = 'check_circle'; all[correct].querySelector('.opt-icon').style.display = 'block'; }
+            
             setTimeout(() => {
                 currentQ++;
                 if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
                 else { 
-                    if(score > 0) addXP(score * 10);
+                    if(score > 0) {
+                        addXP(score * 10);
+                        syncXPToCloud(); // <-- السطر ده اللي بيبعت النقاط للسيرفر
+                    }
                     const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
                     const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
                     const xpReward = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
                     document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:#4caf50; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${score > 0 ? xpReward : ''}</p><button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
                 }
             }, 1500);
+        }
+
+        // دالة الرفع للسيرفر
+        function syncXPToCloud() {
+            const currentXP = localStorage.getItem('daheehXP') || 0;
+            const sCode = localStorage.getItem('studentCode') || '';
+            const sName = localStorage.getItem('studentName') || '';
+            if(!sCode) return;
+
+            const formData = new URLSearchParams();
+            formData.append('action', 'updateXP');
+            formData.append('code', sCode);
+            formData.append('name', sName);
+            formData.append('xp', currentXP);
+
+            fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+            .catch(err => console.log('Network error while saving XP'));
         }
 
         applyLanguage(); updatePomoDisplay();
