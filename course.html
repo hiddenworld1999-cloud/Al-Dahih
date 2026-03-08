@@ -245,7 +245,8 @@
     </div>
 
     <script>
-        // === رابط جوجل شيت السحري ===
+        // === رابط السيرفر (Google Apps Script) ===
+        // ⚠️ مهم: تأكد إن الرابط ده هو نفس الرابط اللي شغال معاك في باقي الصفحات
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -315,7 +316,6 @@
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         
-        // --- الموسيقى متصلة بالشاشتين ---
         function toggleMusic() { 
             const btn = document.getElementById('musicToggle'); 
             const btnPdf = document.getElementById('musicTogglePdf');
@@ -353,13 +353,11 @@
                 document.getElementById('summaryModal').style.display = 'flex';
                 applyLanguage();
 
-                // التعديل الأمني: إرسال الكود للسيرفر
                 const studentCode = localStorage.getItem('studentCode') || '';
 
                 fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
                     .then(response => response.json())
                     .then(data => {
-                        // لو الكود مسروق أو مش متسجل، اطرده
                         if (data.error === 'unauthorized') {
                             alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
                             localStorage.removeItem('isLoggedInDaheeh');
@@ -428,13 +426,11 @@
             document.getElementById('contentModal').style.display = 'flex';
             applyLanguage();
 
-            // التعديل الأمني: إرسال الكود
             const studentCode = localStorage.getItem('studentCode') || '';
 
             fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
                 .then(res => res.json())
                 .then(data => {
-                    // لو الكود مسروق أو مش متسجل، اطرده
                     if (data.error === 'unauthorized') {
                         alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
                         localStorage.removeItem('isLoggedInDaheeh');
@@ -478,7 +474,6 @@
                 });
         }
 
-        // --- محرك التكبير والتصغير (Zoom Engine) ---
         let pdfZoom = 100;
         function zoomPdf(change) {
             pdfZoom += change;
@@ -488,12 +483,10 @@
             document.getElementById('pdfWrapper').style.width = pdfZoom + '%';
         }
 
-        // --- دالة عرض الـ PDF (محدثة بأقوى نظام حماية للعلامة المائية جوه الـ Canvas) ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
             
-            // تصفير الزوم مع كل ملف جديد
             pdfZoom = 100;
             if(document.getElementById('pdfZoomText')) document.getElementById('pdfZoomText').innerText = '100%';
             wrapper.style.width = '100%';
@@ -501,7 +494,6 @@
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
             wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
             
-            // مسح الـ HTML القديم بتاع العلامة المائية عشان مبقاش ليه لزمة
             if (watermark) watermark.innerHTML = ''; 
 
             const loadingDiv = document.createElement('div'); 
@@ -511,7 +503,8 @@
             wrapper.insertBefore(loadingDiv, watermark);
             document.getElementById('pdfViewer').style.display = 'flex';
             
-            // جلب الداتا عشان تترسم جوه المذكرة نفسها
+            // تم إزالة addXP(10) من هنا نهائياً
+
             const sName = localStorage.getItem('studentName') || "Student"; 
             const sCode = localStorage.getItem('studentCode') || "000";
             const watermarkText = `${sName} - ${sCode}`;
@@ -537,7 +530,6 @@
                         const ctx = canvas.getContext('2d');
                         
                         page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
-                            // --- السحر هنا: رسم العلامة المائية فوق البيكسلات ---
                             ctx.save();
                             ctx.translate(canvas.width / 2, canvas.height / 2);
                             ctx.rotate(-Math.PI / 4);
@@ -561,7 +553,6 @@
         
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
 
-        // --- نظام الكويزات ---
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
         
         function openQuiz(lectureNum) { 
@@ -570,13 +561,11 @@
             document.getElementById('quizModal').style.display = 'flex';
             applyLanguage();
 
-            // التعديل الأمني: إرسال الكود
             const studentCode = localStorage.getItem('studentCode') || '';
 
             fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${lectureNum}&code=${studentCode}`)
                 .then(response => response.json())
                 .then(data => {
-                    // لو الكود مسروق أو مش متسجل، اطرده
                     if (data.error === 'unauthorized') {
                         alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
                         localStorage.removeItem('isLoggedInDaheeh');
@@ -618,7 +607,7 @@
                 else { 
                     if(score > 0) {
                         addXP(score * 10);
-                        syncXPToCloud(); // <-- السطر ده اللي بيبعت النقاط للسيرفر
+                        syncXPToCloud(); // حفظ السكور في جوجل شيت
                     }
                     const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
                     const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
@@ -628,20 +617,18 @@
             }, 1500);
         }
 
-        // دالة الرفع للسيرفر
+        // --- دالة رفع النقاط السحابية (محدثة لتعمل بـ GET لضمان وصولها بنجاح) ---
         function syncXPToCloud() {
             const currentXP = localStorage.getItem('daheehXP') || 0;
             const sCode = localStorage.getItem('studentCode') || '';
             const sName = localStorage.getItem('studentName') || '';
             if(!sCode) return;
 
-            const formData = new URLSearchParams();
-            formData.append('action', 'updateXP');
-            formData.append('code', sCode);
-            formData.append('name', sName);
-            formData.append('xp', currentXP);
-
-            fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
+            
+            fetch(requestUrl)
+            .then(res => res.json())
+            .then(data => console.log('XP Saved: ', data))
             .catch(err => console.log('Network error while saving XP'));
         }
 
