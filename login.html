@@ -1,68 +1,69 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-
-<script>
-        (function() {
-            // 1. هل ده تطبيق أندرويد؟ (AppCreator24 بيستخدم WebView)
-            var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
-            
-            // 2. هل ده آيفون فاتح كـ تطبيق من الشاشة الرئيسية؟ (PWA)
-            var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-
-            // لو مش فاتح من الأندرويد ولا فاتح من شاشة الآيفون (يعني معاه اللينك وبيفتحه من متصفح عادي)
-            if (!isAndroidApp && !isIOSStandalone) {
-                // نمسح صفحة تسجيل الدخول ونظهر شاشة الحماية
-                document.write(`
-                    <!DOCTYPE html>
-                    <html lang="ar" dir="rtl">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>تطبيق الدحيح</title>
-                        <style>
-                            body { background: #0A2647; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; text-align: center; padding: 20px; }
-                            .icon { font-size: 70px; margin-bottom: 20px; }
-                            .box { background: rgba(255,255,255,0.05); padding: 35px; border-radius: 24px; border: 1px solid rgba(255,200,0,0.3); max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-                            h2 { color: #FFC800; margin-bottom: 10px; font-weight: 900;}
-                            p { line-height: 1.6; color: #cbd5e1; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="box">
-                            <div class="icon">🛑</div>
-                            <h2>النظام محمي</h2>
-                            <p>عفواً، لا يمكن الدخول للمنصة عبر المتصفح العادي أو الكمبيوتر للحفاظ على سرية المحتوى.</p>
-                            
-                            <hr style="border-color:rgba(255,255,255,0.1); margin: 25px 0;">
-                            
-                            <div class="icon" style="font-size: 40px; margin-bottom:10px;">🍏</div>
-                            <h3 style="color:#2196f3; margin-bottom: 10px;">لمستخدمي الآيفون (iOS):</h3>
-                            <p style="font-size: 0.95rem;">لتشغيل التطبيق، اضغط على زر المشاركة <b>(Share)</b> بالأسفل ⬇️<br><br>ثم اختر<br><span style="background: white; color: black; padding: 5px 10px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 5px;">إضافة إلى الصفحة الرئيسية ➕</span><br><br>وبعدها افتح التطبيق من شاشة موبايلك.</p>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                document.close();
-                throw new Error('تم إيقاف تشغيل الموقع لأنه مفتوح في متصفح عادي.'); // توقيف أي أكواد تانية
-            }
-        })();
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الدخول - منصة الدحيح</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="الدحيح">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3048/3048122.png">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تسجيل الدخول - منصة الدحيح</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <script>
+        (function() {
+            var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
+            var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (!isAndroidApp && !isIOSStandalone) {
+                // بمسح محتوى الصفحة بالكامل وأحط رسالة حماية شيك جداً
+                document.documentElement.innerHTML = `
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>تطبيق الدحيح - محمي</title>
+                        <style>
+                            body { background: #0A2647; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; text-align: center; padding: 20px; }
+                            .box { background: rgba(255,255,255,0.05); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255,200,0,0.3); max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+                            h2 { color: #FFC800; margin-bottom: 15px; font-weight: 900; font-size: 1.8rem;}
+                            p { line-height: 1.8; color: #cbd5e1; font-size: 1.1rem;}
+                            .btn-fake { display: inline-block; background: white; color: black; padding: 8px 15px; border-radius: 8px; font-weight: bold; margin-top: 10px;}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="box">
+                            <div style="font-size: 70px; margin-bottom: 20px;">🛑</div>
+                            <h2>النظام محمي</h2>
+                            <p>عفواً، الدخول للمنصة متاح فقط من خلال التطبيق الرسمي للحفاظ على سرية المحتوى.</p>
+                            
+                            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 40px; margin-bottom:15px;">🍏</div>
+                                <h3 style="color:#2196f3; margin-bottom: 10px;">لمستخدمي الآيفون (iOS):</h3>
+                                <p style="font-size: 0.95rem;">اضغط على زر المشاركة <b>(Share)</b> بالأسفل ⬇️<br>ثم اختر<br><span class="btn-fake">إضافة إلى الصفحة الرئيسية ➕</span></p>
+                            </div>
+                        </div>
+                    </body>
+                `;
+                // إيقاف أي أكواد تانية
+                throw new Error("Access Denied: Opened in browser.");
+            }
+        })();
+    </script>
+    
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'u' || e.key === 'i'))) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <style>
-        /* --- المتغيرات والتنسيقات الأساسية --- */
+        /* --- تصميمك الأصلي --- */
         :root { 
             --primary-blue: #0A2647; 
             --accent-orange: #FFC800; 
@@ -85,10 +86,9 @@
             align-items: center; 
             padding: 20px; 
             position: relative;
-            overflow: hidden; /* لمنع السكرول بسبب أشكال الخلفية */
+            overflow: hidden; 
         }
 
-        /* --- أشكال الديكور في الخلفية (لمسة احترافية) --- */
         .bg-shape { position: absolute; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.7; }
         .shape-1 { top: -10%; right: -10%; width: 350px; height: 350px; background: rgba(10, 38, 71, 0.15); animation: float 6s ease-in-out infinite; }
         .shape-2 { bottom: -10%; left: -10%; width: 300px; height: 300px; background: rgba(255, 200, 0, 0.2); animation: float 8s ease-in-out infinite reverse; }
@@ -99,7 +99,6 @@
             100% { transform: translateY(0px) rotate(0deg); } 
         }
 
-        /* --- صندوق تسجيل الدخول --- */
         .login-container { 
             background: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(10px);
@@ -117,7 +116,6 @@
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- اللوجو والنصوص --- */
         .login-logo { font-size: 2.2rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; letter-spacing: -0.5px; }
         .logo-icon { font-size: 42px !important; margin-left: 10px; color: var(--accent-orange); animation: bounce 2s infinite; }
         
@@ -126,7 +124,6 @@
         .login-title { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 10px; font-weight: 700; }
         .login-subtitle { color: var(--text-grey); font-size: 0.95rem; margin-bottom: 35px; line-height: 1.6; padding: 0 10px; }
         
-        /* --- حقل الإدخال --- */
         .input-group { margin-bottom: 25px; position: relative; text-align: right; }
         .input-label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 600; color: var(--primary-blue); padding-right: 5px; }
         
@@ -155,7 +152,6 @@
         .input-icon { position: absolute; right: 15px; top: 43px; color: var(--text-grey); font-size: 24px; transition: color 0.3s; }
         .login-input:focus + .input-icon { color: var(--primary-blue); }
         
-        /* --- زر الدخول --- */
         .login-btn { 
             width: 100%; 
             padding: 16px; 
@@ -180,11 +176,9 @@
         .login-btn:active { transform: translateY(1px); box-shadow: 0 5px 10px rgba(10, 38, 71, 0.2); }
         .login-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
         
-        /* زرار الدوران أثناء التحميل */
         .spinner { animation: spin 1s linear infinite; font-size: 22px; display: none; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* --- الرسائل المنبثقة --- */
         .message-box { 
             padding: 14px 15px; 
             border-radius: 12px; 
@@ -202,7 +196,6 @@
         .error-msg { background: #fef2f2; color: var(--error-color); border: 1px solid #fecaca; }
         .success-msg { background: #f0fdf4; color: var(--success-color); border: 1px solid #bbf7d0; }
         
-        /* --- رابط الدعم الفني --- */
         .help-text { margin-top: 30px; font-size: 0.9rem; color: var(--text-grey); font-weight: 500; }
         .help-text a { 
             color: var(--primary-blue); 
@@ -217,20 +210,10 @@
         }
         .help-text a:hover { background: rgba(10, 38, 71, 0.05); }
 
-        /* هزة الخطأ */
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
         .shake-animation { animation: shake 0.4s ease-in-out; border-color: var(--error-color) !important; }
     </style>
 
-    <script>
-        // كود حماية الصفحة
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'u' || e.key === 'i'))) {
-                e.preventDefault();
-            }
-        });
-    </script>
 </head>
 <body>
 
@@ -279,12 +262,11 @@
     </div>
 
     <script>
-        // توجيه تلقائي لو الطالب مسجل دخوله قبل كده
         if (localStorage.getItem('isLoggedInDaheeh') === 'true') {
             window.location.href = 'index.html';
         }
 
-        // === رابط جوجل شيت المباشر للتحقق من الأكواد ===
+        // ⚠️ مهم: حط لينك السكريبت بتاعك هنا
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         function validateLogin() {
@@ -300,23 +282,19 @@
             
             if(!userCode) return;
             
-            // 1. تنظيف واجهة الأخطاء القديمة
             errorBox.style.display = 'none'; 
             successBox.style.display = 'none';
             codeInput.classList.remove('shake-animation');
             
-            // 2. تفعيل حالة التحميل (Loading State)
             btn.disabled = true;
             btnText.innerText = 'جاري التحقق...';
             btnSpinner.style.display = 'inline-block';
 
-            // 3. الاتصال بقاعدة بيانات جوجل شيت
             fetch(`${SCRIPT_URL}?action=login&code=${userCode}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // --- حالة النجاح (الكود صحيح وموجود في الشيت) ---
-                        const studentName = data.name.split(' ')[0]; // جلب الاسم الأول للترحيب
+                        const studentName = data.name.split(' ')[0];
                         
                         btnSpinner.style.display = 'none';
                         btnText.innerText = 'تم الدخول بنجاح ✓';
@@ -325,32 +303,27 @@
                         successText.innerText = `أهلاً بك يا ${studentName}!`;
                         successBox.style.display = 'flex';
                         
-                        // حفظ البيانات محلياً ليتم استخدامها في باقي التطبيق
                         localStorage.setItem('isLoggedInDaheeh', 'true');
-                        localStorage.setItem('studentName', data.name); // حفظ الاسم كامل للعلامة المائية
+                        localStorage.setItem('studentName', data.name);
                         localStorage.setItem('studentCode', userCode);
 
-                        // الانتقال للصفحة الرئيسية بعد ثانية ونص
                         setTimeout(() => {
                             window.location.href = 'index.html'; 
                         }, 1500);
 
                     } else {
-                        // --- حالة الخطأ (الكود غير موجود) ---
                         btn.disabled = false;
                         btnSpinner.style.display = 'none';
                         btnText.innerText = 'تأكيد الدخول';
                         
                         errorBox.style.display = 'flex';
                         
-                        // تشغيل حركة الهزة
                         codeInput.classList.add('shake-animation');
-                        codeInput.value = ''; // تفريغ الخانة
+                        codeInput.value = '';
                         codeInput.focus();
                     }
                 })
                 .catch(error => {
-                    // لو النت فاصل عند المستخدم
                     btn.disabled = false;
                     btnSpinner.style.display = 'none';
                     btnText.innerText = 'تأكيد الدخول';
