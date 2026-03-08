@@ -350,7 +350,7 @@
     </div>
 
     <script>
-        // === رابط السيرفر (تأكد إنه نفس رابط الـ Deploy بتاعك) ===
+        // === رابط السيرفر (تأكد إنه اللينك المحدث بتاعك) ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         const coursesData = [
@@ -369,7 +369,6 @@
         const quotesAr = [`"النجاح بيليق عليك يا ${studentFirstName}.. كمل فرم!"`, `"تعب المذاكرة دلوقتي أحسن مليون مرة من ندم النتيجة بعدين."`];
         const quotesEn = [`"Success looks good on you, ${studentFirstName}!"`, `"Pain of studying is better than pain of regret."`];
 
-        // === نظام النقاط والمستويات ===
         function getLevelName(xp) {
             if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد';
             if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح';
@@ -393,7 +392,6 @@
             if(document.getElementById('profileLevel')) document.getElementById('profileLevel').innerText = level;
         }
 
-        // محرك الترجمة
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
         function applyLanguage() {
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
@@ -408,7 +406,6 @@
 
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
 
-        // الدارك مود
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
             const isDark = document.body.classList.contains('dark-mode');
@@ -548,7 +545,6 @@
         
         function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
 
-
         let activeFilter = 'all';
         function filterCourses(category, btn) { activeFilter = category; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); if (category === 'all') renderCourses(coursesData); else renderCourses(coursesData.filter(c => c.category === category)); }
         function updateCompletedCountBadge() { let count = 0; coursesData.forEach(c => { if(localStorage.getItem('completed_' + c.id) === 'true') count++; }); document.getElementById('completedCountBadge').innerText = count; }
@@ -594,16 +590,34 @@
         function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // === نظام الإشعارات الذكي (يقرأ أحدث خبر أوتوماتيك) ===
+        // === نظام الإشعارات الذكي (شامل المحاضرات والامتحانات) ===
         function checkLatestNews() {
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${localStorage.getItem('studentCode')}`)
             .then(res => res.json())
             .then(data => {
-                if(data.success && data.news) {
-                    const newsMsgAr = `✨ تمت إضافة [ ${data.news} ] حديثاً للمنصة.. ادخل شوفها! 🚀`;
-                    const newsMsgEn = `✨ [ ${data.news} ] has been recently added.. Check it out! 🚀`;
-                    
-                    // 1. تحديث شريط الأخبار المتحرك فوق
+                if(data.success) {
+                    let courseTitleAr = "مادة جديدة";
+                    let courseTitleEn = "New Course";
+                    const courseObj = coursesData.find(c => c.id == data.courseId);
+                    if(courseObj) {
+                        courseTitleAr = courseObj.titleAr;
+                        courseTitleEn = courseObj.titleEn;
+                    }
+
+                    let newsMsgAr = "";
+                    let newsMsgEn = "";
+
+                    if (data.type === 'lecture') {
+                        newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`;
+                        newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`;
+                    } else if (data.type === 'midterm') {
+                        newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`;
+                        newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`;
+                    } else if (data.type === 'final') {
+                        newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`;
+                        newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`;
+                    }
+
                     const marqueeSpan = document.querySelector('.news-ticker marquee span');
                     if (marqueeSpan) {
                         marqueeSpan.setAttribute('data-ar', newsMsgAr);
@@ -611,7 +625,6 @@
                         marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr;
                     }
 
-                    // 2. إظهار الإشعار المنبثق لو لسه مشافهوش
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime');
                     if(lastSeenTime != data.timestamp) { 
                         document.getElementById('newsPopupText').innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr;
@@ -627,7 +640,7 @@
 
         // تهيئة الصفحة
         applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay();
-        checkLatestNews(); // تشغيل فحص الأخبار أول ما الصفحة تفتح
+        checkLatestNews();
     </script>
 </body>
 </html>
