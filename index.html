@@ -323,6 +323,10 @@
     </div>
 
     <script>
+        // === رابط السيرفر (Google Apps Script) ===
+        // تأكد إن ده نفس الرابط اللي في Login و Courses
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
+
         const coursesData = [
             { id: 1, category: 'cs', titleAr: "تصميم برامج الحاسب", titleEn: "Software Design", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_coding.jpg" },
             { id: 2, category: 'cs', titleAr: "البنية التحتية للتكنولوجيا", titleEn: "IT Infrastructure", instructorAr: "د.شيماء عبد الرؤوف", instructorEn: "Dr. Shaimaa", img: "cover_network.jpg" },
@@ -399,19 +403,86 @@
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
 
-    // الكشكول (إضافة نقطة XP عند الكتابة بذكاء)
-const notebookInput = document.getElementById('studentNotebook'); const saveIndicator = document.getElementById('saveIndicator'); let typingTimer;
-if (localStorage.getItem('daheehNotebook')) { notebookInput.value = localStorage.getItem('daheehNotebook'); }
-notebookInput.addEventListener('input', function() { 
-    clearTimeout(typingTimer); saveIndicator.style.display = 'none'; 
-    typingTimer = setTimeout(() => { 
-        localStorage.setItem('daheehNotebook', notebookInput.value); 
-        saveIndicator.style.display = 'flex'; 
-        // إعطاء +1 XP للطالب كل ما يكتب ويحفظ
-        if(notebookInput.value.trim().length > 5) addXP(1);
-        setTimeout(() => { saveIndicator.style.display = 'none'; }, 2000); 
-    }, 800); 
-});
+        // === الكشكول السحابي الذكي (Cloud Smart Notebook) ===
+        const notebookInput = document.getElementById('studentNotebook'); 
+        const saveIndicator = document.getElementById('saveIndicator'); 
+        let typingTimer;
+
+        // 1. جلب الملاحظات من السحابة أول ما الصفحة تفتح
+        const studentCode = localStorage.getItem('studentCode') || '';
+        notebookInput.placeholder = currentLang === 'en' ? 'Loading your notes from cloud...' : 'جاري جلب ملاحظاتك من السحابة...';
+        notebookInput.disabled = true;
+
+        fetch(`${SCRIPT_URL}?action=getNotebook&code=${studentCode}`)
+            .then(res => res.json())
+            .then(data => {
+                notebookInput.disabled = false;
+                notebookInput.placeholder = currentLang === 'en' ? 'Write important points here to review before exams...' : 'دون أهم النقاط هنا لتراجعها قبل الامتحان...';
+                
+                // طرد لو الكود مسروق
+                if (data.error === 'unauthorized') { safeLogout(); return; }
+                
+                if (data.success && data.notes) {
+                    notebookInput.value = data.notes;
+                    localStorage.setItem('daheehNotebook', data.notes); // تحديث النسخة المحلية
+                } else if (localStorage.getItem('daheehNotebook')) {
+                    notebookInput.value = localStorage.getItem('daheehNotebook');
+                }
+            })
+            .catch(err => {
+                notebookInput.disabled = false;
+                if (localStorage.getItem('daheehNotebook')) notebookInput.value = localStorage.getItem('daheehNotebook');
+            });
+
+        // 2. حفظ الملاحظات في السحابة محلياً وسحابياً
+        notebookInput.addEventListener('input', function() { 
+            clearTimeout(typingTimer); 
+            
+            // تغيير شكل المؤشر لـ "جاري الحفظ"
+            document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
+            document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
+            saveIndicator.style.color = '#ff9800'; 
+            saveIndicator.style.display = 'flex'; 
+
+            // حفظ محلي سريع كنسخة احتياطية
+            localStorage.setItem('daheehNotebook', notebookInput.value); 
+            
+            // استنى ثانية ونص بعد آخر ضغطة زرار عشان ميعملش ضغط على السيرفر
+            typingTimer = setTimeout(() => { 
+                
+                const formData = new URLSearchParams();
+                formData.append('action', 'saveNotebook');
+                formData.append('code', studentCode);
+                formData.append('notes', notebookInput.value);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { safeLogout(); return; }
+                    if (data.success) {
+                        saveIndicator.style.color = '#2e7d32'; 
+                        document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_done';
+                        document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved to Cloud (+1 XP)' : 'تم الحفظ سحابياً (+1 XP)';
+                        
+                        // إعطاء +1 XP للطالب
+                        if(notebookInput.value.trim().length > 5) addXP(1);
+                        
+                        setTimeout(() => { saveIndicator.style.display = 'none'; }, 2500); 
+                    }
+                })
+                .catch(err => {
+                    // لو مفيش نت، يطمنه إنه اتحفظ محلي
+                    saveIndicator.style.color = '#d32f2f'; 
+                    document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_off';
+                    document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved locally (Offline)' : 'تم الحفظ محلياً (بدون إنترنت)';
+                    setTimeout(() => { saveIndicator.style.display = 'none'; }, 3000); 
+                });
+            }, 1500); 
+        });
 
         let activeFilter = 'all';
         function filterCourses(category, btn) { activeFilter = category; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); if (category === 'all') renderCourses(coursesData); else renderCourses(coursesData.filter(c => c.category === category)); }
