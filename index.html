@@ -146,6 +146,10 @@
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
+        
+        /* زرار لوحة الشرف */
+        .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
+        .btn-card:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -262,7 +266,7 @@
             <div class="notebook-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                     <span style="color: var(--text-grey); font-size: 0.85rem;" data-ar="حفظ تلقائي سحابي.." data-en="Auto-saving..">حفظ تلقائي سحابي..</span>
-                    <span id="saveIndicator" style="color:#2e7d32; display:none; align-items:center; gap:4px; font-weight:bold; font-size:0.85rem;"><span class="material-icons" style="font-size: 16px;">cloud_done</span> <span data-ar="تم الحفظ (+1 XP)" data-en="Saved (+1 XP)">تم الحفظ (+1 XP)</span></span>
+                    <span id="saveIndicator" style="color:#2e7d32; display:none; align-items:center; gap:4px; font-weight:bold; font-size:0.85rem;"><span class="material-icons" style="font-size: 16px;">cloud_done</span> <span data-ar="تم الحفظ سحابياً" data-en="Saved to Cloud">تم الحفظ سحابياً</span></span>
                 </div>
                 <textarea id="studentNotebook" class="notebook-textarea" placeholder="دون أهم النقاط هنا لتراجعها قبل الامتحان..." data-ph-ar="دون أهم النقاط هنا لتراجعها قبل الامتحان..." data-ph-en="Write important points here to review before exams..."></textarea>
             </div>
@@ -283,6 +287,11 @@
                 <div class="stat-item"><div class="stat-value" id="profileLevel" style="color: var(--accent-orange);">طالب</div><div class="stat-label" data-ar="المستوى" data-en="Level">المستوى</div></div>
             </div>
             
+            <button class="btn-card" onclick="openLeaderboard()" style="background: linear-gradient(135deg, #FFC800, #ffb700); color: #0A2647; justify-content:center; box-shadow: 0 8px 20px rgba(255, 200, 0, 0.3);">
+                <span class="material-icons" style="margin-inline-end:8px; font-size:28px;">emoji_events</span>
+                <span data-ar="لوحة الشرف (أوائل الدفعة)" data-en="Leaderboard">لوحة الشرف (أوائل الدفعة)</span>
+            </button>
+
             <div class="settings-list">
                 <div class="settings-item" onclick="toggleDarkMode()">
                     <div class="settings-item-right">
@@ -305,6 +314,15 @@
         </div>
     </div>
 
+    <div id="leaderboardModal" class="page-section" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 1000; overflow-y: auto; display: none;">
+        <div class="app-header" style="position: sticky; top: 0;">
+            <span class="material-icons" onclick="closeLeaderboard()" style="cursor:pointer; font-size:28px; color:var(--text-main);">arrow_forward</span>
+            <span style="font-weight:bold; font-size:1.2rem; color:var(--primary-blue);" data-ar="لوحة الشرف 🏆" data-en="Leaderboard 🏆">لوحة الشرف 🏆</span>
+            <span style="width: 28px;"></span>
+        </div>
+        <div class="container" id="leaderboardBody" style="padding-top: 20px; padding-bottom: 40px;"></div>
+    </div>
+
     <div class="bottom-nav-wrapper">
         <nav class="bottom-nav" id="bottomNav">
             <div class="nav-item active" onclick="switchTab('home', this)">
@@ -324,7 +342,6 @@
 
     <script>
         // === رابط السيرفر (Google Apps Script) ===
-        // تأكد إن ده نفس الرابط اللي في Login و Courses
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         const coursesData = [
@@ -343,7 +360,7 @@
         const quotesAr = [`"النجاح بيليق عليك يا ${studentFirstName}.. كمل فرم!"`, `"تعب المذاكرة دلوقتي أحسن مليون مرة من ندم النتيجة بعدين."`];
         const quotesEn = [`"Success looks good on you, ${studentFirstName}!"`, `"Pain of studying is better than pain of regret."`];
 
-        // === نظام النقاط والمستويات (Gamification XP) ===
+        // === نظام النقاط والمستويات ===
         function getLevelName(xp) {
             if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد';
             if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح';
@@ -377,7 +394,7 @@
             document.getElementById('profileCode').innerText = (currentLang === 'en' ? "ID: " : "الكود: ") + (localStorage.getItem('studentCode') || "---");
             document.getElementById('motivationQuote').innerText = currentLang === 'en' ? quotesEn[Math.floor(Math.random() * quotesEn.length)] : quotesAr[Math.floor(Math.random() * quotesAr.length)];
             renderCourses(activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter));
-            updateXPDisplay(); // تحديث اسم المستوى باللغة
+            updateXPDisplay();
         }
 
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
@@ -403,12 +420,11 @@
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
 
-        // === الكشكول السحابي الذكي (Cloud Smart Notebook) ===
+        // === الكشكول السحابي الذكي ===
         const notebookInput = document.getElementById('studentNotebook'); 
         const saveIndicator = document.getElementById('saveIndicator'); 
         let typingTimer;
 
-        // 1. جلب الملاحظات من السحابة أول ما الصفحة تفتح
         const studentCode = localStorage.getItem('studentCode') || '';
         notebookInput.placeholder = currentLang === 'en' ? 'Loading your notes from cloud...' : 'جاري جلب ملاحظاتك من السحابة...';
         notebookInput.disabled = true;
@@ -419,12 +435,11 @@
                 notebookInput.disabled = false;
                 notebookInput.placeholder = currentLang === 'en' ? 'Write important points here to review before exams...' : 'دون أهم النقاط هنا لتراجعها قبل الامتحان...';
                 
-                // طرد لو الكود مسروق
                 if (data.error === 'unauthorized') { safeLogout(); return; }
                 
                 if (data.success && data.notes) {
                     notebookInput.value = data.notes;
-                    localStorage.setItem('daheehNotebook', data.notes); // تحديث النسخة المحلية
+                    localStorage.setItem('daheehNotebook', data.notes);
                 } else if (localStorage.getItem('daheehNotebook')) {
                     notebookInput.value = localStorage.getItem('daheehNotebook');
                 }
@@ -434,22 +449,17 @@
                 if (localStorage.getItem('daheehNotebook')) notebookInput.value = localStorage.getItem('daheehNotebook');
             });
 
-        // 2. حفظ الملاحظات في السحابة محلياً وسحابياً
         notebookInput.addEventListener('input', function() { 
             clearTimeout(typingTimer); 
             
-            // تغيير شكل المؤشر لـ "جاري الحفظ"
             document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
             document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
             saveIndicator.style.color = '#ff9800'; 
             saveIndicator.style.display = 'flex'; 
 
-            // حفظ محلي سريع كنسخة احتياطية
             localStorage.setItem('daheehNotebook', notebookInput.value); 
             
-            // استنى ثانية ونص بعد آخر ضغطة زرار عشان ميعملش ضغط على السيرفر
             typingTimer = setTimeout(() => { 
-                
                 const formData = new URLSearchParams();
                 formData.append('action', 'saveNotebook');
                 formData.append('code', studentCode);
@@ -466,16 +476,14 @@
                     if (data.success) {
                         saveIndicator.style.color = '#2e7d32'; 
                         document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_done';
-                        document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved to Cloud (+1 XP)' : 'تم الحفظ سحابياً (+1 XP)';
+                        document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved to Cloud' : 'تم الحفظ سحابياً';
                         
-                        // إعطاء +1 XP للطالب
-                        if(notebookInput.value.trim().length > 5) addXP(1);
+                        // تم إزالة إضافة النقاط من هنا بناءً على طلبك
                         
                         setTimeout(() => { saveIndicator.style.display = 'none'; }, 2500); 
                     }
                 })
                 .catch(err => {
-                    // لو مفيش نت، يطمنه إنه اتحفظ محلي
                     saveIndicator.style.color = '#d32f2f'; 
                     document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_off';
                     document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved locally (Offline)' : 'تم الحفظ محلياً (بدون إنترنت)';
@@ -483,6 +491,57 @@
                 });
             }, 1500); 
         });
+
+        // === لوحة الشرف (Leaderboard) ===
+        function openLeaderboard() {
+            const modal = document.getElementById('leaderboardModal');
+            const body = document.getElementById('leaderboardBody');
+            modal.style.display = 'block';
+            
+            body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--primary-blue);"><span class="material-icons" style="font-size:60px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري ترتيب الأوائل..." data-en="Loading Leaderboard...">جاري ترتيب الأوائل...</h3></div>`;
+            applyLanguage();
+            
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${studentCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.error === 'unauthorized') { safeLogout(); return; }
+                if(data.success && data.leaderboard.length > 0) {
+                    let html = `<div style="text-align:center; margin-bottom:25px;"><h2 style="color:var(--primary-blue); font-weight:900;" data-ar="أبطال المنصة 🚀" data-en="Platform Heroes 🚀">أبطال المنصة 🚀</h2><p style="color:var(--text-grey); font-size:0.9rem;" data-ar="أعلى 10 طلاب جمعوا نقاط من الكويزات" data-en="Top 10 students from quizzes">أعلى 10 طلاب جمعوا نقاط من الكويزات</p></div>`;
+                    
+                    data.leaderboard.forEach((student, index) => {
+                        let medal = '';
+                        let bgStyle = 'background:var(--bg-card);';
+                        if(index === 0) { medal = '🥇'; bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; }
+                        else if(index === 1) medal = '🥈';
+                        else if(index === 2) medal = '🥉';
+                        else medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
+                        
+                        if (student.name === localStorage.getItem('studentName')) bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
+
+                        html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-size:1.6rem;">${medal}</span>
+                                <span style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">${student.name}</span>
+                            </div>
+                            <div style="font-weight:900; color:#0A2647; background:var(--accent-orange); padding:6px 12px; border-radius:12px; font-size:0.95rem;">⭐ ${student.xp}</div>
+                        </div>`;
+                    });
+                    body.innerHTML = html;
+                    applyLanguage();
+                } else {
+                    body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:60px; opacity:0.3; margin-bottom:15px;">emoji_events</span><h3 data-ar="لا يوجد بيانات حتى الآن" data-en="No data yet">لا يوجد بيانات حتى الآن</h3><p data-ar="حل كويزات عشان تكون أول واحد هنا!" data-en="Solve quizzes to be the first here!">حل كويزات عشان تكون أول واحد هنا!</p></div>`;
+                    applyLanguage();
+                }
+            })
+            .catch(err => {
+                body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:#d32f2f;"><span class="material-icons" style="font-size:60px; margin-bottom:15px;">wifi_off</span><h3 data-ar="خطأ في الاتصال" data-en="Connection error">خطأ في الاتصال</h3></div>`;
+                applyLanguage();
+            });
+        }
+        
+        function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
+
 
         let activeFilter = 'all';
         function filterCourses(category, btn) { activeFilter = category; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); if (category === 'all') renderCourses(coursesData); else renderCourses(coursesData.filter(c => c.category === category)); }
@@ -518,10 +577,8 @@
 
         function switchTab(tabName, element) { document.querySelectorAll('.page-section').forEach(p => { p.classList.remove('active'); }); document.getElementById('page-' + tabName).classList.add('active'); if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); } if(tabName === 'profile') updateCompletedCountBadge(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         
-        // === الخروج الآمن (لا يمسح النقاط) ===
         function safeLogout() { 
             localStorage.removeItem('isLoggedInDaheeh'); 
-            // سيحتفظ المتصفح بالنقاط، الكشكول، والدارك مود
             window.location.href = 'login.html'; 
         }
 
@@ -531,7 +588,6 @@
         function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // تهيئة الصفحة
         applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay();
     </script>
 </body>
