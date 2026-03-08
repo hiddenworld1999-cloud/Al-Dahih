@@ -72,7 +72,7 @@
         .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2500; display: none; flex-direction: column; }
         .img-head { padding: 15px 20px; background: #111; display: flex; justify-content: space-between; align-items: center; z-index: 2501; border-bottom: 1px solid #333; }
         .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
-        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #e9ecef; text-align: center; padding-bottom: 100px; /* مسافة عشان شريط الزوم ميغطيش الصفحة */ }
+        .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #e9ecef; text-align: center; padding-bottom: 100px; }
         .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; padding-top: 15px; transition: width 0.3s ease; }
         
         .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
@@ -100,7 +100,6 @@
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: #0A2647; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
 
-        /* شريط التكبير والتصغير العائم للـ PDF */
         .pdf-zoom-bar {
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: rgba(10, 38, 71, 0.9); backdrop-filter: blur(10px);
@@ -245,7 +244,6 @@
     </div>
 
     <script>
-        // === رابط جوجل شيت السحري ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -295,7 +293,6 @@
         }
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
 
-        // --- الدارك مود متصل بالشاشتين ---
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
             const isDark = document.body.classList.contains('dark-mode');
@@ -314,12 +311,9 @@
         }
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        
-        // --- الموسيقى متصلة بالشاشتين ---
         function toggleMusic() { 
             const btn = document.getElementById('musicToggle'); 
             const btnPdf = document.getElementById('musicTogglePdf');
-            
             if (bgMusic.paused) { 
                 bgMusic.play(); 
                 btn.innerText = 'music_note'; btn.classList.add('music-active'); 
@@ -353,7 +347,6 @@
                 document.getElementById('summaryModal').style.display = 'flex';
                 applyLanguage();
 
-                // التعديل الأمني: إرسال الكود للسيرفر
                 const studentCode = localStorage.getItem('studentCode') || '';
 
                 fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
@@ -392,8 +385,22 @@
             }
         }
 
+        // --- التحديث البصري الذكي: الزرار لونه يتغير لو حل الكويز قبل كده ---
         function showDynamicLecture(lectureName, fileName, num) {
-            const btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
+            const quizKey = `completed_quiz_${courseId}_${num}`;
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+
+            let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
+            let btnIcon = 'quiz';
+            let btnStyle = '';
+
+            // لو حله قبل كده، نغير شكل الزرار ونطفي النور بتاعه
+            if(isAlreadyCompleted) {
+                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
+                btnIcon = 'replay';
+                btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);';
+            }
+
             let htmlContent = `
                 <div class="content-view" style="text-align:center; padding:30px 10px;">
                     <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
@@ -406,7 +413,7 @@
                         <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
                         <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
                     </button>
-                    <button class="btn-lecture-quiz" onclick="openQuiz(${num})"><span class="material-icons">quiz</span> <span>${btnTxt}</span></button>
+                    <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz(${num})"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span></button>
                 </div>`;
             document.getElementById('contentTitle').innerText = lectureName; 
             document.getElementById('contentBody').innerHTML = htmlContent; 
@@ -484,7 +491,6 @@
             document.getElementById('pdfWrapper').style.width = pdfZoom + '%';
         }
 
-        // --- دالة عرض الـ PDF (محدثة بأقوى نظام حماية للعلامة المائية جوه الـ Canvas) ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
@@ -555,10 +561,10 @@
 
         // --- نظام الكويزات ---
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
-        let currentLectureNum = 0; // متغير جديد لحفظ رقم الكويز الحالي
+        let currentLectureNum = 0; 
 
         function openQuiz(lectureNum) { 
-            currentLectureNum = lectureNum; // حفظ رقم الكويز
+            currentLectureNum = lectureNum; 
 
             const body = document.getElementById('quizBody');
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
@@ -609,7 +615,6 @@
                 currentQ++;
                 if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
                 else { 
-                    // === المنطق لمنع تكرار النقاط للكويز الواحد ===
                     const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
                     const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
                     let xpRewardText = '';
@@ -618,9 +623,13 @@
                     if(score > 0) {
                         if (!isAlreadyCompleted) {
                             addXP(score * 10);
-                            syncXPToCloud(); // الرفع للسيرفر بـ GET
-                            localStorage.setItem(quizKey, 'true'); // ختم الكويز
+                            syncXPToCloud(); 
+                            localStorage.setItem(quizKey, 'true'); 
                             xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
+                            
+                            // تحديث النص في الزرار بره في الخلفية عشان يبان إنه اتحل
+                            let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`);
+                            if(btnTxtEl) btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
                         } else {
                             xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`;
                             xpColor = 'var(--text-grey)'; 
@@ -635,7 +644,6 @@
             }, 1500);
         }
 
-        // --- دالة رفع النقاط السحابية (بـ GET لضمان وصولها بنجاح) ---
         function syncXPToCloud() {
             const currentXP = localStorage.getItem('daheehXP') || 0;
             const sCode = localStorage.getItem('studentCode') || '';
@@ -646,8 +654,8 @@
             
             fetch(requestUrl)
             .then(res => res.json())
-            .then(data => console.log('XP Saved: ', data))
-            .catch(err => console.log('Network error while saving XP'));
+            .then(data => console.log('XP Saved'))
+            .catch(err => console.log('Error'));
         }
 
         applyLanguage(); updatePomoDisplay();
