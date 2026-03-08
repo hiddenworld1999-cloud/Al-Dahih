@@ -245,8 +245,7 @@
     </div>
 
     <script>
-        // === رابط السيرفر (Google Apps Script) ===
-        // ⚠️ مهم: تأكد إن الرابط ده هو نفس الرابط اللي شغال معاك في باقي الصفحات
+        // === رابط جوجل شيت السحري ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -316,6 +315,7 @@
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         
+        // --- الموسيقى متصلة بالشاشتين ---
         function toggleMusic() { 
             const btn = document.getElementById('musicToggle'); 
             const btnPdf = document.getElementById('musicTogglePdf');
@@ -353,6 +353,7 @@
                 document.getElementById('summaryModal').style.display = 'flex';
                 applyLanguage();
 
+                // التعديل الأمني: إرسال الكود للسيرفر
                 const studentCode = localStorage.getItem('studentCode') || '';
 
                 fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
@@ -483,6 +484,7 @@
             document.getElementById('pdfWrapper').style.width = pdfZoom + '%';
         }
 
+        // --- دالة عرض الـ PDF (محدثة بأقوى نظام حماية للعلامة المائية جوه الـ Canvas) ---
         function openPdfViewerInsideApp(pdfUrl) {
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
@@ -503,8 +505,6 @@
             wrapper.insertBefore(loadingDiv, watermark);
             document.getElementById('pdfViewer').style.display = 'flex';
             
-            // تم إزالة addXP(10) من هنا نهائياً
-
             const sName = localStorage.getItem('studentName') || "Student"; 
             const sCode = localStorage.getItem('studentCode') || "000";
             const watermarkText = `${sName} - ${sCode}`;
@@ -553,9 +553,13 @@
         
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
 
+        // --- نظام الكويزات ---
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
-        
+        let currentLectureNum = 0; // متغير جديد لحفظ رقم الكويز الحالي
+
         function openQuiz(lectureNum) { 
+            currentLectureNum = lectureNum; // حفظ رقم الكويز
+
             const body = document.getElementById('quizBody');
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
             document.getElementById('quizModal').style.display = 'flex';
@@ -605,19 +609,33 @@
                 currentQ++;
                 if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
                 else { 
+                    // === المنطق لمنع تكرار النقاط للكويز الواحد ===
+                    const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
+                    const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
+                    let xpRewardText = '';
+                    let xpColor = '#4caf50';
+
                     if(score > 0) {
-                        addXP(score * 10);
-                        syncXPToCloud(); // حفظ السكور في جوجل شيت
+                        if (!isAlreadyCompleted) {
+                            addXP(score * 10);
+                            syncXPToCloud(); // الرفع للسيرفر بـ GET
+                            localStorage.setItem(quizKey, 'true'); // ختم الكويز
+                            xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
+                        } else {
+                            xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`;
+                            xpColor = 'var(--text-grey)'; 
+                        }
                     }
+
                     const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
                     const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
-                    const xpReward = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
-                    document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:#4caf50; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${score > 0 ? xpReward : ''}</p><button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
+                    
+                    document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p><button class="btn-card" onclick="closeModal('quizModal')" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
                 }
             }, 1500);
         }
 
-        // --- دالة رفع النقاط السحابية (محدثة لتعمل بـ GET لضمان وصولها بنجاح) ---
+        // --- دالة رفع النقاط السحابية (بـ GET لضمان وصولها بنجاح) ---
         function syncXPToCloud() {
             const currentXP = localStorage.getItem('daheehXP') || 0;
             const sCode = localStorage.getItem('studentCode') || '';
