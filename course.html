@@ -244,6 +244,7 @@
     </div>
 
     <script>
+        // === رابط السيرفر (Google Apps Script) ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -385,7 +386,6 @@
             }
         }
 
-        // --- التحديث البصري الذكي: الزرار لونه يتغير لو حل الكويز قبل كده ---
         function showDynamicLecture(lectureName, fileName, num) {
             const quizKey = `completed_quiz_${courseId}_${num}`;
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
@@ -394,7 +394,6 @@
             let btnIcon = 'quiz';
             let btnStyle = '';
 
-            // لو حله قبل كده، نغير شكل الزرار ونطفي النور بتاعه
             if(isAlreadyCompleted) {
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
                 btnIcon = 'replay';
@@ -413,7 +412,7 @@
                         <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
                         <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
                     </button>
-                    <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz(${num})"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span></button>
+                    <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span></button>
                 </div>`;
             document.getElementById('contentTitle').innerText = lectureName; 
             document.getElementById('contentBody').innerHTML = htmlContent; 
@@ -421,16 +420,16 @@
             applyLanguage();
         }
 
+        // === شاشة الامتحانات الذكية (PDF + Quiz) ===
         function openExam(type) {
             const body = document.getElementById('contentBody');
-            const title = type === 'midterm' ? (currentLang === 'en' ? 'Midterm Exam' : 'أسئلة الميدترم') : (currentLang === 'en' ? 'Final Exam' : 'أسئلة الفاينل');
+            const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل';
+            const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam';
+            const title = currentLang === 'en' ? titleEn : titleAr;
             
             document.getElementById('contentTitle').innerText = title;
             
-            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);">
-                                <span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span>
-                                <h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3>
-                              </div>`;
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
             document.getElementById('contentModal').style.display = 'flex';
             applyLanguage();
 
@@ -449,27 +448,45 @@
                     if(data.success) {
                         const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final;
                         
-                        if(fileName) {
-                            body.innerHTML = `
-                                <div class="content-view" style="text-align:center; padding:30px 10px;">
-                                    <span class="material-icons" style="font-size:70px; color:#ff9800; margin-bottom:15px;">picture_as_pdf</span>
-                                    <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
-                                    <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;"
-                                       data-ar="الامتحان متوفر بصيغة PDF. اضغط للفتح." data-en="Exam available in PDF. Click to open.">
-                                       الامتحان متوفر بصيغة PDF. اضغط للفتح.
-                                    </p>
-                                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%;">
-                                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
-                                        <span data-ar="افتح الامتحان الآن" data-en="Open Exam Now">افتح الامتحان الآن</span>
-                                    </button>
-                                </div>`;
-                        } else {
-                            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);">
-                                                <span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">find_in_page</span>
-                                                <h3 data-ar="لا يوجد امتحان متاح!" data-en="No Exam Available">لا يوجد امتحان متاح!</h3>
-                                                <p style="margin-top:10px;" data-ar="لم يتم إضافة ملف هذا الامتحان حتى الآن." data-en="The exam file has not been uploaded yet.">لم يتم إضافة ملف هذا الامتحان حتى الآن.</p>
-                                              </div>`;
+                        const quizKey = `completed_quiz_${courseId}_${type}`;
+                        const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+
+                        let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)';
+                        let btnIcon = 'quiz';
+                        let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+
+                        if(isAlreadyCompleted) {
+                            btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
+                            btnIcon = 'replay';
+                            btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);';
                         }
+
+                        let pdfHtml = '';
+                        if(fileName) {
+                            pdfHtml = `
+                            <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+                                <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
+                                <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
+                            </button>`;
+                        } else {
+                            pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`;
+                        }
+
+                        body.innerHTML = `
+                            <div class="content-view" style="text-align:center; padding:30px 10px;">
+                                <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
+                                <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
+                                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;"
+                                   data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">
+                                   اختر طريقة المراجعة المناسبة لك:
+                                </p>
+                                
+                                ${pdfHtml}
+                                
+                                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
+                                    <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                                </button>
+                            </div>`;
                         applyLanguage();
                     }
                 })
@@ -559,12 +576,11 @@
         
         function closePdfViewer() { document.getElementById('pdfViewer').style.display = 'none'; }
 
-        // --- نظام الكويزات ---
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
-        let currentLectureNum = 0; 
+        let currentLectureNum = ''; 
 
         function openQuiz(lectureNum) { 
-            currentLectureNum = lectureNum; 
+            currentLectureNum = lectureNum.toString(); 
 
             const body = document.getElementById('quizBody');
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
@@ -573,7 +589,7 @@
 
             const studentCode = localStorage.getItem('studentCode') || '';
 
-            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${lectureNum}&code=${studentCode}`)
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error === 'unauthorized') {
@@ -586,7 +602,7 @@
                     if (data.success && data.questions && data.questions.length > 0) {
                         activeQuizQuestions = data.questions; currentQ = 0; score = 0; showQuestion();
                     } else {
-                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار لهذه المحاضرة حتى الآن." data-en="No quiz has been added for this lecture yet.">لم يتم إضافة اختبار لهذه المحاضرة حتى الآن.</p></div>`;
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`;
                         applyLanguage();
                     }
                 })
@@ -627,9 +643,15 @@
                             localStorage.setItem(quizKey, 'true'); 
                             xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
                             
-                            // تحديث النص في الزرار بره في الخلفية عشان يبان إنه اتحل
                             let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`);
-                            if(btnTxtEl) btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
+                            if(btnTxtEl) {
+                                btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
+                                btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)';
+                                btnTxtEl.parentElement.style.color = 'var(--text-grey)';
+                                btnTxtEl.parentElement.style.boxShadow = 'none';
+                                btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)';
+                                btnTxtEl.previousElementSibling.innerText = 'replay';
+                            }
                         } else {
                             xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`;
                             xpColor = 'var(--text-grey)'; 
