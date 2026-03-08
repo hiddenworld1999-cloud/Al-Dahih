@@ -14,46 +14,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script>
-        (function() {
-            var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
-            var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-
-            if (!isAndroidApp && !isIOSStandalone) {
-                // بمسح محتوى الصفحة بالكامل وأحط رسالة حماية شيك جداً
-                document.documentElement.innerHTML = `
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>تطبيق الدحيح - محمي</title>
-                        <style>
-                            body { background: #0A2647; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; text-align: center; padding: 20px; }
-                            .box { background: rgba(255,255,255,0.05); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255,200,0,0.3); max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-                            h2 { color: #FFC800; margin-bottom: 15px; font-weight: 900; font-size: 1.8rem;}
-                            p { line-height: 1.8; color: #cbd5e1; font-size: 1.1rem;}
-                            .btn-fake { display: inline-block; background: white; color: black; padding: 8px 15px; border-radius: 8px; font-weight: bold; margin-top: 10px;}
-                        </style>
-                    </head>
-                    <body>
-                        <div class="box">
-                            <div style="font-size: 70px; margin-bottom: 20px;">🛑</div>
-                            <h2>النظام محمي</h2>
-                            <p>عفواً، الدخول للمنصة متاح فقط من خلال التطبيق الرسمي للحفاظ على سرية المحتوى.</p>
-                            
-                            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 40px; margin-bottom:15px;">🍏</div>
-                                <h3 style="color:#2196f3; margin-bottom: 10px;">لمستخدمي الآيفون (iOS):</h3>
-                                <p style="font-size: 0.95rem;">اضغط على زر المشاركة <b>(Share)</b> بالأسفل ⬇️<br>ثم اختر<br><span class="btn-fake">إضافة إلى الصفحة الرئيسية ➕</span></p>
-                            </div>
-                        </div>
-                    </body>
-                `;
-                // إيقاف أي أكواد تانية
-                throw new Error("Access Denied: Opened in browser.");
-            }
-        })();
-    </script>
-    
-    <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if (e.key === 'PrintScreen' || e.key === 'F12' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'u' || e.key === 'i'))) {
@@ -63,7 +23,7 @@
     </script>
 
     <style>
-        /* --- تصميمك الأصلي --- */
+        /* === المتغيرات الأساسية === */
         :root { 
             --primary-blue: #0A2647; 
             --accent-orange: #FFC800; 
@@ -76,17 +36,48 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
+        /* قفلنا السكرول نهائياً عشان الشاشات متدخلش في بعض */
         body { 
             font-family: 'IBM Plex Sans Arabic', sans-serif; 
             background-color: var(--bg-light); 
-            color: var(--text-dark); 
             height: 100vh; 
-            display: flex; 
+            width: 100vw;
+            overflow: hidden; 
+            position: relative;
+        }
+
+        /* ======================================= */
+        /* تصميم شاشة الحماية الزرقاء (الافتراضية) */
+        /* ======================================= */
+        #protection-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0A2647; 
+            color: white; 
+            display: flex; /* ظاهرة من البداية */
+            flex-direction: column; 
             justify-content: center; 
             align-items: center; 
+            text-align: center; 
             padding: 20px; 
+            z-index: 99999;
+        }
+        .prot-box { background: rgba(255,255,255,0.05); padding: 40px 30px; border-radius: 24px; border: 1px solid rgba(255,200,0,0.3); max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .prot-box h2 { color: #FFC800; margin-bottom: 15px; font-weight: 900; font-size: 1.8rem;}
+        .prot-box p { line-height: 1.8; color: #cbd5e1; font-size: 1.1rem;}
+        .btn-fake { display: inline-block; background: white; color: black; padding: 8px 15px; border-radius: 8px; font-weight: bold; margin-top: 10px;}
+
+        /* ======================================= */
+        /* تصميم شاشة التطبيق الأصلية (مخفية مؤقتاً)*/
+        /* ======================================= */
+        #main-app {
+            display: none; /* مخفية لحد ما نتأكد إنه فاتح من التطبيق */
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
             position: relative;
-            overflow: hidden; 
         }
 
         .bg-shape { position: absolute; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.7; }
@@ -118,7 +109,6 @@
 
         .login-logo { font-size: 2.2rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; letter-spacing: -0.5px; }
         .logo-icon { font-size: 42px !important; margin-left: 10px; color: var(--accent-orange); animation: bounce 2s infinite; }
-        
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
 
         .login-title { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 10px; font-weight: 700; }
@@ -143,12 +133,7 @@
             letter-spacing: 2px;
         }
         .login-input::placeholder { color: #adb5bd; font-weight: 500; letter-spacing: 0; font-size: 0.95rem; }
-        .login-input:focus { 
-            border-color: var(--primary-blue); 
-            background: white; 
-            outline: none; 
-            box-shadow: 0 0 0 4px rgba(10, 38, 71, 0.1); 
-        }
+        .login-input:focus { border-color: var(--primary-blue); background: white; outline: none; box-shadow: 0 0 0 4px rgba(10, 38, 71, 0.1); }
         .input-icon { position: absolute; right: 15px; top: 43px; color: var(--text-grey); font-size: 24px; transition: color 0.3s; }
         .login-input:focus + .input-icon { color: var(--primary-blue); }
         
@@ -165,12 +150,7 @@
             cursor: pointer; 
             transition: all 0.3s ease; 
             box-shadow: 0 8px 20px rgba(10, 38, 71, 0.25); 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
         .login-btn:hover { background: #071b33; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(10, 38, 71, 0.3); }
         .login-btn:active { transform: translateY(1px); box-shadow: 0 5px 10px rgba(10, 38, 71, 0.2); }
@@ -180,15 +160,9 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         .message-box { 
-            padding: 14px 15px; 
-            border-radius: 12px; 
-            margin-bottom: 25px; 
-            font-size: 0.95rem; 
-            font-weight: 600;
-            display: none; 
-            align-items: center; 
-            justify-content: center;
-            gap: 8px;
+            padding: 14px 15px; border-radius: 12px; margin-bottom: 25px; 
+            font-size: 0.95rem; font-weight: 600; display: none; 
+            align-items: center; justify-content: center; gap: 8px;
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -197,71 +171,95 @@
         .success-msg { background: #f0fdf4; color: var(--success-color); border: 1px solid #bbf7d0; }
         
         .help-text { margin-top: 30px; font-size: 0.9rem; color: var(--text-grey); font-weight: 500; }
-        .help-text a { 
-            color: var(--primary-blue); 
-            font-weight: 700; 
-            text-decoration: none; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 4px;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
+        .help-text a { color: var(--primary-blue); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 8px; transition: background 0.3s; }
         .help-text a:hover { background: rgba(10, 38, 71, 0.05); }
 
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
         .shake-animation { animation: shake 0.4s ease-in-out; border-color: var(--error-color) !important; }
     </style>
-
 </head>
 <body>
 
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
-
-    <div class="login-container">
-        <div class="login-logo">
-            <span class="material-icons logo-icon">local_library</span>
-            الدحيح
+    <div id="protection-screen">
+        <div class="prot-box">
+            <div style="font-size: 70px; margin-bottom: 20px;">🛑</div>
+            <h2>النظام محمي</h2>
+            <p>عفواً، الدخول للمنصة متاح فقط من خلال التطبيق الرسمي للحفاظ على سرية المحتوى.</p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 40px; margin-bottom:15px;">🍏</div>
+                <h3 style="color:#2196f3; margin-bottom: 10px;">لمستخدمي الآيفون (iOS):</h3>
+                <p style="font-size: 0.95rem;">اضغط على زر المشاركة <b>(Share)</b> بالأسفل ⬇️<br>ثم اختر<br><span class="btn-fake">إضافة إلى الصفحة الرئيسية ➕</span></p>
+            </div>
         </div>
-        
-        <h2 class="login-title">أهلاً بك يا بطل 🚀</h2>
-        <p class="login-subtitle">يرجى إدخال كود التفعيل الخاص بك للوصول إلى المحتوى الدراسي.</p>
+    </div>
 
-        <div id="errorBox" class="message-box error-msg">
-            <span class="material-icons">error_outline</span>
-            <span id="errorText">الكود المدخل غير صحيح.</span>
-        </div>
-        
-        <div id="successBox" class="message-box success-msg">
-            <span class="material-icons">check_circle</span>
-            <span id="successText">تم التحقق بنجاح!</span>
-        </div>
+    <div id="main-app">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
 
-        <form id="loginForm" onsubmit="event.preventDefault(); validateLogin();">
-            <div class="input-group">
-                <label class="input-label" for="accessCode">كود التفعيل:</label>
-                <input type="text" id="accessCode" class="login-input" placeholder="مثال: A1B2" required autocomplete="off" autocorrect="off" spellcheck="false">
-                <span class="material-icons input-icon">vpn_key</span>
+        <div class="login-container">
+            <div class="login-logo">
+                <span class="material-icons logo-icon">local_library</span>
+                الدحيح
             </div>
             
-            <button type="submit" class="login-btn" id="submitBtn">
-                <span id="btnText">تأكيد الدخول</span>
-                <span class="material-icons spinner" id="btnSpinner">autorenew</span>
-            </button>
-        </form>
+            <h2 class="login-title">أهلاً بك يا بطل 🚀</h2>
+            <p class="login-subtitle">يرجى إدخال كود التفعيل الخاص بك للوصول إلى المحتوى الدراسي.</p>
 
-        <p class="help-text">
-            تواجه مشكلة أو لا تملك كود؟ <br>
-            <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end">
-                <span class="material-icons" style="font-size: 18px; color: #229ED9;">telegram</span>
-                تواصل مع الدعم الفني
-            </a>
-        </p>
+            <div id="errorBox" class="message-box error-msg">
+                <span class="material-icons">error_outline</span>
+                <span id="errorText">الكود المدخل غير صحيح.</span>
+            </div>
+            
+            <div id="successBox" class="message-box success-msg">
+                <span class="material-icons">check_circle</span>
+                <span id="successText">تم التحقق بنجاح!</span>
+            </div>
+
+            <form id="loginForm" onsubmit="event.preventDefault(); validateLogin();">
+                <div class="input-group">
+                    <label class="input-label" for="accessCode">كود التفعيل:</label>
+                    <input type="text" id="accessCode" class="login-input" placeholder="مثال: A1B2" required autocomplete="off" autocorrect="off" spellcheck="false">
+                    <span class="material-icons input-icon">vpn_key</span>
+                </div>
+                
+                <button type="submit" class="login-btn" id="submitBtn">
+                    <span id="btnText">تأكيد الدخول</span>
+                    <span class="material-icons spinner" id="btnSpinner">autorenew</span>
+                </button>
+            </form>
+
+            <p class="help-text">
+                تواجه مشكلة أو لا تملك كود؟ <br>
+                <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end">
+                    <span class="material-icons" style="font-size: 18px; color: #229ED9;">telegram</span>
+                    تواصل مع الدعم الفني
+                </a>
+            </p>
+        </div>
     </div>
 
     <script>
+        // --- حارس التطبيق (The Gatekeeper) ---
+        (function() {
+            var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
+            var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isAndroidApp || isIOSStandalone) {
+                // لو فاتح من التطبيق: نحذف شاشة الحماية ونظهر التطبيق
+                const protScreen = document.getElementById('protection-screen');
+                if(protScreen) protScreen.remove();
+                
+                document.getElementById('main-app').style.display = 'flex';
+            } else {
+                // لو فاتح من متصفح: نحذف التطبيق نفسه من الكود عشان محدش يلعب فيه
+                const appScreen = document.getElementById('main-app');
+                if(appScreen) appScreen.remove();
+            }
+        })();
+
+        // توجيه تلقائي
         if (localStorage.getItem('isLoggedInDaheeh') === 'true') {
             window.location.href = 'index.html';
         }
