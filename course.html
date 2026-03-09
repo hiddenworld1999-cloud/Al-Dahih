@@ -2,10 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
     <script>
-        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') { window.location.href = 'login.html'; }
+        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') { 
+            window.location.href = 'login.html'; 
+        }
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { alert('عذراً، هذا المحتوى محمي.'); e.preventDefault(); }
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { 
+                alert('عذراً، هذا المحتوى محمي.'); 
+                e.preventDefault(); 
+            }
         });
     </script>
     <meta charset="UTF-8">
@@ -31,7 +36,6 @@
             --calc-bg: #2d2d2d; --calc-btn: #3e3e3e; --quiz-option-bg: #2d2d2d;
         }
 
-        /* === الثيم الذهبي السري الملكي (VIP Mode) === */
         body.vip-gold-mode {
             --primary: #FFD700; --accent: #FFFFFF; --bg: #0a0a0a; --card: #171717; --text: #FFD700; --grey: #aaaaaa;
             --calc-bg: #1a1a1a; --calc-btn: #222; --quiz-option-bg: #222;
@@ -168,10 +172,24 @@
         <input type="text" id="calcDisplay" class="calc-display" readonly>
         <div class="calc-grid">
             <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
-            <button class="calc-btn op" onclick="appendCalc('/')">/</button><button class="calc-btn op" onclick="appendCalc('*')">×</button><button class="calc-btn op" onclick="appendCalc('-')">-</button>
-            <button class="calc-btn" onclick="appendCalc('7')">7</button><button class="calc-btn" onclick="appendCalc('8')">8</button><button class="calc-btn" onclick="appendCalc('9')">9</button><button class="calc-btn op" onclick="appendCalc('+')">+</button>
-            <button class="calc-btn" onclick="appendCalc('4')">4</button><button class="calc-btn" onclick="appendCalc('5')">5</button><button class="calc-btn" onclick="appendCalc('6')">6</button><button class="calc-btn eq" onclick="calculateResult()">=</button>
-            <button class="calc-btn" onclick="appendCalc('1')">1</button><button class="calc-btn" onclick="appendCalc('2')">2</button><button class="calc-btn" onclick="appendCalc('3')">3</button><button class="calc-btn" onclick="appendCalc('0')">0</button>
+            <button class="calc-btn op" onclick="appendCalc('/')">/</button>
+            <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+            
+            <button class="calc-btn" onclick="appendCalc('7')">7</button>
+            <button class="calc-btn" onclick="appendCalc('8')">8</button>
+            <button class="calc-btn" onclick="appendCalc('9')">9</button>
+            <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+            
+            <button class="calc-btn" onclick="appendCalc('4')">4</button>
+            <button class="calc-btn" onclick="appendCalc('5')">5</button>
+            <button class="calc-btn" onclick="appendCalc('6')">6</button>
+            <button class="calc-btn eq" onclick="calculateResult()">=</button>
+            
+            <button class="calc-btn" onclick="appendCalc('1')">1</button>
+            <button class="calc-btn" onclick="appendCalc('2')">2</button>
+            <button class="calc-btn" onclick="appendCalc('3')">3</button>
+            <button class="calc-btn" onclick="appendCalc('0')">0</button>
         </div>
     </div>
 
@@ -273,7 +291,6 @@
     </div>
 
     <script>
-        // === استرجاع حالة المظهر الذهبي عند فتح المادة ===
         if(localStorage.getItem('daheehVipMode') === 'true') {
             document.body.classList.add('vip-gold-mode');
         }
@@ -293,7 +310,6 @@
             }
         });
 
-        // === لوجيك سبورة الشخبطة (مربوطة بزرار الرجوع) 🎨 ===
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
@@ -342,7 +358,10 @@
                 ctxCanvas.stroke();
                 e.preventDefault();
             };
-            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
+            const stopDraw = () => { 
+                isDrawing = false; 
+                ctxCanvas.closePath(); 
+            };
 
             const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
             const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
@@ -357,21 +376,57 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
-        let touchStartX = 0; let touchStartY = 0;
-        document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
+        let touchStartX = 0; 
+        let touchStartY = 0;
+        
+        document.addEventListener('touchstart', e => { 
+            touchStartX = e.changedTouches[0].screenX; 
+            touchStartY = e.changedTouches[0].screenY; 
+        }, {passive: true});
+        
         document.addEventListener('touchend', e => {
-            let touchEndX = e.changedTouches[0].screenX; let touchEndY = e.changedTouches[0].screenY;
-            let diffX = touchStartX - touchEndX; let diffY = Math.abs(touchStartY - touchEndY); 
+            let touchEndX = e.changedTouches[0].screenX; 
+            let touchEndY = e.changedTouches[0].screenY;
+            let diffX = touchStartX - touchEndX; 
+            let diffY = Math.abs(touchStartY - touchEndY); 
+            
             if (touchStartX > window.innerWidth - 80 && diffX > 60 && diffY < 50) {
                 const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable')).some(el => el.style.display === 'flex' || el.style.display === 'block');
-                if (isAnyModalOpen) { history.back(); } else { window.location.href = 'index.html'; }
+                if (isAnyModalOpen) { 
+                    history.back(); 
+                } else { 
+                    window.location.href = 'index.html'; 
+                }
             }
         }, {passive: true});
 
-        let pdfInitialWidth = 100; let initialPinchDistance = null; const pdfWrapper = document.getElementById('pdfWrapper');
-        pdfWrapper.addEventListener('touchstart', (e) => { if (e.touches.length === 2) { initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; } });
-        pdfWrapper.addEventListener('touchmove', (e) => { if (e.touches.length === 2 && initialPinchDistance) { let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); let scaleChange = currentDistance / initialPinchDistance; let newWidth = pdfInitialWidth * scaleChange; if (newWidth < 100) newWidth = 100; if (newWidth > 400) newWidth = 400; pdfWrapper.style.width = newWidth + '%'; } });
-        pdfWrapper.addEventListener('touchend', (e) => { if (e.touches.length < 2) { initialPinchDistance = null; } });
+        let pdfInitialWidth = 100; 
+        let initialPinchDistance = null; 
+        const pdfWrapper = document.getElementById('pdfWrapper');
+        
+        pdfWrapper.addEventListener('touchstart', (e) => { 
+            if (e.touches.length === 2) { 
+                initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
+                pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; 
+            } 
+        });
+        
+        pdfWrapper.addEventListener('touchmove', (e) => { 
+            if (e.touches.length === 2 && initialPinchDistance) { 
+                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
+                let scaleChange = currentDistance / initialPinchDistance; 
+                let newWidth = pdfInitialWidth * scaleChange; 
+                if (newWidth < 100) newWidth = 100; 
+                if (newWidth > 400) newWidth = 400; 
+                pdfWrapper.style.width = newWidth + '%'; 
+            } 
+        });
+        
+        pdfWrapper.addEventListener('touchend', (e) => { 
+            if (e.touches.length < 2) { 
+                initialPinchDistance = null; 
+            } 
+        });
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -387,158 +442,525 @@
         const params = new URLSearchParams(window.location.search);
         const courseId = params.get('id') || 1; 
         const course = allCourses[courseId];
+        
         if (!course) window.location.href = 'index.html';
 
-        function getLevelName(xp) { if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد'; if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح'; if (xp < 600) return currentLang === 'en' ? 'Genius' : 'عبقري'; return currentLang === 'en' ? 'Legend' : 'أسطورة'; }
-        function addXP(amount) { let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0; currentXP += amount; localStorage.setItem('daheehXP', currentXP); updateXPDisplay(); }
-        function updateXPDisplay() { let xp = parseInt(localStorage.getItem('daheehXP')) || 0; let level = getLevelName(xp); if(document.getElementById('courseXP')) document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`; }
-
-        let currentLang = localStorage.getItem('daheehLang') || 'ar';
-        function applyLanguage() {
-            document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl'; document.documentElement.lang = currentLang;
-            document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
-            document.querySelectorAll('.close-arrow').forEach(el => { el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; });
-            if (course) { document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr; document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr; }
-            updateXPDisplay();
-        }
-        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
-
-        function toggleDarkMode() { 
-            document.body.classList.toggle('dark-mode'); const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('daheehDarkMode', isDark); document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode';
-            
-            if(isDark) { document.body.classList.remove('vip-gold-mode'); localStorage.setItem('daheehVipMode', 'false'); }
+        function getLevelName(xp) { 
+            if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد'; 
+            if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح'; 
+            if (xp < 600) return currentLang === 'en' ? 'Genius' : 'عبقري'; 
+            return currentLang === 'en' ? 'Legend' : 'أسطورة'; 
         }
         
-        if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; } 
-        else { document.getElementById('darkModeToggle').innerText = 'light_mode'; if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; }
+        function addXP(amount) { 
+            let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0; 
+            currentXP += amount; 
+            localStorage.setItem('daheehXP', currentXP); 
+            updateXPDisplay(); 
+        }
+        
+        function updateXPDisplay() { 
+            let xp = parseInt(localStorage.getItem('daheehXP')) || 0; 
+            let level = getLevelName(xp); 
+            if(document.getElementById('courseXP')) {
+                document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`; 
+            }
+        }
 
-        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { const btn = document.getElementById('musicToggle'); const btnPdf = document.getElementById('musicTogglePdf'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); if(btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); } } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); if(btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); } } }
+        let currentLang = localStorage.getItem('daheehLang') || 'ar';
+        
+        function applyLanguage() {
+            document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl'; 
+            document.documentElement.lang = currentLang;
+            
+            document.querySelectorAll('[data-ar]').forEach(el => { 
+                el.innerText = el.getAttribute(`data-${currentLang}`); 
+            });
+            
+            document.querySelectorAll('.close-arrow').forEach(el => { 
+                el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; 
+            });
+            
+            if (course) { 
+                document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr; 
+                document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr; 
+            }
+            updateXPDisplay();
+        }
+        
+        function toggleLanguage() { 
+            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
+            localStorage.setItem('daheehLang', currentLang); 
+            applyLanguage(); 
+        }
 
-        function toggleCalculator() { const m = document.getElementById('calculatorModal'); if(m.style.display === 'block' || m.style.display === 'flex') { history.back(); } else { openModalWithHistory('calculatorModal'); } }
-        function appendCalc(v) { document.getElementById('calcDisplay').value += v; } function clearCalc() { document.getElementById('calcDisplay').value = ''; }
-        function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
+        function toggleDarkMode() { 
+            document.body.classList.toggle('dark-mode'); 
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('daheehDarkMode', isDark); 
+            document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
+            
+            if(document.getElementById('darkModeTogglePdf')) {
+                document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode';
+            }
+            
+            if(isDark) { 
+                document.body.classList.remove('vip-gold-mode'); 
+                localStorage.setItem('daheehVipMode', 'false'); 
+            }
+        }
+        
+        if (localStorage.getItem('daheehDarkMode') === 'true') { 
+            document.body.classList.add('dark-mode'); 
+            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
+            if(document.getElementById('darkModeTogglePdf')) {
+                document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
+            }
+        } else { 
+            document.getElementById('darkModeToggle').innerText = 'light_mode'; 
+            if(document.getElementById('darkModeTogglePdf')) {
+                document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
+            }
+        }
 
-        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
-        function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
-        function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
-        function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
-        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+        const bgMusic = document.getElementById('bgMusic'); 
+        bgMusic.volume = 0.5;
+        
+        function toggleMusic() { 
+            const btn = document.getElementById('musicToggle'); 
+            const btnPdf = document.getElementById('musicTogglePdf'); 
+            if (bgMusic.paused) { 
+                bgMusic.play(); 
+                btn.innerText = 'music_note'; 
+                btn.classList.add('music-active'); 
+                if(btnPdf) { 
+                    btnPdf.innerText = 'music_note'; 
+                    btnPdf.classList.add('music-active'); 
+                } 
+            } else { 
+                bgMusic.pause(); 
+                btn.innerText = 'music_off'; 
+                btn.classList.remove('music-active'); 
+                if(btnPdf) { 
+                    btnPdf.innerText = 'music_off'; 
+                    btnPdf.classList.remove('music-active'); 
+                } 
+            } 
+        }
+
+        function toggleCalculator() { 
+            const m = document.getElementById('calculatorModal'); 
+            if(m.style.display === 'block' || m.style.display === 'flex') { 
+                history.back(); 
+            } else { 
+                openModalWithHistory('calculatorModal'); 
+            } 
+        }
+        
+        function appendCalc(v) { 
+            document.getElementById('calcDisplay').value += v; 
+        } 
+        
+        function clearCalc() { 
+            document.getElementById('calcDisplay').value = ''; 
+        }
+        
+        function calculateResult() { 
+            try { 
+                document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); 
+            } catch(e) { 
+                document.getElementById('calcDisplay').value = 'Error'; 
+                setTimeout(clearCalc,1000); 
+            } 
+        }
+
+        let pomoInterval; 
+        let pomoTime = 25 * 60; 
+        let isPomoRunning = false;
+        
+        function updatePomoDisplay() { 
+            let m = Math.floor(pomoTime / 60); 
+            let s = pomoTime % 60; 
+            document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); 
+        }
+        
+        function togglePomodoro() { 
+            let t = document.getElementById('pomodoroTimer'); 
+            t.style.display = t.style.display === 'none' ? 'block' : 'none'; 
+        }
+        
+        function startPomodoro() { 
+            if(isPomoRunning) { 
+                clearInterval(pomoInterval); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; 
+                isPomoRunning = false; 
+            } else { 
+                pomoInterval = setInterval(() => { 
+                    if(pomoTime > 0) { 
+                        pomoTime--; 
+                        updatePomoDisplay(); 
+                    } else { 
+                        clearInterval(pomoInterval); 
+                        alert("وقت الراحة!"); 
+                        resetPomodoro(); 
+                    } 
+                }, 1000); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; 
+                isPomoRunning = true; 
+            } 
+        }
+        
+        function resetPomodoro() { 
+            clearInterval(pomoInterval); 
+            pomoTime = 25 * 60; 
+            isPomoRunning = false; 
+            document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; 
+            updatePomoDisplay(); 
+        }
 
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
             list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
             applyLanguage();
+            
             const studentCode = localStorage.getItem('studentCode') || '';
-            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`).then(response => response.json()).then(data => {
-                if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                list.innerHTML = ''; 
-                if (data.success && data.lectures && data.lectures.length > 0) { data.lectures.forEach((lec, index) => { const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; const lectureNumber = index + 1; list.innerHTML += `<div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})"><span>${lec.name}</span><span class="material-icons" style="color:var(--grey)">${arr}</span></div>`; }); } 
-                else { list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; }
-                applyLanguage(); 
-            }).catch(error => { list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="حدث خطأ في الاتصال." data-en="Connection error.">حدث خطأ في الاتصال.</p></div>`; applyLanguage(); });
+            
+            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    
+                    list.innerHTML = ''; 
+                    
+                    if (data.success && data.lectures && data.lectures.length > 0) { 
+                        data.lectures.forEach((lec, index) => { 
+                            const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; 
+                            const lectureNumber = index + 1; 
+                            list.innerHTML += `
+                            <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
+                                <span>${lec.name}</span>
+                                <span class="material-icons" style="color:var(--grey)">${arr}</span>
+                            </div>`; 
+                        }); 
+                    } else { 
+                        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; 
+                    }
+                    applyLanguage(); 
+                })
+                .catch(error => { 
+                    list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="حدث خطأ في الاتصال." data-en="Connection error.">حدث خطأ في الاتصال.</p></div>`; 
+                    applyLanguage(); 
+                });
         }
 
         function showDynamicLecture(lectureName, fileName, num) {
-            const quizKey = `completed_quiz_${courseId}_${num}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
-            let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة'; let btnIcon = 'quiz'; let btnStyle = '';
-            if(isAlreadyCompleted) { btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnIcon = 'replay'; btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; }
-            let htmlContent = `<div class="content-view" style="text-align:center; padding:30px 10px;"><span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span><h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3><p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه." data-en="Content available in PDF. Click to open.">محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه.</p><button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;"><span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span></button><button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span></button></div>`;
-            document.getElementById('contentTitle').innerText = lectureName; document.getElementById('contentBody').innerHTML = htmlContent; openModalWithHistory('contentModal'); applyLanguage();
+            const quizKey = `completed_quiz_${courseId}_${num}`; 
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+            
+            let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة'; 
+            let btnIcon = 'quiz'; 
+            let btnStyle = '';
+            
+            if(isAlreadyCompleted) { 
+                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                btnIcon = 'replay'; 
+                btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
+            }
+            
+            let htmlContent = `
+            <div class="content-view" style="text-align:center; padding:30px 10px;">
+                <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
+                <h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3>
+                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه." data-en="Content available in PDF. Click to open.">محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه.</p>
+                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+                    <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
+                    <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
+                </button>
+                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')">
+                    <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
+                </button>
+            </div>`;
+            
+            document.getElementById('contentTitle').innerText = lectureName; 
+            document.getElementById('contentBody').innerHTML = htmlContent; 
+            openModalWithHistory('contentModal'); 
+            applyLanguage();
         }
 
         function openExam(type) {
-            const body = document.getElementById('contentBody'); const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; const title = currentLang === 'en' ? titleEn : titleAr;
+            const body = document.getElementById('contentBody'); 
+            const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
+            const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; 
+            const title = currentLang === 'en' ? titleEn : titleAr;
+            
             document.getElementById('contentTitle').innerText = title;
+            
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
-            openModalWithHistory('contentModal'); applyLanguage();
+            openModalWithHistory('contentModal'); 
+            applyLanguage();
+            
             const studentCode = localStorage.getItem('studentCode') || '';
-            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`).then(res => res.json()).then(data => {
-                if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                if(data.success) {
-                    const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; const quizKey = `completed_quiz_${courseId}_${type}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
-                    let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; let btnIcon = 'quiz'; let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
-                    if(isAlreadyCompleted) { btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnIcon = 'replay'; btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; }
-                    let pdfHtml = ''; if(fileName) { pdfHtml = `<button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;"><span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span><span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span></button>`; } else { pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; }
-                    body.innerHTML = `<div class="content-view" style="text-align:center; padding:30px 10px;"><span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span><h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3><p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>${pdfHtml}<button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span></button></div>`;
-                    applyLanguage();
-                }
-            }).catch(err => { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection Error">حدث خطأ في الاتصال!</h3></div>`; applyLanguage(); });
+            
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    
+                    if(data.success) {
+                        const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
+                        const quizKey = `completed_quiz_${courseId}_${type}`; 
+                        const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+                        
+                        let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
+                        let btnIcon = 'quiz'; 
+                        let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+                        
+                        if(isAlreadyCompleted) { 
+                            btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                            btnIcon = 'replay'; 
+                            btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
+                        }
+                        
+                        let pdfHtml = ''; 
+                        if(fileName) { 
+                            pdfHtml = `
+                            <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+                                <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
+                                <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
+                            </button>`; 
+                        } else { 
+                            pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; 
+                        }
+                        
+                        body.innerHTML = `
+                        <div class="content-view" style="text-align:center; padding:30px 10px;">
+                            <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
+                            <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
+                            <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>
+                            ${pdfHtml}
+                            <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
+                                <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                            </button>
+                        </div>`;
+                        applyLanguage();
+                    }
+                })
+                .catch(err => { 
+                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection Error">حدث خطأ في الاتصال!</h3></div>`; 
+                    applyLanguage(); 
+                });
         }
 
         function openPdfViewerInsideApp(pdfUrl) {
-            const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
-            wrapper.style.width = '100%'; wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
+            const wrapper = document.getElementById('pdfWrapper'); 
+            const watermark = document.getElementById('pdfWatermarkOverlay');
+            
+            wrapper.style.width = '100%'; 
+            wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
+            wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
+            
             if (watermark) watermark.innerHTML = ''; 
-            const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
-            wrapper.insertBefore(loadingDiv, watermark); openModalWithHistory('pdfViewer');
-            const sName = localStorage.getItem('studentName') || "Student"; const sCode = localStorage.getItem('studentCode') || "000"; const watermarkText = `${sName} - ${sCode}`;
+            
+            const loadingDiv = document.createElement('div'); 
+            loadingDiv.className = 'loading-msg'; 
+            loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
+            loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
+            wrapper.insertBefore(loadingDiv, watermark); 
+            
+            openModalWithHistory('pdfViewer');
+            
+            const sName = localStorage.getItem('studentName') || "Student"; 
+            const sCode = localStorage.getItem('studentCode') || "000"; 
+            const watermarkText = `${sName} - ${sCode}`;
+            
             pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
                 loadingDiv.remove();
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
-                        const viewport = page.getViewport({ scale: 1.5 }); const canvas = document.createElement('canvas'); 
-                        canvas.style.display = 'block'; canvas.style.margin = '0 auto 15px auto'; canvas.style.width = '100%'; canvas.style.borderRadius = '8px'; canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; canvas.style.position = 'relative'; canvas.style.zIndex = '1';
-                        canvas.height = viewport.height; canvas.width = viewport.width; wrapper.insertBefore(canvas, watermark);
+                        const viewport = page.getViewport({ scale: 1.5 }); 
+                        const canvas = document.createElement('canvas'); 
+                        
+                        canvas.style.display = 'block'; 
+                        canvas.style.margin = '0 auto 15px auto'; 
+                        canvas.style.width = '100%'; 
+                        canvas.style.borderRadius = '8px'; 
+                        canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; 
+                        canvas.style.position = 'relative'; 
+                        canvas.style.zIndex = '1';
+                        canvas.height = viewport.height; 
+                        canvas.width = viewport.width; 
+                        
+                        wrapper.insertBefore(canvas, watermark);
+                        
                         const ctx = canvas.getContext('2d');
+                        
                         page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
-                            ctx.save(); ctx.translate(canvas.width / 2, canvas.height / 2); ctx.rotate(-Math.PI / 4); ctx.font = "bold 40px 'IBM Plex Sans Arabic', sans-serif"; ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; ctx.textAlign = "center";
-                            for (let x = -canvas.width; x < canvas.width * 2; x += 300) { for (let y = -canvas.height; y < canvas.height * 2; y += 300) { ctx.fillText(watermarkText, x, y); } } ctx.restore();
+                            ctx.save(); 
+                            ctx.translate(canvas.width / 2, canvas.height / 2); 
+                            ctx.rotate(-Math.PI / 4); 
+                            ctx.font = "bold 40px 'IBM Plex Sans Arabic', sans-serif"; 
+                            ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
+                            ctx.textAlign = "center";
+                            for (let x = -canvas.width; x < canvas.width * 2; x += 300) { 
+                                for (let y = -canvas.height; y < canvas.height * 2; y += 300) { 
+                                    ctx.fillText(watermarkText, x, y); 
+                                } 
+                            } 
+                            ctx.restore();
                         });
                     });
                 }
-            }).catch(e => { loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; });
+            }).catch(e => { 
+                loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; 
+            });
         }
 
-        let currentQ = 0; let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; 
+        let currentQ = 0; 
+        let score = 0; 
+        let activeQuizQuestions = []; 
+        let currentLectureNum = ''; 
+        
         function openQuiz(lectureNum) { 
-            currentLectureNum = lectureNum.toString(); const body = document.getElementById('quizBody');
+            currentLectureNum = lectureNum.toString(); 
+            const body = document.getElementById('quizBody');
+            
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
-            openModalWithHistory('quizModal'); applyLanguage();
+            openModalWithHistory('quizModal'); 
+            applyLanguage();
+            
             const studentCode = localStorage.getItem('studentCode') || '';
-            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`).then(response => response.json()).then(data => {
-                if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                if (data.success && data.questions && data.questions.length > 0) { activeQuizQuestions = data.questions; currentQ = 0; score = 0; showQuestion(); } 
-                else { body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; applyLanguage(); }
-            }).catch(error => { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3></div>`; applyLanguage(); });
+            
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if (data.success && data.questions && data.questions.length > 0) { 
+                        activeQuizQuestions = data.questions; 
+                        currentQ = 0; 
+                        score = 0; 
+                        showQuestion(); 
+                    } else { 
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; 
+                        applyLanguage(); 
+                    }
+                })
+                .catch(error => { 
+                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3></div>`; 
+                    applyLanguage(); 
+                });
         }
         
         function showQuestion() {
-            const q = activeQuizQuestions[currentQ]; const body = document.getElementById('quizBody'); let optsHtml = ''; const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
-            opts.forEach((opt, idx) => { optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})"><span>${opt}</span><span class="material-icons opt-icon" style="display:none;"></span></div>`; });
-            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${activeQuizQuestions.length}` : `سؤال ${currentQ + 1} من ${activeQuizQuestions.length}`; const qText = currentLang === 'en' ? q.qEn : q.qAr;
+            const q = activeQuizQuestions[currentQ]; 
+            const body = document.getElementById('quizBody'); 
+            let optsHtml = ''; 
+            const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+            
+            opts.forEach((opt, idx) => { 
+                optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})"><span>${opt}</span><span class="material-icons opt-icon" style="display:none;"></span></div>`; 
+            });
+            
+            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${activeQuizQuestions.length}` : `سؤال ${currentQ + 1} من ${activeQuizQuestions.length}`; 
+            const qText = currentLang === 'en' ? q.qEn : q.qAr;
+            
             body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div><h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
         }
         
         function checkAnswer(el, chosen, correct) {
-            const all = document.querySelectorAll('.quiz-opt'); all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
-            const icon = el.querySelector('.opt-icon'); icon.style.display = 'block';
-            if (chosen === correct) { el.classList.add('correct'); icon.innerText = 'check_circle'; score++; } 
-            else { el.classList.add('wrong'); icon.innerText = 'cancel'; all[correct].classList.add('correct'); all[correct].querySelector('.opt-icon').innerText = 'check_circle'; all[correct].querySelector('.opt-icon').style.display = 'block'; if (navigator.vibrate) { navigator.vibrate([50, 50, 50]); } }
+            const all = document.querySelectorAll('.quiz-opt'); 
+            all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
+            const icon = el.querySelector('.opt-icon'); 
+            icon.style.display = 'block';
+            
+            if (chosen === correct) { 
+                el.classList.add('correct'); 
+                icon.innerText = 'check_circle'; 
+                score++; 
+            } else { 
+                el.classList.add('wrong'); 
+                icon.innerText = 'cancel'; 
+                all[correct].classList.add('correct'); 
+                all[correct].querySelector('.opt-icon').innerText = 'check_circle'; 
+                all[correct].querySelector('.opt-icon').style.display = 'block'; 
+                if (navigator.vibrate) { navigator.vibrate([50, 50, 50]); } 
+            }
+            
             setTimeout(() => {
                 currentQ++;
-                if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
-                else { 
-                    const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; let xpRewardText = ''; let xpColor = '#4caf50';
+                if (currentQ < activeQuizQuestions.length) { 
+                    showQuestion(); 
+                } else { 
+                    const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
+                    const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
+                    let xpRewardText = ''; 
+                    let xpColor = '#4caf50';
+                    
                     if(score > 0) {
-                        if (!isAlreadyCompleted) { addXP(score * 10); syncXPToCloud(); localStorage.setItem(quizKey, 'true'); xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); if(btnTxtEl) { btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; btnTxtEl.parentElement.style.color = 'var(--text-grey)'; btnTxtEl.parentElement.style.boxShadow = 'none'; btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; btnTxtEl.previousElementSibling.innerText = 'replay'; } } 
-                        else { xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; xpColor = 'var(--text-grey)'; }
+                        if (!isAlreadyCompleted) { 
+                            addXP(score * 10); 
+                            syncXPToCloud(); 
+                            localStorage.setItem(quizKey, 'true'); 
+                            xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; 
+                            let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); 
+                            if(btnTxtEl) { 
+                                btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                                btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; 
+                                btnTxtEl.parentElement.style.color = 'var(--text-grey)'; 
+                                btnTxtEl.parentElement.style.boxShadow = 'none'; 
+                                btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; 
+                                btnTxtEl.previousElementSibling.innerText = 'replay'; 
+                            } 
+                        } else { 
+                            xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; 
+                            xpColor = 'var(--text-grey)'; 
+                        }
                     }
-                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
-                    document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p><button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
+                    
+                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; 
+                    const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
+                    
+                    document.getElementById('quizBody').innerHTML = `
+                    <div style="text-align:center; padding:30px;">
+                        <h2>${resTitle}</h2>
+                        <h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1>
+                        <p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p>
+                        <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button>
+                    </div>`; 
                 }
             }, 1500);
         }
 
         function syncXPToCloud() {
-            const currentXP = localStorage.getItem('daheehXP') || 0; const sCode = localStorage.getItem('studentCode') || ''; const sName = localStorage.getItem('studentName') || ''; if(!sCode) return;
+            const currentXP = localStorage.getItem('daheehXP') || 0; 
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            const sName = localStorage.getItem('studentName') || ''; 
+            if(!sCode) return;
+            
             const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
-            fetch(requestUrl).then(res => res.json()).then(data => console.log('XP Saved')).catch(err => console.log('Error'));
+            
+            fetch(requestUrl)
+                .then(res => res.json())
+                .then(data => console.log('XP Saved'))
+                .catch(err => console.log('Error'));
         }
 
-        applyLanguage(); updatePomoDisplay();
+        applyLanguage(); 
+        updatePomoDisplay();
     </script>
 </body>
 </html>
