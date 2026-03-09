@@ -273,6 +273,7 @@
             <span style="color: white; font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
             
             <div class="header-icons" style="gap: 15px;">
+                <span class="material-icons" onclick="openWhiteboard()" style="color: var(--accent); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleCalculator()" style="color: white; cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: white; cursor: pointer;" title="الموسيقى">music_off</span>
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: white; cursor: pointer;" title="المظهر الليلي">light_mode</span>
@@ -287,7 +288,6 @@
     </div>
 
     <script>
-        // === استرجاع حالة الثيم الذهبي ===
         if(localStorage.getItem('daheehVipMode') === 'true') {
             document.body.classList.add('vip-gold-mode');
         }
@@ -307,7 +307,6 @@
             }
         });
 
-        // === دوال سبورة الشخبطة الذكية ===
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
