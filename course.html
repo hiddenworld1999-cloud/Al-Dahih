@@ -244,20 +244,16 @@
 
     <script>
         // === 1. نظام تتبع النوافذ وزر الرجوع (History API) ===
-        // التعديل ده بيصطاد زرار الموبايل عشان يقفل الشاشة المفتوحة بس بدل ما يقفل التطبيق
         function openModalWithHistory(elementId, loadContent = false) {
             document.getElementById(elementId).style.display = 'flex';
-            history.pushState({ modalOpen: elementId }, '', ''); // بنسجل إن في شاشة فتحت
+            history.pushState({ modalOpen: elementId }, '', ''); 
             
             if(loadContent && elementId === 'summaryModal') loadLectures();
         }
 
-        // لما الطالب يدوس على زرار الموبايل "رجوع"، المتصفح بيعمل popstate
         window.addEventListener('popstate', function(event) {
-            // بنقفل كل النوافذ
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
-            // لو كان لسه في نافذة في الهيستوري (تداخل نوافذ)، نفتحها
             if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
             }
@@ -276,17 +272,16 @@
             let touchEndX = e.changedTouches[0].screenX;
             let touchEndY = e.changedTouches[0].screenY;
             
-            let diffX = touchStartX - touchEndX; // موجب لو سحب ناحية اليسار
-            let diffY = Math.abs(touchStartY - touchEndY); // عشان نتأكد إنه مسحبش لتحت بالغلط
+            let diffX = touchStartX - touchEndX; 
+            let diffY = Math.abs(touchStartY - touchEndY); 
 
-            // لو الطالب بدأ السحب من الحافة اليمين (على بعد 80 بكسل من الحافة) وسحب ناحية اليسار
             if (touchStartX > window.innerWidth - 80 && diffX > 60 && diffY < 50) {
                 const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable'))
                                             .some(el => el.style.display === 'flex' || el.style.display === 'block');
                 if (isAnyModalOpen) {
-                    history.back(); // نقفل النافذة
+                    history.back(); 
                 } else {
-                    window.location.href = 'index.html'; // نرجع للصفحة الرئيسية
+                    window.location.href = 'index.html'; 
                 }
             }
         }, {passive: true});
@@ -299,7 +294,6 @@
         
         pdfWrapper.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
-                // بنحسب المسافة بين الصباعين في أول اللمس
                 initialPinchDistance = Math.hypot(
                     e.touches[0].pageX - e.touches[1].pageX,
                     e.touches[0].pageY - e.touches[1].pageY
@@ -310,7 +304,6 @@
 
         pdfWrapper.addEventListener('touchmove', (e) => {
             if (e.touches.length === 2 && initialPinchDistance) {
-                // بنحسب المسافة الجديدة ونسبة التكبير
                 let currentDistance = Math.hypot(
                     e.touches[0].pageX - e.touches[1].pageX,
                     e.touches[0].pageY - e.touches[1].pageY
@@ -318,7 +311,6 @@
                 let scaleChange = currentDistance / initialPinchDistance;
                 let newWidth = pdfInitialWidth * scaleChange;
                 
-                // بنحط حدود للتكبير عشان ميبوظش الشاشة (من 100% لحد 400%)
                 if (newWidth < 100) newWidth = 100;
                 if (newWidth > 400) newWidth = 400;
                 
@@ -328,7 +320,7 @@
 
         pdfWrapper.addEventListener('touchend', (e) => {
             if (e.touches.length < 2) {
-                initialPinchDistance = null; // ننهي عملية التكبير لما يشيل صباعه
+                initialPinchDistance = null; 
             }
         });
 
@@ -418,7 +410,7 @@
         function toggleCalculator() { 
             const m = document.getElementById('calculatorModal'); 
             if(m.style.display === 'block' || m.style.display === 'flex') {
-                history.back(); // نقفلها
+                history.back(); 
             } else {
                 openModalWithHistory('calculatorModal');
             }
@@ -530,7 +522,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.error === 'unauthorized') {
-                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به! يرجى تسجيل الدخول بالكود الخاص بك.');
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!');
                         localStorage.removeItem('isLoggedInDaheeh');
                         window.location.href = 'login.html';
                         return;
@@ -594,7 +586,7 @@
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
             
-            wrapper.style.width = '100%'; // إرجاع الحجم الطبيعي مع كل فتح
+            wrapper.style.width = '100%'; 
             wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
             wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
             
@@ -656,6 +648,29 @@
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
         let currentLectureNum = ''; 
 
+        // === دالة توليد صوت النجاح (بدون ملفات خارجية) ===
+        function playSuccessSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                osc.type = 'sine'; // صوت ناعم
+                osc.frequency.setValueAtTime(880, ctx.currentTime); 
+                osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1); 
+                
+                gainNode.gain.setValueAtTime(0.3, ctx.currentTime); 
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4); 
+                
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch(e) { console.log('Audio not supported'); }
+        }
+
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
 
@@ -698,11 +713,33 @@
             body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div><h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
         }
         
+        // === دالة فحص الإجابة (مضاف إليها الصوت والهزاز) ===
         function checkAnswer(el, chosen, correct) {
-            const all = document.querySelectorAll('.quiz-opt'); all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
-            const icon = el.querySelector('.opt-icon'); icon.style.display = 'block';
-            if (chosen === correct) { el.classList.add('correct'); icon.innerText = 'check_circle'; score++; } 
-            else { el.classList.add('wrong'); icon.innerText = 'cancel'; all[correct].classList.add('correct'); all[correct].querySelector('.opt-icon').innerText = 'check_circle'; all[correct].querySelector('.opt-icon').style.display = 'block'; }
+            const all = document.querySelectorAll('.quiz-opt'); 
+            all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
+            const icon = el.querySelector('.opt-icon'); 
+            icon.style.display = 'block';
+            
+            if (chosen === correct) { 
+                // --- الإجابة صحيحة ---
+                el.classList.add('correct'); 
+                icon.innerText = 'check_circle'; 
+                score++; 
+                playSuccessSound(); // تشغيل صوت النجاح الخفيف
+            } 
+            else { 
+                // --- الإجابة خاطئة ---
+                el.classList.add('wrong'); 
+                icon.innerText = 'cancel'; 
+                all[correct].classList.add('correct'); 
+                all[correct].querySelector('.opt-icon').innerText = 'check_circle'; 
+                all[correct].querySelector('.opt-icon').style.display = 'block'; 
+                
+                // تشغيل الهزاز (نبضتين ورا بعض للخطأ)
+                if (navigator.vibrate) {
+                    navigator.vibrate([50, 50, 50]); 
+                }
+            }
             
             setTimeout(() => {
                 currentQ++;
