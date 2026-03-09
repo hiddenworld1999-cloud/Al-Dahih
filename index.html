@@ -53,7 +53,7 @@
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .logo-img { width: 40px; height: 40px; object-fit: contain; animation: float 3s ease-in-out infinite; drop-shadow(0 2px 4px rgba(0,0,0,0.1)); } 
+        .logo-img { width: 45px; height: 45px; object-fit: contain; animation: float 3s ease-in-out infinite; drop-shadow(0 2px 4px rgba(0,0,0,0.1)); } 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         
         .header-icons { display: flex; align-items: center; gap: 15px; }
@@ -68,7 +68,6 @@
 
         .hero-wrapper { padding: 20px 20px 0; }
         .premium-hero { background: linear-gradient(135deg, #0A2647 0%, #144272 100%); border-radius: 24px; padding: 25px 20px; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(10, 38, 71, 0.2); margin-bottom: 20px; text-align: center; }
-        body.dark-mode .premium-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .hero-decor { position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .hero-decor-2 { position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(33,150,243,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
@@ -84,8 +83,7 @@
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .cat-btn { display: inline-block; padding: 10px 22px; background: var(--filter-bg); color: var(--text-grey); border-radius: 30px; margin-inline-end: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; font-family: inherit; }
         .cat-btn.active { background: var(--primary-blue); color: white; box-shadow: 0 6px 15px rgba(10, 38, 71, 0.25); transform: translateY(-2px); }
-        body.dark-mode .cat-btn.active { background: var(--accent-orange); color: #0A2647; box-shadow: 0 6px 15px rgba(255, 200, 0, 0.2); }
-
+        
         .container { padding: 0 20px; }
         .section-title { font-size: 1.2rem; font-weight: 800; margin: 10px 0 20px 0; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .section-title::before { content: ''; display: block; width: 6px; height: 22px; background: var(--accent-orange); border-radius: 4px; }
@@ -102,23 +100,17 @@
         .badge { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; width: fit-content; margin-bottom: 8px; }
         .badge-new { background: rgba(33, 150, 243, 0.1); color: #1976D2; }
         .badge-completed { background: rgba(76, 175, 80, 0.1); color: #2E7D32; display: flex; align-items: center; gap: 3px; }
-        body.dark-mode .badge-new { background: rgba(33, 150, 243, 0.2); color: #64B5F6; }
-        body.dark-mode .badge-completed { background: rgba(76, 175, 80, 0.2); color: #81C784; }
         .p-course-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; line-height: 1.4; }
         .p-course-prof { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; gap: 4px; font-weight: 500; }
 
         .bottom-nav-wrapper { position: fixed; bottom: 20px; left: 0; width: 100%; padding: 0 20px; z-index: 200; pointer-events: none; }
         .bottom-nav { pointer-events: auto; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 5px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
-        body.dark-mode .bottom-nav { border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text-grey); flex: 1; cursor: pointer; transition: 0.3s; font-weight: 600; gap: 3px; }
         .nav-item .material-icons { font-size: 24px; transition: 0.3s; }
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active .material-icons { background: rgba(10, 38, 71, 0.1); padding: 5px 15px; border-radius: 15px; transform: translateY(-3px); }
-        body.dark-mode .nav-item.active { color: var(--accent-orange); }
-        body.dark-mode .nav-item.active .material-icons { background: rgba(255, 200, 0, 0.15); }
-
+        
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
-        body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 4px solid var(--accent-orange); }
         
         .profile-stats-box { display: flex; justify-content: space-around; background: var(--bg-card); padding: 20px 10px; border-radius: 20px; margin-top: -25px; position: relative; z-index: 3; box-shadow: var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
@@ -133,7 +125,6 @@
         .settings-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         .icon-darkmode { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         .icon-support { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
-        body.dark-mode .icon-darkmode { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); }
         .settings-text { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
         
         .logout-btn-new { width: 100%; padding: 18px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: none; border-radius: 18px; font-weight: 700; font-size: 1.05rem; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
@@ -148,13 +139,12 @@
         .pomo-fab:active { transform: scale(0.9); }
         .pomo-timer { background: var(--bg-card); padding: 15px; border-radius: 20px; box-shadow: var(--card-shadow); margin-bottom: 15px; border: 2px solid var(--accent-orange); width: 200px; text-align: center; display: none; }
         
-        .calculator-modal { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 500; display: none; border: 1px solid var(--border-color); direction: ltr; }
+        .calculator-modal { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 500; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
         .calc-display { width: 100%; height: 65px; background: var(--bg-main); border: none; border-radius: 16px; font-size: 2rem; text-align: right; padding: 10px 15px; color: var(--primary-blue); font-family: monospace; margin-bottom: 15px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .calc-btn { padding: 18px 0; border: none; border-radius: 14px; font-size: 1.3rem; font-weight: bold; cursor: pointer; background: var(--bg-main); color: var(--text-main); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .calc-btn:active { transform: translateY(2px); box-shadow: none; }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
-        body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
         
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
@@ -211,6 +201,24 @@
             </button>
         </div>
         <canvas id="drawingCanvas"></canvas>
+    </div>
+
+    <div id="vipLockedModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
+        <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; box-shadow:0 15px 40px rgba(0,0,0,0.4); border: 2px solid #FFC800; animation: slideUpFade 0.4s ease forwards; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, transparent 70%);"></div>
+            
+            <span class="material-icons" style="font-size:60px; color:#FFC800; margin-bottom:10px; animation: pulse 2s infinite;">lock</span>
+            <h3 style="color:var(--text-main); font-weight:900; margin-bottom:10px; font-size: 1.3rem;" data-ar="مظهر الأساطير مقفول 🔒" data-en="VIP Theme Locked 🔒">مظهر الأساطير مقفول 🔒</h3>
+            <p id="vipLockedText" style="color:var(--text-grey); line-height:1.6; margin-bottom:25px; font-weight:600; font-size:0.95rem;"></p>
+            
+            <div style="background: rgba(255, 200, 0, 0.1); padding: 10px; border-radius: 12px; margin-bottom: 20px; color: #FFC800; font-weight: bold; font-size: 1.2rem;">
+                <span id="vipCurrentXp"></span> / 1000 XP
+            </div>
+            
+            <button onclick="closeVipModal()" class="btn-card" style="justify-content:center; background:linear-gradient(135deg, #FFC800, #ffb700); color:#0A2647; border:none; margin:0; box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3);">
+                <span data-ar="سأكمل التحدي 💪" data-en="I will complete the challenge 💪">سأكمل التحدي 💪</span>
+            </button>
+        </div>
     </div>
 
     <div id="calculatorModal" class="calculator-modal">
@@ -398,6 +406,7 @@
     </div>
 
     <script>
+        // === رابط السيرفر (تأكد إنه اللينك المحدث بتاعك) ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         const coursesData = [
@@ -410,6 +419,7 @@
 
         const studentFullName = localStorage.getItem('studentName') || "طالب دحيح";
         const studentFirstName = studentFullName.split(' ')[0]; 
+        
         document.getElementById('welcomeName').innerText = studentFirstName;
         document.getElementById('profileName').innerText = studentFullName;
         
@@ -467,8 +477,15 @@
                     document.getElementById('darkModeToggle').innerText = 'light_mode'; 
                 }
             } else {
-                alert(currentLang === 'en' ? `You need 1000 XP to unlock this! Current: ${xp} XP` : `عفواً، هذا المظهر الملكي مخصص للأساطير فقط! تحتاج إلى 1000 نقطة لفتحه (نقاطك الحالية: ${xp}). استمر في الحل!`);
+                // إظهار الرسالة المنبثقة بدلاً من الـ alert العادي
+                document.getElementById('vipCurrentXp').innerText = xp;
+                document.getElementById('vipLockedText').innerText = currentLang === 'en' ? "This royal theme is reserved for legends! Solve more quizzes to unlock it." : "هذا المظهر الملكي مخصص للأساطير فقط! استمر في حل الكويزات لفتحه.";
+                document.getElementById('vipLockedModal').style.display = 'flex';
             }
+        }
+
+        function closeVipModal() {
+            document.getElementById('vipLockedModal').style.display = 'none';
         }
 
         function updateXPDisplay() {
@@ -483,18 +500,31 @@
         }
 
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
+        
         function applyLanguage() {
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
             document.documentElement.lang = currentLang;
-            document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
-            document.querySelectorAll('[data-ph-ar]').forEach(el => { el.placeholder = el.getAttribute(`data-ph-${currentLang}`); });
+            
+            document.querySelectorAll('[data-ar]').forEach(el => { 
+                el.innerText = el.getAttribute(`data-${currentLang}`); 
+            });
+            
+            document.querySelectorAll('[data-ph-ar]').forEach(el => { 
+                el.placeholder = el.getAttribute(`data-ph-${currentLang}`); 
+            });
+            
             document.getElementById('profileCode').innerText = (currentLang === 'en' ? "ID: " : "الكود: ") + (localStorage.getItem('studentCode') || "---");
             document.getElementById('motivationQuote').innerText = currentLang === 'en' ? quotesEn[Math.floor(Math.random() * quotesEn.length)] : quotesAr[Math.floor(Math.random() * quotesAr.length)];
+            
             renderCourses(activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter));
             updateXPDisplay();
         }
 
-        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
+        function toggleLanguage() { 
+            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
+            localStorage.setItem('daheehLang', currentLang); 
+            applyLanguage(); 
+        }
 
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
@@ -515,13 +545,10 @@
         }
         
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
-            document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
+            document.body.classList.add('dark-mode'); 
+            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
         } else {
             document.getElementById('darkModeToggle').innerText = 'light_mode'; 
-        }
-
-        if (localStorage.getItem('daheehVipMode') === 'true') {
-            document.body.classList.add('vip-gold-mode');
         }
 
         // === دوال سبورة الشخبطة الذكية ===
@@ -578,7 +605,10 @@
                 ctxCanvas.stroke();
                 e.preventDefault();
             };
-            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
+            const stopDraw = () => { 
+                isDrawing = false; 
+                ctxCanvas.closePath(); 
+            };
 
             const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
             const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
@@ -593,19 +623,48 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
-        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
-        function appendCalc(v) { document.getElementById('calcDisplay').value += v; }
-        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
-        function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
+        function toggleCalculator() { 
+            const m = document.getElementById('calculatorModal'); 
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; 
+        }
+        
+        function appendCalc(v) { 
+            document.getElementById('calcDisplay').value += v; 
+        } 
+        
+        function clearCalc() { 
+            document.getElementById('calcDisplay').value = ''; 
+        }
+        
+        function calculateResult() { 
+            try { 
+                document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); 
+            } catch(e) { 
+                document.getElementById('calcDisplay').value = 'Error'; 
+                setTimeout(clearCalc,1000); 
+            } 
+        }
 
-        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
+        const bgMusic = document.getElementById('bgMusic'); 
+        bgMusic.volume = 0.5;
+        
+        function toggleMusic() { 
+            const btn = document.getElementById('musicToggle'); 
+            if (bgMusic.paused) { 
+                bgMusic.play(); 
+                btn.innerText = 'music_note'; 
+                btn.classList.add('music-active'); 
+            } else { 
+                bgMusic.pause(); 
+                btn.innerText = 'music_off'; 
+                btn.classList.remove('music-active'); 
+            } 
+        }
 
-        // === الكشكول السحابي ===
         const notebookInput = document.getElementById('studentNotebook'); 
         const saveIndicator = document.getElementById('saveIndicator'); 
         let typingTimer;
-
+        
         const studentCode = localStorage.getItem('studentCode') || '';
         notebookInput.placeholder = currentLang === 'en' ? 'Loading your notes from cloud...' : 'جاري جلب ملاحظاتك من السحابة...';
         notebookInput.disabled = true;
@@ -616,7 +675,10 @@
                 notebookInput.disabled = false;
                 notebookInput.placeholder = currentLang === 'en' ? 'Write important points here to review before exams...' : 'دون أهم النقاط هنا لتراجعها قبل الامتحان...';
                 
-                if (data.error === 'unauthorized') { safeLogout(); return; }
+                if (data.error === 'unauthorized') { 
+                    safeLogout(); 
+                    return; 
+                }
                 
                 if (data.success && data.notes) {
                     notebookInput.value = data.notes;
@@ -627,7 +689,9 @@
             })
             .catch(err => {
                 notebookInput.disabled = false;
-                if (localStorage.getItem('daheehNotebook')) notebookInput.value = localStorage.getItem('daheehNotebook');
+                if (localStorage.getItem('daheehNotebook')) {
+                    notebookInput.value = localStorage.getItem('daheehNotebook');
+                }
             });
 
         notebookInput.addEventListener('input', function() { 
@@ -670,7 +734,6 @@
             }, 1500); 
         });
 
-        // === لوحة الشرف ===
         function openLeaderboard() {
             const modal = document.getElementById('leaderboardModal');
             const body = document.getElementById('leaderboardBody');
@@ -689,12 +752,21 @@
                     data.leaderboard.forEach((student, index) => {
                         let medal = '';
                         let bgStyle = 'background:var(--bg-card);';
-                        if(index === 0) { medal = '🥇'; bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; }
-                        else if(index === 1) medal = '🥈';
-                        else if(index === 2) medal = '🥉';
-                        else medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
                         
-                        if (student.name === localStorage.getItem('studentName')) bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
+                        if(index === 0) { 
+                            medal = '🥇'; 
+                            bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; 
+                        } else if(index === 1) {
+                            medal = '🥈';
+                        } else if(index === 2) {
+                            medal = '🥉';
+                        } else {
+                            medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
+                        }
+                        
+                        if (student.name === localStorage.getItem('studentName')) {
+                            bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
+                        }
 
                         html += `
                         <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}">
@@ -705,6 +777,7 @@
                             <div style="font-weight:900; color:#0A2647; background:var(--accent-orange); padding:6px 12px; border-radius:12px; font-size:0.95rem;">⭐ ${student.xp}</div>
                         </div>`;
                     });
+                    
                     body.innerHTML = html;
                     applyLanguage();
                 } else {
@@ -718,16 +791,40 @@
             });
         }
         
-        function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
+        function closeLeaderboard() { 
+            document.getElementById('leaderboardModal').style.display = 'none'; 
+        }
 
         let activeFilter = 'all';
-        function filterCourses(category, btn) { activeFilter = category; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); if (category === 'all') renderCourses(coursesData); else renderCourses(coursesData.filter(c => c.category === category)); }
-        function updateCompletedCountBadge() { let count = 0; coursesData.forEach(c => { if(localStorage.getItem('completed_' + c.id) === 'true') count++; }); document.getElementById('completedCountBadge').innerText = count; }
+        
+        function filterCourses(category, btn) { 
+            activeFilter = category; 
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); 
+            if(btn) btn.classList.add('active'); 
+            if (category === 'all') {
+                renderCourses(coursesData); 
+            } else {
+                renderCourses(coursesData.filter(c => c.category === category)); 
+            }
+        }
+        
+        function updateCompletedCountBadge() { 
+            let count = 0; 
+            coursesData.forEach(c => { 
+                if(localStorage.getItem('completed_' + c.id) === 'true') count++; 
+            }); 
+            document.getElementById('completedCountBadge').innerText = count; 
+        }
 
         const container = document.getElementById('coursesListContainer');
+        
         function renderCourses(list) {
             container.innerHTML = '';
-            if (list.length === 0) { container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">search_off</span><br>${currentLang === 'en' ? 'No courses found' : 'لا توجد مواد تطابق بحثك'}</div>`; return; }
+            if (list.length === 0) { 
+                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">search_off</span><br>${currentLang === 'en' ? 'No courses found' : 'لا توجد مواد تطابق بحثك'}</div>`; 
+                return; 
+            }
+            
             list.forEach((course, index) => {
                 const isCompleted = localStorage.getItem('completed_' + course.id) === 'true';
                 const compText = isCompleted ? (currentLang === 'en' ? 'Completed' : 'مكتملة') : (currentLang === 'en' ? 'New' : 'متاحة الآن');
@@ -750,53 +847,107 @@
             });
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter); renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term))); });
+        document.getElementById('searchInput').addEventListener('input', (e) => { 
+            const term = e.target.value.toLowerCase(); 
+            const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter); 
+            renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term))); 
+        });
 
-        function switchTab(tabName, element) { document.querySelectorAll('.page-section').forEach(p => { p.classList.remove('active'); }); document.getElementById('page-' + tabName).classList.add('active'); if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); } if(tabName === 'profile') updateCompletedCountBadge(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function switchTab(tabName, element) { 
+            document.querySelectorAll('.page-section').forEach(p => { 
+                p.classList.remove('active'); 
+            }); 
+            document.getElementById('page-' + tabName).classList.add('active'); 
+            
+            if(element) { 
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); 
+                element.classList.add('active'); 
+            } 
+            if(tabName === 'profile') updateCompletedCountBadge(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
         
         function safeLogout() { 
             localStorage.removeItem('isLoggedInDaheeh'); 
             window.location.href = 'login.html'; 
         }
 
-        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
-        function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
-        function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
-        function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
-        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+        let pomoInterval; 
+        let pomoTime = 25 * 60; 
+        let isPomoRunning = false;
         
+        function updatePomoDisplay() { 
+            let m = Math.floor(pomoTime / 60); 
+            let s = pomoTime % 60; 
+            document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); 
+        }
+        
+        function togglePomodoro() { 
+            let t = document.getElementById('pomodoroTimer'); 
+            t.style.display = t.style.display === 'none' ? 'block' : 'none'; 
+        }
+        
+        function startPomodoro() { 
+            if(isPomoRunning) { 
+                clearInterval(pomoInterval); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; 
+                isPomoRunning = false; 
+            } else { 
+                pomoInterval = setInterval(() => { 
+                    if(pomoTime > 0) { 
+                        pomoTime--; updatePomoDisplay(); 
+                    } else { 
+                        clearInterval(pomoInterval); 
+                        alert("وقت الراحة!"); 
+                        resetPomodoro(); 
+                    } 
+                }, 1000); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; 
+                isPomoRunning = true; 
+            } 
+        }
+        
+        function resetPomodoro() { 
+            clearInterval(pomoInterval); 
+            pomoTime = 25 * 60; 
+            isPomoRunning = false; 
+            document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; 
+            updatePomoDisplay(); 
+        }
+
         function checkLatestNews() {
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${localStorage.getItem('studentCode')}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
-                    let courseTitleAr = "مادة جديدة";
+                    let courseTitleAr = "مادة جديدة"; 
                     let courseTitleEn = "New Course";
+                    
                     const courseObj = coursesData.find(c => c.id == data.courseId);
-                    if(courseObj) {
-                        courseTitleAr = courseObj.titleAr;
-                        courseTitleEn = courseObj.titleEn;
+                    if(courseObj) { 
+                        courseTitleAr = courseObj.titleAr; 
+                        courseTitleEn = courseObj.titleEn; 
                     }
-
-                    let newsMsgAr = "";
+                    
+                    let newsMsgAr = ""; 
                     let newsMsgEn = "";
-
-                    if (data.type === 'lecture') {
-                        newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`;
-                        newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`;
-                    } else if (data.type === 'midterm') {
-                        newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`;
-                        newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`;
-                    } else if (data.type === 'final') {
-                        newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`;
-                        newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`;
+                    
+                    if (data.type === 'lecture') { 
+                        newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`; 
+                        newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`; 
+                    } else if (data.type === 'midterm') { 
+                        newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`; 
+                        newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`; 
+                    } else if (data.type === 'final') { 
+                        newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`; 
+                        newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`; 
                     }
 
                     const marqueeSpan = document.querySelector('.news-ticker marquee span');
-                    if (marqueeSpan) {
-                        marqueeSpan.setAttribute('data-ar', newsMsgAr);
-                        marqueeSpan.setAttribute('data-en', newsMsgEn);
-                        marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr;
+                    if (marqueeSpan) { 
+                        marqueeSpan.setAttribute('data-ar', newsMsgAr); 
+                        marqueeSpan.setAttribute('data-en', newsMsgEn); 
+                        marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr; 
                     }
 
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime');
@@ -810,9 +961,14 @@
             .catch(err => console.log('No news updates found'));
         }
 
-        function closeNewsPopup() { document.getElementById('newsPopup').style.display = 'none'; }
+        function closeNewsPopup() { 
+            document.getElementById('newsPopup').style.display = 'none'; 
+        }
 
-        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay();
+        applyLanguage(); 
+        updatePomoDisplay(); 
+        updateCompletedCountBadge(); 
+        updateXPDisplay(); 
         checkLatestNews();
     </script>
 </body>
