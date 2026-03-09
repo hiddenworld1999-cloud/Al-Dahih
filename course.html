@@ -89,7 +89,7 @@
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
-        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; border: 1px solid var(--border-color); direction: ltr; }
+        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; } 
         .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
         .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
