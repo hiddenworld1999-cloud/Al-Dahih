@@ -30,7 +30,6 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
-        /* === الثيم الذهبي السري الملكي (VIP Mode) === */
         body.vip-gold-mode {
             --primary-blue: #FFD700; --primary-light: #DAA520; --accent-orange: #FFFFFF;
             --bg-main: #0a0a0a; --bg-card: #171717; --text-main: #FFD700; --text-grey: #aaaaaa;
@@ -211,10 +210,24 @@
         <input type="text" id="calcDisplay" class="calc-display" readonly>
         <div class="calc-grid">
             <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
-            <button class="calc-btn op" onclick="appendCalc('/')">/</button> <button class="calc-btn op" onclick="appendCalc('*')">×</button> <button class="calc-btn op" onclick="appendCalc('-')">-</button>
-            <button class="calc-btn" onclick="appendCalc('7')">7</button> <button class="calc-btn" onclick="appendCalc('8')">8</button> <button class="calc-btn" onclick="appendCalc('9')">9</button> <button class="calc-btn op" onclick="appendCalc('+')">+</button>
-            <button class="calc-btn" onclick="appendCalc('4')">4</button> <button class="calc-btn" onclick="appendCalc('5')">5</button> <button class="calc-btn" onclick="appendCalc('6')">6</button> <button class="calc-btn eq" onclick="calculateResult()">=</button>
-            <button class="calc-btn" onclick="appendCalc('1')">1</button> <button class="calc-btn" onclick="appendCalc('2')">2</button> <button class="calc-btn" onclick="appendCalc('3')">3</button> <button class="calc-btn" onclick="appendCalc('0')">0</button>
+            <button class="calc-btn op" onclick="appendCalc('/')">/</button> 
+            <button class="calc-btn op" onclick="appendCalc('*')">×</button> 
+            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+            
+            <button class="calc-btn" onclick="appendCalc('7')">7</button> 
+            <button class="calc-btn" onclick="appendCalc('8')">8</button> 
+            <button class="calc-btn" onclick="appendCalc('9')">9</button> 
+            <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+            
+            <button class="calc-btn" onclick="appendCalc('4')">4</button> 
+            <button class="calc-btn" onclick="appendCalc('5')">5</button> 
+            <button class="calc-btn" onclick="appendCalc('6')">6</button> 
+            <button class="calc-btn eq" onclick="calculateResult()">=</button>
+            
+            <button class="calc-btn" onclick="appendCalc('1')">1</button> 
+            <button class="calc-btn" onclick="appendCalc('2')">2</button> 
+            <button class="calc-btn" onclick="appendCalc('3')">3</button> 
+            <button class="calc-btn" onclick="appendCalc('0')">0</button>
         </div>
     </div>
 
@@ -397,6 +410,7 @@
 
         const studentFullName = localStorage.getItem('studentName') || "طالب دحيح";
         const studentFirstName = studentFullName.split(' ')[0]; 
+        
         document.getElementById('welcomeName').innerText = studentFirstName;
         document.getElementById('profileName').innerText = studentFullName;
         
@@ -465,22 +479,35 @@
             if(document.getElementById('profileXP')) document.getElementById('profileXP').innerText = xp;
             if(document.getElementById('profileLevel')) document.getElementById('profileLevel').innerText = level;
             
-            checkVipStatus(xp); // فحص القفل
+            checkVipStatus(xp);
         }
 
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
+        
         function applyLanguage() {
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
             document.documentElement.lang = currentLang;
-            document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
-            document.querySelectorAll('[data-ph-ar]').forEach(el => { el.placeholder = el.getAttribute(`data-ph-${currentLang}`); });
+            
+            document.querySelectorAll('[data-ar]').forEach(el => { 
+                el.innerText = el.getAttribute(`data-${currentLang}`); 
+            });
+            
+            document.querySelectorAll('[data-ph-ar]').forEach(el => { 
+                el.placeholder = el.getAttribute(`data-ph-${currentLang}`); 
+            });
+            
             document.getElementById('profileCode').innerText = (currentLang === 'en' ? "ID: " : "الكود: ") + (localStorage.getItem('studentCode') || "---");
             document.getElementById('motivationQuote').innerText = currentLang === 'en' ? quotesEn[Math.floor(Math.random() * quotesEn.length)] : quotesAr[Math.floor(Math.random() * quotesAr.length)];
+            
             renderCourses(activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter));
             updateXPDisplay();
         }
 
-        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
+        function toggleLanguage() { 
+            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
+            localStorage.setItem('daheehLang', currentLang); 
+            applyLanguage(); 
+        }
 
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
@@ -499,7 +526,8 @@
         }
         
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
-            document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
+            document.body.classList.add('dark-mode'); 
+            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
         } else {
             document.getElementById('darkModeToggle').innerText = 'light_mode'; 
         }
@@ -558,7 +586,10 @@
                 ctxCanvas.stroke();
                 e.preventDefault();
             };
-            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
+            const stopDraw = () => { 
+                isDrawing = false; 
+                ctxCanvas.closePath(); 
+            };
 
             const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
             const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
@@ -573,17 +604,48 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
-        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
-        function appendCalc(v) { document.getElementById('calcDisplay').value += v; }
-        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
-        function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
+        function toggleCalculator() { 
+            const m = document.getElementById('calculatorModal'); 
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; 
+        }
+        
+        function appendCalc(v) { 
+            document.getElementById('calcDisplay').value += v; 
+        }
+        
+        function clearCalc() { 
+            document.getElementById('calcDisplay').value = ''; 
+        }
+        
+        function calculateResult() { 
+            try { 
+                document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); 
+            } catch(e) { 
+                document.getElementById('calcDisplay').value = 'Error'; 
+                setTimeout(clearCalc,1000); 
+            } 
+        }
 
-        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
+        const bgMusic = document.getElementById('bgMusic'); 
+        bgMusic.volume = 0.5;
+        
+        function toggleMusic() { 
+            const btn = document.getElementById('musicToggle'); 
+            if (bgMusic.paused) { 
+                bgMusic.play(); 
+                btn.innerText = 'music_note'; 
+                btn.classList.add('music-active'); 
+            } else { 
+                bgMusic.pause(); 
+                btn.innerText = 'music_off'; 
+                btn.classList.remove('music-active'); 
+            } 
+        }
 
         const notebookInput = document.getElementById('studentNotebook'); 
         const saveIndicator = document.getElementById('saveIndicator'); 
         let typingTimer;
+        
         const studentCode = localStorage.getItem('studentCode') || '';
         notebookInput.placeholder = currentLang === 'en' ? 'Loading your notes from cloud...' : 'جاري جلب ملاحظاتك من السحابة...';
         notebookInput.disabled = true;
@@ -593,28 +655,47 @@
             .then(data => {
                 notebookInput.disabled = false;
                 notebookInput.placeholder = currentLang === 'en' ? 'Write important points here to review before exams...' : 'دون أهم النقاط هنا لتراجعها قبل الامتحان...';
-                if (data.error === 'unauthorized') { safeLogout(); return; }
+                
+                if (data.error === 'unauthorized') { 
+                    safeLogout(); 
+                    return; 
+                }
+                
                 if (data.success && data.notes) {
                     notebookInput.value = data.notes;
                     localStorage.setItem('daheehNotebook', data.notes);
                 } else if (localStorage.getItem('daheehNotebook')) {
                     notebookInput.value = localStorage.getItem('daheehNotebook');
                 }
-            }).catch(err => {
+            })
+            .catch(err => {
                 notebookInput.disabled = false;
-                if (localStorage.getItem('daheehNotebook')) notebookInput.value = localStorage.getItem('daheehNotebook');
+                if (localStorage.getItem('daheehNotebook')) {
+                    notebookInput.value = localStorage.getItem('daheehNotebook');
+                }
             });
 
         notebookInput.addEventListener('input', function() { 
             clearTimeout(typingTimer); 
+            
             document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
             document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
             saveIndicator.style.color = '#ff9800'; 
             saveIndicator.style.display = 'flex'; 
+
             localStorage.setItem('daheehNotebook', notebookInput.value); 
+            
             typingTimer = setTimeout(() => { 
-                const formData = new URLSearchParams(); formData.append('action', 'saveNotebook'); formData.append('code', studentCode); formData.append('notes', notebookInput.value);
-                fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                const formData = new URLSearchParams();
+                formData.append('action', 'saveNotebook');
+                formData.append('code', studentCode);
+                formData.append('notes', notebookInput.value);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                })
                 .then(res => res.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { safeLogout(); return; }
@@ -624,7 +705,8 @@
                         document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved to Cloud' : 'تم الحفظ سحابياً';
                         setTimeout(() => { saveIndicator.style.display = 'none'; }, 2500); 
                     }
-                }).catch(err => {
+                })
+                .catch(err => {
                     saveIndicator.style.color = '#d32f2f'; 
                     document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_off';
                     document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved locally (Offline)' : 'تم الحفظ محلياً (بدون إنترنت)';
@@ -637,78 +719,217 @@
             const modal = document.getElementById('leaderboardModal');
             const body = document.getElementById('leaderboardBody');
             modal.style.display = 'block';
+            
             body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--primary-blue);"><span class="material-icons" style="font-size:60px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري ترتيب الأوائل..." data-en="Loading Leaderboard...">جاري ترتيب الأوائل...</h3></div>`;
             applyLanguage();
+            
             fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${studentCode}`)
             .then(res => res.json())
             .then(data => {
                 if(data.error === 'unauthorized') { safeLogout(); return; }
                 if(data.success && data.leaderboard.length > 0) {
                     let html = `<div style="text-align:center; margin-bottom:25px;"><h2 style="color:var(--primary-blue); font-weight:900;" data-ar="أبطال المنصة 🚀" data-en="Platform Heroes 🚀">أبطال المنصة 🚀</h2><p style="color:var(--text-grey); font-size:0.9rem;" data-ar="أعلى 10 طلاب جمعوا نقاط من الكويزات" data-en="Top 10 students from quizzes">أعلى 10 طلاب جمعوا نقاط من الكويزات</p></div>`;
+                    
                     data.leaderboard.forEach((student, index) => {
-                        let medal = ''; let bgStyle = 'background:var(--bg-card);';
-                        if(index === 0) { medal = '🥇'; bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; }
-                        else if(index === 1) medal = '🥈'; else if(index === 2) medal = '🥉';
-                        else medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
-                        if (student.name === localStorage.getItem('studentName')) bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
-                        html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}"><div style="display:flex; align-items:center; gap:12px;"><span style="font-size:1.6rem;">${medal}</span><span style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">${student.name}</span></div><div style="font-weight:900; color:#0A2647; background:var(--accent-orange); padding:6px 12px; border-radius:12px; font-size:0.95rem;">⭐ ${student.xp}</div></div>`;
+                        let medal = '';
+                        let bgStyle = 'background:var(--bg-card);';
+                        
+                        if(index === 0) { 
+                            medal = '🥇'; 
+                            bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; 
+                        } else if(index === 1) {
+                            medal = '🥈';
+                        } else if(index === 2) {
+                            medal = '🥉';
+                        } else {
+                            medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
+                        }
+                        
+                        if (student.name === localStorage.getItem('studentName')) {
+                            bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
+                        }
+
+                        html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-size:1.6rem;">${medal}</span>
+                                <span style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">${student.name}</span>
+                            </div>
+                            <div style="font-weight:900; color:#0A2647; background:var(--accent-orange); padding:6px 12px; border-radius:12px; font-size:0.95rem;">⭐ ${student.xp}</div>
+                        </div>`;
                     });
-                    body.innerHTML = html; applyLanguage();
+                    
+                    body.innerHTML = html;
+                    applyLanguage();
                 } else {
                     body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:60px; opacity:0.3; margin-bottom:15px;">emoji_events</span><h3 data-ar="لا يوجد بيانات حتى الآن" data-en="No data yet">لا يوجد بيانات حتى الآن</h3><p data-ar="حل كويزات عشان تكون أول واحد هنا!" data-en="Solve quizzes to be the first here!">حل كويزات عشان تكون أول واحد هنا!</p></div>`;
                     applyLanguage();
                 }
-            }).catch(err => {
+            })
+            .catch(err => {
                 body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:#d32f2f;"><span class="material-icons" style="font-size:60px; margin-bottom:15px;">wifi_off</span><h3 data-ar="خطأ في الاتصال" data-en="Connection error">خطأ في الاتصال</h3></div>`;
                 applyLanguage();
             });
         }
-        function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
+        
+        function closeLeaderboard() { 
+            document.getElementById('leaderboardModal').style.display = 'none'; 
+        }
 
         let activeFilter = 'all';
-        function filterCourses(category, btn) { activeFilter = category; document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); if(btn) btn.classList.add('active'); if (category === 'all') renderCourses(coursesData); else renderCourses(coursesData.filter(c => c.category === category)); }
-        function updateCompletedCountBadge() { let count = 0; coursesData.forEach(c => { if(localStorage.getItem('completed_' + c.id) === 'true') count++; }); document.getElementById('completedCountBadge').innerText = count; }
+        
+        function filterCourses(category, btn) { 
+            activeFilter = category; 
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); 
+            if(btn) btn.classList.add('active'); 
+            if (category === 'all') {
+                renderCourses(coursesData); 
+            } else {
+                renderCourses(coursesData.filter(c => c.category === category)); 
+            }
+        }
+        
+        function updateCompletedCountBadge() { 
+            let count = 0; 
+            coursesData.forEach(c => { 
+                if(localStorage.getItem('completed_' + c.id) === 'true') count++; 
+            }); 
+            document.getElementById('completedCountBadge').innerText = count; 
+        }
 
         const container = document.getElementById('coursesListContainer');
+        
         function renderCourses(list) {
             container.innerHTML = '';
-            if (list.length === 0) { container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">search_off</span><br>${currentLang === 'en' ? 'No courses found' : 'لا توجد مواد تطابق بحثك'}</div>`; return; }
+            if (list.length === 0) { 
+                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">search_off</span><br>${currentLang === 'en' ? 'No courses found' : 'لا توجد مواد تطابق بحثك'}</div>`; 
+                return; 
+            }
+            
             list.forEach((course, index) => {
                 const isCompleted = localStorage.getItem('completed_' + course.id) === 'true';
                 const compText = isCompleted ? (currentLang === 'en' ? 'Completed' : 'مكتملة') : (currentLang === 'en' ? 'New' : 'متاحة الآن');
                 const badgeClass = isCompleted ? 'badge-completed' : 'badge-new';
                 const iconHtml = isCompleted ? '<span class="material-icons" style="font-size:12px;">done_all</span>' : '';
                 const animDelay = index * 0.1;
-                container.innerHTML += `<div class="premium-course-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;" onclick="window.location.href='course.html?id=${course.id}'"><div class="card-img-wrapper"><img src="${course.img}" class="p-course-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%23eee\\'/><text x=\\'50\\' y=\\'50\\' font-family=\\'Arial\\' font-size=\\'14\\' fill=\\'%23999\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'>صورة</text></svg>'"><div class="play-overlay"><span class="material-icons">play_arrow</span></div></div><div class="p-course-info"><span class="badge ${badgeClass}">${iconHtml} ${compText}</span><h4 class="p-course-title">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4><p class="p-course-prof"><span class="material-icons" style="font-size:16px;">school</span> ${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p></div></div>`;
+                
+                container.innerHTML += `
+                <div class="premium-course-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;" onclick="window.location.href='course.html?id=${course.id}'">
+                    <div class="card-img-wrapper">
+                        <img src="${course.img}" class="p-course-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%23eee\\'/><text x=\\'50\\' y=\\'50\\' font-family=\\'Arial\\' font-size=\\'14\\' fill=\\'%23999\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'>صورة</text></svg>'">
+                        <div class="play-overlay"><span class="material-icons">play_arrow</span></div>
+                    </div>
+                    <div class="p-course-info">
+                        <span class="badge ${badgeClass}">${iconHtml} ${compText}</span>
+                        <h4 class="p-course-title">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4>
+                        <p class="p-course-prof"><span class="material-icons" style="font-size:16px;">school</span> ${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p>
+                    </div>
+                </div>`;
             });
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter); renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term))); });
+        document.getElementById('searchInput').addEventListener('input', (e) => { 
+            const term = e.target.value.toLowerCase(); 
+            const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter); 
+            renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term))); 
+        });
 
-        function switchTab(tabName, element) { document.querySelectorAll('.page-section').forEach(p => { p.classList.remove('active'); }); document.getElementById('page-' + tabName).classList.add('active'); if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); } if(tabName === 'profile') updateCompletedCountBadge(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function safeLogout() { localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; }
+        function switchTab(tabName, element) { 
+            document.querySelectorAll('.page-section').forEach(p => { 
+                p.classList.remove('active'); 
+            }); 
+            document.getElementById('page-' + tabName).classList.add('active'); 
+            
+            if(element) { 
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); 
+                element.classList.add('active'); 
+            } 
+            if(tabName === 'profile') updateCompletedCountBadge(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
+        
+        function safeLogout() { 
+            localStorage.removeItem('isLoggedInDaheeh'); 
+            window.location.href = 'login.html'; 
+        }
 
-        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
-        function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
-        function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
-        function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
-        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+        let pomoInterval; 
+        let pomoTime = 25 * 60; 
+        let isPomoRunning = false;
+        
+        function updatePomoDisplay() { 
+            let m = Math.floor(pomoTime / 60); 
+            let s = pomoTime % 60; 
+            document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); 
+        }
+        
+        function togglePomodoro() { 
+            let t = document.getElementById('pomodoroTimer'); 
+            t.style.display = t.style.display === 'none' ? 'block' : 'none'; 
+        }
+        
+        function startPomodoro() { 
+            if(isPomoRunning) { 
+                clearInterval(pomoInterval); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; 
+                isPomoRunning = false; 
+            } else { 
+                pomoInterval = setInterval(() => { 
+                    if(pomoTime > 0) { 
+                        pomoTime--; updatePomoDisplay(); 
+                    } else { 
+                        clearInterval(pomoInterval); 
+                        alert("وقت الراحة!"); 
+                        resetPomodoro(); 
+                    } 
+                }, 1000); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; 
+                isPomoRunning = true; 
+            } 
+        }
+        
+        function resetPomodoro() { 
+            clearInterval(pomoInterval); 
+            pomoTime = 25 * 60; 
+            isPomoRunning = false; 
+            document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; 
+            updatePomoDisplay(); 
+        }
 
         function checkLatestNews() {
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${localStorage.getItem('studentCode')}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
-                    let courseTitleAr = "مادة جديدة"; let courseTitleEn = "New Course";
+                    let courseTitleAr = "مادة جديدة"; 
+                    let courseTitleEn = "New Course";
+                    
                     const courseObj = coursesData.find(c => c.id == data.courseId);
-                    if(courseObj) { courseTitleAr = courseObj.titleAr; courseTitleEn = courseObj.titleEn; }
-                    let newsMsgAr = ""; let newsMsgEn = "";
-                    if (data.type === 'lecture') { newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`; newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`; } 
-                    else if (data.type === 'midterm') { newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`; newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`; } 
-                    else if (data.type === 'final') { newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`; newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`; }
+                    if(courseObj) { 
+                        courseTitleAr = courseObj.titleAr; 
+                        courseTitleEn = courseObj.titleEn; 
+                    }
+                    
+                    let newsMsgAr = ""; 
+                    let newsMsgEn = "";
+                    
+                    if (data.type === 'lecture') { 
+                        newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`; 
+                        newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`; 
+                    } else if (data.type === 'midterm') { 
+                        newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`; 
+                        newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`; 
+                    } else if (data.type === 'final') { 
+                        newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`; 
+                        newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`; 
+                    }
 
                     const marqueeSpan = document.querySelector('.news-ticker marquee span');
-                    if (marqueeSpan) { marqueeSpan.setAttribute('data-ar', newsMsgAr); marqueeSpan.setAttribute('data-en', newsMsgEn); marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr; }
+                    if (marqueeSpan) { 
+                        marqueeSpan.setAttribute('data-ar', newsMsgAr); 
+                        marqueeSpan.setAttribute('data-en', newsMsgEn); 
+                        marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr; 
+                    }
 
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime');
                     if(lastSeenTime != data.timestamp) { 
@@ -717,12 +938,19 @@
                         localStorage.setItem('daheehLastNewsTime', data.timestamp); 
                     }
                 }
-            }).catch(err => console.log('No news updates found'));
+            })
+            .catch(err => console.log('No news updates found'));
         }
 
-        function closeNewsPopup() { document.getElementById('newsPopup').style.display = 'none'; }
+        function closeNewsPopup() { 
+            document.getElementById('newsPopup').style.display = 'none'; 
+        }
 
-        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay(); checkLatestNews();
+        applyLanguage(); 
+        updatePomoDisplay(); 
+        updateCompletedCountBadge(); 
+        updateXPDisplay(); 
+        checkLatestNews();
     </script>
 </body>
 </html>
