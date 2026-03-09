@@ -730,4 +730,34 @@
                                 btnTxtEl.previousElementSibling.innerText = 'replay';
                             }
                         } else {
-                            xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسب
+                            xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`;
+                            xpColor = 'var(--text-grey)'; 
+                        }
+                    }
+
+                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
+                    const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
+                    
+                    document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p><button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
+                }
+            }, 1500);
+        }
+
+        function syncXPToCloud() {
+            const currentXP = localStorage.getItem('daheehXP') || 0;
+            const sCode = localStorage.getItem('studentCode') || '';
+            const sName = localStorage.getItem('studentName') || '';
+            if(!sCode) return;
+
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
+            
+            fetch(requestUrl)
+            .then(res => res.json())
+            .then(data => console.log('XP Saved'))
+            .catch(err => console.log('Error'));
+        }
+
+        applyLanguage(); updatePomoDisplay();
+    </script>
+</body>
+</html>
