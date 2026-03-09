@@ -636,28 +636,6 @@
         let currentQ = 0; let score = 0; let activeQuizQuestions = [];
         let currentLectureNum = ''; 
 
-        function playSuccessSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gainNode = ctx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.1);
-                
-                gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                
-                osc.connect(gainNode);
-                gainNode.connect(ctx.destination);
-                
-                osc.start();
-                osc.stop(ctx.currentTime + 0.1);
-            } catch(e) { console.log('Audio not supported'); }
-        }
-
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
 
@@ -710,7 +688,6 @@
                 el.classList.add('correct'); 
                 icon.innerText = 'check_circle'; 
                 score++; 
-                playSuccessSound(); 
             } 
             else { 
                 el.classList.add('wrong'); 
