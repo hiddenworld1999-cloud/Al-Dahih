@@ -30,6 +30,13 @@
             --bg: #121212; --card: #1E1E1E; --text: #E8EAED; --grey: #9AA0A6; --primary: #FFC800;
             --calc-bg: #2d2d2d; --calc-btn: #3e3e3e; --quiz-option-bg: #2d2d2d;
         }
+
+        body.vip-gold-mode {
+            --primary: #FFD700; --accent: #FFFFFF; --bg: #0a0a0a; --card: #171717; --text: #FFD700; --grey: #aaaaaa;
+            --calc-bg: #1a1a1a; --calc-btn: #222; --quiz-option-bg: #222;
+        }
+        body.vip-gold-mode .hero-banner { background: linear-gradient(135deg, #111 0%, #222 100%); border-bottom: 1px solid rgba(255,215,0,0.3); box-shadow: 0 15px 40px rgba(255,215,0,0.15); }
+        body.vip-gold-mode .btn-card { border: 1px solid rgba(255,215,0,0.2); box-shadow: 0 4px 15px rgba(255,215,0,0.05); }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s; }
         body { margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; user-select: none; }
@@ -52,7 +59,7 @@
         
         .container { padding: 0 20px; }
         .section-label { margin: 25px 0 15px 0; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; font-size: 1rem; border-bottom: 2px dashed rgba(0,0,0,0.1); padding-bottom: 8px; }
-        body.dark-mode .section-label { border-bottom: 2px dashed rgba(255,255,255,0.1); }
+        body.dark-mode .section-label, body.vip-gold-mode .section-label { border-bottom: 2px dashed rgba(255,255,255,0.1); }
         
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; background: var(--card); color: var(--text); text-align: start; }
         .btn-card:active { transform: scale(0.98); }
@@ -61,17 +68,18 @@
         .btn-final { border-inline-end: 5px solid #f44336; }
         
         .btn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); }
-        body.dark-mode .btn-icon { background: rgba(255,255,255,0.05); }
+        body.dark-mode .btn-icon, body.vip-gold-mode .btn-icon { background: rgba(255,255,255,0.05); }
 
         .btn-lecture-quiz { width: 100%; margin-top: 20px; padding: 15px; background: var(--accent); color: #0A2647; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; transition: 0.3s; }
         .btn-lecture-quiz:active { transform: scale(0.96); }
         
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: none; flex-direction: column; overflow: hidden; }
-        .modal-head { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
+        .modal-head { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
         .close-arrow { cursor: pointer; font-size: 28px; padding: 5px; }
         
         .lecture-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); font-weight: bold; font-size: 1.05rem; }
+        body.vip-gold-mode .lecture-item { border: 1px solid rgba(255,215,0,0.2); }
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 15px; padding: 20px; }
         .content-view h3 { color: var(--primary); border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
         
@@ -89,13 +97,13 @@
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
-        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; } 
+        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
         .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
         .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text); }
-        .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: #0A2647; }
+        .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary); }
         .calc-btn.eq { background: var(--accent); color: #0A2647; grid-column: span 2; }
         
         .pomodoro-container { position: fixed; bottom: 30px; z-index: 400; display: flex; flex-direction: column; align-items: center; right: 20px; }
@@ -106,6 +114,13 @@
         body.dark-mode .pomo-time { color: var(--primary); }
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: #0A2647; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
+
+        #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; display: none; flex-direction: column; }
+        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 10px; background: var(--card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .color-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
+        .color-btn.active { transform: scale(1.2); border-color: var(--text); }
+        #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
     </style>
 </head>
 <body>
@@ -116,11 +131,30 @@
         </div>
         <div class="header-icons">
             <span class="material-icons" onclick="toggleLanguage()" title="تغيير اللغة">language</span>
+            <span class="material-icons" onclick="openWhiteboard()" title="السبورة الذكية" style="color: var(--accent);">palette</span>
             <span class="material-icons" onclick="toggleCalculator()" title="الآلة الحاسبة">calculate</span>
             <span class="material-icons" id="musicToggle" onclick="toggleMusic()" title="الموسيقى">music_off</span>
             <span class="material-icons" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي">light_mode</span>
         </div>
     </header>
+
+    <div id="whiteboardModal" class="modal-trackable">
+        <div class="wb-header">
+            <span class="material-icons" onclick="history.back()" style="cursor:pointer; font-size:28px; color:var(--text);">close</span>
+            <span style="font-weight:bold; color:var(--primary); font-size:1.2rem;" data-ar="سبورة الشخبطة 🎨" data-en="Whiteboard 🎨">سبورة الشخبطة 🎨</span>
+            <span class="material-icons" onclick="clearWhiteboard()" style="cursor:pointer; color:#d32f2f; font-size:28px;" title="مسح الكل">delete</span>
+        </div>
+        <div class="wb-tools">
+            <button class="color-btn active" style="background:#0A2647;" onclick="setBrushColor('#0A2647', this)"></button>
+            <button class="color-btn" style="background:#FFC800;" onclick="setBrushColor('#FFC800', this)"></button>
+            <button class="color-btn" style="background:#f44336;" onclick="setBrushColor('#f44336', this)"></button>
+            <button class="color-btn" style="background:#4caf50;" onclick="setBrushColor('#4caf50', this)"></button>
+            <button class="color-btn" style="background:#ffffff; border: 1px solid #ccc; display:flex; justify-content:center; align-items:center;" onclick="setBrushColor('#ffffff', this)" title="أستيكة">
+                <span class="material-icons" style="font-size:16px; color:#ccc;">ink_eraser</span>
+            </button>
+        </div>
+        <canvas id="drawingCanvas"></canvas>
+    </div>
 
     <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
@@ -237,6 +271,10 @@
     </div>
 
     <script>
+        if(localStorage.getItem('daheehVipMode') === 'true') {
+            document.body.classList.add('vip-gold-mode');
+        }
+
         function openModalWithHistory(elementId, loadContent = false) {
             document.getElementById(elementId).style.display = 'flex';
             history.pushState({ modalOpen: elementId }, '', ''); 
@@ -252,70 +290,86 @@
             }
         });
 
-        let touchStartX = 0;
-        let touchStartY = 0;
+        const canvas = document.getElementById('drawingCanvas');
+        const ctxCanvas = canvas ? canvas.getContext('2d') : null;
+        let isDrawing = false;
+        let brushColor = '#0A2647';
 
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, {passive: true});
+        function openWhiteboard() {
+            openModalWithHistory('whiteboardModal');
+            setTimeout(resizeCanvas, 100);
+        }
 
+        function resizeCanvas() {
+            if(canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight - 130; 
+                ctxCanvas.fillStyle = "#ffffff";
+                ctxCanvas.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function setBrushColor(color, btnEl) {
+            brushColor = color;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            if(btnEl) btnEl.classList.add('active');
+        }
+
+        function clearWhiteboard() {
+            if(ctxCanvas) {
+                ctxCanvas.fillStyle = "#ffffff";
+                ctxCanvas.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        if(canvas) {
+            const startDraw = (e) => {
+                isDrawing = true;
+                ctxCanvas.beginPath();
+                ctxCanvas.moveTo(getX(e), getY(e));
+                e.preventDefault();
+            };
+            const draw = (e) => {
+                if(!isDrawing) return;
+                ctxCanvas.lineTo(getX(e), getY(e));
+                ctxCanvas.strokeStyle = brushColor;
+                ctxCanvas.lineWidth = brushColor === '#ffffff' ? 20 : 4; 
+                ctxCanvas.lineCap = 'round';
+                ctxCanvas.stroke();
+                e.preventDefault();
+            };
+            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
+
+            const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
+            const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseout', stopDraw);
+
+            canvas.addEventListener('touchstart', startDraw, {passive: false});
+            canvas.addEventListener('touchmove', draw, {passive: false});
+            canvas.addEventListener('touchend', stopDraw);
+        }
+
+        let touchStartX = 0; let touchStartY = 0;
+        document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
         document.addEventListener('touchend', e => {
-            let touchEndX = e.changedTouches[0].screenX;
-            let touchEndY = e.changedTouches[0].screenY;
-            
-            let diffX = touchStartX - touchEndX; 
-            let diffY = Math.abs(touchStartY - touchEndY); 
-
+            let touchEndX = e.changedTouches[0].screenX; let touchEndY = e.changedTouches[0].screenY;
+            let diffX = touchStartX - touchEndX; let diffY = Math.abs(touchStartY - touchEndY); 
             if (touchStartX > window.innerWidth - 80 && diffX > 60 && diffY < 50) {
-                const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable'))
-                                            .some(el => el.style.display === 'flex' || el.style.display === 'block');
-                if (isAnyModalOpen) {
-                    history.back(); 
-                } else {
-                    window.location.href = 'index.html'; 
-                }
+                const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable')).some(el => el.style.display === 'flex' || el.style.display === 'block');
+                if (isAnyModalOpen) { history.back(); } else { window.location.href = 'index.html'; }
             }
         }, {passive: true});
 
-        let pdfInitialWidth = 100;
-        let initialPinchDistance = null;
-        const pdfWrapper = document.getElementById('pdfWrapper');
-        
-        pdfWrapper.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                initialPinchDistance = Math.hypot(
-                    e.touches[0].pageX - e.touches[1].pageX,
-                    e.touches[0].pageY - e.touches[1].pageY
-                );
-                pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100;
-            }
-        });
-
-        pdfWrapper.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2 && initialPinchDistance) {
-                let currentDistance = Math.hypot(
-                    e.touches[0].pageX - e.touches[1].pageX,
-                    e.touches[0].pageY - e.touches[1].pageY
-                );
-                let scaleChange = currentDistance / initialPinchDistance;
-                let newWidth = pdfInitialWidth * scaleChange;
-                
-                if (newWidth < 100) newWidth = 100;
-                if (newWidth > 400) newWidth = 400;
-                
-                pdfWrapper.style.width = newWidth + '%';
-            }
-        });
-
-        pdfWrapper.addEventListener('touchend', (e) => {
-            if (e.touches.length < 2) {
-                initialPinchDistance = null; 
-            }
-        });
+        let pdfInitialWidth = 100; let initialPinchDistance = null; const pdfWrapper = document.getElementById('pdfWrapper');
+        pdfWrapper.addEventListener('touchstart', (e) => { if (e.touches.length === 2) { initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; } });
+        pdfWrapper.addEventListener('touchmove', (e) => { if (e.touches.length === 2 && initialPinchDistance) { let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); let scaleChange = currentDistance / initialPinchDistance; let newWidth = pdfInitialWidth * scaleChange; if (newWidth < 100) newWidth = 100; if (newWidth > 400) newWidth = 400; pdfWrapper.style.width = newWidth + '%'; } });
+        pdfWrapper.addEventListener('touchend', (e) => { if (e.touches.length < 2) { initialPinchDistance = null; } });
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
-
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
         const allCourses = {
@@ -331,80 +385,36 @@
         const course = allCourses[courseId];
         if (!course) window.location.href = 'index.html';
 
-        function getLevelName(xp) {
-            if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد';
-            if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح';
-            if (xp < 600) return currentLang === 'en' ? 'Genius' : 'عبقري';
-            return currentLang === 'en' ? 'Legend' : 'أسطورة';
-        }
-        function addXP(amount) {
-            let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0;
-            currentXP += amount;
-            localStorage.setItem('daheehXP', currentXP);
-            updateXPDisplay();
-        }
-        function updateXPDisplay() {
-            let xp = parseInt(localStorage.getItem('daheehXP')) || 0;
-            let level = getLevelName(xp);
-            if(document.getElementById('courseXP')) document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`;
-        }
+        function getLevelName(xp) { if (xp < 100) return currentLang === 'en' ? 'Beginner' : 'طالب جديد'; if (xp < 300) return currentLang === 'en' ? 'Nerd' : 'دحيح'; if (xp < 600) return currentLang === 'en' ? 'Genius' : 'عبقري'; return currentLang === 'en' ? 'Legend' : 'أسطورة'; }
+        function addXP(amount) { let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0; currentXP += amount; localStorage.setItem('daheehXP', currentXP); updateXPDisplay(); }
+        function updateXPDisplay() { let xp = parseInt(localStorage.getItem('daheehXP')) || 0; let level = getLevelName(xp); if(document.getElementById('courseXP')) document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`; }
 
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
         function applyLanguage() {
-            document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
-            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl'; document.documentElement.lang = currentLang;
             document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
             document.querySelectorAll('.close-arrow').forEach(el => { el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; });
-            if (course) {
-                document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr;
-                document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr;
-            }
+            if (course) { document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr; document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr; }
             updateXPDisplay();
         }
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
 
         function toggleDarkMode() { 
-            document.body.classList.toggle('dark-mode'); 
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('daheehDarkMode', isDark); 
-            document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
+            document.body.classList.toggle('dark-mode'); const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('daheehDarkMode', isDark); document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
             if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode';
+            
+            if(isDark) { document.body.classList.remove('vip-gold-mode'); localStorage.setItem('daheehVipMode', 'false'); }
         }
         
-        if (localStorage.getItem('daheehDarkMode') === 'true') { 
-            document.body.classList.add('dark-mode'); 
-            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode';
-        } else { 
-            document.getElementById('darkModeToggle').innerText = 'light_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode';
-        }
+        if (localStorage.getItem('daheehDarkMode') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; } 
+        else { document.getElementById('darkModeToggle').innerText = 'light_mode'; if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; }
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
-        function toggleMusic() { 
-            const btn = document.getElementById('musicToggle'); 
-            const btnPdf = document.getElementById('musicTogglePdf');
-            if (bgMusic.paused) { 
-                bgMusic.play(); 
-                btn.innerText = 'music_note'; btn.classList.add('music-active'); 
-                if(btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); }
-            } else { 
-                bgMusic.pause(); 
-                btn.innerText = 'music_off'; btn.classList.remove('music-active'); 
-                if(btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); }
-            } 
-        }
+        function toggleMusic() { const btn = document.getElementById('musicToggle'); const btnPdf = document.getElementById('musicTogglePdf'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); if(btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); } } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); if(btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); } } }
 
-        function toggleCalculator() { 
-            const m = document.getElementById('calculatorModal'); 
-            if(m.style.display === 'block' || m.style.display === 'flex') {
-                history.back(); 
-            } else {
-                openModalWithHistory('calculatorModal');
-            }
-        }
-        function appendCalc(v) { document.getElementById('calcDisplay').value += v; } 
-        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
+        function toggleCalculator() { const m = document.getElementById('calculatorModal'); if(m.style.display === 'block' || m.style.display === 'flex') { history.back(); } else { openModalWithHistory('calculatorModal'); } }
+        function appendCalc(v) { document.getElementById('calcDisplay').value += v; } function clearCalc() { document.getElementById('calcDisplay').value = ''; }
         function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
 
         let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
@@ -415,343 +425,113 @@
 
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
-            list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);">
-                                <span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span>
-                                <p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p>
-                              </div>`;
+            list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
             applyLanguage();
-
             const studentCode = localStorage.getItem('studentCode') || '';
-
-            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error === 'unauthorized') {
-                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!');
-                        localStorage.removeItem('isLoggedInDaheeh');
-                        window.location.href = 'login.html';
-                        return;
-                    }
-
-                    list.innerHTML = ''; 
-                    if (data.success && data.lectures && data.lectures.length > 0) {
-                        data.lectures.forEach((lec, index) => {
-                            const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left';
-                            const lectureNumber = index + 1; 
-                            list.innerHTML += `
-                            <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
-                                <span>${lec.name}</span>
-                                <span class="material-icons" style="color:var(--grey)">${arr}</span>
-                            </div>`;
-                        });
-                    } else {
-                        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);">
-                                            <span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span>
-                                            <p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p>
-                                          </div>`;
-                    }
-                    applyLanguage(); 
-                })
-                .catch(error => {
-                    list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="حدث خطأ في الاتصال." data-en="Connection error.">حدث خطأ في الاتصال.</p></div>`;
-                    applyLanguage();
-                });
+            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`).then(response => response.json()).then(data => {
+                if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
+                list.innerHTML = ''; 
+                if (data.success && data.lectures && data.lectures.length > 0) { data.lectures.forEach((lec, index) => { const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; const lectureNumber = index + 1; list.innerHTML += `<div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})"><span>${lec.name}</span><span class="material-icons" style="color:var(--grey)">${arr}</span></div>`; }); } 
+                else { list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; }
+                applyLanguage(); 
+            }).catch(error => { list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="حدث خطأ في الاتصال." data-en="Connection error.">حدث خطأ في الاتصال.</p></div>`; applyLanguage(); });
         }
 
         function showDynamicLecture(lectureName, fileName, num) {
-            const quizKey = `completed_quiz_${courseId}_${num}`;
-            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
-
-            let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة';
-            let btnIcon = 'quiz';
-            let btnStyle = '';
-
-            if(isAlreadyCompleted) {
-                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
-                btnIcon = 'replay';
-                btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);';
-            }
-
-            let htmlContent = `
-                <div class="content-view" style="text-align:center; padding:30px 10px;">
-                    <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
-                    <h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3>
-                    <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" 
-                       data-ar="محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه." data-en="Content available in PDF. Click to open.">
-                       محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه.
-                    </p>
-                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
-                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
-                        <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
-                    </button>
-                    <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span></button>
-                </div>`;
-            document.getElementById('contentTitle').innerText = lectureName; 
-            document.getElementById('contentBody').innerHTML = htmlContent; 
-            openModalWithHistory('contentModal');
-            applyLanguage();
+            const quizKey = `completed_quiz_${courseId}_${num}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+            let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة'; let btnIcon = 'quiz'; let btnStyle = '';
+            if(isAlreadyCompleted) { btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnIcon = 'replay'; btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; }
+            let htmlContent = `<div class="content-view" style="text-align:center; padding:30px 10px;"><span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span><h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3><p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه." data-en="Content available in PDF. Click to open.">محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه.</p><button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;"><span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span></button><button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span></button></div>`;
+            document.getElementById('contentTitle').innerText = lectureName; document.getElementById('contentBody').innerHTML = htmlContent; openModalWithHistory('contentModal'); applyLanguage();
         }
 
         function openExam(type) {
-            const body = document.getElementById('contentBody');
-            const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل';
-            const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam';
-            const title = currentLang === 'en' ? titleEn : titleAr;
-            
+            const body = document.getElementById('contentBody'); const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; const title = currentLang === 'en' ? titleEn : titleAr;
             document.getElementById('contentTitle').innerText = title;
-            
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
-            openModalWithHistory('contentModal');
-            applyLanguage();
-
+            openModalWithHistory('contentModal'); applyLanguage();
             const studentCode = localStorage.getItem('studentCode') || '';
-
-            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.error === 'unauthorized') {
-                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!');
-                        localStorage.removeItem('isLoggedInDaheeh');
-                        window.location.href = 'login.html';
-                        return;
-                    }
-
-                    if(data.success) {
-                        const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final;
-                        
-                        const quizKey = `completed_quiz_${courseId}_${type}`;
-                        const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
-
-                        let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)';
-                        let btnIcon = 'quiz';
-                        let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
-
-                        if(isAlreadyCompleted) {
-                            btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
-                            btnIcon = 'replay';
-                            btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);';
-                        }
-
-                        let pdfHtml = '';
-                        if(fileName) {
-                            pdfHtml = `
-                            <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
-                                <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
-                                <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
-                            </button>`;
-                        } else {
-                            pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`;
-                        }
-
-                        body.innerHTML = `
-                            <div class="content-view" style="text-align:center; padding:30px 10px;">
-                                <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
-                                <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
-                                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;"
-                                   data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">
-                                   اختر طريقة المراجعة المناسبة لك:
-                                </p>
-                                
-                                ${pdfHtml}
-                                
-                                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
-                                    <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
-                                </button>
-                            </div>`;
-                        applyLanguage();
-                    }
-                })
-                .catch(err => {
-                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;">
-                                        <span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span>
-                                        <h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection Error">حدث خطأ في الاتصال!</h3>
-                                      </div>`;
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`).then(res => res.json()).then(data => {
+                if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
+                if(data.success) {
+                    const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; const quizKey = `completed_quiz_${courseId}_${type}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+                    let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; let btnIcon = 'quiz'; let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+                    if(isAlreadyCompleted) { btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnIcon = 'replay'; btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; }
+                    let pdfHtml = ''; if(fileName) { pdfHtml = `<button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;"><span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span><span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span></button>`; } else { pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; }
+                    body.innerHTML = `<div class="content-view" style="text-align:center; padding:30px 10px;"><span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span><h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3><p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>${pdfHtml}<button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')"><span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span></button></div>`;
                     applyLanguage();
-                });
+                }
+            }).catch(err => { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection Error">حدث خطأ في الاتصال!</h3></div>`; applyLanguage(); });
         }
 
         function openPdfViewerInsideApp(pdfUrl) {
-            const wrapper = document.getElementById('pdfWrapper'); 
-            const watermark = document.getElementById('pdfWatermarkOverlay');
-            
-            wrapper.style.width = '100%'; 
-            wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
-            wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
-            
+            const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
+            wrapper.style.width = '100%'; wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
             if (watermark) watermark.innerHTML = ''; 
-
-            const loadingDiv = document.createElement('div'); 
-            loadingDiv.className = 'loading-msg'; 
-            loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
-            loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
-            wrapper.insertBefore(loadingDiv, watermark);
-            openModalWithHistory('pdfViewer');
-            
-            const sName = localStorage.getItem('studentName') || "Student"; 
-            const sCode = localStorage.getItem('studentCode') || "000";
-            const watermarkText = `${sName} - ${sCode}`;
-
+            const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
+            wrapper.insertBefore(loadingDiv, watermark); openModalWithHistory('pdfViewer');
+            const sName = localStorage.getItem('studentName') || "Student"; const sCode = localStorage.getItem('studentCode') || "000"; const watermarkText = `${sName} - ${sCode}`;
             pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
                 loadingDiv.remove();
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
-                        const viewport = page.getViewport({ scale: 1.5 });
-                        const canvas = document.createElement('canvas'); 
-                        canvas.style.display = 'block'; 
-                        canvas.style.margin = '0 auto 15px auto'; 
-                        canvas.style.width = '100%'; 
-                        canvas.style.borderRadius = '8px'; 
-                        canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; 
-                        canvas.style.position = 'relative'; 
-                        canvas.style.zIndex = '1';
-                        
-                        canvas.height = viewport.height; 
-                        canvas.width = viewport.width; 
-                        wrapper.insertBefore(canvas, watermark);
-                        
+                        const viewport = page.getViewport({ scale: 1.5 }); const canvas = document.createElement('canvas'); 
+                        canvas.style.display = 'block'; canvas.style.margin = '0 auto 15px auto'; canvas.style.width = '100%'; canvas.style.borderRadius = '8px'; canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; canvas.style.position = 'relative'; canvas.style.zIndex = '1';
+                        canvas.height = viewport.height; canvas.width = viewport.width; wrapper.insertBefore(canvas, watermark);
                         const ctx = canvas.getContext('2d');
-                        
                         page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
-                            ctx.save();
-                            ctx.translate(canvas.width / 2, canvas.height / 2);
-                            ctx.rotate(-Math.PI / 4);
-                            ctx.font = "bold 40px 'IBM Plex Sans Arabic', sans-serif";
-                            ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
-                            ctx.textAlign = "center";
-                            
-                            for (let x = -canvas.width; x < canvas.width * 2; x += 300) {
-                                for (let y = -canvas.height; y < canvas.height * 2; y += 300) {
-                                    ctx.fillText(watermarkText, x, y);
-                                }
-                            }
-                            ctx.restore();
+                            ctx.save(); ctx.translate(canvas.width / 2, canvas.height / 2); ctx.rotate(-Math.PI / 4); ctx.font = "bold 40px 'IBM Plex Sans Arabic', sans-serif"; ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; ctx.textAlign = "center";
+                            for (let x = -canvas.width; x < canvas.width * 2; x += 300) { for (let y = -canvas.height; y < canvas.height * 2; y += 300) { ctx.fillText(watermarkText, x, y); } } ctx.restore();
                         });
                     });
                 }
-            }).catch(e => { 
-                loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; 
-            });
+            }).catch(e => { loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; });
         }
 
-        let currentQ = 0; let score = 0; let activeQuizQuestions = [];
-        let currentLectureNum = ''; 
-
+        let currentQ = 0; let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; 
         function openQuiz(lectureNum) { 
-            currentLectureNum = lectureNum.toString(); 
-
-            const body = document.getElementById('quizBody');
+            currentLectureNum = lectureNum.toString(); const body = document.getElementById('quizBody');
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
-            openModalWithHistory('quizModal');
-            applyLanguage();
-
+            openModalWithHistory('quizModal'); applyLanguage();
             const studentCode = localStorage.getItem('studentCode') || '';
-
-            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error === 'unauthorized') {
-                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!');
-                        localStorage.removeItem('isLoggedInDaheeh');
-                        window.location.href = 'login.html';
-                        return;
-                    }
-
-                    if (data.success && data.questions && data.questions.length > 0) {
-                        activeQuizQuestions = data.questions; currentQ = 0; score = 0; showQuestion();
-                    } else {
-                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`;
-                        applyLanguage();
-                    }
-                })
-                .catch(error => {
-                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3></div>`;
-                    applyLanguage();
-                });
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`).then(response => response.json()).then(data => {
+                if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
+                if (data.success && data.questions && data.questions.length > 0) { activeQuizQuestions = data.questions; currentQ = 0; score = 0; showQuestion(); } 
+                else { body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; applyLanguage(); }
+            }).catch(error => { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3></div>`; applyLanguage(); });
         }
         
         function showQuestion() {
-            const q = activeQuizQuestions[currentQ]; const body = document.getElementById('quizBody'); let optsHtml = '';
-            const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+            const q = activeQuizQuestions[currentQ]; const body = document.getElementById('quizBody'); let optsHtml = ''; const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
             opts.forEach((opt, idx) => { optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})"><span>${opt}</span><span class="material-icons opt-icon" style="display:none;"></span></div>`; });
-            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${activeQuizQuestions.length}` : `سؤال ${currentQ + 1} من ${activeQuizQuestions.length}`;
-            const qText = currentLang === 'en' ? q.qEn : q.qAr;
+            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${activeQuizQuestions.length}` : `سؤال ${currentQ + 1} من ${activeQuizQuestions.length}`; const qText = currentLang === 'en' ? q.qEn : q.qAr;
             body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div><h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
         }
         
         function checkAnswer(el, chosen, correct) {
-            const all = document.querySelectorAll('.quiz-opt'); 
-            all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
-            const icon = el.querySelector('.opt-icon'); 
-            icon.style.display = 'block';
-            
-            if (chosen === correct) { 
-                el.classList.add('correct'); 
-                icon.innerText = 'check_circle'; 
-                score++; 
-            } 
-            else { 
-                el.classList.add('wrong'); 
-                icon.innerText = 'cancel'; 
-                all[correct].classList.add('correct'); 
-                all[correct].querySelector('.opt-icon').innerText = 'check_circle'; 
-                all[correct].querySelector('.opt-icon').style.display = 'block'; 
-                
-                if (navigator.vibrate) {
-                    navigator.vibrate([50, 50, 50]); 
-                }
-            }
-            
+            const all = document.querySelectorAll('.quiz-opt'); all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
+            const icon = el.querySelector('.opt-icon'); icon.style.display = 'block';
+            if (chosen === correct) { el.classList.add('correct'); icon.innerText = 'check_circle'; score++; } 
+            else { el.classList.add('wrong'); icon.innerText = 'cancel'; all[correct].classList.add('correct'); all[correct].querySelector('.opt-icon').innerText = 'check_circle'; all[correct].querySelector('.opt-icon').style.display = 'block'; if (navigator.vibrate) { navigator.vibrate([50, 50, 50]); } }
             setTimeout(() => {
                 currentQ++;
                 if (currentQ < activeQuizQuestions.length) { showQuestion(); } 
                 else { 
-                    const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
-                    const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
-                    let xpRewardText = '';
-                    let xpColor = '#4caf50';
-
+                    const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; let xpRewardText = ''; let xpColor = '#4caf50';
                     if(score > 0) {
-                        if (!isAlreadyCompleted) {
-                            addXP(score * 10);
-                            syncXPToCloud(); 
-                            localStorage.setItem(quizKey, 'true'); 
-                            xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`;
-                            
-                            let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`);
-                            if(btnTxtEl) {
-                                btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)';
-                                btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)';
-                                btnTxtEl.parentElement.style.color = 'var(--text-grey)';
-                                btnTxtEl.parentElement.style.boxShadow = 'none';
-                                btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)';
-                                btnTxtEl.previousElementSibling.innerText = 'replay';
-                            }
-                        } else {
-                            xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`;
-                            xpColor = 'var(--text-grey)'; 
-                        }
+                        if (!isAlreadyCompleted) { addXP(score * 10); syncXPToCloud(); localStorage.setItem(quizKey, 'true'); xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); if(btnTxtEl) { btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; btnTxtEl.parentElement.style.color = 'var(--text-grey)'; btnTxtEl.parentElement.style.boxShadow = 'none'; btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; btnTxtEl.previousElementSibling.innerText = 'replay'; } } 
+                        else { xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; xpColor = 'var(--text-grey)'; }
                     }
-
-                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية';
-                    const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
-                    
+                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
                     document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:30px;"><h2>${resTitle}</h2><h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1><p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p><button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button></div>`; 
                 }
             }, 1500);
         }
 
         function syncXPToCloud() {
-            const currentXP = localStorage.getItem('daheehXP') || 0;
-            const sCode = localStorage.getItem('studentCode') || '';
-            const sName = localStorage.getItem('studentName') || '';
-            if(!sCode) return;
-
+            const currentXP = localStorage.getItem('daheehXP') || 0; const sCode = localStorage.getItem('studentCode') || ''; const sName = localStorage.getItem('studentName') || ''; if(!sCode) return;
             const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
-            
-            fetch(requestUrl)
-            .then(res => res.json())
-            .then(data => console.log('XP Saved'))
-            .catch(err => console.log('Error'));
+            fetch(requestUrl).then(res => res.json()).then(data => console.log('XP Saved')).catch(err => console.log('Error'));
         }
 
         applyLanguage(); updatePomoDisplay();
