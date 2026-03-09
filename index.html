@@ -30,6 +30,16 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
+        body.vip-gold-mode {
+            --primary-blue: #FFD700; --primary-light: #DAA520; --accent-orange: #FFFFFF;
+            --bg-main: #0a0a0a; --bg-card: #171717; --text-main: #FFD700; --text-grey: #aaaaaa;
+            --card-shadow: 0 10px 30px rgba(255, 215, 0, 0.1); --border-color: rgba(255, 215, 0, 0.2);
+            --glass-bg: rgba(10, 10, 10, 0.9); --filter-bg: #222; --calc-bg: #1a1a1a;
+        }
+        body.vip-gold-mode .news-ticker { background: linear-gradient(90deg, #DAA520, #FFD700); }
+        body.vip-gold-mode .premium-hero { background: linear-gradient(135deg, #111 0%, #222 100%); border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 15px 40px rgba(255,215,0,0.15); }
+        body.vip-gold-mode .avatar-container { border-color: #FFD700; background: #222; }
+
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 120px; overflow-x: hidden; user-select: none; }
@@ -42,7 +52,7 @@
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .logo-img { width: 40px; height: 40px; object-fit: contain; animation: float 3s ease-in-out infinite; drop-shadow(0 2px 4px rgba(0,0,0,0.1)); } 
+        .logo-img { width: 45px; height: 45px; object-fit: contain; animation: float 3s ease-in-out infinite; drop-shadow(0 2px 4px rgba(0,0,0,0.1)); } 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         
         .header-icons { display: flex; align-items: center; gap: 15px; }
@@ -57,7 +67,6 @@
 
         .hero-wrapper { padding: 20px 20px 0; }
         .premium-hero { background: linear-gradient(135deg, #0A2647 0%, #144272 100%); border-radius: 24px; padding: 25px 20px; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(10, 38, 71, 0.2); margin-bottom: 20px; text-align: center; }
-        body.dark-mode .premium-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .hero-decor { position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .hero-decor-2 { position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(33,150,243,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
@@ -73,8 +82,7 @@
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .cat-btn { display: inline-block; padding: 10px 22px; background: var(--filter-bg); color: var(--text-grey); border-radius: 30px; margin-inline-end: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; font-family: inherit; }
         .cat-btn.active { background: var(--primary-blue); color: white; box-shadow: 0 6px 15px rgba(10, 38, 71, 0.25); transform: translateY(-2px); }
-        body.dark-mode .cat-btn.active { background: var(--accent-orange); color: #0A2647; box-shadow: 0 6px 15px rgba(255, 200, 0, 0.2); }
-
+        
         .container { padding: 0 20px; }
         .section-title { font-size: 1.2rem; font-weight: 800; margin: 10px 0 20px 0; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .section-title::before { content: ''; display: block; width: 6px; height: 22px; background: var(--accent-orange); border-radius: 4px; }
@@ -91,23 +99,17 @@
         .badge { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; width: fit-content; margin-bottom: 8px; }
         .badge-new { background: rgba(33, 150, 243, 0.1); color: #1976D2; }
         .badge-completed { background: rgba(76, 175, 80, 0.1); color: #2E7D32; display: flex; align-items: center; gap: 3px; }
-        body.dark-mode .badge-new { background: rgba(33, 150, 243, 0.2); color: #64B5F6; }
-        body.dark-mode .badge-completed { background: rgba(76, 175, 80, 0.2); color: #81C784; }
         .p-course-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; line-height: 1.4; }
         .p-course-prof { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; gap: 4px; font-weight: 500; }
 
         .bottom-nav-wrapper { position: fixed; bottom: 20px; left: 0; width: 100%; padding: 0 20px; z-index: 200; pointer-events: none; }
         .bottom-nav { pointer-events: auto; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 5px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
-        body.dark-mode .bottom-nav { border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text-grey); flex: 1; cursor: pointer; transition: 0.3s; font-weight: 600; gap: 3px; }
         .nav-item .material-icons { font-size: 24px; transition: 0.3s; }
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active .material-icons { background: rgba(10, 38, 71, 0.1); padding: 5px 15px; border-radius: 15px; transform: translateY(-3px); }
-        body.dark-mode .nav-item.active { color: var(--accent-orange); }
-        body.dark-mode .nav-item.active .material-icons { background: rgba(255, 200, 0, 0.15); }
-
+        
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
-        body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 4px solid var(--accent-orange); }
         
         .profile-stats-box { display: flex; justify-content: space-around; background: var(--bg-card); padding: 20px 10px; border-radius: 20px; margin-top: -25px; position: relative; z-index: 3; box-shadow: var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
@@ -122,7 +124,6 @@
         .settings-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         .icon-darkmode { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         .icon-support { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
-        body.dark-mode .icon-darkmode { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); }
         .settings-text { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
         
         .logout-btn-new { width: 100%; padding: 18px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: none; border-radius: 18px; font-weight: 700; font-size: 1.05rem; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
@@ -137,29 +138,36 @@
         .pomo-fab:active { transform: scale(0.9); }
         .pomo-timer { background: var(--bg-card); padding: 15px; border-radius: 20px; box-shadow: var(--card-shadow); margin-bottom: 15px; border: 2px solid var(--accent-orange); width: 200px; text-align: center; display: none; }
         
-        .calculator-modal { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 500; display: none; border: 1px solid var(--border-color); direction: ltr; }
+        .calculator-modal { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 500; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
         .calc-display { width: 100%; height: 65px; background: var(--bg-main); border: none; border-radius: 16px; font-size: 2rem; text-align: right; padding: 10px 15px; color: var(--primary-blue); font-family: monospace; margin-bottom: 15px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .calc-btn { padding: 18px 0; border: none; border-radius: 14px; font-size: 1.3rem; font-weight: bold; cursor: pointer; background: var(--bg-main); color: var(--text-main); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .calc-btn:active { transform: translateY(2px); box-shadow: none; }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
-        body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
         
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
         .btn-card:active { transform: scale(0.98); }
+
+        #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 4000; display: none; flex-direction: column; }
+        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--glass-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); }
+        .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 10px; background: var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); }
+        .color-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
+        .color-btn.active { transform: scale(1.2); border-color: var(--text-main); }
+        #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
     </style>
 </head>
 <body>
 
- <header class="app-header" id="mainHeader">
+    <header class="app-header" id="mainHeader">
         <div class="logo-text">
-            <img src="logo.png" class="logo-img" alt="لوجو">
+            <img src="logo.png" class="logo-img" alt="لوجو" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
             الدحيح
         </div>
 
         <div class="header-icons">
             <span class="material-icons" onclick="toggleLanguage()" title="تغيير اللغة">language</span>
+            <span class="material-icons" onclick="toggleWhiteboard()" title="السبورة الذكية" style="color: var(--accent-orange);">palette</span>
             <span class="material-icons" onclick="toggleCalculator()" title="الآلة الحاسبة">calculate</span>
             <span class="material-icons" id="musicToggle" onclick="toggleMusic()" title="الموسيقى">music_off</span>
             <span class="material-icons" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي">light_mode</span>
@@ -174,6 +182,25 @@
             </span>
         </marquee>
     </div>
+
+    <div id="whiteboardModal">
+        <div class="wb-header">
+            <span class="material-icons" onclick="toggleWhiteboard()" style="cursor:pointer; font-size:28px; color:var(--text-main);">close</span>
+            <span style="font-weight:bold; color:var(--primary-blue); font-size:1.2rem;" data-ar="سبورة الشخبطة 🎨" data-en="Whiteboard 🎨">سبورة الشخبطة 🎨</span>
+            <span class="material-icons" onclick="clearWhiteboard()" style="cursor:pointer; color:#d32f2f; font-size:28px;" title="مسح الكل">delete</span>
+        </div>
+        <div class="wb-tools">
+            <button class="color-btn active" style="background:#0A2647;" onclick="setBrushColor('#0A2647', this)"></button>
+            <button class="color-btn" style="background:#FFC800;" onclick="setBrushColor('#FFC800', this)"></button>
+            <button class="color-btn" style="background:#f44336;" onclick="setBrushColor('#f44336', this)"></button>
+            <button class="color-btn" style="background:#4caf50;" onclick="setBrushColor('#4caf50', this)"></button>
+            <button class="color-btn" style="background:#ffffff; border: 1px solid #ccc; display:flex; justify-content:center; align-items:center;" onclick="setBrushColor('#ffffff', this)" title="أستيكة">
+                <span class="material-icons" style="font-size:16px; color:#ccc;">ink_eraser</span>
+            </button>
+        </div>
+        <canvas id="drawingCanvas"></canvas>
+    </div>
+
     <div id="calculatorModal" class="calculator-modal">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <span style="font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 5px;"><span class="material-icons" style="font-size:20px; color:var(--accent-orange)">calculate</span> <span data-ar="آلة حاسبة" data-en="Calculator">آلة حاسبة</span></span>
@@ -188,8 +215,6 @@
             <button class="calc-btn" onclick="appendCalc('1')">1</button> <button class="calc-btn" onclick="appendCalc('2')">2</button> <button class="calc-btn" onclick="appendCalc('3')">3</button> <button class="calc-btn" onclick="appendCalc('0')">0</button>
         </div>
     </div>
-
-    <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
     <div class="pomodoro-container">
         <div id="pomodoroTimer" class="pomo-timer">
@@ -209,7 +234,6 @@
     </div>
 
     <div id="page-home" class="page-section active">
-        
         <div class="hero-wrapper">
             <div class="premium-hero">
                 <div class="hero-decor"></div>
@@ -291,6 +315,14 @@
             </button>
 
             <div class="settings-list">
+                <div class="settings-item" onclick="toggleVIPTheme()">
+                    <div class="settings-item-right">
+                        <div class="settings-icon" style="background: rgba(255, 215, 0, 0.15); color: #FFC800;"><span class="material-icons">workspace_premium</span></div>
+                        <span class="settings-text" data-ar="المظهر الذهبي (VIP) 👑" data-en="VIP Gold Theme 👑">المظهر الذهبي (VIP) 👑</span>
+                    </div>
+                    <span class="material-icons" id="vipToggleIcon" style="color: var(--text-grey);">lock</span>
+                </div>
+
                 <div class="settings-item" onclick="toggleDarkMode()">
                     <div class="settings-item-right">
                         <div class="settings-icon icon-darkmode"><span class="material-icons">dark_mode</span></div>
@@ -350,7 +382,6 @@
     </div>
 
     <script>
-        // === رابط السيرفر (تأكد إنه اللينك المحدث بتاعك) ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         const coursesData = [
@@ -383,13 +414,50 @@
             updateXPDisplay();
         }
 
+        function checkVipStatus(xp) {
+            let vipIcon = document.getElementById('vipToggleIcon');
+            if(xp >= 1000) {
+                if(localStorage.getItem('daheehVipMode') === 'true') {
+                    document.body.classList.add('vip-gold-mode');
+                    if(vipIcon) { vipIcon.innerText = 'toggle_on'; vipIcon.style.color = '#FFD700'; }
+                } else {
+                    if(vipIcon) { vipIcon.innerText = 'toggle_off'; vipIcon.style.color = 'var(--text-grey)'; }
+                }
+            } else {
+                document.body.classList.remove('vip-gold-mode');
+                localStorage.setItem('daheehVipMode', 'false');
+                if(vipIcon) { vipIcon.innerText = 'lock'; vipIcon.style.color = 'var(--text-grey)'; }
+            }
+        }
+
+        function toggleVIPTheme() {
+            let xp = parseInt(localStorage.getItem('daheehXP')) || 0;
+            if(xp >= 1000) {
+                document.body.classList.toggle('vip-gold-mode');
+                const isVip = document.body.classList.contains('vip-gold-mode');
+                localStorage.setItem('daheehVipMode', isVip);
+                let vipIcon = document.getElementById('vipToggleIcon');
+                if(vipIcon) {
+                    vipIcon.innerText = isVip ? 'toggle_on' : 'toggle_off';
+                    vipIcon.style.color = isVip ? '#FFD700' : 'var(--text-grey)';
+                }
+                if(isVip) {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('daheehDarkMode', 'false');
+                    document.getElementById('darkModeToggle').innerText = 'light_mode'; 
+                }
+            } else {
+                alert(currentLang === 'en' ? `You need 1000 XP to unlock this! Current: ${xp} XP` : `عفواً، هذا المظهر الملكي مخصص للأساطير فقط! تحتاج إلى 1000 نقطة لفتحه (نقاطك الحالية: ${xp}). استمر في الحل!`);
+            }
+        }
+
         function updateXPDisplay() {
             let xp = parseInt(localStorage.getItem('daheehXP')) || 0;
             let level = getLevelName(xp);
-            
             if(document.getElementById('heroXP')) document.getElementById('heroXP').innerText = `⭐ ${xp} XP`;
             if(document.getElementById('profileXP')) document.getElementById('profileXP').innerText = xp;
             if(document.getElementById('profileLevel')) document.getElementById('profileLevel').innerText = level;
+            checkVipStatus(xp); 
         }
 
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
@@ -411,14 +479,88 @@
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('daheehDarkMode', isDark); 
             document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
+            if(isDark) {
+                document.body.classList.remove('vip-gold-mode');
+                localStorage.setItem('daheehVipMode', 'false');
+                let xp = parseInt(localStorage.getItem('daheehXP')) || 0;
+                let vipIcon = document.getElementById('vipToggleIcon');
+                if(vipIcon) vipIcon.innerText = xp >= 1000 ? 'toggle_off' : 'lock';
+                if(vipIcon) vipIcon.style.color = 'var(--text-grey)';
+            }
         }
+        
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
             document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
         } else {
             document.getElementById('darkModeToggle').innerText = 'light_mode'; 
         }
 
-        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+        const canvas = document.getElementById('drawingCanvas');
+        const ctxCanvas = canvas ? canvas.getContext('2d') : null;
+        let isDrawing = false;
+        let brushColor = '#0A2647';
+
+        function toggleWhiteboard() {
+            const modal = document.getElementById('whiteboardModal');
+            if(modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'flex';
+                setTimeout(resizeCanvas, 100);
+            }
+        }
+
+        function resizeCanvas() {
+            if(canvas) {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight - 130;
+                ctxCanvas.fillStyle = "#ffffff";
+                ctxCanvas.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function setBrushColor(color, btnEl) {
+            brushColor = color;
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+            if(btnEl) btnEl.classList.add('active');
+        }
+
+        function clearWhiteboard() {
+            if(ctxCanvas) {
+                ctxCanvas.fillStyle = "#ffffff";
+                ctxCanvas.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        if(canvas) {
+            const startDraw = (e) => {
+                isDrawing = true;
+                ctxCanvas.beginPath();
+                ctxCanvas.moveTo(getX(e), getY(e));
+                e.preventDefault();
+            };
+            const draw = (e) => {
+                if(!isDrawing) return;
+                ctxCanvas.lineTo(getX(e), getY(e));
+                ctxCanvas.strokeStyle = brushColor;
+                ctxCanvas.lineWidth = brushColor === '#ffffff' ? 20 : 4; 
+                ctxCanvas.lineCap = 'round';
+                ctxCanvas.stroke();
+                e.preventDefault();
+            };
+            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
+            const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
+            const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseout', stopDraw);
+            canvas.addEventListener('touchstart', startDraw, {passive: false});
+            canvas.addEventListener('touchmove', draw, {passive: false});
+            canvas.addEventListener('touchend', stopDraw);
+        }
+
+        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
         function appendCalc(v) { document.getElementById('calcDisplay').value += v; }
         function clearCalc() { document.getElementById('calcDisplay').value = ''; }
         function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
@@ -426,11 +568,9 @@
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         function toggleMusic() { const btn = document.getElementById('musicToggle'); if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } }
 
-        // === الكشكول السحابي ===
         const notebookInput = document.getElementById('studentNotebook'); 
         const saveIndicator = document.getElementById('saveIndicator'); 
         let typingTimer;
-
         const studentCode = localStorage.getItem('studentCode') || '';
         notebookInput.placeholder = currentLang === 'en' ? 'Loading your notes from cloud...' : 'جاري جلب ملاحظاتك من السحابة...';
         notebookInput.disabled = true;
@@ -440,42 +580,28 @@
             .then(data => {
                 notebookInput.disabled = false;
                 notebookInput.placeholder = currentLang === 'en' ? 'Write important points here to review before exams...' : 'دون أهم النقاط هنا لتراجعها قبل الامتحان...';
-                
                 if (data.error === 'unauthorized') { safeLogout(); return; }
-                
                 if (data.success && data.notes) {
                     notebookInput.value = data.notes;
                     localStorage.setItem('daheehNotebook', data.notes);
                 } else if (localStorage.getItem('daheehNotebook')) {
                     notebookInput.value = localStorage.getItem('daheehNotebook');
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 notebookInput.disabled = false;
                 if (localStorage.getItem('daheehNotebook')) notebookInput.value = localStorage.getItem('daheehNotebook');
             });
 
         notebookInput.addEventListener('input', function() { 
             clearTimeout(typingTimer); 
-            
             document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
             document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
             saveIndicator.style.color = '#ff9800'; 
             saveIndicator.style.display = 'flex'; 
-
             localStorage.setItem('daheehNotebook', notebookInput.value); 
-            
             typingTimer = setTimeout(() => { 
-                const formData = new URLSearchParams();
-                formData.append('action', 'saveNotebook');
-                formData.append('code', studentCode);
-                formData.append('notes', notebookInput.value);
-
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                })
+                const formData = new URLSearchParams(); formData.append('action', 'saveNotebook'); formData.append('code', studentCode); formData.append('notes', notebookInput.value);
+                fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(res => res.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { safeLogout(); return; }
@@ -485,8 +611,7 @@
                         document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved to Cloud' : 'تم الحفظ سحابياً';
                         setTimeout(() => { saveIndicator.style.display = 'none'; }, 2500); 
                     }
-                })
-                .catch(err => {
+                }).catch(err => {
                     saveIndicator.style.color = '#d32f2f'; 
                     document.querySelector('#saveIndicator .material-icons').innerText = 'cloud_off';
                     document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saved locally (Offline)' : 'تم الحفظ محلياً (بدون إنترنت)';
@@ -495,54 +620,36 @@
             }, 1500); 
         });
 
-        // === لوحة الشرف ===
         function openLeaderboard() {
             const modal = document.getElementById('leaderboardModal');
             const body = document.getElementById('leaderboardBody');
             modal.style.display = 'block';
-            
             body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--primary-blue);"><span class="material-icons" style="font-size:60px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري ترتيب الأوائل..." data-en="Loading Leaderboard...">جاري ترتيب الأوائل...</h3></div>`;
             applyLanguage();
-            
             fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${studentCode}`)
             .then(res => res.json())
             .then(data => {
                 if(data.error === 'unauthorized') { safeLogout(); return; }
                 if(data.success && data.leaderboard.length > 0) {
                     let html = `<div style="text-align:center; margin-bottom:25px;"><h2 style="color:var(--primary-blue); font-weight:900;" data-ar="أبطال المنصة 🚀" data-en="Platform Heroes 🚀">أبطال المنصة 🚀</h2><p style="color:var(--text-grey); font-size:0.9rem;" data-ar="أعلى 10 طلاب جمعوا نقاط من الكويزات" data-en="Top 10 students from quizzes">أعلى 10 طلاب جمعوا نقاط من الكويزات</p></div>`;
-                    
                     data.leaderboard.forEach((student, index) => {
-                        let medal = '';
-                        let bgStyle = 'background:var(--bg-card);';
+                        let medal = ''; let bgStyle = 'background:var(--bg-card);';
                         if(index === 0) { medal = '🥇'; bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; }
-                        else if(index === 1) medal = '🥈';
-                        else if(index === 2) medal = '🥉';
+                        else if(index === 1) medal = '🥈'; else if(index === 2) medal = '🥉';
                         else medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
-                        
                         if (student.name === localStorage.getItem('studentName')) bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
-
-                        html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}">
-                            <div style="display:flex; align-items:center; gap:12px;">
-                                <span style="font-size:1.6rem;">${medal}</span>
-                                <span style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">${student.name}</span>
-                            </div>
-                            <div style="font-weight:900; color:#0A2647; background:var(--accent-orange); padding:6px 12px; border-radius:12px; font-size:0.95rem;">⭐ ${student.xp}</div>
-                        </div>`;
+                        html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}"><div style="display:flex; align-items:center; gap:12px;"><span style="font-size:1.6rem;">${medal}</span><span style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">${student.name}</span></div><div style="font-weight:900; color:#0A2647; background:var(--accent-orange); padding:6px 12px; border-radius:12px; font-size:0.95rem;">⭐ ${student.xp}</div></div>`;
                     });
-                    body.innerHTML = html;
-                    applyLanguage();
+                    body.innerHTML = html; applyLanguage();
                 } else {
                     body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:60px; opacity:0.3; margin-bottom:15px;">emoji_events</span><h3 data-ar="لا يوجد بيانات حتى الآن" data-en="No data yet">لا يوجد بيانات حتى الآن</h3><p data-ar="حل كويزات عشان تكون أول واحد هنا!" data-en="Solve quizzes to be the first here!">حل كويزات عشان تكون أول واحد هنا!</p></div>`;
                     applyLanguage();
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:#d32f2f;"><span class="material-icons" style="font-size:60px; margin-bottom:15px;">wifi_off</span><h3 data-ar="خطأ في الاتصال" data-en="Connection error">خطأ في الاتصال</h3></div>`;
                 applyLanguage();
             });
         }
-        
         function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
 
         let activeFilter = 'all';
@@ -559,30 +666,14 @@
                 const badgeClass = isCompleted ? 'badge-completed' : 'badge-new';
                 const iconHtml = isCompleted ? '<span class="material-icons" style="font-size:12px;">done_all</span>' : '';
                 const animDelay = index * 0.1;
-                
-                container.innerHTML += `
-                <div class="premium-course-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;" onclick="window.location.href='course.html?id=${course.id}'">
-                    <div class="card-img-wrapper">
-                        <img src="${course.img}" class="p-course-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%23eee\\'/><text x=\\'50\\' y=\\'50\\' font-family=\\'Arial\\' font-size=\\'14\\' fill=\\'%23999\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'>صورة</text></svg>'">
-                        <div class="play-overlay"><span class="material-icons">play_arrow</span></div>
-                    </div>
-                    <div class="p-course-info">
-                        <span class="badge ${badgeClass}">${iconHtml} ${compText}</span>
-                        <h4 class="p-course-title">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4>
-                        <p class="p-course-prof"><span class="material-icons" style="font-size:16px;">school</span> ${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p>
-                    </div>
-                </div>`;
+                container.innerHTML += `<div class="premium-course-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;" onclick="window.location.href='course.html?id=${course.id}'"><div class="card-img-wrapper"><img src="${course.img}" class="p-course-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%23eee\\'/><text x=\\'50\\' y=\\'50\\' font-family=\\'Arial\\' font-size=\\'14\\' fill=\\'%23999\\' text-anchor=\\'middle\\' dominant-baseline=\\'middle\\'>صورة</text></svg>'"><div class="play-overlay"><span class="material-icons">play_arrow</span></div></div><div class="p-course-info"><span class="badge ${badgeClass}">${iconHtml} ${compText}</span><h4 class="p-course-title">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4><p class="p-course-prof"><span class="material-icons" style="font-size:16px;">school</span> ${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p></div></div>`;
             });
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); const baseData = activeFilter === 'all' ? coursesData : coursesData.filter(c => c.category === activeFilter); renderCourses(baseData.filter(c => c.titleAr.toLowerCase().includes(term) || c.titleEn.toLowerCase().includes(term))); });
 
         function switchTab(tabName, element) { document.querySelectorAll('.page-section').forEach(p => { p.classList.remove('active'); }); document.getElementById('page-' + tabName).classList.add('active'); if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); } if(tabName === 'profile') updateCompletedCountBadge(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        
-        function safeLogout() { 
-            localStorage.removeItem('isLoggedInDaheeh'); 
-            window.location.href = 'login.html'; 
-        }
+        function safeLogout() { localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; }
 
         let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
         function updatePomoDisplay() { let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); }
@@ -590,40 +681,21 @@
         function startPomodoro() { if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } else { pomoInterval = setInterval(() => { if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } }, 1000); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // === نظام الإشعارات الذكي (شامل المحاضرات والامتحانات) ===
         function checkLatestNews() {
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${localStorage.getItem('studentCode')}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
-                    let courseTitleAr = "مادة جديدة";
-                    let courseTitleEn = "New Course";
+                    let courseTitleAr = "مادة جديدة"; let courseTitleEn = "New Course";
                     const courseObj = coursesData.find(c => c.id == data.courseId);
-                    if(courseObj) {
-                        courseTitleAr = courseObj.titleAr;
-                        courseTitleEn = courseObj.titleEn;
-                    }
-
-                    let newsMsgAr = "";
-                    let newsMsgEn = "";
-
-                    if (data.type === 'lecture') {
-                        newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`;
-                        newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`;
-                    } else if (data.type === 'midterm') {
-                        newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`;
-                        newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`;
-                    } else if (data.type === 'final') {
-                        newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`;
-                        newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`;
-                    }
+                    if(courseObj) { courseTitleAr = courseObj.titleAr; courseTitleEn = courseObj.titleEn; }
+                    let newsMsgAr = ""; let newsMsgEn = "";
+                    if (data.type === 'lecture') { newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`; newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`; } 
+                    else if (data.type === 'midterm') { newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`; newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`; } 
+                    else if (data.type === 'final') { newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`; newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`; }
 
                     const marqueeSpan = document.querySelector('.news-ticker marquee span');
-                    if (marqueeSpan) {
-                        marqueeSpan.setAttribute('data-ar', newsMsgAr);
-                        marqueeSpan.setAttribute('data-en', newsMsgEn);
-                        marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr;
-                    }
+                    if (marqueeSpan) { marqueeSpan.setAttribute('data-ar', newsMsgAr); marqueeSpan.setAttribute('data-en', newsMsgEn); marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr; }
 
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime');
                     if(lastSeenTime != data.timestamp) { 
@@ -632,15 +704,12 @@
                         localStorage.setItem('daheehLastNewsTime', data.timestamp); 
                     }
                 }
-            })
-            .catch(err => console.log('No news updates found'));
+            }).catch(err => console.log('No news updates found'));
         }
 
         function closeNewsPopup() { document.getElementById('newsPopup').style.display = 'none'; }
 
-        // تهيئة الصفحة
-        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay();
-        checkLatestNews();
+        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay(); checkLatestNews();
     </script>
 </body>
 </html>
