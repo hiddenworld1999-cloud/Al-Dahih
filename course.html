@@ -31,6 +31,7 @@
             --calc-bg: #2d2d2d; --calc-btn: #3e3e3e; --quiz-option-bg: #2d2d2d;
         }
 
+        /* === الثيم الذهبي السري الملكي (VIP Mode) === */
         body.vip-gold-mode {
             --primary: #FFD700; --accent: #FFFFFF; --bg: #0a0a0a; --card: #171717; --text: #FFD700; --grey: #aaaaaa;
             --calc-bg: #1a1a1a; --calc-btn: #222; --quiz-option-bg: #222;
@@ -115,6 +116,7 @@
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
         .pomo-controls button { background: #0A2647; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
 
+        /* === ستايلات سبورة الشخبطة === */
         #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; display: none; flex-direction: column; }
         .wb-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 10px; background: var(--card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
@@ -271,6 +273,7 @@
     </div>
 
     <script>
+        // === استرجاع حالة المظهر الذهبي عند فتح المادة ===
         if(localStorage.getItem('daheehVipMode') === 'true') {
             document.body.classList.add('vip-gold-mode');
         }
@@ -290,6 +293,7 @@
             }
         });
 
+        // === لوجيك سبورة الشخبطة (مربوطة بزرار الرجوع) 🎨 ===
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
