@@ -2,10 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
     <script>
-        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') { window.location.href = 'login.html'; }
+        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') { 
+            window.location.href = 'login.html'; 
+        }
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { alert('عذراً، هذا المحتوى محمي.'); e.preventDefault(); }
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { 
+                alert('عذراً، هذا المحتوى محمي.'); 
+                e.preventDefault(); 
+            }
         });
     </script>
     <meta charset="UTF-8">
@@ -31,7 +36,6 @@
             --calc-bg: #2d2d2d; --calc-btn: #3e3e3e; --quiz-option-bg: #2d2d2d;
         }
 
-        /* === ستايلات الثيم الذهبي السري === */
         body.vip-gold-mode {
             --primary: #FFD700; --accent: #FFFFFF; --bg: #0a0a0a; --card: #171717; --text: #FFD700; --grey: #aaaaaa;
             --calc-bg: #1a1a1a; --calc-btn: #222; --quiz-option-bg: #222;
@@ -98,7 +102,7 @@
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
-        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; } 
+        .calculator-modal { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
         .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
         .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
@@ -462,6 +466,24 @@
             if(document.getElementById('courseXP')) {
                 document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`; 
             }
+        }
+
+        // === دالة المزامنة من جوجل شيت (السحب من السيرفر عند الفتح) ===
+        function fetchXPFromSheet() {
+            const sCode = localStorage.getItem('studentCode');
+            if(!sCode) return;
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.success && data.leaderboard) {
+                    const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
+                    if(myRecord && myRecord.xp !== undefined) {
+                        localStorage.setItem('daheehXP', myRecord.xp);
+                        updateXPDisplay();
+                    }
+                }
+            })
+            .catch(err => console.log('Syncing XP...'));
         }
 
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
@@ -958,6 +980,7 @@
 
         applyLanguage(); 
         updatePomoDisplay();
+        fetchXPFromSheet(); // جلب النقاط من جوجل شيت عند فتح المادة
     </script>
 </body>
 </html>
