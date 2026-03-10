@@ -68,6 +68,7 @@
 
         .hero-wrapper { padding: 20px 20px 0; }
         .premium-hero { background: linear-gradient(135deg, #0A2647 0%, #144272 100%); border-radius: 24px; padding: 25px 20px; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(10, 38, 71, 0.2); margin-bottom: 20px; text-align: center; }
+        body.dark-mode .premium-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .hero-decor { position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .hero-decor-2 { position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(33,150,243,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
@@ -83,7 +84,8 @@
         .categories-wrapper::-webkit-scrollbar { display: none; }
         .cat-btn { display: inline-block; padding: 10px 22px; background: var(--filter-bg); color: var(--text-grey); border-radius: 30px; margin-inline-end: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; font-family: inherit; }
         .cat-btn.active { background: var(--primary-blue); color: white; box-shadow: 0 6px 15px rgba(10, 38, 71, 0.25); transform: translateY(-2px); }
-        
+        body.dark-mode .cat-btn.active { background: var(--accent-orange); color: #0A2647; box-shadow: 0 6px 15px rgba(255, 200, 0, 0.2); }
+
         .container { padding: 0 20px; }
         .section-title { font-size: 1.2rem; font-weight: 800; margin: 10px 0 20px 0; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .section-title::before { content: ''; display: block; width: 6px; height: 22px; background: var(--accent-orange); border-radius: 4px; }
@@ -100,17 +102,23 @@
         .badge { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; width: fit-content; margin-bottom: 8px; }
         .badge-new { background: rgba(33, 150, 243, 0.1); color: #1976D2; }
         .badge-completed { background: rgba(76, 175, 80, 0.1); color: #2E7D32; display: flex; align-items: center; gap: 3px; }
+        body.dark-mode .badge-new { background: rgba(33, 150, 243, 0.2); color: #64B5F6; }
+        body.dark-mode .badge-completed { background: rgba(76, 175, 80, 0.2); color: #81C784; }
         .p-course-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; line-height: 1.4; }
         .p-course-prof { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; gap: 4px; font-weight: 500; }
 
         .bottom-nav-wrapper { position: fixed; bottom: 20px; left: 0; width: 100%; padding: 0 20px; z-index: 200; pointer-events: none; }
         .bottom-nav { pointer-events: auto; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 5px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
+        body.dark-mode .bottom-nav { border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text-grey); flex: 1; cursor: pointer; transition: 0.3s; font-weight: 600; gap: 3px; }
         .nav-item .material-icons { font-size: 24px; transition: 0.3s; }
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active .material-icons { background: rgba(10, 38, 71, 0.1); padding: 5px 15px; border-radius: 15px; transform: translateY(-3px); }
-        
+        body.dark-mode .nav-item.active { color: var(--accent-orange); }
+        body.dark-mode .nav-item.active .material-icons { background: rgba(255, 200, 0, 0.15); }
+
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
+        body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 4px solid var(--accent-orange); }
         
         .profile-stats-box { display: flex; justify-content: space-around; background: var(--bg-card); padding: 20px 10px; border-radius: 20px; margin-top: -25px; position: relative; z-index: 3; box-shadow: var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
@@ -125,6 +133,7 @@
         .settings-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         .icon-darkmode { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         .icon-support { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
+        body.dark-mode .icon-darkmode { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); }
         .settings-text { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
         
         .logout-btn-new { width: 100%; padding: 18px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: none; border-radius: 18px; font-weight: 700; font-size: 1.05rem; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
@@ -145,6 +154,7 @@
         .calc-btn { padding: 18px 0; border: none; border-radius: 14px; font-size: 1.3rem; font-weight: bold; cursor: pointer; background: var(--bg-main); color: var(--text-main); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .calc-btn:active { transform: translateY(2px); box-shadow: none; }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
+        body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
         
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
@@ -380,7 +390,7 @@
     <div id="newsPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
         <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; box-shadow:0 15px 35px rgba(0,0,0,0.3); border: 1px solid var(--border-color); animation: slideUpFade 0.4s ease forwards;">
             <span class="material-icons" style="font-size:60px; color:var(--accent-orange); margin-bottom:15px;">campaign</span>
-            <h3 style="color:var(--primary-blue); font-weight:900; margin-bottom:10px;" data-ar="خبر عاجل 🚀" data-en="Breaking News 🚀">خبر عاجل 🚀</h3>
+            <h3 style="color:var(--primary-blue); font-weight:900; margin-bottom:10px;" data-ar="إشعار 🚀" data-en="Notification 🚀">إشعار 🚀</h3>
             <p id="newsPopupText" style="color:var(--text-main); line-height:1.6; margin-bottom:20px; font-weight:600; font-size:1.05rem;"></p>
             <button onclick="closeNewsPopup()" class="btn-card" style="justify-content:center; background:var(--primary-blue); color:white; border:none; margin:0;">
                 <span data-ar="تمام، فهمت" data-en="Got it!">تمام، فهمت</span>
@@ -433,21 +443,57 @@
             return currentLang === 'en' ? 'Legend' : 'أسطورة';
         }
 
+        // === دالة المزامنة مع جوجل شيت (الرفع للسيرفر) ===
+        function syncXPToCloud() {
+            const currentXP = localStorage.getItem('daheehXP') || 0; 
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            const sName = localStorage.getItem('studentName') || ''; 
+            if(!sCode) return;
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
+            fetch(requestUrl).then(res => res.json()).then(data => console.log('XP Saved')).catch(err => console.log('Error'));
+        }
+
+        // === دالة المزامنة من جوجل شيت (السحب من السيرفر عند الفتح) ===
+        function fetchXPFromSheet() {
+            const sCode = localStorage.getItem('studentCode');
+            if(!sCode) return;
+            // بنحاول نسحب بيانات الطالب من الشيت باستخدام action=getStudentXP أو action=login لو متاح
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.success && data.leaderboard) {
+                    // ندور على الطالب الحالي في لوحة الشرف ونحدث نقاطه
+                    const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
+                    if(myRecord && myRecord.xp !== undefined) {
+                        localStorage.setItem('daheehXP', myRecord.xp);
+                        updateXPDisplay();
+                    }
+                }
+            })
+            .catch(err => console.log('Syncing XP...'));
+        }
+
         function addXP(amount) {
             let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0;
             currentXP += amount;
             localStorage.setItem('daheehXP', currentXP);
             updateXPDisplay();
+            syncXPToCloud();
         }
 
-        // === الشفرة السرية الخاصة بالأدمن للتجربة ===
+        // === الشفرة السرية الخاصة بالأدمن للتجربة (بدون Alert) ===
         let adminClicks = 0;
         function adminCheat() {
             adminClicks++;
             if (adminClicks === 5) {
                 localStorage.setItem('daheehXP', '1500');
                 updateXPDisplay();
-                alert('أهلاً بك يا هندسة! تم تفعيل وضع الأدمن وإضافة 1500 نقطة للتجربة 👑');
+                syncXPToCloud();
+                
+                // إظهار النافذة الشيك بدل الـ Alert
+                document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Admin Mode Activated! 1500 XP added 👑' : 'أهلاً بك يا هندسة! تم تفعيل وضع الأدمن وإضافة 1500 نقطة للتجربة 👑';
+                document.getElementById('newsPopup').style.display = 'flex';
+                
                 adminClicks = 0; 
             }
             setTimeout(() => { adminClicks = 0; }, 2000);
@@ -982,6 +1028,7 @@
         updateCompletedCountBadge(); 
         updateXPDisplay(); 
         checkLatestNews();
+        fetchXPFromSheet(); // جلب النقاط من جوجل شيت عند فتح التطبيق
     </script>
 </body>
 </html>
