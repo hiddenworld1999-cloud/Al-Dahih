@@ -162,8 +162,8 @@
 <body>
 
     <header class="app-header" id="mainHeader">
-        <div class="logo-text">
-            <img src="logo.png" class="logo-img" alt="لوجو">
+        <div class="logo-text" onclick="adminCheat()" style="cursor: pointer;">
+            <img src="logo.png" class="logo-img" alt="لوجو" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
             الدحيح
         </div>
 
@@ -406,7 +406,7 @@
     </div>
 
     <script>
-        // === رابط السيرفر (تأكد إنه اللينك المحدث بتاعك) ===
+        // === رابط السيرفر ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
 
         const coursesData = [
@@ -438,6 +438,19 @@
             currentXP += amount;
             localStorage.setItem('daheehXP', currentXP);
             updateXPDisplay();
+        }
+
+        // === الشفرة السرية الخاصة بالأدمن للتجربة ===
+        let adminClicks = 0;
+        function adminCheat() {
+            adminClicks++;
+            if (adminClicks === 5) {
+                localStorage.setItem('daheehXP', '1500');
+                updateXPDisplay();
+                alert('أهلاً بك يا هندسة! تم تفعيل وضع الأدمن وإضافة 1500 نقطة للتجربة 👑');
+                adminClicks = 0; 
+            }
+            setTimeout(() => { adminClicks = 0; }, 2000);
         }
 
         // === دوال المظهر الذهبي (VIP Theme) ===
@@ -477,7 +490,6 @@
                     document.getElementById('darkModeToggle').innerText = 'light_mode'; 
                 }
             } else {
-                // إظهار الرسالة المنبثقة بدلاً من الـ alert العادي
                 document.getElementById('vipCurrentXp').innerText = xp;
                 document.getElementById('vipLockedText').innerText = currentLang === 'en' ? "This royal theme is reserved for legends! Solve more quizzes to unlock it." : "هذا المظهر الملكي مخصص للأساطير فقط! استمر في حل الكويزات لفتحه.";
                 document.getElementById('vipLockedModal').style.display = 'flex';
