@@ -1067,7 +1067,8 @@
         function submitFeedback() {
             const text = document.getElementById('feedbackText').value.trim();
             if(!text) {
-                alert(currentLang === 'en' ? 'Please write your suggestion first!' : 'يرجى كتابة مقترحك أولاً!');
+                document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Please write your suggestion first!' : 'يرجى كتابة مقترحك أولاً!';
+                document.getElementById('newsPopup').style.display = 'flex';
                 return;
             }
 
