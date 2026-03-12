@@ -638,12 +638,16 @@
             updatePomoDisplay(); 
         }
 
+        // ==========================================
+        // 1. دالة تحميل المحاضرات (أونلاين + أوفلاين)
+        // ==========================================
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
             list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
             applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || '';
+            const cacheKey = `daheeh_lectures_cache_${courseId}`; 
             
             fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
                 .then(response => response.json())
@@ -654,28 +658,39 @@
                         window.location.href = 'login.html'; 
                         return; 
                     }
-                    
-                    list.innerHTML = ''; 
-                    
-                    if (data.success && data.lectures && data.lectures.length > 0) { 
-                        data.lectures.forEach((lec, index) => { 
-                            const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; 
-                            const lectureNumber = index + 1; 
-                            list.innerHTML += `
-                            <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
-                                <span>${lec.name}</span>
-                                <span class="material-icons" style="color:var(--grey)">${arr}</span>
-                            </div>`; 
-                        }); 
-                    } else { 
-                        list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; 
+                    if (data.success && data.lectures) {
+                        localStorage.setItem(cacheKey, JSON.stringify(data));
                     }
-                    applyLanguage(); 
+                    renderLectures(data);
                 })
                 .catch(error => { 
-                    list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="حدث خطأ في الاتصال." data-en="Connection error.">حدث خطأ في الاتصال.</p></div>`; 
-                    applyLanguage(); 
+                    const cachedData = localStorage.getItem(cacheKey);
+                    if (cachedData) {
+                        renderLectures(JSON.parse(cachedData));
+                    } else {
+                        list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</p></div>`; 
+                        applyLanguage(); 
+                    }
                 });
+        }
+
+        function renderLectures(data) {
+            const list = document.getElementById('summaryList');
+            list.innerHTML = ''; 
+            if (data.success && data.lectures && data.lectures.length > 0) { 
+                data.lectures.forEach((lec, index) => { 
+                    const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; 
+                    const lectureNumber = index + 1; 
+                    list.innerHTML += `
+                    <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
+                        <span>${lec.name}</span>
+                        <span class="material-icons" style="color:var(--grey)">${arr}</span>
+                    </div>`; 
+                }); 
+            } else { 
+                list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; 
+            }
+            applyLanguage();
         }
 
         function showDynamicLecture(lectureName, fileName, num) {
@@ -712,6 +727,9 @@
             applyLanguage();
         }
 
+        // ==========================================
+        // 2. دالة تحميل الامتحانات (أونلاين + أوفلاين)
+        // ==========================================
         function openExam(type) {
             const body = document.getElementById('contentBody'); 
             const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
@@ -719,66 +737,76 @@
             const title = currentLang === 'en' ? titleEn : titleAr;
             
             document.getElementById('contentTitle').innerText = title;
-            
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
             openModalWithHistory('contentModal'); 
             applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || '';
+            const cacheKey = `daheeh_exams_cache_${courseId}`; 
             
             fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { 
-                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
                         localStorage.removeItem('isLoggedInDaheeh'); 
                         window.location.href = 'login.html'; 
                         return; 
                     }
-                    
                     if(data.success) {
-                        const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
-                        const quizKey = `completed_quiz_${courseId}_${type}`; 
-                        const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
-                        
-                        let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
-                        let btnIcon = 'quiz'; 
-                        let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
-                        
-                        if(isAlreadyCompleted) { 
-                            btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
-                            btnIcon = 'replay'; 
-                            btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
-                        }
-                        
-                        let pdfHtml = ''; 
-                        if(fileName) { 
-                            pdfHtml = `
-                            <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
-                                <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
-                                <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
-                            </button>`; 
-                        } else { 
-                            pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; 
-                        }
-                        
-                        body.innerHTML = `
-                        <div class="content-view" style="text-align:center; padding:30px 10px;">
-                            <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
-                            <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
-                            <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>
-                            ${pdfHtml}
-                            <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
-                                <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
-                            </button>
-                        </div>`;
-                        applyLanguage();
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderExams(data, type, title);
                     }
                 })
                 .catch(err => { 
-                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection Error">حدث خطأ في الاتصال!</h3></div>`; 
-                    applyLanguage(); 
+                    const cachedData = localStorage.getItem(cacheKey);
+                    if (cachedData) {
+                        renderExams(JSON.parse(cachedData), type, title);
+                    } else {
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3></div>`; 
+                        applyLanguage(); 
+                    }
                 });
+        }
+
+        function renderExams(data, type, title) {
+            const body = document.getElementById('contentBody');
+            const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
+            const quizKey = `completed_quiz_${courseId}_${type}`; 
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+            
+            let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
+            let btnIcon = 'quiz'; 
+            let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+            
+            if(isAlreadyCompleted) { 
+                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                btnIcon = 'replay'; 
+                btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
+            }
+            
+            let pdfHtml = ''; 
+            if(fileName) { 
+                pdfHtml = `
+                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+                    <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
+                    <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
+                </button>`; 
+            } else { 
+                pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; 
+            }
+            
+            body.innerHTML = `
+            <div class="content-view" style="text-align:center; padding:30px 10px;">
+                <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
+                <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
+                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>
+                ${pdfHtml}
+                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
+                    <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                </button>
+            </div>`;
+            applyLanguage();
         }
 
         function openPdfViewerInsideApp(pdfUrl) {
@@ -829,12 +857,10 @@
                             ctx.translate(canvas.width / 2, canvas.height / 2); 
                             ctx.rotate(-Math.PI / 4); 
                             
-                            // 1. تصغير الخط شوية عشان الاسم الطويل يكون متناسق
                             ctx.font = "bold 28px 'IBM Plex Sans Arabic', sans-serif"; 
                             ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
                             ctx.textAlign = "center";
                             
-                            // 2. توسيع المسافات (550 بالعرض و 350 بالطول) عشان ميحصلش تداخل
                             for (let x = -canvas.width; x < canvas.width * 2; x += 550) { 
                                 for (let y = -canvas.height; y < canvas.height * 2; y += 350) { 
                                     ctx.fillText(watermarkText, x, y); 
@@ -854,6 +880,9 @@
         let activeQuizQuestions = []; 
         let currentLectureNum = ''; 
         
+        // ==========================================
+        // 3. دالة تحميل أسئلة الاختبار (أونلاين + أوفلاين)
+        // ==========================================
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
             const body = document.getElementById('quizBody');
@@ -863,30 +892,44 @@
             applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || '';
+            const cacheKey = `daheeh_quiz_cache_${courseId}_${currentLectureNum}`; 
             
             fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { 
-                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
                         localStorage.removeItem('isLoggedInDaheeh'); 
                         window.location.href = 'login.html'; 
                         return; 
                     }
-                    if (data.success && data.questions && data.questions.length > 0) { 
-                        activeQuizQuestions = data.questions; 
-                        currentQ = 0; 
-                        score = 0; 
-                        showQuestion(); 
-                    } else { 
-                        body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; 
-                        applyLanguage(); 
+                    if (data.success && data.questions) {
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderQuizData(data);
                     }
                 })
                 .catch(error => { 
-                    body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="حدث خطأ في الاتصال!" data-en="Connection error!">حدث خطأ في الاتصال!</h3></div>`; 
-                    applyLanguage(); 
+                    const cachedData = localStorage.getItem(cacheKey);
+                    if (cachedData) {
+                        renderQuizData(JSON.parse(cachedData));
+                    } else {
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لتحميل الأسئلة لأول مرة!" data-en="Internet needed for first time load!">تحتاج للإنترنت لتحميل الأسئلة لأول مرة!</h3></div>`; 
+                        applyLanguage(); 
+                    }
                 });
+        }
+
+        function renderQuizData(data) {
+            const body = document.getElementById('quizBody');
+            if (data.questions && data.questions.length > 0) { 
+                activeQuizQuestions = data.questions; 
+                currentQ = 0; 
+                score = 0; 
+                showQuestion(); 
+            } else { 
+                body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; 
+                applyLanguage(); 
+            }
         }
         
         function showQuestion() {
