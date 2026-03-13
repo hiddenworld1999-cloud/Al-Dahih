@@ -12,7 +12,7 @@
         });
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تطبيق الدحيح - الرئيسية</title>
     
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -54,7 +54,7 @@
 
         .xp-badge { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); padding: 4px 10px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; box-shadow: 0 2px 8px rgba(255,200,0,0.2); }
 
-        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
+        .app-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); } 
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
         .logo-img { width: 45px; height: 45px; object-fit: contain; animation: float 3s ease-in-out infinite; drop-shadow(0 2px 4px rgba(0,0,0,0.1)); } 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
