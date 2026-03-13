@@ -12,7 +12,7 @@
         });
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تطبيق الدحيح - الرئيسية</title>
     
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -33,75 +33,26 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
-        /* === ستايلات الثيم الاحترافي (Titanium Pro ⚡) === */
+        /* === ستايلات الثيم الذهبي السري === */
         body.vip-gold-mode {
-            --primary-blue: #ffffff; 
-            --primary-light: #a1a1aa; 
-            --accent-orange: #0ea5e9; /* أزرق احترافي */
-            --bg-main: #000000; /* أسود OLED نقي */
-            --bg-card: #0c0c0c; /* كروت بلون تيتانيوم داكن */
-            --text-main: #f8fafc; 
-            --text-grey: #8b8d98;
-            --card-shadow: none; /* إزالة الظلال تماماً للتصميم المسطح */
-            --border-color: #27272a; /* خطوط رفيعة معدنية */
-            --glass-bg: #000000; 
-            --filter-bg: #18181b; 
-            --calc-bg: #09090b;
+            --primary-blue: #FFD700; --primary-light: #DAA520; --accent-orange: #FFFFFF;
+            --bg-main: #0a0a0a; --bg-card: #171717; --text-main: #FFD700; --text-grey: #aaaaaa;
+            --card-shadow: 0 10px 30px rgba(255, 215, 0, 0.1); --border-color: rgba(255, 215, 0, 0.2);
+            --glass-bg: rgba(10, 10, 10, 0.9); --filter-bg: #222; --calc-bg: #1a1a1a;
         }
-
-        /* إخفاء أي إضاءات أو نيون في الخلفية */
-        body.vip-gold-mode::before, body.vip-gold-mode::after { display: none; }
-
-        /* ستايل الكروت الاحترافي */
-        body.vip-gold-mode .premium-course-card,
-        body.vip-gold-mode .notebook-container,
-        body.vip-gold-mode .profile-stats-box,
-        body.vip-gold-mode .settings-list,
-        body.vip-gold-mode .search-input,
-        body.vip-gold-mode .profile-header-card,
-        body.vip-gold-mode .bottom-nav,
-        body.vip-gold-mode #vipLockedModal > div,
-        body.vip-gold-mode .calculator-modal {
-            background: var(--bg-card);
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            border: 1px solid var(--border-color);
-            box-shadow: none;
-            border-radius: 18px;
-        }
-
-        /* تعديلات مخصصة للبار العلوي والترحيب */
-        body.vip-gold-mode .app-header { background: #000000; border-bottom: 1px solid var(--border-color); backdrop-filter: none; }
-        body.vip-gold-mode .news-ticker { background: #0a0a0a; border-bottom: 1px solid var(--border-color); }
-        body.vip-gold-mode .news-ticker marquee span, body.vip-gold-mode .news-ticker .material-icons { color: var(--primary-light) !important; }
-        
-        body.vip-gold-mode .premium-hero { 
-            background: linear-gradient(135deg, #111111 0%, #050505 100%); 
-            border: 1px solid var(--border-color); 
-            box-shadow: none; 
-        }
-        
-        body.vip-gold-mode .avatar-container { border-color: var(--border-color); background: #111; }
-        body.vip-gold-mode .avatar-container .material-icons { color: var(--accent-orange) !important; }
-        
-        /* أزرار الفلاتر والمواد */
-        body.vip-gold-mode .cat-btn.active { background: #ffffff; color: #000000; font-weight: 800; border: none; box-shadow: none; }
-        body.vip-gold-mode .btn-card { background: var(--bg-card) !important; border: 1px solid var(--border-color) !important; box-shadow: none !important; color: #fff !important; }
-        body.vip-gold-mode .pomo-fab { background: var(--accent-orange); color: #fff; border: none; box-shadow: none; }
-        body.vip-gold-mode .badge-new, body.vip-gold-mode .badge-completed { background: #18181b; color: var(--primary-light); border: 1px solid var(--border-color); }
-        body.vip-gold-mode .settings-icon { background: #18181b !important; color: var(--accent-orange) !important; }
-        body.vip-gold-mode .logout-btn-new { background: #18181b; color: #ef4444; border: 1px solid #27272a; box-shadow: none; }
+        body.vip-gold-mode .news-ticker { background: linear-gradient(90deg, #DAA520, #FFD700); }
+        body.vip-gold-mode .premium-hero { background: linear-gradient(135deg, #111 0%, #222 100%); border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 15px 40px rgba(255,215,0,0.15); }
+        body.vip-gold-mode .avatar-container { border-color: #FFD700; background: #222; }
 
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg-main); background-attachment: fixed; color: var(--text-main); padding-bottom: 120px; overflow-x: hidden; user-select: none; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 120px; overflow-x: hidden; user-select: none; }
 
         .page-section { display: none; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .page-section.active { display: block; }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .xp-badge { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); padding: 4px 10px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; box-shadow: 0 2px 8px rgba(255,200,0,0.2); }
-        body.vip-gold-mode .xp-badge { background: #18181b; color: #fff; box-shadow: none; border: 1px solid var(--border-color); }
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); } 
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
@@ -123,8 +74,6 @@
         body.dark-mode .premium-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .hero-decor { position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .hero-decor-2 { position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(33,150,243,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
-        body.vip-gold-mode .hero-decor, body.vip-gold-mode .hero-decor-2 { display: none; }
-        
         .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .welcome-text p { color: rgba(255,255,255,0.8); font-weight: 500; font-size: 0.95rem; position: relative; z-index: 2; line-height: 1.6; }
 
@@ -143,7 +92,6 @@
         .container { padding: 0 20px; }
         .section-title { font-size: 1.2rem; font-weight: 800; margin: 10px 0 20px 0; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .section-title::before { content: ''; display: block; width: 6px; height: 22px; background: var(--accent-orange); border-radius: 4px; }
-        body.vip-gold-mode .section-title::before { background: #fff; }
         
         .premium-course-card { background: var(--bg-card); border-radius: 20px; padding: 12px; display: flex; gap: 15px; margin-bottom: 18px; box-shadow: var(--card-shadow); cursor: pointer; border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
         .premium-course-card:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -159,7 +107,6 @@
         .badge-completed { background: rgba(76, 175, 80, 0.1); color: #2E7D32; display: flex; align-items: center; gap: 3px; }
         body.dark-mode .badge-new { background: rgba(33, 150, 243, 0.2); color: #64B5F6; }
         body.dark-mode .badge-completed { background: rgba(76, 175, 80, 0.2); color: #81C784; }
-        
         .p-course-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; line-height: 1.4; }
         .p-course-prof { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; gap: 4px; font-weight: 500; }
 
@@ -172,8 +119,6 @@
         .nav-item.active .material-icons { background: rgba(10, 38, 71, 0.1); padding: 5px 15px; border-radius: 15px; transform: translateY(-3px); }
         body.dark-mode .nav-item.active { color: var(--accent-orange); }
         body.dark-mode .nav-item.active .material-icons { background: rgba(255, 200, 0, 0.15); }
-        body.vip-gold-mode .nav-item.active .material-icons { background: #18181b; color: var(--accent-orange); }
-        body.vip-gold-mode .nav-item.active { color: var(--accent-orange); }
 
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
         body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
@@ -184,7 +129,6 @@
         .stat-item:first-child { border-inline-start: none; }
         .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--primary-blue); }
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
-        body.vip-gold-mode .stat-value { color: #fff !important; }
         
         .settings-list { background: var(--bg-card); border-radius: 20px; padding: 5px 0; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); }
         .settings-item { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
@@ -214,21 +158,19 @@
         .calc-btn:active { transform: translateY(2px); box-shadow: none; }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
-        body.vip-gold-mode .calc-btn.op { background: #18181b; color: #0ea5e9; }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
-        body.vip-gold-mode .calc-btn.eq { background: #0ea5e9; color: #fff; border: none; }
         
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
         .btn-card:active { transform: scale(0.98); }
 
         /* === ستايلات السبورة === */
         #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 4000; display: none; flex-direction: column; }
-        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); } 
+.wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); } 
         .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 10px; background: var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); }
         .color-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
         .color-btn.active { transform: scale(1.2); border-color: var(--text-main); }
         #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
-        /* === كود إصلاح رسالة المقترحات === */
+/* === كود إصلاح رسالة المقترحات === */
         #newsPopup { z-index: 99999 !important; }
     </style>
 </head>
@@ -276,17 +218,19 @@
         <canvas id="drawingCanvas"></canvas>
     </div>
 
-    <div id="vipLockedModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(10px);">
-        <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; border: 2px solid #0ea5e9; animation: slideUpFade 0.4s ease forwards; position: relative; overflow: hidden;">
-            <span class="material-icons" style="font-size:60px; color:#0ea5e9; margin-bottom:10px; animation: pulse 2s infinite;">lock</span>
-            <h3 style="color:#fff; font-weight:900; margin-bottom:10px; font-size: 1.3rem;" data-ar="المظهر الاحترافي مقفول 🔒" data-en="Pro Theme Locked 🔒">المظهر الاحترافي مقفول 🔒</h3>
-            <p id="vipLockedText" style="color:rgba(255,255,255,0.7); line-height:1.6; margin-bottom:25px; font-weight:600; font-size:0.95rem;"></p>
+    <div id="vipLockedModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
+        <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; box-shadow:0 15px 40px rgba(0,0,0,0.4); border: 2px solid #FFC800; animation: slideUpFade 0.4s ease forwards; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, transparent 70%);"></div>
             
-            <div style="background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(14, 165, 233, 0.2); padding: 10px; border-radius: 12px; margin-bottom: 20px; color: #0ea5e9; font-weight: bold; font-size: 1.2rem;">
+            <span class="material-icons" style="font-size:60px; color:#FFC800; margin-bottom:10px; animation: pulse 2s infinite;">lock</span>
+            <h3 style="color:var(--text-main); font-weight:900; margin-bottom:10px; font-size: 1.3rem;" data-ar="مظهر الأساطير مقفول 🔒" data-en="VIP Theme Locked 🔒">مظهر الأساطير مقفول 🔒</h3>
+            <p id="vipLockedText" style="color:var(--text-grey); line-height:1.6; margin-bottom:25px; font-weight:600; font-size:0.95rem;"></p>
+            
+            <div style="background: rgba(255, 200, 0, 0.1); padding: 10px; border-radius: 12px; margin-bottom: 20px; color: #FFC800; font-weight: bold; font-size: 1.2rem;">
                 <span id="vipCurrentXp"></span> / 1000 XP
             </div>
             
-            <button onclick="closeVipModal()" class="btn-card" style="justify-content:center; background:#0ea5e9 !important; color:#ffffff !important; border:none !important; margin:0;">
+            <button onclick="closeVipModal()" class="btn-card" style="justify-content:center; background:linear-gradient(135deg, #FFC800, #ffb700); color:#0A2647; border:none; margin:0; box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3);">
                 <span data-ar="سأكمل التحدي 💪" data-en="I will complete the challenge 💪">سأكمل التحدي 💪</span>
             </button>
         </div>
@@ -420,8 +364,8 @@
 
                 <div class="settings-item" onclick="toggleVIPTheme()">
                     <div class="settings-item-right">
-                        <div class="settings-icon" style="background: rgba(14, 165, 233, 0.15); color: #0ea5e9;"><span class="material-icons">workspace_premium</span></div>
-                        <span class="settings-text" data-ar="المظهر الاحترافي (Pro) ⚡" data-en="Pro Theme ⚡">المظهر الاحترافي (Pro) ⚡</span>
+                        <div class="settings-icon" style="background: rgba(255, 215, 0, 0.15); color: #FFC800;"><span class="material-icons">workspace_premium</span></div>
+                        <span class="settings-text" data-ar="المظهر الذهبي (VIP) 👑" data-en="VIP Gold Theme 👑">المظهر الذهبي (VIP) 👑</span>
                     </div>
                     <span class="material-icons" id="vipToggleIcon" style="color: var(--text-grey);">lock</span>
                 </div>
@@ -461,7 +405,7 @@
             <span class="material-icons" style="font-size:60px; color:var(--accent-orange); margin-bottom:15px;">campaign</span>
             <h3 style="color:var(--primary-blue); font-weight:900; margin-bottom:10px;" data-ar="إشعار 🚀" data-en="Notification 🚀">إشعار 🚀</h3>
             <p id="newsPopupText" style="color:var(--text-main); line-height:1.6; margin-bottom:20px; font-weight:600; font-size:1.05rem;"></p>
-            <button onclick="closeNewsPopup()" class="btn-card" style="justify-content:center; background:var(--primary-blue) !important; color:white !important; border:none; margin:0;">
+            <button onclick="closeNewsPopup()" class="btn-card" style="justify-content:center; background:var(--primary-blue); color:white; border:none; margin:0;">
                 <span data-ar="تمام، فهمت" data-en="Got it!">تمام، فهمت</span>
             </button>
         </div>
@@ -480,7 +424,7 @@
 
             <textarea id="feedbackText" rows="4" style="width:100%; padding:15px; border-radius:16px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-main); font-family:inherit; font-size:1rem; resize:none; outline:none; margin-bottom:15px;" placeholder="اكتب مقترحك هنا..." data-ph-ar="اكتب مقترحك هنا..." data-ph-en="Write your suggestion here..."></textarea>
             
-            <button id="sendFeedbackBtn" onclick="submitFeedback()" class="btn-card" style="justify-content:center; background:#4caf50 !important; color:white !important; border:none; margin:0; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
+            <button id="sendFeedbackBtn" onclick="submitFeedback()" class="btn-card" style="justify-content:center; background:#4caf50; color:white; border:none; margin:0; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
                 <span class="material-icons" style="margin-inline-end:8px;">send</span>
                 <span data-ar="إرسال الآن" data-en="Send Now">إرسال الآن</span>
             </button>
@@ -570,7 +514,7 @@
             syncXPToCloud();
         }
 
-        // === الشفرة السرية الخاصة بالأدمن للتجربة ===
+        // === الشفرة السرية الخاصة بالأدمن للتجربة (بدون Alert) ===
         let adminClicks = 0;
         function adminCheat() {
             adminClicks++;
@@ -579,6 +523,7 @@
                 updateXPDisplay();
                 syncXPToCloud();
                 
+                // إظهار النافذة الشيك بدل الـ Alert
                 document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Admin Mode Activated! 1500 XP added 👑' : 'أهلاً بك يا هندسة! تم تفعيل وضع الأدمن وإضافة 1500 نقطة للتجربة 👑';
                 document.getElementById('newsPopup').style.display = 'flex';
                 
@@ -587,13 +532,13 @@
             setTimeout(() => { adminClicks = 0; }, 2000);
         }
 
-        // === دوال المظهر الاحترافي (Pro Theme) ===
+        // === دوال المظهر الذهبي (VIP Theme) ===
         function checkVipStatus(xp) {
             let vipIcon = document.getElementById('vipToggleIcon');
             if(xp >= 1000) {
                 if(localStorage.getItem('daheehVipMode') === 'true') {
                     document.body.classList.add('vip-gold-mode');
-                    if(vipIcon) { vipIcon.innerText = 'toggle_on'; vipIcon.style.color = '#0ea5e9'; }
+                    if(vipIcon) { vipIcon.innerText = 'toggle_on'; vipIcon.style.color = '#FFD700'; }
                 } else {
                     document.body.classList.remove('vip-gold-mode');
                     if(vipIcon) { vipIcon.innerText = 'toggle_off'; vipIcon.style.color = 'var(--text-grey)'; }
@@ -615,7 +560,7 @@
                 let vipIcon = document.getElementById('vipToggleIcon');
                 if(vipIcon) {
                     vipIcon.innerText = isVip ? 'toggle_on' : 'toggle_off';
-                    vipIcon.style.color = isVip ? '#0ea5e9' : 'var(--text-grey)';
+                    vipIcon.style.color = isVip ? '#FFD700' : 'var(--text-grey)';
                 }
                 
                 if(isVip) {
@@ -625,7 +570,7 @@
                 }
             } else {
                 document.getElementById('vipCurrentXp').innerText = xp;
-                document.getElementById('vipLockedText').innerText = currentLang === 'en' ? "This Pro theme is reserved for legends! Solve more quizzes to unlock it." : "هذا المظهر الاحترافي مخصص للأساطير فقط! استمر في حل الكويزات لفتحه.";
+                document.getElementById('vipLockedText').innerText = currentLang === 'en' ? "This royal theme is reserved for legends! Solve more quizzes to unlock it." : "هذا المظهر الملكي مخصص للأساطير فقط! استمر في حل الكويزات لفتحه.";
                 document.getElementById('vipLockedModal').style.display = 'flex';
             }
         }
@@ -844,7 +789,7 @@
             clearTimeout(typingTimer); 
             
             document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
-            document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving... ' : 'جاري الحفظ... ';
+            document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
             saveIndicator.style.color = '#ff9800'; 
             saveIndicator.style.display = 'flex'; 
 
