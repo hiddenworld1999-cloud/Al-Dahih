@@ -33,52 +33,48 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
-        /* === ستايلات الثيم الزجاجي النقي بالكامل (Full Pure Glassmorphism) === */
+        /* === ستايلات الثيم الزجاجي البلوري المضيء (Neon Frosted Glassmorphism) === */
         body.vip-gold-mode {
             --primary-blue: #ffffff; 
-            --primary-light: rgba(255, 255, 255, 0.6); 
-            --accent-orange: #ffffff; 
-            --bg-main: #050505; 
-            --bg-card: rgba(255, 255, 255, 0.03); 
+            --primary-light: rgba(255, 255, 255, 0.8); 
+            --accent-orange: #00f2fe; 
+            --bg-main: #0a0a0c; 
+            --bg-card: rgba(255, 255, 255, 0.1); 
             --text-main: #ffffff; 
-            --text-grey: rgba(255, 255, 255, 0.5);
-            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); 
-            --border-color: rgba(255, 255, 255, 0.08); 
-            --glass-bg: rgba(10, 10, 12, 0.4); 
-            --filter-bg: rgba(255, 255, 255, 0.05); 
-            --calc-bg: rgba(255, 255, 255, 0.05);
+            --text-grey: rgba(255, 255, 255, 0.7);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+            --border-color: rgba(255, 255, 255, 0.15); 
+            --glass-bg: rgba(255, 255, 255, 0.05); 
+            --filter-bg: rgba(255, 255, 255, 0.15); 
+            --calc-bg: rgba(255, 255, 255, 0.1);
         }
 
-        /* إضاءات مخفية خلف الزجاج */
+        /* دوائر نيون مضيئة تتحرك في الخلفية */
         body.vip-gold-mode::before,
         body.vip-gold-mode::after {
-            content: '';
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(90px);
-            -webkit-filter: blur(90px);
-            z-index: -1;
-            pointer-events: none;
-            animation: floatGlow 12s infinite alternate ease-in-out;
+            content: ''; position: fixed; border-radius: 50%;
+            filter: blur(90px); -webkit-filter: blur(90px);
+            z-index: -1; pointer-events: none;
+            animation: floatNeon 12s infinite alternate ease-in-out;
         }
         body.vip-gold-mode::before {
-            width: 300px; height: 300px;
-            background: rgba(255, 255, 255, 0.06); 
-            top: -50px; left: -50px;
+            width: 350px; height: 350px;
+            background: #ff007f; 
+            top: 10%; left: -100px;
         }
         body.vip-gold-mode::after {
             width: 400px; height: 400px;
-            background: rgba(200, 200, 200, 0.04); 
-            bottom: -100px; right: -50px;
+            background: #00d2ff; 
+            bottom: 5%; right: -100px;
             animation-delay: -6s;
         }
 
-        @keyframes floatGlow {
+        @keyframes floatNeon {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 40px) scale(1.1); }
+            100% { transform: translate(80px, -50px) scale(1.2); }
         }
 
-        /* تطبيق الفلتر الزجاجي (Blur) على الكروت */
+        /* تطبيق الفلتر البلوري (Frosted Blur) على الكروت مع لمعة الحواف */
         body.vip-gold-mode .premium-course-card,
         body.vip-gold-mode .notebook-container,
         body.vip-gold-mode .profile-stats-box,
@@ -89,16 +85,27 @@
         body.vip-gold-mode #vipLockedModal > div,
         body.vip-gold-mode .calculator-modal {
             background: var(--bg-card);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.4); 
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: var(--card-shadow);
         }
 
-        body.vip-gold-mode .news-ticker { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color); }
+        body.vip-gold-mode .news-ticker { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color); }
         body.vip-gold-mode .news-ticker marquee span, body.vip-gold-mode .news-ticker .material-icons { color: #fff !important; }
-        body.vip-gold-mode .premium-hero { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
-        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.02); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        
+        body.vip-gold-mode .premium-hero { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
+            border: 1px solid var(--border-color); 
+            border-top: 1px solid rgba(255, 255, 255, 0.4); 
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: var(--card-shadow); 
+        }
+        
+        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
 
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
@@ -182,12 +189,13 @@
         .nav-item.active .material-icons { background: rgba(10, 38, 71, 0.1); padding: 5px 15px; border-radius: 15px; transform: translateY(-3px); }
         body.dark-mode .nav-item.active { color: var(--accent-orange); }
         body.dark-mode .nav-item.active .material-icons { background: rgba(255, 200, 0, 0.15); }
-        body.vip-gold-mode .nav-item.active .material-icons { background: rgba(255, 255, 255, 0.15); }
+        body.vip-gold-mode .nav-item.active .material-icons { background: rgba(255, 255, 255, 0.15); color: #fff; }
+        body.vip-gold-mode .nav-item.active { color: #fff; }
 
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
         body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 4px solid var(--accent-orange); }
-        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.4); }
+        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); }
         body.vip-gold-mode .avatar-container .material-icons { color: #fff !important; }
         
         .profile-stats-box { display: flex; justify-content: space-around; background: var(--bg-card); padding: 20px 10px; border-radius: 20px; margin-top: -25px; position: relative; z-index: 3; box-shadow: var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
@@ -439,7 +447,7 @@
                 <div class="settings-item" onclick="toggleVIPTheme()">
                     <div class="settings-item-right">
                         <div class="settings-icon" style="background: rgba(255, 255, 255, 0.15); color: #ffffff;"><span class="material-icons">workspace_premium</span></div>
-                        <span class="settings-text" data-ar="المظهر الزجاجي النقي 💎" data-en="Pure Glass Theme 💎">المظهر الزجاجي النقي 💎</span>
+                        <span class="settings-text" data-ar="المظهر الزجاجي البلوري 💎" data-en="Frosted Glass Theme 💎">المظهر الزجاجي البلوري 💎</span>
                     </div>
                     <span class="material-icons" id="vipToggleIcon" style="color: var(--text-grey);">lock</span>
                 </div>
@@ -564,12 +572,10 @@
         function fetchXPFromSheet() {
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
-            // بنحاول نسحب بيانات الطالب من الشيت باستخدام action=getStudentXP أو action=login لو متاح
             fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success && data.leaderboard) {
-                    // ندور على الطالب الحالي في لوحة الشرف ونحدث نقاطه
                     const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
                     if(myRecord && myRecord.xp !== undefined) {
                         localStorage.setItem('daheehXP', myRecord.xp);
@@ -588,7 +594,7 @@
             syncXPToCloud();
         }
 
-        // === الشفرة السرية الخاصة بالأدمن للتجربة (بدون Alert) ===
+        // === الشفرة السرية الخاصة بالأدمن للتجربة ===
         let adminClicks = 0;
         function adminCheat() {
             adminClicks++;
@@ -597,7 +603,6 @@
                 updateXPDisplay();
                 syncXPToCloud();
                 
-                // إظهار النافذة الشيك بدل الـ Alert
                 document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Admin Mode Activated! 1500 XP added 👑' : 'أهلاً بك يا هندسة! تم تفعيل وضع الأدمن وإضافة 1500 نقطة للتجربة 👑';
                 document.getElementById('newsPopup').style.display = 'flex';
                 
