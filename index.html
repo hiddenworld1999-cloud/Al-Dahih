@@ -33,23 +33,52 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
-        /* === ستايلات الثيم الزجاجي (iOS Glassmorphism) === */
+        /* === ستايلات الثيم الزجاجي النقي بالكامل (Full Pure Glassmorphism) === */
         body.vip-gold-mode {
             --primary-blue: #ffffff; 
             --primary-light: rgba(255, 255, 255, 0.6); 
-            --accent-orange: #00f2fe; 
-            --bg-main: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%, #1e3c72 100%); 
-            --bg-card: rgba(255, 255, 255, 0.1); 
+            --accent-orange: #ffffff; 
+            --bg-main: #050505; 
+            --bg-card: rgba(255, 255, 255, 0.03); 
             --text-main: #ffffff; 
-            --text-grey: rgba(255, 255, 255, 0.7);
-            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
-            --border-color: rgba(255, 255, 255, 0.2);
-            --glass-bg: rgba(255, 255, 255, 0.05); 
-            --filter-bg: rgba(255, 255, 255, 0.15); 
+            --text-grey: rgba(255, 255, 255, 0.5);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); 
+            --border-color: rgba(255, 255, 255, 0.08); 
+            --glass-bg: rgba(10, 10, 12, 0.4); 
+            --filter-bg: rgba(255, 255, 255, 0.05); 
             --calc-bg: rgba(255, 255, 255, 0.05);
         }
 
-        /* تطبيق الفلتر الزجاجي (Blur) على كل الكروت */
+        /* إضاءات مخفية خلف الزجاج */
+        body.vip-gold-mode::before,
+        body.vip-gold-mode::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            -webkit-filter: blur(90px);
+            z-index: -1;
+            pointer-events: none;
+            animation: floatGlow 12s infinite alternate ease-in-out;
+        }
+        body.vip-gold-mode::before {
+            width: 300px; height: 300px;
+            background: rgba(255, 255, 255, 0.06); 
+            top: -50px; left: -50px;
+        }
+        body.vip-gold-mode::after {
+            width: 400px; height: 400px;
+            background: rgba(200, 200, 200, 0.04); 
+            bottom: -100px; right: -50px;
+            animation-delay: -6s;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 40px) scale(1.1); }
+        }
+
+        /* تطبيق الفلتر الزجاجي (Blur) على الكروت */
         body.vip-gold-mode .premium-course-card,
         body.vip-gold-mode .notebook-container,
         body.vip-gold-mode .profile-stats-box,
@@ -60,21 +89,19 @@
         body.vip-gold-mode #vipLockedModal > div,
         body.vip-gold-mode .calculator-modal {
             background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border-color);
             box-shadow: var(--card-shadow);
         }
 
-        body.vip-gold-mode .news-ticker { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
+        body.vip-gold-mode .news-ticker { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color); }
         body.vip-gold-mode .news-ticker marquee span, body.vip-gold-mode .news-ticker .material-icons { color: #fff !important; }
-        body.vip-gold-mode .premium-hero { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
-        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        body.vip-gold-mode .premium-hero { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
+        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.02); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
 
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
-        
-        /* تم تعديل الـ body عشان يقبل التدرج اللوني ويبقى ثابت */
         body { font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg-main); background-attachment: fixed; color: var(--text-main); padding-bottom: 120px; overflow-x: hidden; user-select: none; }
 
         .page-section { display: none; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -82,6 +109,7 @@
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .xp-badge { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); padding: 4px 10px; border-radius: 12px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; box-shadow: 0 2px 8px rgba(255,200,0,0.2); }
+        body.vip-gold-mode .xp-badge { background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: none; border: 1px solid rgba(255,255,255,0.2); }
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); } 
         .logo-text { font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
@@ -103,6 +131,8 @@
         body.dark-mode .premium-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .hero-decor { position: absolute; top: -20px; left: -20px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,200,0,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
         .hero-decor-2 { position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(33,150,243,0.2) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
+        body.vip-gold-mode .hero-decor, body.vip-gold-mode .hero-decor-2 { display: none; }
+        
         .welcome-text h2 { color: white; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .welcome-text p { color: rgba(255,255,255,0.8); font-weight: 500; font-size: 0.95rem; position: relative; z-index: 2; line-height: 1.6; }
 
@@ -117,10 +147,12 @@
         .cat-btn { display: inline-block; padding: 10px 22px; background: var(--filter-bg); color: var(--text-grey); border-radius: 30px; margin-inline-end: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; font-family: inherit; }
         .cat-btn.active { background: var(--primary-blue); color: white; box-shadow: 0 6px 15px rgba(10, 38, 71, 0.25); transform: translateY(-2px); }
         body.dark-mode .cat-btn.active { background: var(--accent-orange); color: #0A2647; box-shadow: 0 6px 15px rgba(255, 200, 0, 0.2); }
+        body.vip-gold-mode .cat-btn.active { background: rgba(255,255,255,0.15); color: #fff; box-shadow: none; border: 1px solid rgba(255,255,255,0.3); }
 
         .container { padding: 0 20px; }
         .section-title { font-size: 1.2rem; font-weight: 800; margin: 10px 0 20px 0; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         .section-title::before { content: ''; display: block; width: 6px; height: 22px; background: var(--accent-orange); border-radius: 4px; }
+        body.vip-gold-mode .section-title::before { background: #fff; }
         
         .premium-course-card { background: var(--bg-card); border-radius: 20px; padding: 12px; display: flex; gap: 15px; margin-bottom: 18px; box-shadow: var(--card-shadow); cursor: pointer; border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
         .premium-course-card:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -136,6 +168,8 @@
         .badge-completed { background: rgba(76, 175, 80, 0.1); color: #2E7D32; display: flex; align-items: center; gap: 3px; }
         body.dark-mode .badge-new { background: rgba(33, 150, 243, 0.2); color: #64B5F6; }
         body.dark-mode .badge-completed { background: rgba(76, 175, 80, 0.2); color: #81C784; }
+        body.vip-gold-mode .badge-new, body.vip-gold-mode .badge-completed { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        
         .p-course-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 5px; line-height: 1.4; }
         .p-course-prof { font-size: 0.85rem; color: var(--text-grey); display: flex; align-items: center; gap: 4px; font-weight: 500; }
 
@@ -148,16 +182,20 @@
         .nav-item.active .material-icons { background: rgba(10, 38, 71, 0.1); padding: 5px 15px; border-radius: 15px; transform: translateY(-3px); }
         body.dark-mode .nav-item.active { color: var(--accent-orange); }
         body.dark-mode .nav-item.active .material-icons { background: rgba(255, 200, 0, 0.15); }
+        body.vip-gold-mode .nav-item.active .material-icons { background: rgba(255, 255, 255, 0.15); }
 
         .profile-header-card { background: linear-gradient(135deg, var(--primary-blue), #1a3c63); border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; margin-top: 10px; box-shadow: var(--card-shadow); }
         body.dark-mode .profile-header-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border-color); }
         .avatar-container { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; z-index: 2; border: 4px solid var(--accent-orange); }
+        body.vip-gold-mode .avatar-container { border-color: rgba(255,255,255,0.4); }
+        body.vip-gold-mode .avatar-container .material-icons { color: #fff !important; }
         
         .profile-stats-box { display: flex; justify-content: space-around; background: var(--bg-card); padding: 20px 10px; border-radius: 20px; margin-top: -25px; position: relative; z-index: 3; box-shadow: var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
         .stat-item { text-align: center; flex: 1; border-inline-start: 1px solid var(--border-color); }
         .stat-item:first-child { border-inline-start: none; }
         .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--primary-blue); }
         .stat-label { font-size: 0.75rem; color: var(--text-grey); margin-top: 4px; }
+        body.vip-gold-mode .stat-value { color: #fff !important; }
         
         .settings-list { background: var(--bg-card); border-radius: 20px; padding: 5px 0; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); }
         .settings-item { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
@@ -166,10 +204,12 @@
         .icon-darkmode { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         .icon-support { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
         body.dark-mode .icon-darkmode { background: rgba(255, 200, 0, 0.15); color: var(--accent-orange); }
+        body.vip-gold-mode .settings-icon { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
         .settings-text { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
         
         .logout-btn-new { width: 100%; padding: 18px; background: rgba(211, 47, 47, 0.08); color: #d32f2f; border: none; border-radius: 18px; font-weight: 700; font-size: 1.05rem; font-family: inherit; margin-top: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
         .logout-btn-new:active { transform: scale(0.98); background: rgba(211, 47, 47, 0.15); }
+        body.vip-gold-mode .logout-btn-new { background: rgba(211, 47, 47, 0.2); color: #ff5252; border: 1px solid rgba(211, 47, 47, 0.3); }
 
         .notebook-container { background: var(--bg-card); border-radius: 24px; padding: 25px; box-shadow: var(--card-shadow); height: calc(100vh - 280px); display: flex; flex-direction: column; border: 1px solid var(--border-color); }
         .notebook-textarea { flex: 1; width: 100%; border: none; resize: none; background: transparent; color: var(--text-main); font-family: inherit; font-size: 1.1rem; line-height: 1.8; outline: none; }
@@ -178,7 +218,9 @@
         html[dir="ltr"] .pomodoro-container { right: 20px; left: auto; }
         .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent-orange); color: #0A2647; border: none; box-shadow: 0 10px 20px rgba(255,200,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
         .pomo-fab:active { transform: scale(0.9); }
+        body.vip-gold-mode .pomo-fab { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         .pomo-timer { background: var(--bg-card); padding: 15px; border-radius: 20px; box-shadow: var(--card-shadow); margin-bottom: 15px; border: 2px solid var(--accent-orange); width: 200px; text-align: center; display: none; }
+        body.vip-gold-mode .pomo-timer { border-color: rgba(255,255,255,0.2); }
         
         .calculator-modal { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 500; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
         .calc-display { width: 100%; height: 65px; background: var(--bg-main); border: none; border-radius: 16px; font-size: 2rem; text-align: right; padding: 10px 15px; color: var(--primary-blue); font-family: monospace; margin-bottom: 15px; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
@@ -187,10 +229,13 @@
         .calc-btn:active { transform: translateY(2px); box-shadow: none; }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary-blue); }
         body.dark-mode .calc-btn.op { background: rgba(255,200,0,0.1); color: var(--accent-orange); }
+        body.vip-gold-mode .calc-btn.op { background: rgba(255,255,255,0.1); color: #fff; }
         .calc-btn.eq { background: var(--accent-orange); color: #0A2647; grid-column: span 2; }
+        body.vip-gold-mode .calc-btn.eq { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
         
         .btn-card { width: 100%; padding: 20px; border-radius: 18px; border: none; font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; cursor: pointer; margin-bottom: 15px; transition: transform 0.2s; }
         .btn-card:active { transform: scale(0.98); }
+        body.vip-gold-mode .btn-card { background: rgba(255,255,255,0.1) !important; color: #fff !important; border: 1px solid rgba(255,255,255,0.2) !important; backdrop-filter: blur(10px); box-shadow: none !important; }
 
         /* === ستايلات السبورة === */
         #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 4000; display: none; flex-direction: column; }
@@ -247,19 +292,19 @@
         <canvas id="drawingCanvas"></canvas>
     </div>
 
-    <div id="vipLockedModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
-        <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; box-shadow:0 15px 40px rgba(0,0,0,0.4); border: 2px solid #00f2fe; animation: slideUpFade 0.4s ease forwards; position: relative; overflow: hidden;">
-            <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(0,242,254,0.2) 0%, transparent 70%);"></div>
+    <div id="vipLockedModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(10px);">
+        <div style="background:var(--bg-card); padding:30px; border-radius:24px; width:85%; max-width:350px; text-align:center; box-shadow:0 15px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); animation: slideUpFade 0.4s ease forwards; position: relative; overflow: hidden; backdrop-filter: blur(20px);">
+            <div style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);"></div>
             
-            <span class="material-icons" style="font-size:60px; color:#00f2fe; margin-bottom:10px; animation: pulse 2s infinite;">lock</span>
-            <h3 style="color:var(--text-main); font-weight:900; margin-bottom:10px; font-size: 1.3rem;" data-ar="مظهر الأساطير مقفول 🔒" data-en="VIP Theme Locked 🔒">مظهر الأساطير مقفول 🔒</h3>
-            <p id="vipLockedText" style="color:var(--text-grey); line-height:1.6; margin-bottom:25px; font-weight:600; font-size:0.95rem;"></p>
+            <span class="material-icons" style="font-size:60px; color:#fff; margin-bottom:10px; animation: pulse 2s infinite;">lock</span>
+            <h3 style="color:#fff; font-weight:900; margin-bottom:10px; font-size: 1.3rem;" data-ar="مظهر الأساطير مقفول 🔒" data-en="VIP Theme Locked 🔒">مظهر الأساطير مقفول 🔒</h3>
+            <p id="vipLockedText" style="color:rgba(255,255,255,0.7); line-height:1.6; margin-bottom:25px; font-weight:600; font-size:0.95rem;"></p>
             
-            <div style="background: rgba(0, 242, 254, 0.1); padding: 10px; border-radius: 12px; margin-bottom: 20px; color: #00f2fe; font-weight: bold; font-size: 1.2rem;">
+            <div style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px; border-radius: 12px; margin-bottom: 20px; color: #fff; font-weight: bold; font-size: 1.2rem;">
                 <span id="vipCurrentXp"></span> / 1000 XP
             </div>
             
-            <button onclick="closeVipModal()" class="btn-card" style="justify-content:center; background:linear-gradient(135deg, #00f2fe, #4facfe); color:#ffffff; border:none; margin:0; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);">
+            <button onclick="closeVipModal()" class="btn-card" style="justify-content:center; background:rgba(255,255,255,0.2) !important; color:#ffffff !important; border:1px solid rgba(255,255,255,0.3) !important; margin:0;">
                 <span data-ar="سأكمل التحدي 💪" data-en="I will complete the challenge 💪">سأكمل التحدي 💪</span>
             </button>
         </div>
@@ -393,8 +438,8 @@
 
                 <div class="settings-item" onclick="toggleVIPTheme()">
                     <div class="settings-item-right">
-                        <div class="settings-icon" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;"><span class="material-icons">workspace_premium</span></div>
-                        <span class="settings-text" data-ar="المظهر الزجاجي (VIP) 💎" data-en="VIP Glass Theme 💎">المظهر الزجاجي (VIP) 💎</span>
+                        <div class="settings-icon" style="background: rgba(255, 255, 255, 0.15); color: #ffffff;"><span class="material-icons">workspace_premium</span></div>
+                        <span class="settings-text" data-ar="المظهر الزجاجي النقي 💎" data-en="Pure Glass Theme 💎">المظهر الزجاجي النقي 💎</span>
                     </div>
                     <span class="material-icons" id="vipToggleIcon" style="color: var(--text-grey);">lock</span>
                 </div>
@@ -434,7 +479,7 @@
             <span class="material-icons" style="font-size:60px; color:var(--accent-orange); margin-bottom:15px;">campaign</span>
             <h3 style="color:var(--primary-blue); font-weight:900; margin-bottom:10px;" data-ar="إشعار 🚀" data-en="Notification 🚀">إشعار 🚀</h3>
             <p id="newsPopupText" style="color:var(--text-main); line-height:1.6; margin-bottom:20px; font-weight:600; font-size:1.05rem;"></p>
-            <button onclick="closeNewsPopup()" class="btn-card" style="justify-content:center; background:var(--primary-blue); color:white; border:none; margin:0;">
+            <button onclick="closeNewsPopup()" class="btn-card" style="justify-content:center; background:var(--primary-blue) !important; color:white !important; border:none; margin:0;">
                 <span data-ar="تمام، فهمت" data-en="Got it!">تمام، فهمت</span>
             </button>
         </div>
@@ -453,7 +498,7 @@
 
             <textarea id="feedbackText" rows="4" style="width:100%; padding:15px; border-radius:16px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-main); font-family:inherit; font-size:1rem; resize:none; outline:none; margin-bottom:15px;" placeholder="اكتب مقترحك هنا..." data-ph-ar="اكتب مقترحك هنا..." data-ph-en="Write your suggestion here..."></textarea>
             
-            <button id="sendFeedbackBtn" onclick="submitFeedback()" class="btn-card" style="justify-content:center; background:#4caf50; color:white; border:none; margin:0; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
+            <button id="sendFeedbackBtn" onclick="submitFeedback()" class="btn-card" style="justify-content:center; background:#4caf50 !important; color:white !important; border:none; margin:0; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
                 <span class="material-icons" style="margin-inline-end:8px;">send</span>
                 <span data-ar="إرسال الآن" data-en="Send Now">إرسال الآن</span>
             </button>
@@ -567,7 +612,7 @@
             if(xp >= 1000) {
                 if(localStorage.getItem('daheehVipMode') === 'true') {
                     document.body.classList.add('vip-gold-mode');
-                    if(vipIcon) { vipIcon.innerText = 'toggle_on'; vipIcon.style.color = '#00f2fe'; }
+                    if(vipIcon) { vipIcon.innerText = 'toggle_on'; vipIcon.style.color = '#ffffff'; }
                 } else {
                     document.body.classList.remove('vip-gold-mode');
                     if(vipIcon) { vipIcon.innerText = 'toggle_off'; vipIcon.style.color = 'var(--text-grey)'; }
@@ -589,7 +634,7 @@
                 let vipIcon = document.getElementById('vipToggleIcon');
                 if(vipIcon) {
                     vipIcon.innerText = isVip ? 'toggle_on' : 'toggle_off';
-                    vipIcon.style.color = isVip ? '#00f2fe' : 'var(--text-grey)';
+                    vipIcon.style.color = isVip ? '#ffffff' : 'var(--text-grey)';
                 }
                 
                 if(isVip) {
@@ -599,7 +644,7 @@
                 }
             } else {
                 document.getElementById('vipCurrentXp').innerText = xp;
-                document.getElementById('vipLockedText').innerText = currentLang === 'en' ? "This royal theme is reserved for legends! Solve more quizzes to unlock it." : "هذا المظهر الملكي مخصص للأساطير فقط! استمر في حل الكويزات لفتحه.";
+                document.getElementById('vipLockedText').innerText = currentLang === 'en' ? "This pure glass theme is reserved for legends! Solve more quizzes to unlock it." : "هذا المظهر الزجاجي النقي مخصص للأساطير فقط! استمر في حل الكويزات لفتحه.";
                 document.getElementById('vipLockedModal').style.display = 'flex';
             }
         }
@@ -818,7 +863,7 @@
             clearTimeout(typingTimer); 
             
             document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
-            document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
+            document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving... ' : 'جاري الحفظ... ';
             saveIndicator.style.color = '#ff9800'; 
             saveIndicator.style.display = 'flex'; 
 
