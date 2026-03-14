@@ -165,13 +165,27 @@
 
         /* === ستايلات السبورة === */
         #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 4000; display: none; flex-direction: column; }
-.wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); } 
+        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--glass-bg); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); } 
         .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 10px; background: var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); }
         .color-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
         .color-btn.active { transform: scale(1.2); border-color: var(--text-main); }
         #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
-/* === كود إصلاح رسالة المقترحات === */
         #newsPopup { z-index: 99999 !important; }
+
+        /* === ستايلات صفحة المنشورات === */
+        .post-card { background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); }
+        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-orange); }
+        .post-author { font-weight: 800; color: var(--text-main); font-size: 1.05rem; }
+        .post-date { font-size: 0.75rem; color: var(--text-grey); margin-top: 2px; }
+        .post-content { color: var(--text-main); line-height: 1.7; font-size: 0.95rem; margin-bottom: 15px; white-space: pre-wrap; }
+        .post-image { width: 100%; border-radius: 12px; margin-bottom: 15px; display: none; }
+        .post-actions { display: flex; align-items: center; gap: 20px; border-top: 1px solid var(--border-color); padding-top: 15px; }
+        .like-btn { display: flex; align-items: center; gap: 6px; color: var(--text-grey); cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: 0.2s; user-select: none; }
+        .like-btn:active { transform: scale(0.9); }
+        .like-btn.liked { color: #e91e63; }
+        .like-btn.liked .material-icons { font-variation-settings: 'FILL' 1; color: #e91e63; animation: pop 0.3s ease; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -271,7 +285,6 @@
     </div>
 
     <div id="page-home" class="page-section active">
-        
         <div class="hero-wrapper">
             <div class="premium-hero">
                 <div class="hero-decor"></div>
@@ -313,6 +326,21 @@
                 <span class="material-icons" style="font-size:80px; opacity:0.3; margin-bottom:15px;">school</span>
                 <h3 data-ar="أنت مشترك في 5 دورات حالياً" data-en="You are enrolled in 5 courses">أنت مشترك في 5 دورات حالياً</h3>
                 <p style="font-size:0.9rem; margin-top:5px;" data-ar="استمر في التقدم والنجاح!" data-en="Keep up the good work!">استمر في التقدم والنجاح!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-posts" class="page-section">
+        <div class="container">
+            <h3 class="section-title" style="margin-top:20px;">
+                <span class="material-icons" style="color: var(--accent-orange); margin-inline-end:8px;">dynamic_feed</span> 
+                <span data-ar="المنشورات" data-en="Posts">المنشورات</span>
+            </h3>
+            <div id="postsContainer">
+                <div style="text-align:center; padding:50px 0; color:var(--primary-blue);">
+                    <span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span>
+                    <p style="margin-top:10px; font-weight:bold;" data-ar="جاري تحميل المنشورات..." data-en="Loading posts...">جاري تحميل المنشورات...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -439,6 +467,9 @@
             <div class="nav-item" onclick="switchTab('courses', this)">
                 <span class="material-icons">school</span><span data-ar="دوراتي" data-en="Courses">دوراتي</span>
             </div>
+            <div class="nav-item" onclick="switchTab('posts', this); loadPosts();">
+                <span class="material-icons">dynamic_feed</span><span data-ar="المنشورات" data-en="Posts">المنشورات</span>
+            </div>
             <div class="nav-item" onclick="switchTab('notebook', this)">
                 <span class="material-icons">edit_note</span><span data-ar="كشكولي" data-en="Notebook">كشكولي</span>
             </div>
@@ -462,6 +493,7 @@
 
         const studentFullName = localStorage.getItem('studentName') || "طالب دحيح";
         const studentFirstName = studentFullName.split(' ')[0]; 
+        const studentCode = localStorage.getItem('studentCode') || '';
         
         document.getElementById('welcomeName').innerText = studentFirstName;
         document.getElementById('profileName').innerText = studentFullName;
@@ -476,26 +508,20 @@
             return currentLang === 'en' ? 'Legend' : 'أسطورة';
         }
 
-        // === دالة المزامنة مع جوجل شيت (الرفع للسيرفر) ===
         function syncXPToCloud() {
             const currentXP = localStorage.getItem('daheehXP') || 0; 
-            const sCode = localStorage.getItem('studentCode') || ''; 
             const sName = localStorage.getItem('studentName') || ''; 
-            if(!sCode) return;
-            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
+            if(!studentCode) return;
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${studentCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
             fetch(requestUrl).then(res => res.json()).then(data => console.log('XP Saved')).catch(err => console.log('Error'));
         }
 
-        // === دالة المزامنة من جوجل شيت (السحب من السيرفر عند الفتح) ===
         function fetchXPFromSheet() {
-            const sCode = localStorage.getItem('studentCode');
-            if(!sCode) return;
-            // بنحاول نسحب بيانات الطالب من الشيت باستخدام action=getStudentXP أو action=login لو متاح
-            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
+            if(!studentCode) return;
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${studentCode}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success && data.leaderboard) {
-                    // ندور على الطالب الحالي في لوحة الشرف ونحدث نقاطه
                     const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
                     if(myRecord && myRecord.xp !== undefined) {
                         localStorage.setItem('daheehXP', myRecord.xp);
@@ -514,7 +540,6 @@
             syncXPToCloud();
         }
 
-        // === الشفرة السرية الخاصة بالأدمن للتجربة (بدون Alert) ===
         let adminClicks = 0;
         function adminCheat() {
             adminClicks++;
@@ -523,16 +548,13 @@
                 updateXPDisplay();
                 syncXPToCloud();
                 
-                // إظهار النافذة الشيك بدل الـ Alert
                 document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Admin Mode Activated! 1500 XP added 👑' : 'أهلاً بك يا هندسة! تم تفعيل وضع الأدمن وإضافة 1500 نقطة للتجربة 👑';
                 document.getElementById('newsPopup').style.display = 'flex';
-                
                 adminClicks = 0; 
             }
             setTimeout(() => { adminClicks = 0; }, 2000);
         }
 
-        // === دوال المظهر الذهبي (VIP Theme) ===
         function checkVipStatus(xp) {
             let vipIcon = document.getElementById('vipToggleIcon');
             if(xp >= 1000) {
@@ -575,9 +597,7 @@
             }
         }
 
-        function closeVipModal() {
-            document.getElementById('vipLockedModal').style.display = 'none';
-        }
+        function closeVipModal() { document.getElementById('vipLockedModal').style.display = 'none'; }
 
         function updateXPDisplay() {
             let xp = parseInt(localStorage.getItem('daheehXP')) || 0;
@@ -596,13 +616,8 @@
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl';
             document.documentElement.lang = currentLang;
             
-            document.querySelectorAll('[data-ar]').forEach(el => { 
-                el.innerText = el.getAttribute(`data-${currentLang}`); 
-            });
-            
-            document.querySelectorAll('[data-ph-ar]').forEach(el => { 
-                el.placeholder = el.getAttribute(`data-ph-${currentLang}`); 
-            });
+            document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
+            document.querySelectorAll('[data-ph-ar]').forEach(el => { el.placeholder = el.getAttribute(`data-ph-${currentLang}`); });
             
             document.getElementById('profileCode').innerText = (currentLang === 'en' ? "ID: " : "الكود: ") + (localStorage.getItem('studentCode') || "---");
             document.getElementById('motivationQuote').innerText = currentLang === 'en' ? quotesEn[Math.floor(Math.random() * quotesEn.length)] : quotesAr[Math.floor(Math.random() * quotesAr.length)];
@@ -645,17 +660,12 @@
         // === دوال سبورة الشخبطة الذكية ===
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
-        let isDrawing = false;
-        let brushColor = '#0A2647';
+        let isDrawing = false; let brushColor = '#0A2647';
 
         function toggleWhiteboard() {
             const modal = document.getElementById('whiteboardModal');
-            if(modal.style.display === 'flex') {
-                modal.style.display = 'none';
-            } else {
-                modal.style.display = 'flex';
-                setTimeout(resizeCanvas, 100);
-            }
+            if(modal.style.display === 'flex') { modal.style.display = 'none'; } 
+            else { modal.style.display = 'flex'; setTimeout(resizeCanvas, 100); }
         }
 
         function resizeCanvas() {
@@ -674,89 +684,43 @@
         }
 
         function clearWhiteboard() {
-            if(ctxCanvas) {
-                ctxCanvas.fillStyle = "#ffffff";
-                ctxCanvas.fillRect(0, 0, canvas.width, canvas.height);
-            }
+            if(ctxCanvas) { ctxCanvas.fillStyle = "#ffffff"; ctxCanvas.fillRect(0, 0, canvas.width, canvas.height); }
         }
 
         if(canvas) {
-            const startDraw = (e) => {
-                isDrawing = true;
-                ctxCanvas.beginPath();
-                ctxCanvas.moveTo(getX(e), getY(e));
-                e.preventDefault();
-            };
+            const startDraw = (e) => { isDrawing = true; ctxCanvas.beginPath(); ctxCanvas.moveTo(getX(e), getY(e)); e.preventDefault(); };
             const draw = (e) => {
                 if(!isDrawing) return;
                 ctxCanvas.lineTo(getX(e), getY(e));
                 ctxCanvas.strokeStyle = brushColor;
                 ctxCanvas.lineWidth = brushColor === '#ffffff' ? 20 : 4; 
-                ctxCanvas.lineCap = 'round';
-                ctxCanvas.stroke();
-                e.preventDefault();
+                ctxCanvas.lineCap = 'round'; ctxCanvas.stroke(); e.preventDefault();
             };
-            const stopDraw = () => { 
-                isDrawing = false; 
-                ctxCanvas.closePath(); 
-            };
-
+            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
             const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
             const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
 
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDraw);
-            canvas.addEventListener('mouseout', stopDraw);
-
-            canvas.addEventListener('touchstart', startDraw, {passive: false});
-            canvas.addEventListener('touchmove', draw, {passive: false});
-            canvas.addEventListener('touchend', stopDraw);
+            canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDraw); canvas.addEventListener('mouseout', stopDraw);
+            canvas.addEventListener('touchstart', startDraw, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDraw);
         }
 
-        function toggleCalculator() { 
-            const m = document.getElementById('calculatorModal'); 
-            m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; 
-        }
-        
-        function appendCalc(v) { 
-            document.getElementById('calcDisplay').value += v; 
-        } 
-        
-        function clearCalc() { 
-            document.getElementById('calcDisplay').value = ''; 
-        }
-        
-        function calculateResult() { 
-            try { 
-                document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); 
-            } catch(e) { 
-                document.getElementById('calcDisplay').value = 'Error'; 
-                setTimeout(clearCalc,1000); 
-            } 
-        }
+        function toggleCalculator() { const m = document.getElementById('calculatorModal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+        function appendCalc(v) { document.getElementById('calcDisplay').value += v; } 
+        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
+        function calculateResult() { try { document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc,1000); } }
 
-        const bgMusic = document.getElementById('bgMusic'); 
-        bgMusic.volume = 0.5;
-        
+        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         function toggleMusic() { 
             const btn = document.getElementById('musicToggle'); 
-            if (bgMusic.paused) { 
-                bgMusic.play(); 
-                btn.innerText = 'music_note'; 
-                btn.classList.add('music-active'); 
-            } else { 
-                bgMusic.pause(); 
-                btn.innerText = 'music_off'; 
-                btn.classList.remove('music-active'); 
-            } 
+            if (bgMusic.paused) { bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); } 
+            else { bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); } 
         }
 
+        // === الكشكول ===
         const notebookInput = document.getElementById('studentNotebook'); 
         const saveIndicator = document.getElementById('saveIndicator'); 
         let typingTimer;
         
-        const studentCode = localStorage.getItem('studentCode') || '';
         notebookInput.placeholder = currentLang === 'en' ? 'Loading your notes from cloud...' : 'جاري جلب ملاحظاتك من السحابة...';
         notebookInput.disabled = true;
 
@@ -765,12 +729,7 @@
             .then(data => {
                 notebookInput.disabled = false;
                 notebookInput.placeholder = currentLang === 'en' ? 'Write important points here to review before exams...' : 'دون أهم النقاط هنا لتراجعها قبل الامتحان...';
-                
-                if (data.error === 'unauthorized') { 
-                    safeLogout(); 
-                    return; 
-                }
-                
+                if (data.error === 'unauthorized') { safeLogout(); return; }
                 if (data.success && data.notes) {
                     notebookInput.value = data.notes;
                     localStorage.setItem('daheehNotebook', data.notes);
@@ -780,32 +739,21 @@
             })
             .catch(err => {
                 notebookInput.disabled = false;
-                if (localStorage.getItem('daheehNotebook')) {
-                    notebookInput.value = localStorage.getItem('daheehNotebook');
-                }
+                if (localStorage.getItem('daheehNotebook')) { notebookInput.value = localStorage.getItem('daheehNotebook'); }
             });
 
         notebookInput.addEventListener('input', function() { 
             clearTimeout(typingTimer); 
-            
             document.querySelector('#saveIndicator .material-icons').innerText = 'sync';
             document.querySelector('#saveIndicator span:last-child').innerText = currentLang === 'en' ? 'Saving...' : 'جاري الحفظ...';
-            saveIndicator.style.color = '#ff9800'; 
-            saveIndicator.style.display = 'flex'; 
+            saveIndicator.style.color = '#ff9800'; saveIndicator.style.display = 'flex'; 
 
             localStorage.setItem('daheehNotebook', notebookInput.value); 
             
             typingTimer = setTimeout(() => { 
                 const formData = new URLSearchParams();
-                formData.append('action', 'saveNotebook');
-                formData.append('code', studentCode);
-                formData.append('notes', notebookInput.value);
-
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                })
+                formData.append('action', 'saveNotebook'); formData.append('code', studentCode); formData.append('notes', notebookInput.value);
+                fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(res => res.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { safeLogout(); return; }
@@ -825,6 +773,105 @@
             }, 1500); 
         });
 
+        // === المنشورات (القسم الجديد) ===
+        let postsLoaded = false;
+        function loadPosts() {
+            if (postsLoaded) return; // عشان ميحملش كل مرة تدوس على الزرار
+            const container = document.getElementById('postsContainer');
+            
+            fetch(`${SCRIPT_URL}?action=getPosts&code=${studentCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.error === 'unauthorized') { safeLogout(); return; }
+                if(data.success) {
+                    container.innerHTML = '';
+                    if(data.posts.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; padding:50px 0; color:var(--text-grey);"><span class="material-icons" style="font-size:50px; opacity:0.5; margin-bottom:10px;">dynamic_feed</span><p>${currentLang==='en'?'No posts yet.':'لا توجد منشورات حتى الآن.'}</p></div>`;
+                        return;
+                    }
+                    
+                    data.posts.forEach((post, index) => {
+                        const isLiked = post.likedBy.includes(studentCode);
+                        const likeClass = isLiked ? 'liked' : '';
+                        const likeIcon = isLiked ? 'favorite' : 'favorite_border';
+                        const animDelay = index * 0.1;
+                        
+                        // تصميم كارت البوست
+                        let postHtml = `
+                        <div class="post-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;">
+                            <div class="post-header">
+                                <img src="logo.png" class="post-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                                <div>
+                                    <div class="post-author" data-ar="الدحيح" data-en="Al Dahhih">الدحيح <span class="material-icons" style="font-size:14px; color:#2196f3; vertical-align:middle;">verified</span></div>
+                                    <div class="post-date">${post.date}</div>
+                                </div>
+                            </div>
+                            <div class="post-content">${post.content}</div>`;
+                            
+                        if(post.image && post.image.trim() !== "") {
+                            postHtml += `<img src="${post.image}" class="post-image" style="display:block;" onerror="this.style.display='none'">`;
+                        }
+                        
+                        postHtml += `
+                            <div class="post-actions">
+                                <div class="like-btn ${likeClass}" id="likeBtn_${post.id}" onclick="toggleLike('${post.id}')">
+                                    <span class="material-icons" id="likeIcon_${post.id}">${likeIcon}</span>
+                                    <span id="likeCount_${post.id}">${post.likes}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                        
+                        container.innerHTML += postHtml;
+                    });
+                    postsLoaded = true;
+                    applyLanguage(); // تطبيق اللغة على البوستات الجديدة
+                }
+            })
+            .catch(err => {
+                container.innerHTML = `<div style="text-align:center; padding:50px 0; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:10px;">error_outline</span><p>${currentLang==='en'?'Connection Error':'خطأ في الاتصال'}</p></div>`;
+            });
+        }
+
+        function toggleLike(postId) {
+            const btn = document.getElementById(`likeBtn_${postId}`);
+            const icon = document.getElementById(`likeIcon_${postId}`);
+            const countEl = document.getElementById(`likeCount_${postId}`);
+            
+            // تأثير بصري فوري قبل رد السيرفر (Optimistic UI)
+            const isCurrentlyLiked = btn.classList.contains('liked');
+            let currentCount = parseInt(countEl.innerText);
+            
+            if (isCurrentlyLiked) {
+                btn.classList.remove('liked');
+                icon.innerText = 'favorite_border';
+                countEl.innerText = currentCount - 1;
+            } else {
+                btn.classList.add('liked');
+                icon.innerText = 'favorite';
+                countEl.innerText = currentCount + 1;
+            }
+
+            // إرسال الطلب للسيرفر
+            const formData = new URLSearchParams();
+            formData.append('action', 'likePost');
+            formData.append('code', studentCode);
+            formData.append('postId', postId);
+
+            fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    // لو حصل خطأ نرجع الشكل زي ما كان
+                    alert(currentLang === 'en' ? 'Error saving like' : 'حدث خطأ، حاول مرة أخرى');
+                    if (isCurrentlyLiked) { btn.classList.add('liked'); icon.innerText = 'favorite'; countEl.innerText = currentCount; } 
+                    else { btn.classList.remove('liked'); icon.innerText = 'favorite_border'; countEl.innerText = currentCount; }
+                } else {
+                    // تأكيد العدد الفعلي من السيرفر
+                    countEl.innerText = data.likes;
+                }
+            }).catch(err => console.log(err));
+        }
+
         function openLeaderboard() {
             const modal = document.getElementById('leaderboardModal');
             const body = document.getElementById('leaderboardBody');
@@ -841,23 +888,12 @@
                     let html = `<div style="text-align:center; margin-bottom:25px;"><h2 style="color:var(--primary-blue); font-weight:900;" data-ar="أبطال المنصة 🚀" data-en="Platform Heroes 🚀">أبطال المنصة 🚀</h2><p style="color:var(--text-grey); font-size:0.9rem;" data-ar="أعلى 10 طلاب جمعوا نقاط من الكويزات" data-en="Top 10 students from quizzes">أعلى 10 طلاب جمعوا نقاط من الكويزات</p></div>`;
                     
                     data.leaderboard.forEach((student, index) => {
-                        let medal = '';
-                        let bgStyle = 'background:var(--bg-card);';
+                        let medal = ''; let bgStyle = 'background:var(--bg-card);';
+                        if(index === 0) { medal = '🥇'; bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; } 
+                        else if(index === 1) { medal = '🥈'; } else if(index === 2) { medal = '🥉'; } 
+                        else { medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`; }
                         
-                        if(index === 0) { 
-                            medal = '🥇'; 
-                            bgStyle = 'background:rgba(255, 200, 0, 0.15); border: 2px solid var(--accent-orange);'; 
-                        } else if(index === 1) {
-                            medal = '🥈';
-                        } else if(index === 2) {
-                            medal = '🥉';
-                        } else {
-                            medal = `<span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; font-weight:bold; color:var(--text-grey); background:rgba(0,0,0,0.05); border-radius:50%;">${index+1}</span>`;
-                        }
-                        
-                        if (student.name === localStorage.getItem('studentName')) {
-                            bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;';
-                        }
+                        if (student.name === localStorage.getItem('studentName')) { bgStyle = 'background:rgba(33, 150, 243, 0.1); border: 2px solid #2196f3;'; }
 
                         html += `
                         <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-radius:18px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); ${bgStyle}">
@@ -869,46 +905,33 @@
                         </div>`;
                     });
                     
-                    body.innerHTML = html;
-                    applyLanguage();
+                    body.innerHTML = html; applyLanguage();
                 } else {
                     body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:var(--text-grey);"><span class="material-icons" style="font-size:60px; opacity:0.3; margin-bottom:15px;">emoji_events</span><h3 data-ar="لا يوجد بيانات حتى الآن" data-en="No data yet">لا يوجد بيانات حتى الآن</h3><p data-ar="حل كويزات عشان تكون أول واحد هنا!" data-en="Solve quizzes to be the first here!">حل كويزات عشان تكون أول واحد هنا!</p></div>`;
                     applyLanguage();
                 }
-            })
-            .catch(err => {
+            }).catch(err => {
                 body.innerHTML = `<div style="text-align:center; padding:80px 20px; color:#d32f2f;"><span class="material-icons" style="font-size:60px; margin-bottom:15px;">wifi_off</span><h3 data-ar="خطأ في الاتصال" data-en="Connection error">خطأ في الاتصال</h3></div>`;
                 applyLanguage();
             });
         }
         
-        function closeLeaderboard() { 
-            document.getElementById('leaderboardModal').style.display = 'none'; 
-        }
+        function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
 
         let activeFilter = 'all';
-        
         function filterCourses(category, btn) { 
             activeFilter = category; 
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active')); 
             if(btn) btn.classList.add('active'); 
-            if (category === 'all') {
-                renderCourses(coursesData); 
-            } else {
-                renderCourses(coursesData.filter(c => c.category === category)); 
-            }
+            if (category === 'all') { renderCourses(coursesData); } else { renderCourses(coursesData.filter(c => c.category === category)); }
         }
         
         function updateCompletedCountBadge() { 
-            let count = 0; 
-            coursesData.forEach(c => { 
-                if(localStorage.getItem('completed_' + c.id) === 'true') count++; 
-            }); 
+            let count = 0; coursesData.forEach(c => { if(localStorage.getItem('completed_' + c.id) === 'true') count++; }); 
             document.getElementById('completedCountBadge').innerText = count; 
         }
 
         const container = document.getElementById('coursesListContainer');
-        
         function renderCourses(list) {
             container.innerHTML = '';
             if (list.length === 0) { 
@@ -945,101 +968,50 @@
         });
 
         function switchTab(tabName, element) { 
-            document.querySelectorAll('.page-section').forEach(p => { 
-                p.classList.remove('active'); 
-            }); 
+            document.querySelectorAll('.page-section').forEach(p => { p.classList.remove('active'); }); 
             document.getElementById('page-' + tabName).classList.add('active'); 
             
-            if(element) { 
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); 
-                element.classList.add('active'); 
-            } 
+            if(element) { document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); element.classList.add('active'); } 
             if(tabName === 'profile') updateCompletedCountBadge(); 
             window.scrollTo({ top: 0, behavior: 'smooth' }); 
         }
         
-        function safeLogout() { 
-            localStorage.removeItem('isLoggedInDaheeh'); 
-            window.location.href = 'login.html'; 
-        }
+        function safeLogout() { localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; }
 
-        let pomoInterval; 
-        let pomoTime = 25 * 60; 
-        let isPomoRunning = false;
-        
+        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
         function updatePomoDisplay() { 
-            let m = Math.floor(pomoTime / 60); 
-            let s = pomoTime % 60; 
+            let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; 
             document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); 
         }
-        
-        function togglePomodoro() { 
-            let t = document.getElementById('pomodoroTimer'); 
-            t.style.display = t.style.display === 'none' ? 'block' : 'none'; 
-        }
-        
+        function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
         function startPomodoro() { 
-            if(isPomoRunning) { 
-                clearInterval(pomoInterval); 
-                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; 
-                isPomoRunning = false; 
-            } else { 
+            if(isPomoRunning) { clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; } 
+            else { 
                 pomoInterval = setInterval(() => { 
-                    if(pomoTime > 0) { 
-                        pomoTime--; updatePomoDisplay(); 
-                    } else { 
-                        clearInterval(pomoInterval); 
-                        alert("وقت الراحة!"); 
-                        resetPomodoro(); 
-                    } 
+                    if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } 
+                    else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } 
                 }, 1000); 
-                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; 
-                isPomoRunning = true; 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; 
             } 
         }
-        
-        function resetPomodoro() { 
-            clearInterval(pomoInterval); 
-            pomoTime = 25 * 60; 
-            isPomoRunning = false; 
-            document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; 
-            updatePomoDisplay(); 
-        }
+        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
         function checkLatestNews() {
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${localStorage.getItem('studentCode')}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
-                    let courseTitleAr = "مادة جديدة"; 
-                    let courseTitleEn = "New Course";
-                    
+                    let courseTitleAr = "مادة جديدة"; let courseTitleEn = "New Course";
                     const courseObj = coursesData.find(c => c.id == data.courseId);
-                    if(courseObj) { 
-                        courseTitleAr = courseObj.titleAr; 
-                        courseTitleEn = courseObj.titleEn; 
-                    }
+                    if(courseObj) { courseTitleAr = courseObj.titleAr; courseTitleEn = courseObj.titleEn; }
                     
-                    let newsMsgAr = ""; 
-                    let newsMsgEn = "";
-                    
-                    if (data.type === 'lecture') { 
-                        newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`; 
-                        newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`; 
-                    } else if (data.type === 'midterm') { 
-                        newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`; 
-                        newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`; 
-                    } else if (data.type === 'final') { 
-                        newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`; 
-                        newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`; 
-                    }
+                    let newsMsgAr = ""; let newsMsgEn = "";
+                    if (data.type === 'lecture') { newsMsgAr = `✨ تمت إضافة [ ${data.news} ] في مادة [ ${courseTitleAr} ].. ادخل شوفها! 🚀`; newsMsgEn = `✨ [ ${data.news} ] in [ ${courseTitleEn} ] has been added.. Check it out! 🚀`; } 
+                    else if (data.type === 'midterm') { newsMsgAr = `📝 تمت إضافة [ أسئلة الميدترم ] في مادة [ ${courseTitleAr} ].. استعد للامتحان! 💡`; newsMsgEn = `📝 Midterm Exams for [ ${courseTitleEn} ] added.. Get ready! 💡`; } 
+                    else if (data.type === 'final') { newsMsgAr = `🎓 تمت إضافة [ أسئلة الفاينل ] في مادة [ ${courseTitleAr} ].. راجع وجمع درجات! 🏆`; newsMsgEn = `🎓 Final Exams for [ ${courseTitleEn} ] added.. Review and score high! 🏆`; }
 
                     const marqueeSpan = document.querySelector('.news-ticker marquee span');
-                    if (marqueeSpan) { 
-                        marqueeSpan.setAttribute('data-ar', newsMsgAr); 
-                        marqueeSpan.setAttribute('data-en', newsMsgEn); 
-                        marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr; 
-                    }
+                    if (marqueeSpan) { marqueeSpan.setAttribute('data-ar', newsMsgAr); marqueeSpan.setAttribute('data-en', newsMsgEn); marqueeSpan.innerText = currentLang === 'en' ? newsMsgEn : newsMsgAr; }
 
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime');
                     if(lastSeenTime != data.timestamp) { 
@@ -1048,79 +1020,36 @@
                         localStorage.setItem('daheehLastNewsTime', data.timestamp); 
                     }
                 }
-            })
-            .catch(err => console.log('No news updates found'));
+            }).catch(err => console.log('No news updates found'));
         }
 
-        function closeNewsPopup() { 
-            document.getElementById('newsPopup').style.display = 'none'; 
-        }
-
-        // === دوال صندوق المقترحات ===
-        function openFeedbackModal() {
-            document.getElementById('feedbackText').value = '';
-            document.getElementById('feedbackModal').style.display = 'flex';
-        }
-
-        function closeFeedbackModal() {
-            document.getElementById('feedbackModal').style.display = 'none';
-        }
+        function closeNewsPopup() { document.getElementById('newsPopup').style.display = 'none'; }
+        function openFeedbackModal() { document.getElementById('feedbackText').value = ''; document.getElementById('feedbackModal').style.display = 'flex'; }
+        function closeFeedbackModal() { document.getElementById('feedbackModal').style.display = 'none'; }
 
         function submitFeedback() {
             const text = document.getElementById('feedbackText').value.trim();
-            if(!text) {
-                document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Please write your suggestion first!' : 'يرجى كتابة مقترحك أولاً!';
-                document.getElementById('newsPopup').style.display = 'flex';
-                return;
-            }
+            if(!text) { document.getElementById('newsPopupText').innerText = currentLang === 'en' ? 'Please write your suggestion first!' : 'يرجى كتابة مقترحك أولاً!'; document.getElementById('newsPopup').style.display = 'flex'; return; }
 
             const btn = document.getElementById('sendFeedbackBtn');
             btn.innerHTML = `<span class="material-icons" style="animation: pulse 1s infinite;">sync</span> <span data-ar="جاري الإرسال..." data-en="Sending...">جاري الإرسال...</span>`;
             btn.disabled = true;
 
-            const sCode = localStorage.getItem('studentCode') || 'غير معروف';
-            const sName = localStorage.getItem('studentName') || 'غير معروف';
-
             const formData = new URLSearchParams();
-            formData.append('action', 'sendFeedback');
-            formData.append('code', sCode);
-            formData.append('name', sName);
-            formData.append('message', text);
+            formData.append('action', 'sendFeedback'); formData.append('code', studentCode); formData.append('name', localStorage.getItem('studentName') || 'غير معروف'); formData.append('message', text);
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
+            fetch(SCRIPT_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
             .then(res => res.json())
             .then(data => {
-                btn.innerHTML = `<span class="material-icons">check_circle</span> <span data-ar="تم الإرسال بنجاح!" data-en="Sent Successfully!">تم الإرسال بنجاح!</span>`;
-                btn.style.background = '#2e7d32';
-                
-                setTimeout(() => {
-                    closeFeedbackModal();
-                    btn.innerHTML = `<span class="material-icons" style="margin-inline-end:8px;">send</span><span data-ar="إرسال الآن" data-en="Send Now">إرسال الآن</span>`;
-                    btn.style.background = '#4caf50';
-                    btn.disabled = false;
-                }, 2000);
-            })
-            .catch(err => {
-                btn.innerHTML = `<span class="material-icons">error</span> <span data-ar="خطأ في الاتصال" data-en="Connection Error">خطأ في الاتصال</span>`;
-                btn.style.background = '#d32f2f';
-                setTimeout(() => {
-                    btn.innerHTML = `<span class="material-icons" style="margin-inline-end:8px;">send</span><span data-ar="إرسال الآن" data-en="Send Now">إرسال الآن</span>`;
-                    btn.style.background = '#4caf50';
-                    btn.disabled = false;
-                }, 2000);
+                btn.innerHTML = `<span class="material-icons">check_circle</span> <span data-ar="تم الإرسال بنجاح!" data-en="Sent Successfully!">تم الإرسال بنجاح!</span>`; btn.style.background = '#2e7d32';
+                setTimeout(() => { closeFeedbackModal(); btn.innerHTML = `<span class="material-icons" style="margin-inline-end:8px;">send</span><span data-ar="إرسال الآن" data-en="Send Now">إرسال الآن</span>`; btn.style.background = '#4caf50'; btn.disabled = false; }, 2000);
+            }).catch(err => {
+                btn.innerHTML = `<span class="material-icons">error</span> <span data-ar="خطأ في الاتصال" data-en="Connection Error">خطأ في الاتصال</span>`; btn.style.background = '#d32f2f';
+                setTimeout(() => { btn.innerHTML = `<span class="material-icons" style="margin-inline-end:8px;">send</span><span data-ar="إرسال الآن" data-en="Send Now">إرسال الآن</span>`; btn.style.background = '#4caf50'; btn.disabled = false; }, 2000);
             });
         }
 
-        applyLanguage(); 
-        updatePomoDisplay(); 
-        updateCompletedCountBadge(); 
-        updateXPDisplay(); 
-        checkLatestNews();
-        fetchXPFromSheet(); // جلب النقاط من جوجل شيت عند فتح التطبيق
+        applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay(); checkLatestNews(); fetchXPFromSheet();
     </script>
 </body>
 </html>
