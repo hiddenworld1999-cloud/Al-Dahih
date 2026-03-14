@@ -33,6 +33,7 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
+        /* === ستايلات الثيم الذهبي السري === */
         body.vip-gold-mode {
             --primary-blue: #FFD700; --primary-light: #DAA520; --accent-orange: #FFFFFF;
             --bg-main: #0a0a0a; --bg-card: #171717; --text-main: #FFD700; --text-grey: #aaaaaa;
@@ -772,10 +773,19 @@
             }, 1500); 
         });
 
-        // === دالة تحويل التاريخ إلى وقت نسبي (منذ دقيقة، منذ يوم) ===
+        // === دالة تحويل التاريخ إلى وقت نسبي (منذ دقيقة، منذ يوم) - تم إصلاح NaN ===
         function timeAgo(dateParam) {
             if (!dateParam) return "";
-            const date = new Date(dateParam);
+            
+            // معالجة مشكلة الـ NaN لو التاريخ مبعوت كأرقام (مللي ثانية)
+            let parsedDate = dateParam;
+            if (!isNaN(dateParam) && dateParam.toString().trim() !== "") {
+                parsedDate = parseInt(dateParam);
+            }
+            
+            const date = new Date(parsedDate);
+            if (isNaN(date.getTime())) return currentLang === 'en' ? "Just now" : "الآن"; // لو لسه في مشكلة يكتب الآن أمان
+
             const now = new Date();
             const diffInSeconds = Math.floor((now - date) / 1000);
             const isEn = currentLang === 'en';
@@ -786,8 +796,8 @@
             if (diffInMinutes < 60) {
                 if (diffInMinutes === 1) return isEn ? "1 minute ago" : "منذ دقيقة";
                 if (diffInMinutes === 2) return isEn ? "2 minutes ago" : "منذ دقيقتين";
-                if (diffInMinutes <= 10) return isEn ? `${diffInMinutes} minutes ago` : `منذ ${diffInMinutes} دقائق`;
-                return isEn ? `${diffInMinutes} minutes ago` : `منذ ${diffInMinutes} دقيقة`;
+                if (diffInMinutes <= 10) return isEn ? `${diffInMinutes} mins ago` : `منذ ${diffInMinutes} دقائق`;
+                return isEn ? `${diffInMinutes} mins ago` : `منذ ${diffInMinutes} دقيقة`;
             }
             
             const diffInHours = Math.floor(diffInMinutes / 60);
@@ -805,7 +815,7 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === المنشورات (القسم الجديد) ===
+        // === المنشورات ===
         let postsLoaded = false;
         function loadPosts() {
             if (postsLoaded) return; 
@@ -828,7 +838,6 @@
                         const likeIcon = isLiked ? 'favorite' : 'favorite_border';
                         const animDelay = index * 0.1;
                         
-                        // تصميم كارت البوست واستخدام الوقت النسبي
                         let postHtml = `
                         <div class="post-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;">
                             <div class="post-header">
