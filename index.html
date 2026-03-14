@@ -33,7 +33,6 @@
             --glass-bg: rgba(30, 41, 59, 0.85); --filter-bg: #334155; --calc-bg: #2d2d2d;
         }
 
-        /* === ستايلات الثيم الذهبي السري === */
         body.vip-gold-mode {
             --primary-blue: #FFD700; --primary-light: #DAA520; --accent-orange: #FFFFFF;
             --bg-main: #0a0a0a; --bg-card: #171717; --text-main: #FFD700; --text-grey: #aaaaaa;
@@ -773,10 +772,43 @@
             }, 1500); 
         });
 
+        // === دالة تحويل التاريخ إلى وقت نسبي (منذ دقيقة، منذ يوم) ===
+        function timeAgo(dateParam) {
+            if (!dateParam) return "";
+            const date = new Date(dateParam);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            const isEn = currentLang === 'en';
+
+            if (diffInSeconds < 60) return isEn ? "Just now" : "الآن";
+            
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            if (diffInMinutes < 60) {
+                if (diffInMinutes === 1) return isEn ? "1 minute ago" : "منذ دقيقة";
+                if (diffInMinutes === 2) return isEn ? "2 minutes ago" : "منذ دقيقتين";
+                if (diffInMinutes <= 10) return isEn ? `${diffInMinutes} minutes ago` : `منذ ${diffInMinutes} دقائق`;
+                return isEn ? `${diffInMinutes} minutes ago` : `منذ ${diffInMinutes} دقيقة`;
+            }
+            
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) {
+                if (diffInHours === 1) return isEn ? "1 hour ago" : "منذ ساعة";
+                if (diffInHours === 2) return isEn ? "2 hours ago" : "منذ ساعتين";
+                if (diffInHours <= 10) return isEn ? `${diffInHours} hours ago` : `منذ ${diffInHours} ساعات`;
+                return isEn ? `${diffInHours} hours ago` : `منذ ${diffInHours} ساعة`;
+            }
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays === 1) return isEn ? "Yesterday" : "أمس";
+            if (diffInDays === 2) return isEn ? "2 days ago" : "منذ يومين";
+            if (diffInDays <= 10) return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} أيام`;
+            return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
+        }
+
         // === المنشورات (القسم الجديد) ===
         let postsLoaded = false;
         function loadPosts() {
-            if (postsLoaded) return; // عشان ميحملش كل مرة تدوس على الزرار
+            if (postsLoaded) return; 
             const container = document.getElementById('postsContainer');
             
             fetch(`${SCRIPT_URL}?action=getPosts&code=${studentCode}`)
@@ -796,14 +828,14 @@
                         const likeIcon = isLiked ? 'favorite' : 'favorite_border';
                         const animDelay = index * 0.1;
                         
-                        // تصميم كارت البوست
+                        // تصميم كارت البوست واستخدام الوقت النسبي
                         let postHtml = `
                         <div class="post-card" style="animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;">
                             <div class="post-header">
                                 <img src="logo.png" class="post-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
                                 <div>
                                     <div class="post-author" data-ar="الدحيح" data-en="Al Dahhih">الدحيح <span class="material-icons" style="font-size:14px; color:#2196f3; vertical-align:middle;">verified</span></div>
-                                    <div class="post-date">${post.date}</div>
+                                    <div class="post-date">${timeAgo(post.date)}</div>
                                 </div>
                             </div>
                             <div class="post-content">${post.content}</div>`;
@@ -824,7 +856,7 @@
                         container.innerHTML += postHtml;
                     });
                     postsLoaded = true;
-                    applyLanguage(); // تطبيق اللغة على البوستات الجديدة
+                    applyLanguage(); 
                 }
             })
             .catch(err => {
@@ -837,7 +869,6 @@
             const icon = document.getElementById(`likeIcon_${postId}`);
             const countEl = document.getElementById(`likeCount_${postId}`);
             
-            // تأثير بصري فوري قبل رد السيرفر (Optimistic UI)
             const isCurrentlyLiked = btn.classList.contains('liked');
             let currentCount = parseInt(countEl.innerText);
             
@@ -851,7 +882,6 @@
                 countEl.innerText = currentCount + 1;
             }
 
-            // إرسال الطلب للسيرفر
             const formData = new URLSearchParams();
             formData.append('action', 'likePost');
             formData.append('code', studentCode);
@@ -861,12 +891,10 @@
             .then(res => res.json())
             .then(data => {
                 if (!data.success) {
-                    // لو حصل خطأ نرجع الشكل زي ما كان
                     alert(currentLang === 'en' ? 'Error saving like' : 'حدث خطأ، حاول مرة أخرى');
                     if (isCurrentlyLiked) { btn.classList.add('liked'); icon.innerText = 'favorite'; countEl.innerText = currentCount; } 
                     else { btn.classList.remove('liked'); icon.innerText = 'favorite_border'; countEl.innerText = currentCount; }
                 } else {
-                    // تأكيد العدد الفعلي من السيرفر
                     countEl.innerText = data.likes;
                 }
             }).catch(err => console.log(err));
