@@ -404,8 +404,7 @@
                         <span class="settings-text" data-ar="المظهر الليلي" data-en="Dark Mode">المظهر الليلي</span>
                     </div>
                 </div>
-                
-                <a href="https://t.me/Hidden2003A" class="settings-item" style="text-decoration: none;">
+                <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end" class="settings-item" style="text-decoration: none;">
                     <div class="settings-item-right">
                         <div class="settings-icon icon-support"><span class="material-icons">support_agent</span></div>
                         <span class="settings-text" data-ar="الدعم الفني (Telegram)" data-en="Support (Telegram)">الدعم الفني (Telegram)</span>
@@ -774,7 +773,7 @@
             }, 1500); 
         });
 
-        // === دالة تحويل التاريخ إلى وقت نسبي ===
+        // === دالة تحويل التاريخ إلى وقت نسبي (تمت المعالجة وتصليح التحديث) ===
         function timeAgo(dateParam) {
             if (!dateParam) return "";
             
@@ -815,15 +814,15 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-       // === دالة تحويل الروابط (تم تنظيفها لتناسب Android Studio) ===
-function makeLinksClickable(text) {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, function(url) {
-        return `<a href="${url}" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
-    });
-}
+        // === دالة جديدة لتحويل أي رابط في البوست لزرار أزرق يضغط عليه (Clickable Links) ===
+        function makeLinksClickable(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, function(url) {
+                return `<a href="${url}" target="_blank" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
+            });
+        }
 
-        // === المنشورات ===
+        // === المنشورات (تم التعديل عشان تتحدث تلقائيا وتدعم اللينكات) ===
         let postsLoaded = false;
         function loadPosts() {
             const container = document.getElementById('postsContainer');
@@ -848,6 +847,7 @@ function makeLinksClickable(text) {
                             const animDelay = postsLoaded ? 0 : index * 0.1;
                             const animStyle = postsLoaded ? '' : `animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;`;
                             
+                            // استخدمنا الدالة هنا عشان تحول أي لينك لنص أزرق قابل للضغط
                             const processedContent = makeLinksClickable(post.content);
 
                             let postHtml = `
