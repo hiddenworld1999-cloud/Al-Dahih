@@ -773,7 +773,7 @@
             }, 1500); 
         });
 
-        // === دالة تحويل التاريخ إلى وقت نسبي (تمت المعالجة وتصليح التحديث) ===
+        // === دالة تحويل التاريخ إلى وقت نسبي ===
         function timeAgo(dateParam) {
             if (!dateParam) return "";
             
@@ -814,15 +814,16 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === دالة جديدة لتحويل أي رابط في البوست لزرار أزرق يضغط عليه (Clickable Links) ===
+        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق ===
         function makeLinksClickable(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
+                // إضافة window.open عشان يكسر حماية الويب فيو ويفتح اللينك بره 
+                return `<a href="${url}" target="_blank" rel="noopener noreferrer external" onclick="window.open('${url}', '_system') || window.open('${url}', '_blank'); return false;" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
             });
         }
 
-        // === المنشورات (تم التعديل عشان تتحدث تلقائيا وتدعم اللينكات) ===
+        // === المنشورات ===
         let postsLoaded = false;
         function loadPosts() {
             const container = document.getElementById('postsContainer');
@@ -847,7 +848,6 @@
                             const animDelay = postsLoaded ? 0 : index * 0.1;
                             const animStyle = postsLoaded ? '' : `animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;`;
                             
-                            // استخدمنا الدالة هنا عشان تحول أي لينك لنص أزرق قابل للضغط
                             const processedContent = makeLinksClickable(post.content);
 
                             let postHtml = `
