@@ -814,11 +814,12 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === دالة جديدة لتحويل أي رابط في البوست لزرار أزرق يضغط عليه (Clickable Links) ===
+        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق باستخدام _system ===
         function makeLinksClickable(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
+                // الكود ده بيخلي أي لينك يفتح بره الـ WebView غصب عنه
+                return `<a href="${url}" onclick="window.open('${url}', '_system'); return false;" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
             });
         }
 
