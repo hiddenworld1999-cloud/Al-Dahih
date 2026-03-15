@@ -815,13 +815,13 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق باستخدام target="_blank" و _system ===
-        function makeLinksClickable(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank" onclick="window.open('${url}', '_system'); return false;" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
-            });
-        }
+       // === دالة تحويل الروابط (تم تنظيفها لتناسب Android Studio) ===
+function makeLinksClickable(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+        return `<a href="${url}" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
+    });
+}
 
         // === المنشورات ===
         let postsLoaded = false;
