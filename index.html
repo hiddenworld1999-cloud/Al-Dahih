@@ -172,7 +172,7 @@
         #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
         #newsPopup { z-index: 99999 !important; }
 
-        /* === ستايلات صفحة المنشورات (تمت الإضافة) === */
+        /* === ستايلات صفحة المنشورات === */
         .post-card { background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); }
         .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
         .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-orange); }
@@ -337,7 +337,11 @@
                 <span data-ar="المنشورات" data-en="Posts">المنشورات</span>
             </h3>
             <div id="postsContainer">
+                <div style="text-align:center; padding:50px 0; color:var(--primary-blue);">
+                    <span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span>
+                    <p style="margin-top:10px; font-weight:bold;" data-ar="جاري تحميل المنشورات..." data-en="Loading posts...">جاري تحميل المنشورات...</p>
                 </div>
+            </div>
         </div>
     </div>
 
@@ -810,12 +814,19 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === المنشورات (تم إزالة القفل ليتحدث تلقائياً) ===
+        // === دالة جديدة لتحويل أي رابط في البوست لزرار أزرق يضغط عليه (Clickable Links) ===
+        function makeLinksClickable(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, function(url) {
+                return `<a href="${url}" target="_blank" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
+            });
+        }
+
+        // === المنشورات (تم التعديل عشان تتحدث تلقائيا وتدعم اللينكات) ===
         let postsLoaded = false;
         function loadPosts() {
             const container = document.getElementById('postsContainer');
             
-            // هنظهر علامة التحميل في أول مرة بس عشان منزعجش الطالب لو بيقلب بين الصفحات
             if (!postsLoaded) {
                 container.innerHTML = `<div style="text-align:center; padding:50px 0; color:var(--primary-blue);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><p style="margin-top:10px; font-weight:bold;" data-ar="جاري تحميل المنشورات..." data-en="Loading posts...">جاري تحميل المنشورات...</p></div>`;
             }
@@ -833,11 +844,12 @@
                             const isLiked = post.likedBy.includes(studentCode);
                             const likeClass = isLiked ? 'liked' : '';
                             const likeIcon = isLiked ? 'favorite' : 'favorite_border';
-                            
-                            // الأنيميشن يشتغل أول مرة بس عشان مش كل ما يدخل الصفحة تعمله دوشة
                             const animDelay = postsLoaded ? 0 : index * 0.1;
                             const animStyle = postsLoaded ? '' : `animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;`;
                             
+                            // استخدمنا الدالة هنا عشان تحول أي لينك لنص أزرق قابل للضغط
+                            const processedContent = makeLinksClickable(post.content);
+
                             let postHtml = `
                             <div class="post-card" style="${animStyle}">
                                 <div class="post-header">
@@ -847,7 +859,7 @@
                                         <div class="post-date">${timeAgo(post.date)}</div>
                                     </div>
                                 </div>
-                                <div class="post-content">${post.content}</div>`;
+                                <div class="post-content">${processedContent}</div>`;
                                 
                             if(post.image && post.image.trim() !== "") {
                                 postHtml += `<img src="${post.image}" class="post-image" style="display:block;" onerror="this.style.display='none'">`;
@@ -871,7 +883,7 @@
                 }
             })
             .catch(err => {
-                if(!postsLoaded) {
+                if (!postsLoaded) { 
                     container.innerHTML = `<div style="text-align:center; padding:50px 0; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:10px;">error_outline</span><p>${currentLang==='en'?'Connection Error':'خطأ في الاتصال'}</p></div>`;
                 }
             });
