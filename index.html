@@ -404,7 +404,8 @@
                         <span class="settings-text" data-ar="المظهر الليلي" data-en="Dark Mode">المظهر الليلي</span>
                     </div>
                 </div>
-                <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end" class="settings-item" style="text-decoration: none;">
+                
+                <a href="https://t.me/Hidden2003A" target="_blank" onclick="window.open('https://t.me/Hidden2003A', '_system'); return false;" class="settings-item" style="text-decoration: none;">
                     <div class="settings-item-right">
                         <div class="settings-icon icon-support"><span class="material-icons">support_agent</span></div>
                         <span class="settings-text" data-ar="الدعم الفني (Telegram)" data-en="Support (Telegram)">الدعم الفني (Telegram)</span>
@@ -814,16 +815,11 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق (تحديث الـ Intent) ===
+        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق باستخدام target="_blank" و _system ===
         function makeLinksClickable(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return text.replace(urlRegex, function(url) {
-                // استخدام Android Intent لكسر الـ WebView وإجبار النظام يفتح المتصفح أو التطبيق (زي يوتيوب/تليجرام)
-                let cleanUrl = url.replace(/^https?:\/\//, '');
-                let scheme = url.startsWith('https') ? 'https' : 'http';
-                let intentUrl = `intent://${cleanUrl}#Intent;scheme=${scheme};end`;
-                
-                return `<a href="${intentUrl}" style="color: #2196f3; text-decoration: underline; font-weight: bold;" target="_blank">${url}</a>`;
+                return `<a href="${url}" target="_blank" onclick="window.open('${url}', '_system'); return false;" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
             });
         }
 
