@@ -814,12 +814,16 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق ===
+        // === دالة تحويل الروابط وإجبار فتحها بره التطبيق (تحديث الـ Intent) ===
         function makeLinksClickable(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return text.replace(urlRegex, function(url) {
-                // إضافة window.open عشان يكسر حماية الويب فيو ويفتح اللينك بره 
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer external" onclick="window.open('${url}', '_system') || window.open('${url}', '_blank'); return false;" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
+                // استخدام Android Intent لكسر الـ WebView وإجبار النظام يفتح المتصفح أو التطبيق (زي يوتيوب/تليجرام)
+                let cleanUrl = url.replace(/^https?:\/\//, '');
+                let scheme = url.startsWith('https') ? 'https' : 'http';
+                let intentUrl = `intent://${cleanUrl}#Intent;scheme=${scheme};end`;
+                
+                return `<a href="${intentUrl}" style="color: #2196f3; text-decoration: underline; font-weight: bold;" target="_blank">${url}</a>`;
             });
         }
 
