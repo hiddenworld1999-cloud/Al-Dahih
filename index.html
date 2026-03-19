@@ -404,7 +404,8 @@
                         <span class="settings-text" data-ar="المظهر الليلي" data-en="Dark Mode">المظهر الليلي</span>
                     </div>
                 </div>
-                <a href="intent://resolve?domain=Hidden2003A#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=https%3A%2F%2Ft.me%2FHidden2003A;end" class="settings-item" style="text-decoration: none;">
+                
+                <a href="https://t.me/Hidden2003A" class="settings-item" style="text-decoration: none;">
                     <div class="settings-item-right">
                         <div class="settings-icon icon-support"><span class="material-icons">support_agent</span></div>
                         <span class="settings-text" data-ar="الدعم الفني (Telegram)" data-en="Support (Telegram)">الدعم الفني (Telegram)</span>
@@ -508,17 +509,28 @@
             return currentLang === 'en' ? 'Legend' : 'أسطورة';
         }
 
+        // --- التعديل هنا: إضافة الكويزات للسحابة ---
         function syncXPToCloud() {
             const currentXP = localStorage.getItem('daheehXP') || 0; 
+            const sCode = localStorage.getItem('studentCode') || ''; 
             const sName = localStorage.getItem('studentName') || ''; 
-            if(!studentCode) return;
-            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${studentCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}`;
-            fetch(requestUrl).then(res => res.json()).then(data => console.log('XP Saved')).catch(err => console.log('Error'));
+            const completedQuizzes = localStorage.getItem('daheehAllCompleted') || ''; 
+            
+            if(!sCode) return;
+            
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}&completed=${completedQuizzes}`;
+            
+            fetch(requestUrl)
+                .then(res => res.json())
+                .then(data => console.log('XP & Quizzes Saved to Cloud'))
+                .catch(err => console.log('Error Syncing'));
         }
 
+        // --- التعديل هنا: سحب قائمة الكويزات المقفولة ---
         function fetchXPFromSheet() {
-            if(!studentCode) return;
-            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${studentCode}`)
+            const sCode = localStorage.getItem('studentCode');
+            if(!sCode) return;
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success && data.leaderboard) {
@@ -526,6 +538,15 @@
                     if(myRecord && myRecord.xp !== undefined) {
                         localStorage.setItem('daheehXP', myRecord.xp);
                         updateXPDisplay();
+                        
+                        // استرجاع الكويزات اللي الطالب حلها وقفلها تاني
+                        if (myRecord.completed) {
+                            localStorage.setItem('daheehAllCompleted', myRecord.completed);
+                            let quizzesArr = myRecord.completed.split(',');
+                            quizzesArr.forEach(q => {
+                                if(q.trim() !== '') localStorage.setItem(q, 'true'); // تفعيل القفل
+                            });
+                        }
                     }
                 }
             })
@@ -773,7 +794,7 @@
             }, 1500); 
         });
 
-        // === دالة تحويل التاريخ إلى وقت نسبي (تمت المعالجة وتصليح التحديث) ===
+        // === دالة تحويل التاريخ إلى وقت نسبي ===
         function timeAgo(dateParam) {
             if (!dateParam) return "";
             
@@ -814,14 +835,15 @@
             return isEn ? `${diffInDays} days ago` : `منذ ${diffInDays} يوماً`;
         }
 
-function makeLinksClickable(text) {
+        // === دالة الروابط للمنشورات ===
+        function makeLinksClickable(text) {
             const urlRegex = /(https?:\/\/[^\s]+)/g;
             return text.replace(urlRegex, function(url) {
                 return `<a href="${url}" style="color: #2196f3; text-decoration: underline; font-weight: bold;">${url}</a>`;
             });
         }
 
-        // === المنشورات (تم التعديل عشان تتحدث تلقائيا وتدعم اللينكات) ===
+        // === المنشورات ===
         let postsLoaded = false;
         function loadPosts() {
             const container = document.getElementById('postsContainer');
@@ -846,7 +868,6 @@ function makeLinksClickable(text) {
                             const animDelay = postsLoaded ? 0 : index * 0.1;
                             const animStyle = postsLoaded ? '' : `animation: slideUpFade 0.5s ${animDelay}s forwards; opacity: 0;`;
                             
-                            // استخدمنا الدالة هنا عشان تحول أي لينك لنص أزرق قابل للضغط
                             const processedContent = makeLinksClickable(post.content);
 
                             let postHtml = `
