@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل منصة الدحيح</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-blue: #0A2647;
+            --accent-orange: #FFC800;
+            --text-dark: #1a1a1a;
+            --text-grey: #6c757d;
+            --bg-light: #f4f7f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'IBM Plex Sans Arabic', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* الهيدر */
+        header {
+            background: var(--primary-blue);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-bg {
+            position: absolute; top: -50%; left: -10%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,200,0,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-container .material-icons {
+            font-size: 50px;
+            color: var(--accent-orange);
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 20px;
+        }
+
+        .logo-container h1 {
+            color: white;
+            font-weight: 900;
+            font-size: 2rem;
+        }
+        .logo-container p { color: rgba(255,255,255,0.8); font-size: 1rem; }
+
+        /* حاوية الكروت */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 50px 20px;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .download-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(10,38,71,0.1);
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .card-icon .material-icons { font-size: 40px; }
+        
+        .icon-android { color: #3DDC84; background: rgba(61, 220, 132, 0.1); }
+        .icon-windows { color: #0078D7; background: rgba(0, 120, 215, 0.1); }
+        .icon-apple { color: #555555; background: rgba(85, 85, 85, 0.1); }
+
+        .download-card h2 { font-size: 1.5rem; color: var(--primary-blue); margin-bottom: 10px; font-weight: 800; }
+        .download-card p { color: var(--text-grey); font-size: 0.95rem; line-height: 1.6; margin-bottom: 30px; }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .btn-primary { background: var(--primary-blue); color: white; }
+        .btn-primary:hover { background: #071b33; }
+        
+        .btn-outline { background: white; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+        .btn-outline:hover { background: var(--bg-light); }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-grey);
+            font-size: 0.9rem;
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-bg"></div>
+        <div class="logo-container">
+            <span class="material-icons">school</span>
+            <h1>منصة الدحيح</h1>
+            <p>اختر نسختك وابدأ رحلة التفوق الآن 🚀</p>
+        </div>
+    </header>
+
+    <div class="cards-container">
+        
+        <div class="download-card">
+            <div class="card-icon icon-android">
+                <span class="material-icons">android</span>
+            </div>
+            <h2>تطبيق الأندرويد</h2>
+            <p>النسخة الرسمية للهواتف التي تعمل بنظام أندرويد. خفيفة وسريعة وتعمل بكفاءة عالية.</p>
+            <a href="رابط_جوجل_درايف_للتطبيق_APK_هنا" class="download-btn btn-primary" target="_blank">
+                <span class="material-icons">download</span>
+                تحميل التطبيق
+            </a>
+        </div>
+
+        <div class="download-card">
+            <div class="card-icon icon-windows">
+                <span class="material-icons">computer</span>
+            </div>
+            <h2>برنامج الكمبيوتر</h2>
+            <p>ذاكر على الشاشة الكبيرة بتركيز أعلى. نسخة مخصصة لأجهزة اللاب توب والكمبيوتر (Windows).</p>
+            <a href="رابط_جوجل_درايف_لبرنامج_الكمبيوتر_ZIP_هنا" class="download-btn btn-primary" target="_blank">
+                <span class="material-icons">file_download</span>
+                تحميل البرنامج
+            </a>
+        </div>
+
+        <div class="download-card">
+            <div class="card-icon icon-apple">
+                <span class="material-icons">phone_iphone</span>
+            </div>
+            <h2>مستخدمي الآيفون</h2>
+            <p>المنصة تدعم الآيفون بالكامل! اضغط للدخول، ثم اختر "مشاركة" ⬇️ و "إضافة للشاشة الرئيسية" ➕.</p>
+            <a href="https://hiddenworld1999-cloud.github.io/Al-Dahih/" class="download-btn btn-outline" target="_blank">
+                <span class="material-icons">open_in_new</span>
+                الدخول للمنصة
+            </a>
+        </div>
+
+    </div>
+
+    <footer>
+        جميع الحقوق محفوظة © 2026 - منصة الدحيح
+    </footer>
+
+</body>
+</html>
