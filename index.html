@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<script>
+    // --- حارس الصفحة الرئيسية الخفي ---
+    (function() {
+        var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
+        var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+        var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
+
+        // لو اللي فاتح ده مش التطبيق ولا الآيفون ولا برنامج الكمبيوتر بتاعنا
+        if (!isAndroidApp && !isIOSStandalone && !isElectronApp) {
+            // اطرده فوراً لصفحة التحميل
+            window.location.replace("download.html");
+        }
+    })();
+</script>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
