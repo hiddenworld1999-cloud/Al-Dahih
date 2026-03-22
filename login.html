@@ -249,8 +249,7 @@
             var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
             var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
             
-            // التعديل السحري هنا: إضافة بيئة Electron للحماية عشان تفتح من برنامج الويندوز
-            var isElectronApp = navigator.userAgent.includes('Electron');
+            var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
 
             if (isAndroidApp || isIOSStandalone || isElectronApp) {
                 // لو فاتح من التطبيق أو الآيفون أو برنامج اللاب توب: نحذف شاشة الحماية ونظهر التطبيق
