@@ -2,16 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-    // --- حارس الصفحة الرئيسية الخفي ---
+    // --- حارس الصفحة الرئيسية الخفي (الذكي) ---
     (function() {
         var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
         var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
         var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
 
-        // لو اللي فاتح ده مش التطبيق ولا الآيفون ولا برنامج الكمبيوتر بتاعنا
+        // لو اللي فاتح ده مش التطبيق ولا الآيفون من الشاشة الرئيسية ولا برنامج الكمبيوتر
         if (!isAndroidApp && !isIOSStandalone && !isElectronApp) {
-            // اطرده فوراً لصفحة التحميل
-            window.location.replace("download.html");
+            
+            // لو هو فاتح من آيفون أو آيباد (سفاري العادي)
+            if (/iPhone|iPad|iPod|Mac/.test(navigator.userAgent)) {
+                // نوديه لشاشة الحماية الزرقا عشان يعرف إزاي يضيفه للشاشة الرئيسية
+                window.location.replace("login.html");
+            } else {
+                // لو كمبيوتر أو متصفح عادي، نوديه صفحة التحميل يحمل البرنامج
+                window.location.replace("download.html");
+            }
         }
     })();
 </script>
