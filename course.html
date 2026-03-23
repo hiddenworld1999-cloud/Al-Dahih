@@ -104,7 +104,6 @@
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
-        /* أكواد الآلة الحاسبة العائمة الجديدة */
         .calc-floating-container { position: fixed; bottom: 30px; left: 20px; z-index: 4500; display: flex; flex-direction: column; align-items: flex-start; }
         .calc-fab { width: 55px; height: 55px; border-radius: 50%; background: #0A2647; color: white; border: 2px solid #FFC800; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; z-index: 4501; }
         .calc-fab.active { background: #FFC800; color: #0A2647; border-color: #0A2647; }
@@ -281,7 +280,7 @@
     <div id="quizModal" class="modal modal-trackable" style="z-index: 2000;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:bold;" data-ar="اختبار المحاضرة" data-en="Lecture Quiz">اختبار المحاضرة</span>
+            <span style="font-weight:bold; font-size:1.1rem; color:var(--primary);" id="quizModalTitle">اختبار</span>
             <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="quizBody"></div>
@@ -892,6 +891,20 @@
         // ==========================================
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
+            
+            // --- تعديل عنوان الامتحان الديناميكي ---
+            const courseName = currentLang === 'en' ? course.titleEn : course.titleAr;
+            let dynamicTitle = '';
+            if (currentLectureNum === 'midterm') {
+                dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`;
+            } else if (currentLectureNum === 'final') {
+                dynamicTitle = currentLang === 'en' ? `Final Exam - ${courseName}` : `امتحان الفاينل لمادة ${courseName}`;
+            } else {
+                dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`;
+            }
+            document.getElementById('quizModalTitle').innerText = dynamicTitle;
+            // ---------------------------------------
+
             const body = document.getElementById('quizBody');
             
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
@@ -954,7 +967,7 @@
                 });
                 
                 html += `
-                <div style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);">
+                <div id="question_block_${qIndex}" style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); transition: 0.3s;">
                     <div style="margin-bottom:10px; font-weight:bold; color:var(--accent); font-size:0.9rem;">
                         ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
                     </div>
@@ -996,10 +1009,26 @@
         
         // دالة تسليم الامتحان وإظهار التصحيح والنتيجة
         function submitFullQuiz() {
-            // التحقق من وجود أسئلة لم يتم الإجابة عليها
-            if (userAnswers.includes(null)) {
-                const confirmMsg = currentLang === 'en' ? 'You have unanswered questions. Are you sure you want to submit?' : 'في أسئلة لسه مجاوبتش عليها، متأكد إنك عايز تسلم الامتحان؟';
-                if (!confirm(confirmMsg)) return;
+            // التحقق من وجود أسئلة لم يتم الإجابة عليها مع توجيه ذكي
+            const firstUnansweredIndex = userAnswers.indexOf(null);
+            if (firstUnansweredIndex !== -1) {
+                alert(currentLang === 'en' ? 'Please answer all questions! You missed Question ' + (firstUnansweredIndex + 1) : 'عفواً، لازم تجاوب على كل الأسئلة! إنت نسيت السؤال رقم ' + (firstUnansweredIndex + 1));
+                
+                const missedQuestionEl = document.getElementById('question_block_' + firstUnansweredIndex);
+                if(missedQuestionEl) {
+                    // سحب الشاشة للسؤال المنسي
+                    missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // إضاءة السؤال باللون الأحمر للفت الانتباه
+                    missedQuestionEl.style.boxShadow = '0 0 15px rgba(244, 67, 54, 0.5)';
+                    missedQuestionEl.style.borderColor = '#f44336';
+                    
+                    // إزالة الإضاءة بعد ثانيتين
+                    setTimeout(() => {
+                        missedQuestionEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)';
+                        missedQuestionEl.style.borderColor = 'rgba(0,0,0,0.05)';
+                    }, 2000);
+                }
+                return; // إيقاف التسليم
             }
             
             score = 0;
@@ -1081,7 +1110,7 @@
             }
             
             const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; 
-            const finishBtn = currentLang === 'en' ? 'Finish' : 'العودة للمادة';
+            const finishBtn = currentLang === 'en' ? 'Return to Course' : 'العودة للمادة';
             
             document.getElementById('quizBody').innerHTML = `
             <div style="text-align:center; padding:20px 0 10px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
