@@ -285,6 +285,18 @@
         </div>
         <div class="modal-body" id="quizBody"></div>
     </div>
+    
+    <div id="examLeaderboardModal" class="modal modal-trackable" style="z-index: 2500;">
+        <div class="modal-head">
+            <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
+            <span style="font-weight:bold; font-size:1.1rem; color:var(--accent); display:flex; align-items:center; gap:5px;">
+                <span class="material-icons">emoji_events</span> أوائل الامتحان
+            </span>
+            <span style="width: 28px;"></span>
+        </div>
+        <div class="modal-body" id="examLeaderboardBody" style="background:var(--bg);">
+        </div>
+    </div>
 
     <div id="pdfViewer" class="img-viewer modal-trackable">
         <div class="img-head">
@@ -884,15 +896,15 @@
         let score = 0; 
         let activeQuizQuestions = []; 
         let currentLectureNum = ''; 
-        let userAnswers = []; // مصفوفة لتخزين إجابات الطالب
+        let userAnswers = []; 
         
         // ==========================================
-        // 3. دالة تحميل أسئلة الاختبار (نظام عرض الكل)
+        // 3. دالة تحميل أسئلة الاختبار 
         // ==========================================
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
             
-            // --- تعديل عنوان الامتحان الديناميكي ---
+            // --- عنوان الامتحان الديناميكي ---
             const courseName = currentLang === 'en' ? course.titleEn : course.titleAr;
             let dynamicTitle = '';
             if (currentLectureNum === 'midterm') {
@@ -943,7 +955,7 @@
             const body = document.getElementById('quizBody');
             if (data.questions && data.questions.length > 0) { 
                 activeQuizQuestions = data.questions; 
-                userAnswers = new Array(activeQuizQuestions.length).fill(null); // تصفير إجابات الطالب
+                userAnswers = new Array(activeQuizQuestions.length).fill(null); 
                 score = 0; 
                 showAllQuestions(); 
             } else { 
@@ -952,7 +964,6 @@
             }
         }
         
-        // دالة عرض كل الأسئلة تحت بعض
         function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
             let html = '';
@@ -983,14 +994,12 @@
             </button>`;
             
             body.innerHTML = html;
-            body.scrollTop = 0; // التمرير لأعلى الصفحة
+            body.scrollTop = 0; 
         }
         
-        // دالة تحديد الإجابة (تظليل الاختيار بدون تصحيح)
         function selectAnswer(qIndex, optIndex) {
-            userAnswers[qIndex] = optIndex; // حفظ اختيار الطالب
+            userAnswers[qIndex] = optIndex; 
             
-            // إزالة التظليل من كل الاختيارات في هذا السؤال
             const opts = document.querySelectorAll(`[id^="opt_${qIndex}_"]`);
             opts.forEach(opt => {
                 opt.style.borderColor = 'transparent';
@@ -998,7 +1007,6 @@
                 opt.querySelector('.opt-icon').style.display = 'none';
             });
             
-            // تظليل الاختيار الجديد
             const selectedOpt = document.getElementById(`opt_${qIndex}_${optIndex}`);
             selectedOpt.style.borderColor = 'var(--accent)';
             selectedOpt.style.background = 'rgba(255, 200, 0, 0.1)';
@@ -1006,8 +1014,56 @@
             
             if (navigator.vibrate) { navigator.vibrate(20); }
         }
+
+        // إرسال درجة الامتحان للخادم
+        function saveExamScoreToCloud(quizId, currentScore, totalScore) {
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            const sName = localStorage.getItem('studentName') || ''; 
+            if(!sCode) return;
+            
+            fetch(`${SCRIPT_URL}?action=saveExamScore&quizId=${quizId}&code=${sCode}&name=${encodeURIComponent(sName)}&score=${currentScore}&total=${totalScore}`)
+                .then(res => res.json())
+                .then(data => console.log('تم حفظ نتيجة الامتحان للأوائل'))
+                .catch(err => console.log('خطأ في حفظ نتيجة الأوائل'));
+        }
+
+        // فتح شاشة الأوائل
+        function openExamLeaderboard(quizId) {
+            const modalBody = document.getElementById('examLeaderboardBody');
+            modalBody.innerHTML = `<div style="text-align:center; padding:40px;"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite; color:var(--accent);">emoji_events</span><h3 style="margin-top:15px;">جاري جلب لوحة الشرف...</h3></div>`;
+            openModalWithHistory('examLeaderboardModal');
+            
+            fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success && data.leaderboard && data.leaderboard.length > 0) {
+                        let html = '';
+                        data.leaderboard.forEach((student, index) => {
+                            let medal = '';
+                            if(index === 0) medal = '🥇';
+                            else if(index === 1) medal = '🥈';
+                            else if(index === 2) medal = '🥉';
+                            else medal = `<span style="display:inline-block; width:24px; text-align:center; font-weight:bold; color:var(--grey);">${index + 1}</span>`;
+                            
+                            html += `
+                            <div style="display:flex; align-items:center; justify-content:space-between; background:var(--card); padding:15px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(0,0,0,0.05); box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <div style="font-size:1.5rem;">${medal}</div>
+                                    <div style="font-weight:bold; color:var(--text);">${student.name}</div>
+                                </div>
+                                <div style="font-weight:900; color:var(--primary); background:rgba(10,38,71,0.1); padding:5px 12px; border-radius:8px;">${student.score} <span style="font-size:0.8rem; color:var(--grey)">/ ${student.total}</span></div>
+                            </div>`;
+                        });
+                        modalBody.innerHTML = html;
+                    } else {
+                        modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:50px; opacity:0.5;">sentiment_dissatisfied</span><h3 style="margin-top:15px;">لا يوجد بيانات حتى الآن</h3><p>كن أول من يمتحن ويدخل لوحة الشرف!</p></div>`;
+                    }
+                })
+                .catch(err => {
+                    modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">wifi_off</span><h3 style="margin-top:15px;">عفواً، فشل الاتصال بالخادم</h3></div>`;
+                });
+        }
         
-        // دالة تسليم الامتحان وإظهار التصحيح والنتيجة
         function submitFullQuiz() {
             // التحقق من وجود أسئلة لم يتم الإجابة عليها مع توجيه ذكي
             const firstUnansweredIndex = userAnswers.indexOf(null);
@@ -1016,19 +1072,16 @@
                 
                 const missedQuestionEl = document.getElementById('question_block_' + firstUnansweredIndex);
                 if(missedQuestionEl) {
-                    // سحب الشاشة للسؤال المنسي
                     missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // إضاءة السؤال باللون الأحمر للفت الانتباه
                     missedQuestionEl.style.boxShadow = '0 0 15px rgba(244, 67, 54, 0.5)';
                     missedQuestionEl.style.borderColor = '#f44336';
                     
-                    // إزالة الإضاءة بعد ثانيتين
                     setTimeout(() => {
                         missedQuestionEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)';
                         missedQuestionEl.style.borderColor = 'rgba(0,0,0,0.05)';
                     }, 2000);
                 }
-                return; // إيقاف التسليم
+                return; 
             }
             
             score = 0;
@@ -1047,11 +1100,9 @@
                     let iconHtml = '';
                     
                     if (optIndex === q.ans) {
-                        // الإجابة الصحيحة -> لون أخضر
                         optStyle = 'background: #e8f5e9; border-color: #4caf50; color: #2e7d32; opacity: 1; font-weight: bold;';
                         iconHtml = '<span class="material-icons" style="color:#4caf50;">check_circle</span>';
                     } else if (optIndex === userAnswers[qIndex] && !isCorrect) {
-                        // إجابة الطالب الخاطئة -> لون أحمر
                         optStyle = 'background: #ffebee; border-color: #f44336; color: #c62828; opacity: 1;';
                         iconHtml = '<span class="material-icons" style="color:#f44336;">cancel</span>';
                     }
@@ -1074,12 +1125,14 @@
                 </div>`;
             });
             
-            // حساب النقاط والـ XP
             const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
             let xpRewardText = ''; 
             let xpColor = '#4caf50';
             
+            // حفظ درجة الامتحان في الخادم للمنافسة على الأوائل (حتى لو درجته صفر)
+            saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
+
             if(score > 0) {
                 if (!isAlreadyCompleted) { 
                     addXP(score * 10); 
@@ -1111,12 +1164,17 @@
             
             const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; 
             const finishBtn = currentLang === 'en' ? 'Return to Course' : 'العودة للمادة';
+            const leaderBtn = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل للامتحان';
             
             document.getElementById('quizBody').innerHTML = `
             <div style="text-align:center; padding:20px 0 10px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
                 <h2 style="color: var(--primary);">${resTitle}</h2>
                 <h1 style="font-size:4rem; color:var(--accent); margin: 10px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1>
                 <p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p>
+                
+                <button class="btn-card" onclick="openExamLeaderboard('${quizKey}')" style="justify-content:center; background:var(--accent); color:#0A2647; font-weight:900; margin-bottom:15px; border-radius:15px; padding: 15px; box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3); border:none;">
+                    <span class="material-icons" style="margin-inline-end:8px;">emoji_events</span> ${leaderBtn}
+                </button>
             </div>
             
             <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px;">
@@ -1130,10 +1188,9 @@
                 <span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}
             </button>`;
             
-            document.getElementById('quizBody').scrollTop = 0; // التمرير لأعلى الصفحة ليرى النتيجة
+            document.getElementById('quizBody').scrollTop = 0; 
         }
 
-        // --- التعديل هنا: إضافة الـ completed للرفع ---
         function syncXPToCloud() {
             const currentXP = localStorage.getItem('daheehXP') || 0; 
             const sCode = localStorage.getItem('studentCode') || ''; 
@@ -1150,7 +1207,6 @@
                 .catch(err => console.log('Error Syncing'));
         }
 
-        // --- التعديل هنا: سحب قائمة الكويزات المقفولة ---
         function fetchXPFromSheet() {
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
@@ -1163,12 +1219,11 @@
                         localStorage.setItem('daheehXP', myRecord.xp);
                         updateXPDisplay();
                         
-                        // استرجاع الكويزات اللي الطالب حلها وقفلها تاني
                         if (myRecord.completed) {
                             localStorage.setItem('daheehAllCompleted', myRecord.completed);
                             let quizzesArr = myRecord.completed.split(',');
                             quizzesArr.forEach(q => {
-                                if(q.trim() !== '') localStorage.setItem(q, 'true'); // تفعيل القفل
+                                if(q.trim() !== '') localStorage.setItem(q, 'true'); 
                             });
                         }
                     }
@@ -1179,7 +1234,7 @@
 
         applyLanguage(); 
         updatePomoDisplay();
-        fetchXPFromSheet(); // جلب النقاط من جوجل شيت عند فتح المادة
+        fetchXPFromSheet(); 
     </script>
 </body>
 </html>
