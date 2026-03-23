@@ -21,9 +21,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="الدحيح">
-<link rel="apple-touch-icon" href="logo.png">
-
-<link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -883,13 +882,13 @@
             });
         }
 
-        let currentQ = 0; 
         let score = 0; 
         let activeQuizQuestions = []; 
         let currentLectureNum = ''; 
+        let userAnswers = []; // مصفوفة لتخزين إجابات الطالب
         
         // ==========================================
-        // 3. دالة تحميل أسئلة الاختبار (أونلاين + أوفلاين)
+        // 3. دالة تحميل أسئلة الاختبار (نظام عرض الكل)
         // ==========================================
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
@@ -931,103 +930,178 @@
             const body = document.getElementById('quizBody');
             if (data.questions && data.questions.length > 0) { 
                 activeQuizQuestions = data.questions; 
-                currentQ = 0; 
+                userAnswers = new Array(activeQuizQuestions.length).fill(null); // تصفير إجابات الطالب
                 score = 0; 
-                showQuestion(); 
+                showAllQuestions(); 
             } else { 
                 body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; 
                 applyLanguage(); 
             }
         }
         
-        function showQuestion() {
-            const q = activeQuizQuestions[currentQ]; 
+        // دالة عرض كل الأسئلة تحت بعض
+        function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
-            let optsHtml = ''; 
-            const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+            let html = '';
             
-            opts.forEach((opt, idx) => { 
-                optsHtml += `<div class="quiz-opt" onclick="checkAnswer(this, ${idx}, ${q.ans})"><span>${opt}</span><span class="material-icons opt-icon" style="display:none;"></span></div>`; 
+            activeQuizQuestions.forEach((q, qIndex) => {
+                let optsHtml = ''; 
+                const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+                const qText = currentLang === 'en' ? q.qEn : q.qAr;
+                
+                opts.forEach((opt, optIndex) => { 
+                    optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span>${opt}</span><span class="material-icons opt-icon" style="display:none; color:var(--accent);">check_circle</span></div>`; 
+                });
+                
+                html += `
+                <div style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);">
+                    <div style="margin-bottom:10px; font-weight:bold; color:var(--accent); font-size:0.9rem;">
+                        ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
+                    </div>
+                    <h3 style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
+                    <div>${optsHtml}</div>
+                </div>`;
             });
             
-            const stepText = currentLang === 'en' ? `Question ${currentQ + 1} of ${activeQuizQuestions.length}` : `سؤال ${currentQ + 1} من ${activeQuizQuestions.length}`; 
-            const qText = currentLang === 'en' ? q.qEn : q.qAr;
+            html += `
+            <button class="btn-card" onclick="submitFullQuiz()" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:15px;">
+                <span class="material-icons" style="margin-inline-end:10px;">done_all</span>
+                ${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}
+            </button>`;
             
-            body.innerHTML = `<div style="margin-bottom:15px; font-weight:bold; color:var(--grey)">${stepText}</div><h3 style="margin-bottom:20px; line-height:1.5;">${qText}</h3><div>${optsHtml}</div>`;
+            body.innerHTML = html;
+            body.scrollTop = 0; // التمرير لأعلى الصفحة
         }
         
-        function checkAnswer(el, chosen, correct) {
-            const all = document.querySelectorAll('.quiz-opt'); 
-            all.forEach(d => { d.onclick = null; d.style.pointerEvents = 'none'; });
-            const icon = el.querySelector('.opt-icon'); 
-            icon.style.display = 'block';
+        // دالة تحديد الإجابة (تظليل الاختيار بدون تصحيح)
+        function selectAnswer(qIndex, optIndex) {
+            userAnswers[qIndex] = optIndex; // حفظ اختيار الطالب
             
-            if (chosen === correct) { 
-                el.classList.add('correct'); 
-                icon.innerText = 'check_circle'; 
-                score++; 
-            } else { 
-                el.classList.add('wrong'); 
-                icon.innerText = 'cancel'; 
-                all[correct].classList.add('correct'); 
-                all[correct].querySelector('.opt-icon').innerText = 'check_circle'; 
-                all[correct].querySelector('.opt-icon').style.display = 'block'; 
-                if (navigator.vibrate) { navigator.vibrate([50, 50, 50]); } 
+            // إزالة التظليل من كل الاختيارات في هذا السؤال
+            const opts = document.querySelectorAll(`[id^="opt_${qIndex}_"]`);
+            opts.forEach(opt => {
+                opt.style.borderColor = 'transparent';
+                opt.style.background = 'var(--quiz-option-bg)';
+                opt.querySelector('.opt-icon').style.display = 'none';
+            });
+            
+            // تظليل الاختيار الجديد
+            const selectedOpt = document.getElementById(`opt_${qIndex}_${optIndex}`);
+            selectedOpt.style.borderColor = 'var(--accent)';
+            selectedOpt.style.background = 'rgba(255, 200, 0, 0.1)';
+            selectedOpt.querySelector('.opt-icon').style.display = 'block';
+            
+            if (navigator.vibrate) { navigator.vibrate(20); }
+        }
+        
+        // دالة تسليم الامتحان وإظهار التصحيح والنتيجة
+        function submitFullQuiz() {
+            // التحقق من وجود أسئلة لم يتم الإجابة عليها
+            if (userAnswers.includes(null)) {
+                const confirmMsg = currentLang === 'en' ? 'You have unanswered questions. Are you sure you want to submit?' : 'في أسئلة لسه مجاوبتش عليها، متأكد إنك عايز تسلم الامتحان؟';
+                if (!confirm(confirmMsg)) return;
             }
             
-            setTimeout(() => {
-                currentQ++;
-                if (currentQ < activeQuizQuestions.length) { 
-                    showQuestion(); 
-                } else { 
-                    const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
-                    const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
-                    let xpRewardText = ''; 
-                    let xpColor = '#4caf50';
+            score = 0;
+            let reviewHtml = '';
+            
+            activeQuizQuestions.forEach((q, qIndex) => {
+                const isCorrect = userAnswers[qIndex] === q.ans;
+                if (isCorrect) score++;
+                
+                let optsHtml = '';
+                const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+                const qText = currentLang === 'en' ? q.qEn : q.qAr;
+                
+                opts.forEach((opt, optIndex) => {
+                    let optStyle = 'background: var(--quiz-option-bg); border: 2px solid transparent; opacity: 0.6;';
+                    let iconHtml = '';
                     
-                    if(score > 0) {
-                        if (!isAlreadyCompleted) { 
-                            addXP(score * 10); 
-                            localStorage.setItem(quizKey, 'true'); 
-                            
-                            // ---- الجديد: إضافة الكويز لقائمة المحفوظات السحابية ----
-                            let savedQuizzes = localStorage.getItem('daheehAllCompleted') || '';
-                            if(!savedQuizzes.includes(quizKey)) {
-                                savedQuizzes += quizKey + ',';
-                                localStorage.setItem('daheehAllCompleted', savedQuizzes);
-                            }
-                            // ------------------------------------------------
-                            
-                            syncXPToCloud(); 
-                            
-                            xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; 
-                            let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); 
-                            if(btnTxtEl) { 
-                                btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
-                                btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; 
-                                btnTxtEl.parentElement.style.color = 'var(--text-grey)'; 
-                                btnTxtEl.parentElement.style.boxShadow = 'none'; 
-                                btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; 
-                                btnTxtEl.previousElementSibling.innerText = 'replay'; 
-                            } 
-                        } else { 
-                            xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; 
-                            xpColor = 'var(--text-grey)'; 
-                        }
+                    if (optIndex === q.ans) {
+                        // الإجابة الصحيحة -> لون أخضر
+                        optStyle = 'background: #e8f5e9; border-color: #4caf50; color: #2e7d32; opacity: 1; font-weight: bold;';
+                        iconHtml = '<span class="material-icons" style="color:#4caf50;">check_circle</span>';
+                    } else if (optIndex === userAnswers[qIndex] && !isCorrect) {
+                        // إجابة الطالب الخاطئة -> لون أحمر
+                        optStyle = 'background: #ffebee; border-color: #f44336; color: #c62828; opacity: 1;';
+                        iconHtml = '<span class="material-icons" style="color:#f44336;">cancel</span>';
                     }
                     
-                    const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; 
-                    const finishBtn = currentLang === 'en' ? 'Finish' : 'إنهاء';
+                    optsHtml += `<div class="quiz-opt" style="${optStyle} pointer-events: none; display: flex; justify-content: space-between; align-items: center;"><span>${opt}</span>${iconHtml}</div>`;
+                });
+                
+                const headerColor = isCorrect ? '#4caf50' : '#f44336';
+                const headerIcon = isCorrect ? 'check_circle' : 'cancel';
+                
+                reviewHtml += `
+                <div style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 2px solid ${headerColor}; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: ${headerColor};"></div>
+                    <div style="margin-bottom:10px; font-weight:bold; color:${headerColor}; display:flex; align-items:center; gap:5px; font-size:0.9rem;">
+                        <span class="material-icons" style="font-size:18px;">${headerIcon}</span> 
+                        ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
+                    </div>
+                    <h3 style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
+                    <div>${optsHtml}</div>
+                </div>`;
+            });
+            
+            // حساب النقاط والـ XP
+            const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
+            let xpRewardText = ''; 
+            let xpColor = '#4caf50';
+            
+            if(score > 0) {
+                if (!isAlreadyCompleted) { 
+                    addXP(score * 10); 
+                    localStorage.setItem(quizKey, 'true'); 
                     
-                    document.getElementById('quizBody').innerHTML = `
-                    <div style="text-align:center; padding:30px;">
-                        <h2>${resTitle}</h2>
-                        <h1 style="font-size:3.5rem; color:var(--accent); margin: 10px 0;">${score} / ${activeQuizQuestions.length}</h1>
-                        <p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p>
-                        <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white;">${finishBtn}</button>
-                    </div>`; 
+                    let savedQuizzes = localStorage.getItem('daheehAllCompleted') || '';
+                    if(!savedQuizzes.includes(quizKey)) {
+                        savedQuizzes += quizKey + ',';
+                        localStorage.setItem('daheehAllCompleted', savedQuizzes);
+                    }
+                    
+                    syncXPToCloud(); 
+                    
+                    xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; 
+                    let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); 
+                    if(btnTxtEl) { 
+                        btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                        btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; 
+                        btnTxtEl.parentElement.style.color = 'var(--text-grey)'; 
+                        btnTxtEl.parentElement.style.boxShadow = 'none'; 
+                        btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; 
+                        btnTxtEl.previousElementSibling.innerText = 'replay'; 
+                    } 
+                } else { 
+                    xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; 
+                    xpColor = 'var(--text-grey)'; 
                 }
-            }, 1500);
+            }
+            
+            const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; 
+            const finishBtn = currentLang === 'en' ? 'Finish' : 'العودة للمادة';
+            
+            document.getElementById('quizBody').innerHTML = `
+            <div style="text-align:center; padding:20px 0 10px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <h2 style="color: var(--primary);">${resTitle}</h2>
+                <h1 style="font-size:4rem; color:var(--accent); margin: 10px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1>
+                <p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p>
+            </div>
+            
+            <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px;">
+                <span class="material-icons" style="color:var(--primary);">fact_check</span>
+                ${currentLang === 'en' ? 'Answers Review:' : 'مراجعة الإجابات والتصحيح:'}
+            </h3>
+            
+            ${reviewHtml}
+            
+            <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white; margin-top:20px; border-radius:15px; padding: 15px;">
+                <span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}
+            </button>`;
+            
+            document.getElementById('quizBody').scrollTop = 0; // التمرير لأعلى الصفحة ليرى النتيجة
         }
 
         // --- التعديل هنا: إضافة الـ completed للرفع ---
