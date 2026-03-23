@@ -178,26 +178,29 @@
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="cursor:pointer; color:var(--grey);">close</span>
             </div>
             <input type="text" id="calcDisplay" class="calc-display" readonly>
-            <div class="calc-grid">
-                <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
-                <button class="calc-btn op" onclick="appendCalc('/')">/</button>
-                <button class="calc-btn op" onclick="appendCalc('*')">×</button>
-                <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+            <div class="calc-grid" style="direction: ltr;">
+                <button class="calc-btn" style="background: #ffebee; color: #d32f2f; grid-column: span 2;" onclick="clearCalc()">C</button>
+                <button class="calc-btn op" style="color: #d32f2f;" onclick="deleteLast()">⌫</button>
+                <button class="calc-btn op" onclick="appendCalc('/')">÷</button>
                 
                 <button class="calc-btn" onclick="appendCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendCalc('8')">8</button>
                 <button class="calc-btn" onclick="appendCalc('9')">9</button>
-                <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+                <button class="calc-btn op" onclick="appendCalc('*')">×</button>
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
                 <button class="calc-btn" onclick="appendCalc('5')">5</button>
                 <button class="calc-btn" onclick="appendCalc('6')">6</button>
-                <button class="calc-btn eq" onclick="calculateResult()">=</button>
+                <button class="calc-btn op" onclick="appendCalc('-')">-</button>
                 
                 <button class="calc-btn" onclick="appendCalc('1')">1</button>
                 <button class="calc-btn" onclick="appendCalc('2')">2</button>
                 <button class="calc-btn" onclick="appendCalc('3')">3</button>
-                <button class="calc-btn" onclick="appendCalc('0')">0</button>
+                <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+                
+                <button class="calc-btn" style="grid-column: span 2;" onclick="appendCalc('0')">0</button>
+                <button class="calc-btn" onclick="appendCalc('.')">.</button>
+                <button class="calc-btn eq" style="background: var(--accent); color: #0A2647;" onclick="calculateResult()">=</button>
             </div>
         </div>
         <button class="calc-fab" id="calcFabBtn" onclick="toggleFloatingCalc()">
@@ -574,20 +577,26 @@
             }
         }
         
+        // دوال الآلة الحاسبة المحدثة
         function appendCalc(v) { 
             document.getElementById('calcDisplay').value += v; 
         } 
-        
         function clearCalc() { 
             document.getElementById('calcDisplay').value = ''; 
         }
-        
+        function deleteLast() {
+            let display = document.getElementById('calcDisplay');
+            display.value = display.value.toString().slice(0, -1);
+        }
         function calculateResult() { 
             try { 
-                document.getElementById('calcDisplay').value = eval(document.getElementById('calcDisplay').value); 
+                let expression = document.getElementById('calcDisplay').value.replace(/×/g, '*').replace(/÷/g, '/');
+                let result = eval(expression);
+                if(result === undefined) result = '';
+                document.getElementById('calcDisplay').value = result; 
             } catch(e) { 
                 document.getElementById('calcDisplay').value = 'Error'; 
-                setTimeout(clearCalc,1000); 
+                setTimeout(clearCalc, 1000); 
             } 
         }
 
