@@ -576,7 +576,6 @@
             } 
         }
 
-        // دالة إظهار وإخفاء الآلة الحاسبة العائمة
         function toggleFloatingCalc() {
             const box = document.getElementById('calculatorBox');
             const btn = document.getElementById('calcFabBtn');
@@ -589,7 +588,6 @@
             }
         }
         
-        // دوال الآلة الحاسبة المحدثة
         function appendCalc(v) { 
             document.getElementById('calcDisplay').value += v; 
         } 
@@ -656,9 +654,6 @@
             updatePomoDisplay(); 
         }
 
-        // ==========================================
-        // 1. دالة تحميل المحاضرات (أونلاين + أوفلاين)
-        // ==========================================
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
             list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
@@ -725,6 +720,8 @@
                 btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
             }
             
+            let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
+            
             let htmlContent = `
             <div class="content-view" style="text-align:center; padding:30px 10px;">
                 <span class="material-icons" style="font-size:70px; color:#f44336; margin-bottom:15px;">picture_as_pdf</span>
@@ -737,6 +734,10 @@
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
                 </button>
+                
+                <button class="btn-lecture-quiz" style="background: transparent; color: var(--accent); border: 2px solid var(--accent); margin-top: 15px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
+                    <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
+                </button>
             </div>`;
             
             document.getElementById('contentTitle').innerText = lectureName; 
@@ -745,9 +746,6 @@
             applyLanguage();
         }
 
-        // ==========================================
-        // 2. دالة تحميل الامتحانات (أونلاين + أوفلاين)
-        // ==========================================
         function openExam(type) {
             const body = document.getElementById('contentBody'); 
             const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
@@ -803,6 +801,8 @@
                 btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
             }
             
+            let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
+            
             let pdfHtml = ''; 
             if(fileName) { 
                 pdfHtml = `
@@ -822,6 +822,10 @@
                 ${pdfHtml}
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                </button>
+                
+                <button class="btn-lecture-quiz" style="background: transparent; color: var(--accent); border: 2px solid var(--accent); margin-top: 15px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
+                    <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
                 </button>
             </div>`;
             applyLanguage();
@@ -898,13 +902,9 @@
         let currentLectureNum = ''; 
         let userAnswers = []; 
         
-        // ==========================================
-        // 3. دالة تحميل أسئلة الاختبار 
-        // ==========================================
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
             
-            // --- عنوان الامتحان الديناميكي ---
             const courseName = currentLang === 'en' ? course.titleEn : course.titleAr;
             let dynamicTitle = '';
             if (currentLectureNum === 'midterm') {
@@ -915,7 +915,6 @@
                 dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`;
             }
             document.getElementById('quizModalTitle').innerText = dynamicTitle;
-            // ---------------------------------------
 
             const body = document.getElementById('quizBody');
             
@@ -1015,7 +1014,6 @@
             if (navigator.vibrate) { navigator.vibrate(20); }
         }
 
-        // إرسال درجة الامتحان للخادم
         function saveExamScoreToCloud(quizId, currentScore, totalScore) {
             const sCode = localStorage.getItem('studentCode') || ''; 
             const sName = localStorage.getItem('studentName') || ''; 
@@ -1027,15 +1025,22 @@
                 .catch(err => console.log('خطأ في حفظ نتيجة الأوائل'));
         }
 
-        // فتح شاشة الأوائل
+        // تم إصلاح دالة فتح شاشة الأوائل لترسل كود الطالب للسيرفر
         function openExamLeaderboard(quizId) {
             const modalBody = document.getElementById('examLeaderboardBody');
             modalBody.innerHTML = `<div style="text-align:center; padding:40px;"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite; color:var(--accent);">emoji_events</span><h3 style="margin-top:15px;">جاري جلب لوحة الشرف...</h3></div>`;
             openModalWithHistory('examLeaderboardModal');
             
-            fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}`)
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            
+            fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}&code=${sCode}`)
                 .then(res => res.json())
                 .then(data => {
+                    if (data.error === 'unauthorized') {
+                        modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">gpp_bad</span><h3 style="margin-top:15px;">غير مصرح لك بعرض البيانات</h3></div>`;
+                        return;
+                    }
+
                     if(data.success && data.leaderboard && data.leaderboard.length > 0) {
                         let html = '';
                         data.leaderboard.forEach((student, index) => {
@@ -1065,7 +1070,6 @@
         }
         
         function submitFullQuiz() {
-            // التحقق من وجود أسئلة لم يتم الإجابة عليها مع توجيه ذكي
             const firstUnansweredIndex = userAnswers.indexOf(null);
             if (firstUnansweredIndex !== -1) {
                 alert(currentLang === 'en' ? 'Please answer all questions! You missed Question ' + (firstUnansweredIndex + 1) : 'عفواً، لازم تجاوب على كل الأسئلة! إنت نسيت السؤال رقم ' + (firstUnansweredIndex + 1));
@@ -1130,7 +1134,6 @@
             let xpRewardText = ''; 
             let xpColor = '#4caf50';
             
-            // حفظ درجة الامتحان في الخادم للمنافسة على الأوائل (حتى لو درجته صفر)
             saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
 
             if(score > 0) {
