@@ -103,12 +103,19 @@
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
         
-        .calculator-modal { position: fixed; top: calc(70px + env(safe-area-inset-top, 35px)); left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 3000; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
-        .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        /* أكواد الآلة الحاسبة العائمة الجديدة */
+        .calc-floating-container { position: fixed; bottom: 30px; left: 20px; z-index: 4500; display: flex; flex-direction: column; align-items: flex-start; }
+        .calc-fab { width: 55px; height: 55px; border-radius: 50%; background: #0A2647; color: white; border: 2px solid #FFC800; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; z-index: 4501; }
+        .calc-fab.active { background: #FFC800; color: #0A2647; border-color: #0A2647; }
+        .calc-box { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 2px solid var(--accent); width: 280px; display: none; direction: ltr; position: absolute; bottom: 70px; left: 0; transform-origin: bottom left; animation: scaleUp 0.2s ease-out; z-index: 4500; }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; direction: rtl; }
         .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
         .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text); }
+        .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text); transition: 0.2s; }
+        .calc-btn:active { transform: scale(0.9); }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary); }
         .calc-btn.eq { background: var(--accent); color: #0A2647; grid-column: span 2; }
         
@@ -138,7 +145,7 @@
         <div class="header-icons">
             <span class="material-icons" onclick="toggleLanguage()" title="تغيير اللغة">language</span>
             <span class="material-icons" onclick="openWhiteboard()" title="السبورة الذكية" style="color: var(--accent);">palette</span>
-            <span class="material-icons" onclick="toggleCalculator()" title="الآلة الحاسبة">calculate</span>
+            <span class="material-icons" onclick="toggleFloatingCalc()" title="الآلة الحاسبة">calculate</span>
             <span class="material-icons" id="musicToggle" onclick="toggleMusic()" title="الموسيقى">music_off</span>
             <span class="material-icons" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي">light_mode</span>
         </div>
@@ -164,33 +171,38 @@
 
     <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
-    <div id="calculatorModal" class="calculator-modal modal-trackable">
-        <div class="calc-header">
-            <span class="calc-title"><span class="material-icons" style="font-size:20px; color:var(--accent)">calculate</span> <span data-ar="آلة حاسبة" data-en="Calculator">آلة حاسبة</span></span>
-            <span class="material-icons" onclick="history.back()" style="cursor:pointer; color:var(--grey);">close</span>
+    <div class="calc-floating-container">
+        <div id="calculatorBox" class="calc-box">
+            <div class="calc-header">
+                <span class="calc-title"><span class="material-icons" style="font-size:20px; color:var(--accent)">calculate</span> <span data-ar="آلة حاسبة" data-en="Calculator" style="font-family: 'IBM Plex Sans Arabic', sans-serif;">آلة حاسبة</span></span>
+                <span class="material-icons" onclick="toggleFloatingCalc()" style="cursor:pointer; color:var(--grey);">close</span>
+            </div>
+            <input type="text" id="calcDisplay" class="calc-display" readonly>
+            <div class="calc-grid">
+                <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
+                <button class="calc-btn op" onclick="appendCalc('/')">/</button>
+                <button class="calc-btn op" onclick="appendCalc('*')">×</button>
+                <button class="calc-btn op" onclick="appendCalc('-')">-</button>
+                
+                <button class="calc-btn" onclick="appendCalc('7')">7</button>
+                <button class="calc-btn" onclick="appendCalc('8')">8</button>
+                <button class="calc-btn" onclick="appendCalc('9')">9</button>
+                <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+                
+                <button class="calc-btn" onclick="appendCalc('4')">4</button>
+                <button class="calc-btn" onclick="appendCalc('5')">5</button>
+                <button class="calc-btn" onclick="appendCalc('6')">6</button>
+                <button class="calc-btn eq" onclick="calculateResult()">=</button>
+                
+                <button class="calc-btn" onclick="appendCalc('1')">1</button>
+                <button class="calc-btn" onclick="appendCalc('2')">2</button>
+                <button class="calc-btn" onclick="appendCalc('3')">3</button>
+                <button class="calc-btn" onclick="appendCalc('0')">0</button>
+            </div>
         </div>
-        <input type="text" id="calcDisplay" class="calc-display" readonly>
-        <div class="calc-grid">
-            <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
-            <button class="calc-btn op" onclick="appendCalc('/')">/</button>
-            <button class="calc-btn op" onclick="appendCalc('*')">×</button>
-            <button class="calc-btn op" onclick="appendCalc('-')">-</button>
-            
-            <button class="calc-btn" onclick="appendCalc('7')">7</button>
-            <button class="calc-btn" onclick="appendCalc('8')">8</button>
-            <button class="calc-btn" onclick="appendCalc('9')">9</button>
-            <button class="calc-btn op" onclick="appendCalc('+')">+</button>
-            
-            <button class="calc-btn" onclick="appendCalc('4')">4</button>
-            <button class="calc-btn" onclick="appendCalc('5')">5</button>
-            <button class="calc-btn" onclick="appendCalc('6')">6</button>
-            <button class="calc-btn eq" onclick="calculateResult()">=</button>
-            
-            <button class="calc-btn" onclick="appendCalc('1')">1</button>
-            <button class="calc-btn" onclick="appendCalc('2')">2</button>
-            <button class="calc-btn" onclick="appendCalc('3')">3</button>
-            <button class="calc-btn" onclick="appendCalc('0')">0</button>
-        </div>
+        <button class="calc-fab" id="calcFabBtn" onclick="toggleFloatingCalc()">
+            <span class="material-icons" style="font-size: 28px;">calculate</span>
+        </button>
     </div>
 
     <div class="pomodoro-container">
@@ -271,14 +283,14 @@
         <div class="modal-body" id="quizBody"></div>
     </div>
 
-<div id="pdfViewer" class="img-viewer modal-trackable">
+    <div id="pdfViewer" class="img-viewer modal-trackable">
         <div class="img-head">
             <button class="close-img-btn" onclick="history.back()" data-ar="إنهاء القراءة" data-en="Close PDF">إنهاء القراءة</button>
             <span style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
             
             <div class="header-icons" style="gap: 15px;">
-                <span class="material-icons" onclick="openWhiteboard()" style="color: var(--accent); cursor: pointer;" title="السبورة الذكية">palette</span>
-                <span class="material-icons" onclick="toggleCalculator()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
+                <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
+                <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
@@ -549,13 +561,17 @@
             } 
         }
 
-        function toggleCalculator() { 
-            const m = document.getElementById('calculatorModal'); 
-            if(m.style.display === 'block' || m.style.display === 'flex') { 
-                history.back(); 
-            } else { 
-                openModalWithHistory('calculatorModal'); 
-            } 
+        // دالة إظهار وإخفاء الآلة الحاسبة العائمة
+        function toggleFloatingCalc() {
+            const box = document.getElementById('calculatorBox');
+            const btn = document.getElementById('calcFabBtn');
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+                btn.classList.remove('active');
+            } else {
+                box.style.display = 'block';
+                btn.classList.add('active');
+            }
         }
         
         function appendCalc(v) { 
