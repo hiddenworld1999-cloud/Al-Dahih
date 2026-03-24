@@ -1152,6 +1152,39 @@
         }
 
         applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay(); checkLatestNews(); fetchXPFromSheet();
+
+
+// ==========================================
+        // نظام المراقبة الصامت (إرسال حالة الطالب للأدمن فقط)
+        // ==========================================
+        function sendOnlineStatus(status) {
+            const sCode = localStorage.getItem('studentCode');
+            if(!sCode || !window.SCRIPT_URL) return; // تأكد إن الـ SCRIPT_URL متعرف في الصفحة
+            
+            // إرسال الإشارة للسيرفر في الخلفية
+            fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { 
+                keepalive: true 
+            }).catch(e => {}); 
+        }
+
+        // أول ما يفتح الصفحة
+        window.addEventListener('load', () => {
+            setTimeout(() => sendOnlineStatus('متصل 🟢'), 1000);
+        });
+
+        // لو خرج من التطبيق أو نزله في الخلفية
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                sendOnlineStatus('غير متصل 🔴');
+            } else {
+                sendOnlineStatus('متصل 🟢');
+            }
+        });
+
+        // لو قفل الصفحة نهائي
+        window.addEventListener('beforeunload', () => {
+            sendOnlineStatus('غير متصل 🔴');
+        });
     </script>
 </body>
 </html>
