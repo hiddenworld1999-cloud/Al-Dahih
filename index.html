@@ -1159,12 +1159,16 @@
         // ==========================================
         function sendOnlineStatus(status) {
             const sCode = localStorage.getItem('studentCode');
-            if(!sCode || !window.SCRIPT_URL) return; // تأكد إن الـ SCRIPT_URL متعرف في الصفحة
+            // تأكدنا إن الكود موجود بس، وشيلنا العائق التاني
+            if(!sCode) return; 
             
             // إرسال الإشارة للسيرفر في الخلفية
             fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { 
                 keepalive: true 
-            }).catch(e => {}); 
+            })
+            .then(res => res.json())
+            .then(data => console.log("حالة الطالب اتبعتت:", data))
+            .catch(e => console.log("خطأ في إرسال الحالة", e)); 
         }
 
         // أول ما يفتح الصفحة
