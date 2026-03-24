@@ -1153,30 +1153,31 @@
 
         applyLanguage(); updatePomoDisplay(); updateCompletedCountBadge(); updateXPDisplay(); checkLatestNews(); fetchXPFromSheet();
 
-
 // ==========================================
         // نظام المراقبة الصامت (إرسال حالة الطالب للأدمن فقط)
         // ==========================================
         function sendOnlineStatus(status) {
             const sCode = localStorage.getItem('studentCode');
-            // تأكدنا إن الكود موجود بس، وشيلنا العائق التاني
+            // تأكد إنك تحط رابط الجوجل سكريبت بتاعك هنا بين الدبل كوتيشن
+            const API_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec"; 
+            
             if(!sCode) return; 
             
             // إرسال الإشارة للسيرفر في الخلفية
-            fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { 
+            fetch(`${API_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { 
                 keepalive: true 
             })
             .then(res => res.json())
-            .then(data => console.log("حالة الطالب اتبعتت:", data))
-            .catch(e => console.log("خطأ في إرسال الحالة", e)); 
+            .then(data => console.log("تم تحديث الحالة:", data))
+            .catch(e => console.log("خطأ في الاتصال", e)); 
         }
 
-        // أول ما يفتح الصفحة
+        // إرسال الحالة أول ما الصفحة تحمل
         window.addEventListener('load', () => {
-            setTimeout(() => sendOnlineStatus('متصل 🟢'), 1000);
+            setTimeout(() => sendOnlineStatus('متصل 🟢'), 1500);
         });
 
-        // لو خرج من التطبيق أو نزله في الخلفية
+        // إرسال الحالة لو خرج من التطبيق أو قفله
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
                 sendOnlineStatus('غير متصل 🔴');
@@ -1185,7 +1186,6 @@
             }
         });
 
-        // لو قفل الصفحة نهائي
         window.addEventListener('beforeunload', () => {
             sendOnlineStatus('غير متصل 🔴');
         });
