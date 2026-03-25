@@ -856,7 +856,12 @@
             const sCode = localStorage.getItem('studentCode') || "000"; 
             const watermarkText = `${sName} - ${sCode}`;
             
-            pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
+            // التعديل هنا: إضافة خرائط الحروف العربية cMap
+            pdfjsLib.getDocument({
+                url: pdfUrl,
+                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
+                cMapPacked: true
+            }).promise.then(pdfDoc => {
                 loadingDiv.remove();
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
