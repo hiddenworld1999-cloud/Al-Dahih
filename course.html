@@ -1261,12 +1261,12 @@
             // إرسال الحالة أول ما يفتح
             setTimeout(() => sendOnlineStatus('متصل 🟢'), 1500);
             
-            // 💡 التعديل الجديد (نبض القلب): إرسال إشارة كل 3 دقايق طول ما هو فاتح التطبيق
+            // إرسال إشارة كل دقيقة طول ما هو فاتح التطبيق
             setInterval(() => {
                 if(document.visibilityState === 'visible') {
                     sendOnlineStatus('متصل 🟢');
                 }
-            }, 3 * 60 * 1000); // 3 دقايق
+            }, 60 * 1000); // 1 دقيقة
         });
 
         document.addEventListener('visibilitychange', () => {
