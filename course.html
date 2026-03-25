@@ -856,10 +856,10 @@
             const sCode = localStorage.getItem('studentCode') || "000"; 
             const watermarkText = `${sName} - ${sCode}`;
             
-            // التعديل هنا: إضافة خرائط الحروف العربية cMap
+            // التعديل هنا: استخدام سيرفر jsdelivr الأقوى لملفات الخرائط
             pdfjsLib.getDocument({
                 url: pdfUrl,
-                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/cmaps/',
+                cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/cmaps/',
                 cMapPacked: true
             }).promise.then(pdfDoc => {
                 loadingDiv.remove();
