@@ -333,6 +333,9 @@
         window.addEventListener('popstate', function(event) {
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
+            // إيقاف العداد لو الطالب خرج من الامتحان بالرجوع
+            if(typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
+            
             if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
             }
@@ -897,10 +900,16 @@
             });
         }
 
+        // ==========================================
+        // تعديلات العداد وحفظ الإجابات 🔥
+        // ==========================================
         let score = 0; 
         let activeQuizQuestions = []; 
         let currentLectureNum = ''; 
         let userAnswers = []; 
+        
+        let quizTimerInterval;
+        let remainingQuizTime = 0;
         
         function openQuiz(lectureNum) { 
             currentLectureNum = lectureNum.toString(); 
@@ -954,18 +963,72 @@
             const body = document.getElementById('quizBody');
             if (data.questions && data.questions.length > 0) { 
                 activeQuizQuestions = data.questions; 
-                userAnswers = new Array(activeQuizQuestions.length).fill(null); 
+                
+                // --- استرجاع الذاكرة والوقت لو كان بيمتحن وخرج ---
+                const stateKey = `quizState_${courseId}_${currentLectureNum}`;
+                const savedState = JSON.parse(localStorage.getItem(stateKey));
+                
+                // ميدتيرم أو فاينل (ساعة = 3600 ثانية)، كويز عادي (10 دقايق = 600 ثانية)
+                let defaultTime = (currentLectureNum === 'midterm' || currentLectureNum === 'final') ? 60 * 60 : 10 * 60;
+                
+                if (savedState && savedState.answers && savedState.answers.length === activeQuizQuestions.length && savedState.time > 0) {
+                    userAnswers = savedState.answers;
+                    remainingQuizTime = savedState.time;
+                } else {
+                    userAnswers = new Array(activeQuizQuestions.length).fill(null); 
+                    remainingQuizTime = defaultTime;
+                }
+
                 score = 0; 
                 showAllQuestions(); 
+                startQuizTimer(stateKey);
+                
             } else { 
                 body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; 
                 applyLanguage(); 
             }
         }
         
+        function startQuizTimer(stateKey) {
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = setInterval(() => {
+                remainingQuizTime--;
+                updateTimerDisplay();
+                
+                localStorage.setItem(stateKey, JSON.stringify({
+                    answers: userAnswers,
+                    time: remainingQuizTime
+                }));
+                
+                if (remainingQuizTime <= 0) {
+                    clearInterval(quizTimerInterval);
+                    alert(currentLang === 'en' ? 'Time is up! Submitting automatically.' : 'انتهى الوقت! سيتم تسليم الامتحان تلقائياً بناءً على إجاباتك الحالية.');
+                    submitFullQuiz(true); // الإجبار على التسليم
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('quizTimerDisplay');
+            if(!display) return;
+            let m = Math.floor(remainingQuizTime / 60);
+            let s = remainingQuizTime % 60;
+            display.innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s);
+            
+            if(remainingQuizTime <= 60) {
+                display.style.color = '#f44336';
+                display.style.animation = 'pulse 0.5s infinite';
+            }
+        }
+
         function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
-            let html = '';
+            
+            let html = `
+            <div style="position: sticky; top: -20px; background: var(--card); padding: 10px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+                <div style="font-weight:bold; color:var(--primary); display:flex; align-items:center; gap:5px;"><span class="material-icons" style="color:var(--accent);">timer</span> <span data-ar="الوقت المتبقي:" data-en="Time Left:">الوقت المتبقي:</span></div>
+                <div id="quizTimerDisplay" style="font-size:1.5rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div>
+            </div>`;
             
             activeQuizQuestions.forEach((q, qIndex) => {
                 let optsHtml = ''; 
@@ -973,7 +1036,11 @@
                 const qText = currentLang === 'en' ? q.qEn : q.qAr;
                 
                 opts.forEach((opt, optIndex) => { 
-                    optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span>${opt}</span><span class="material-icons opt-icon" style="display:none; color:var(--accent);">check_circle</span></div>`; 
+                    let isSelected = userAnswers[qIndex] === optIndex;
+                    let optStyle = isSelected ? 'border-color: var(--accent); background: rgba(255, 200, 0, 0.1);' : '';
+                    let iconDisplay = isSelected ? 'block' : 'none';
+                    
+                    optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" style="${optStyle}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span>${opt}</span><span class="material-icons opt-icon" style="display:${iconDisplay}; color:var(--accent);">check_circle</span></div>`; 
                 });
                 
                 html += `
@@ -987,13 +1054,15 @@
             });
             
             html += `
-            <button class="btn-card" onclick="submitFullQuiz()" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:15px;">
+            <button class="btn-card" onclick="submitFullQuiz(false)" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:15px;">
                 <span class="material-icons" style="margin-inline-end:10px;">done_all</span>
                 ${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}
             </button>`;
             
             body.innerHTML = html;
             body.scrollTop = 0; 
+            updateTimerDisplay(); 
+            applyLanguage();
         }
         
         function selectAnswer(qIndex, optIndex) {
@@ -1011,6 +1080,12 @@
             selectedOpt.style.background = 'rgba(255, 200, 0, 0.1)';
             selectedOpt.querySelector('.opt-icon').style.display = 'block';
             
+            const stateKey = `quizState_${courseId}_${currentLectureNum}`;
+            localStorage.setItem(stateKey, JSON.stringify({
+                answers: userAnswers,
+                time: remainingQuizTime
+            }));
+            
             if (navigator.vibrate) { navigator.vibrate(20); }
         }
 
@@ -1025,7 +1100,6 @@
                 .catch(err => console.log('خطأ في حفظ نتيجة الأوائل'));
         }
 
-        // تم إصلاح دالة فتح شاشة الأوائل لترسل كود الطالب للسيرفر
         function openExamLeaderboard(quizId) {
             const modalBody = document.getElementById('examLeaderboardBody');
             modalBody.innerHTML = `<div style="text-align:center; padding:40px;"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite; color:var(--accent);">emoji_events</span><h3 style="margin-top:15px;">جاري جلب لوحة الشرف...</h3></div>`;
@@ -1069,9 +1143,9 @@
                 });
         }
         
-        function submitFullQuiz() {
+        function submitFullQuiz(forceSubmit = false) {
             const firstUnansweredIndex = userAnswers.indexOf(null);
-            if (firstUnansweredIndex !== -1) {
+            if (!forceSubmit && firstUnansweredIndex !== -1) {
                 alert(currentLang === 'en' ? 'Please answer all questions! You missed Question ' + (firstUnansweredIndex + 1) : 'عفواً، لازم تجاوب على كل الأسئلة! إنت نسيت السؤال رقم ' + (firstUnansweredIndex + 1));
                 
                 const missedQuestionEl = document.getElementById('question_block_' + firstUnansweredIndex);
@@ -1087,6 +1161,10 @@
                 }
                 return; 
             }
+            
+            clearInterval(quizTimerInterval);
+            const stateKey = `quizState_${courseId}_${currentLectureNum}`;
+            localStorage.removeItem(stateKey);
             
             score = 0;
             let reviewHtml = '';
@@ -1116,13 +1194,14 @@
                 
                 const headerColor = isCorrect ? '#4caf50' : '#f44336';
                 const headerIcon = isCorrect ? 'check_circle' : 'cancel';
+                const headerText = userAnswers[qIndex] === null ? (currentLang === 'en' ? 'Not Answered' : 'لم يتم الإجابة') : '';
                 
                 reviewHtml += `
                 <div style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 2px solid ${headerColor}; position: relative; overflow: hidden;">
                     <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: ${headerColor};"></div>
                     <div style="margin-bottom:10px; font-weight:bold; color:${headerColor}; display:flex; align-items:center; gap:5px; font-size:0.9rem;">
                         <span class="material-icons" style="font-size:18px;">${headerIcon}</span> 
-                        ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
+                        ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
                     </div>
                     <h3 style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
                     <div>${optsHtml}</div>
@@ -1239,7 +1318,6 @@
         updatePomoDisplay();
         fetchXPFromSheet(); 
 
-
         // ==========================================
         // نظام المراقبة الصامت (إرسال حالة الطالب ونبض القلب)
         // ==========================================
@@ -1258,15 +1336,13 @@
         }
 
         window.addEventListener('load', () => {
-            // إرسال الحالة أول ما يفتح
             setTimeout(() => sendOnlineStatus('متصل 🟢'), 1500);
             
-            // إرسال إشارة كل دقيقة طول ما هو فاتح التطبيق
             setInterval(() => {
                 if(document.visibilityState === 'visible') {
                     sendOnlineStatus('متصل 🟢');
                 }
-            }, 60 * 1000); // 1 دقيقة
+            }, 60 * 1000); 
         });
 
         document.addEventListener('visibilitychange', () => {
