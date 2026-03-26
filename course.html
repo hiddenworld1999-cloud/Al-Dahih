@@ -1052,7 +1052,7 @@
                     let optStyle = isSelected ? 'border-color: var(--accent); background: rgba(255, 200, 0, 0.1);' : '';
                     let iconDisplay = isSelected ? 'block' : 'none';
                     
-                    optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" style="${optStyle}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span style="direction: ltr; display: inline-block;">${safeOpt}</span><span class="material-icons opt-icon" style="display:${iconDisplay}; color:var(--accent);">check_circle</span></div>`; 
+                    optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" style="${optStyle}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span><span class="material-icons opt-icon" style="display:${iconDisplay}; color:var(--accent); margin-inline-start:10px;">check_circle</span></div>`; 
                 });
                 
                 html += `
@@ -1060,7 +1060,7 @@
                     <div style="margin-bottom:10px; font-weight:bold; color:var(--accent); font-size:0.9rem;">
                         ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
                     </div>
-                    <h3 style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; direction: ltr; text-align: left;">${qText}</h3>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
                     <div>${optsHtml}</div>
                 </div>`;
             });
@@ -1202,13 +1202,13 @@
                     
                     if (optIndex === q.ans) {
                         optStyle = 'background: #e8f5e9; border-color: #4caf50; color: #2e7d32; opacity: 1; font-weight: bold;';
-                        iconHtml = '<span class="material-icons" style="color:#4caf50;">check_circle</span>';
+                        iconHtml = '<span class="material-icons" style="color:#4caf50; margin-inline-start:10px;">check_circle</span>';
                     } else if (optIndex === userAnswers[qIndex] && !isCorrect) {
                         optStyle = 'background: #ffebee; border-color: #f44336; color: #c62828; opacity: 1;';
-                        iconHtml = '<span class="material-icons" style="color:#f44336;">cancel</span>';
+                        iconHtml = '<span class="material-icons" style="color:#f44336; margin-inline-start:10px;">cancel</span>';
                     }
                     
-                    optsHtml += `<div class="quiz-opt" style="${optStyle} pointer-events: none; display: flex; justify-content: space-between; align-items: center;"><span style="direction: ltr; display: inline-block;">${safeOpt}</span>${iconHtml}</div>`;
+                    optsHtml += `<div class="quiz-opt" style="${optStyle} pointer-events: none; display: flex; justify-content: space-between; align-items: center;"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span>${iconHtml}</div>`;
                 });
                 
                 const headerColor = isCorrect ? '#4caf50' : '#f44336';
@@ -1222,7 +1222,7 @@
                         <span class="material-icons" style="font-size:18px;">${headerIcon}</span> 
                         ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
                     </div>
-                    <h3 style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; direction: ltr; text-align: left;">${qText}</h3>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
                     <div>${optsHtml}</div>
                 </div>`;
             });
