@@ -1038,9 +1038,9 @@
             activeQuizQuestions.forEach((q, qIndex) => {
                 let optsHtml = ''; 
                 
-                // 👇 لغينا التشفير من السؤال نفسه عشان الجداول والصور تظهر 
+                // إيقاف التشفير في صفحة الأسئلة عشان الجداول والصور تظهر
                 let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
-                const qText = rawQText; // <---- هنا السر!
+                const qText = rawQText;
                 
                 const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
@@ -1187,9 +1187,9 @@
                 
                 let optsHtml = '';
                 
-                // 👇 التشفير ملغي من النتيجة كمان عشان الجداول متختفيش
+                // إيقاف التشفير في صفحة النتيجة عشان الجداول متختفيش
                 let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
-                const qText = rawQText; // <---- السر هنا تاني
+                const qText = rawQText;
                 
                 const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
