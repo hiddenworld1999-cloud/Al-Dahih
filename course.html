@@ -259,7 +259,7 @@
         </button>
     </div>
 
-    <div id="summaryModal" class="modal modal-trackable">
+    <div id="summaryModal" class="modal-trackable">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:bold;" data-ar="قائمة المحاضرات" data-en="Lectures List">قائمة المحاضرات</span>
@@ -268,7 +268,7 @@
         <div class="modal-body" id="summaryList"></div>
     </div>
 
-    <div id="contentModal" class="modal modal-trackable">
+    <div id="contentModal" class="modal-trackable">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:bold;" id="contentTitle">المحتوى</span>
@@ -277,7 +277,7 @@
         <div class="modal-body"><div class="content-view" id="contentBody"></div></div>
     </div>
 
-    <div id="quizModal" class="modal modal-trackable" style="z-index: 2000;">
+    <div id="quizModal" class="modal-trackable" style="z-index: 2000;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:bold; font-size:1.1rem; color:var(--primary);" id="quizModalTitle">اختبار</span>
@@ -286,7 +286,7 @@
         <div class="modal-body" id="quizBody"></div>
     </div>
     
-    <div id="examLeaderboardModal" class="modal modal-trackable" style="z-index: 2500;">
+    <div id="examLeaderboardModal" class="modal-trackable" style="z-index: 2500;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:bold; font-size:1.1rem; color:var(--accent); display:flex; align-items:center; gap:5px;">
@@ -1038,14 +1038,14 @@
             activeQuizQuestions.forEach((q, qIndex) => {
                 let optsHtml = ''; 
                 
-                // التشفير في صفحة الأسئلة
+                // 👇 لغينا التشفير من السؤال نفسه عشان الجداول والصور تظهر 
                 let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
-                const qText = rawQText.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const qText = rawQText; // <---- هنا السر!
                 
                 const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => { 
-                    // تشفير الاختيارات
+                    // تشفير الاختيارات لسه شغال عشان لو حطيت أكواد في الاختيارات متختفيش
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     
                     let isSelected = userAnswers[qIndex] === optIndex;
@@ -1060,7 +1060,7 @@
                     <div style="margin-bottom:10px; font-weight:bold; color:var(--accent); font-size:0.9rem;">
                         ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
                     </div>
-                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3>
                     <div>${optsHtml}</div>
                 </div>`;
             });
@@ -1187,14 +1187,14 @@
                 
                 let optsHtml = '';
                 
-                // التشفير في صفحة النتيجة كمان
+                // 👇 التشفير ملغي من النتيجة كمان عشان الجداول متختفيش
                 let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
-                const qText = rawQText.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const qText = rawQText; // <---- السر هنا تاني
                 
                 const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => {
-                    // تشفير الاختيارات
+                    // تشفير الاختيارات لسه شغال
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     
                     let optStyle = 'background: var(--quiz-option-bg); border: 2px solid transparent; opacity: 0.6;';
@@ -1222,7 +1222,7 @@
                         <span class="material-icons" style="font-size:18px;">${headerIcon}</span> 
                         ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
                     </div>
-                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem;">${qText}</h3>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3>
                     <div>${optsHtml}</div>
                 </div>`;
             });
@@ -1379,4 +1379,3 @@
     </script>
 </body>
 </html>
-بص ده اخر كود اللي كان عندي ممكن تظبط عليه عشان بس مفيش حاجة تقع منك متنساش اي حاجه 
