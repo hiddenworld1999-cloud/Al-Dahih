@@ -1381,57 +1381,74 @@
             sendOnlineStatus('غير متصل 🔴');
         });
 // ==========================================
-        // دالة تحميل الـ PDF مختوم باسم الطالب
+        // دالة تحميل الـ PDF مختوم باسم الطالب (معدلة لمنع انهيار الذاكرة)
         // ==========================================
         async function downloadWatermarkedPDF() {
+            // 1. التأكد إن مكتبة التحميل نزلت من النت صح
+            if (!window.jspdf) {
+                alert(currentLang === 'en' ? 'Download library is still loading, please wait.' : 'مكتبة التحميل لم تكتمل بعد، برجاء الانتظار ثواني ثم المحاولة.');
+                return;
+            }
+
             const canvases = document.querySelectorAll('#pdfWrapper canvas');
             if (canvases.length === 0) {
                 alert(currentLang === 'en' ? 'Please wait for the file to load fully.' : 'أرجوك انتظر حتى يتم فتح الملف بالكامل أولاً!');
                 return;
             }
 
-            // إظهار رسالة تحميل عشان لو الملف كبير
+            // إظهار رسالة تحميل
             let loadingMsg = document.createElement('div');
-            loadingMsg.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.9); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;">
+            loadingMsg.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;">
                 <span class="material-icons" style="font-size:60px; color:var(--accent); animation: pulse 1s infinite;">downloading</span>
-                <h2 style="margin-top:20px;" dir="auto">${currentLang === 'en' ? 'Watermarking your file... Please wait ⏳' : 'جاري ختم الملف باسمك وتحضيره... ⏳'}</h2>
-                <p>لا تغلق هذه الشاشة</p>
+                <h2 style="margin-top:20px; font-weight:bold;" dir="auto">${currentLang === 'en' ? 'Watermarking your file... ⏳' : 'جاري ختم الملف وتجهيزه للتحميل... ⏳'}</h2>
+                <p style="color:var(--accent); margin-top:10px;">لا تغلق هذه الشاشة، قد يستغرق الأمر بضع ثوانٍ</p>
             </div>`;
             document.body.appendChild(loadingMsg);
 
-            // ندي للمتصفح فرصة يعرض رسالة التحميل قبل ما يتجمد في معالجة الـ PDF
+            // استخدام setTimeout عشان ندي المتصفح فرصة يظهر الرسالة قبل ما يطحن نفسه في معالجة الصور
             setTimeout(() => {
                 try {
                     const { jsPDF } = window.jspdf;
                     
-                    // عمل ملف PDF جديد بنفس أبعاد أول صفحة
+                    // تحديد أبعاد واتجاه أول صفحة (عشان لو الملف بالعرض أو بالطول)
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    const orient = firstW > firstH ? 'l' : 'p';
+
                     let pdf = new jsPDF({
-                        orientation: 'p',
+                        orientation: orient,
                         unit: 'px',
-                        format: [canvases[0].width, canvases[0].height]
+                        format: [firstW, firstH]
                     });
 
-                    // لفة على كل الصفحات وحفظها بالختم بتاعها
+                    // لفة على كل الصفحات ودمجها
                     canvases.forEach((canvas, index) => {
                         if (index > 0) {
-                            pdf.addPage([canvas.width, canvas.height], 'p');
+                            const currOrient = canvas.width > canvas.height ? 'l' : 'p';
+                            pdf.addPage([canvas.width, canvas.height], currOrient);
                         }
-                        // تحويل الكانفاس لصورة بجودة 80% عشان حجم الملف ميكبرش أوي
-                        const imgData = canvas.toDataURL('image/jpeg', 0.8);
+                        // السر هنا: تقليل الجودة لـ 0.5 عشان الرامات متضربش والمتصفح يقفل
+                        const imgData = canvas.toDataURL('image/jpeg', 0.5);
                         pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
                     });
 
-                    // تسمية الملف المحمل باسم الطالب
+                    // تسمية الملف والحفظ
                     const sName = localStorage.getItem('studentName') || "Student";
                     const sCode = localStorage.getItem('studentCode') || "000";
                     pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
 
-                    loadingMsg.remove(); // شيل رسالة التحميل
+                    // شيل رسالة التحميل بعد النجاح
+                    if(document.body.contains(loadingMsg)) {
+                        document.body.removeChild(loadingMsg);
+                    }
                 } catch(e) {
-                    loadingMsg.remove();
-                    alert(currentLang === 'en' ? 'Download failed! File might be too large.' : 'عفواً، فشل التحميل. حجم الملف قد يكون ضخماً جداً.');
+                    console.error(e);
+                    if(document.body.contains(loadingMsg)) {
+                        document.body.removeChild(loadingMsg);
+                    }
+                    alert(currentLang === 'en' ? 'Download failed! File might be too large.' : 'عفواً، فشل التحميل! قد يكون حجم الملف كبيراً جداً على ذاكرة الجهاز.');
                 }
-            }, 500);
+            }, 100); 
         }
     </script>
 </body>
