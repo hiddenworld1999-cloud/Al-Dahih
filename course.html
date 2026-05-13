@@ -1376,6 +1376,115 @@
             sendOnlineStatus('غير متصل 🔴');
         });
 
+
+
+        // ==========================================
+        // دالة تحميل الـ PDF مختوم باسم الطالب (مخصصة لتطبيقات الـ APK)
+        // ==========================================
+        async function downloadWatermarkedPDF() {
+            if (!window.jspdf) {
+                alert(currentLang === 'en' ? 'Library is loading, please wait...' : 'مكتبة التحميل لم تكتمل بعد، أرجوك انتظر ثواني...');
+                return;
+            }
+
+            const canvases = document.querySelectorAll('#pdfWrapper canvas');
+            if (canvases.length === 0) {
+                alert(currentLang === 'en' ? 'Please wait for the file to load fully.' : 'أرجوك انتظر حتى يتم فتح الملف بالكامل أولاً!');
+                return;
+            }
+
+            // 1. إظهار شاشة التحميل
+            let loadingMsg = document.getElementById('pdfLoadingOverlayDaheeh');
+            if(!loadingMsg) {
+                loadingMsg = document.createElement('div');
+                loadingMsg.id = 'pdfLoadingOverlayDaheeh';
+                loadingMsg.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.98); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; text-align:center; padding:20px;">
+                    <span class="material-icons" id="loadingIconDaheeh" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span>
+                    <h2 id="loadingTextDaheeh" style="margin-top:20px; font-weight:900; line-height:1.5;" dir="auto">${currentLang === 'en' ? 'Processing File...' : 'جاري ختم الملف باسمك... ⏳<br><span style="font-size:1rem; color:var(--grey); font-weight:normal;">لحظات والملف هيكون جاهز</span>'}</h2>
+                    
+                    <div id="downloadActionContainer" style="margin-top:30px; display:none; flex-direction:column; gap:15px; width:100%; max-width:300px;"></div>
+                    
+                    <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="margin-top:40px; background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:10px 30px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق الشاشة</button>
+                </div>`;
+                document.body.appendChild(loadingMsg);
+            }
+
+            // 2. معالجة الملف
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    const orient = firstW > firstH ? 'l' : 'p';
+
+                    let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
+
+                    canvases.forEach((canvas, index) => {
+                        if (index > 0) {
+                            const currOrient = canvas.width > canvas.height ? 'l' : 'p';
+                            pdf.addPage([canvas.width, canvas.height], currOrient);
+                        }
+                        // جودة 0.6 عشان حجم الملف ميكبرش والموبايل ميهنجش
+                        const imgData = canvas.toDataURL('image/jpeg', 0.6);
+                        pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+                    });
+
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    const pdfBlob = pdf.output('blob');
+                    const blobUrl = URL.createObjectURL(pdfBlob);
+
+                    // 3. تحديث الشاشة بعد النجاح
+                    document.getElementById('loadingIconDaheeh').innerText = 'check_circle';
+                    document.getElementById('loadingIconDaheeh').style.animation = 'none';
+                    document.getElementById('loadingIconDaheeh').style.color = '#4caf50';
+                    document.getElementById('loadingTextDaheeh').innerHTML = currentLang === 'en' ? 'File is Ready!' : 'الملف جاهز ومختوم باسمك! 🎉';
+                    
+                    const actionContainer = document.getElementById('downloadActionContainer');
+                    actionContainer.style.display = 'flex';
+                    
+                    // دالة المشاركة الجبارة اللي بتخترق الـ APK
+                    window.shareOrSavePDFDaheeh = async function() {
+                        try {
+                            const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                await navigator.share({
+                                    files: [file],
+                                    title: fileName,
+                                    text: 'ملف المحاضرة من منصة الدحيح'
+                                });
+                            } else {
+                                alert("عذراً، جهازك لا يدعم المشاركة المباشرة. جرب زر التحميل العادي.");
+                            }
+                        } catch (error) {
+                            console.log("Sharing canceled", error);
+                        }
+                    };
+
+                    // رسم زراير التحميل (مشاركة للموبايل + تحميل عادي للكمبيوتر)
+                    actionContainer.innerHTML = `
+                        <button onclick="shareOrSavePDFDaheeh()" style="background:var(--accent); color:#0A2647; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; width:100%; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow: 0 4px 15px rgba(255,200,0,0.2);">
+                            <span class="material-icons">share</span> حفظ في الجهاز / مشاركة
+                        </button>
+                        
+                        <a href="${blobUrl}" download="${fileName}" style="background:#4caf50; color:white; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; width:100%; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow: 0 4px 15px rgba(76,175,80,0.2); box-sizing: border-box;">
+                            <span class="material-icons">file_download</span> تحميل عادي (للكمبيوتر)
+                        </a>
+                    `;
+
+                } catch(e) {
+                    console.error("PDF Generation Error: ", e);
+                    document.getElementById('loadingIconDaheeh').innerText = 'error_outline';
+                    document.getElementById('loadingIconDaheeh').style.animation = 'none';
+                    document.getElementById('loadingIconDaheeh').style.color = '#f44336';
+                    document.getElementById('loadingTextDaheeh').innerHTML = currentLang === 'en' ? 'Error generating file!' : 'عذراً، حدث خطأ أثناء تجهيز الملف!';
+                }
+            }, 800); 
+        }
+
     </script>
 </body>
 </html>
