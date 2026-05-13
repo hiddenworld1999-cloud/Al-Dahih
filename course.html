@@ -1365,14 +1365,9 @@
         });
 
         // ==========================================
-        // دالة تحميل الـ PDF مختوم (النسخة النهائية لأي موبايل و APK)
+        // دالة التحميل النهائية والأخيرة (معرض الصور لحماية الأندرويد)
         // ==========================================
         async function downloadWatermarkedPDF() {
-            if (!window.jspdf) {
-                alert(currentLang === 'en' ? 'Library is loading, please wait...' : 'مكتبة التحميل لم تكتمل بعد، أرجوك انتظر ثواني...');
-                return;
-            }
-
             const canvases = document.querySelectorAll('#pdfWrapper canvas');
             if (canvases.length === 0) {
                 alert(currentLang === 'en' ? 'Wait for file to load.' : 'أرجوك انتظر فتح الملف بالكامل!');
@@ -1390,112 +1385,63 @@
                         <h2 id="loadingTextDaheeh" style="margin-top:20px; font-weight:900; line-height:1.5;" dir="auto">جاري تجهيز الملف... ⏳<br><span style="font-size:1rem; color:var(--grey); font-weight:normal;">الرجاء الانتظار</span></h2>
                     </div>
                     
-                    <div id="downloadActionContainer" style="display:none; width:100%; max-width:350px; flex-direction:column; gap:15px; margin-top:20px;"></div>
+                    <div id="apkGalleryContainer" style="display:none; width:100%; max-width:500px; max-height:60vh; overflow-y:auto; margin-top:20px; padding:10px; background:var(--bg); border-radius:15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);"></div>
                     
-                    <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="margin-top:30px; background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:12px 25px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق</button>
+                    <div style="display:flex; gap:10px; margin-top:30px;">
+                        <a id="pcDownloadBtn" style="display:none; background:#4caf50; color:white; font-size:1rem; font-weight:900; padding:12px 25px; border-radius:12px; text-decoration:none; cursor:pointer; box-shadow: 0 4px 15px rgba(76,175,80,0.3);">
+                            <span class="material-icons" style="vertical-align:middle;">file_download</span> تحميل PDF المباشر
+                        </a>
+                        
+                        <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:12px 25px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق</button>
+                    </div>
                 </div>`;
                 document.body.appendChild(loadingMsg);
             }
 
             setTimeout(() => {
                 try {
-                    const { jsPDF } = window.jspdf;
-                    const firstW = canvases[0].width;
-                    const firstH = canvases[0].height;
-                    const orient = firstW > firstH ? 'l' : 'p';
-                    let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
+                    // استخراج الصور من الشاشة وعرضها للطالب
+                    const imagesHtml = Array.from(canvases).map(canvas => {
+                        const imgData = canvas.toDataURL('image/jpeg', 0.8);
+                        return `<img src="${imgData}" style="width:100%; margin-bottom:15px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">`;
+                    }).join('');
 
-                    canvases.forEach((canvas, index) => {
-                        if (index > 0) {
-                            const currOrient = canvas.width > canvas.height ? 'l' : 'p';
-                            pdf.addPage([canvas.width, canvas.height], currOrient);
-                        }
-                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, canvas.width, canvas.height);
-                    });
-
-                    const sName = localStorage.getItem('studentName') || "Student";
-                    const sCode = localStorage.getItem('studentCode') || "000";
-                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
-
-                    const pdfBlob = pdf.output('blob');
-                    
                     document.getElementById('loadingIconDaheeh').innerText = 'check_circle';
                     document.getElementById('loadingIconDaheeh').style.animation = 'none';
                     document.getElementById('loadingIconDaheeh').style.color = '#4caf50';
-                    document.getElementById('loadingTextDaheeh').innerHTML = 'الملف جاهز ومختوم باسمك! 🎉<br><span style="font-size:1rem; color:var(--accent); font-weight:normal;">اختر طريقة الحفظ المناسبة لجهازك:</span>';
+                    document.getElementById('loadingTextDaheeh').innerHTML = 'الملف جاهز ومختوم باسمك! 🎉<br><span style="font-size:1rem; color:var(--accent); font-weight:normal;">(اضغط مطولاً على أي صفحة لحفظها في الجهاز)</span>';
                     
-                    const actionContainer = document.getElementById('downloadActionContainer');
-                    actionContainer.style.display = 'flex';
+                    const gallery = document.getElementById('apkGalleryContainer');
+                    gallery.style.display = 'block';
+                    gallery.innerHTML = imagesHtml;
 
-                    // الطريقة الأولى: زرار المشاركة
-                    window.daheehShareAPK = async function() {
-                        try {
-                            const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
-                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                                await navigator.share({ files: [file], title: fileName });
-                            } else {
-                                alert("جهازك لا يدعم المشاركة المباشرة، جرب الزرار الأزرق.");
-                            }
-                        } catch(e) { console.log(e); }
-                    };
+                    // تجهيز الزرار الأخضر للتحميل السريع (للي مش بيستخدموا APK مقفول)
+                    if (window.jspdf) {
+                        const { jsPDF } = window.jspdf;
+                        const firstW = canvases[0].width;
+                        const firstH = canvases[0].height;
+                        const orient = firstW > firstH ? 'l' : 'p';
+                        let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
 
-                    // الطريقة التانية: زرار الطباعة الخارق للـ APK
-                    window.daheehPrintAPK = function() {
-                        let printDiv = document.createElement('div');
-                        printDiv.id = 'daheehPrintArea';
-                        printDiv.style.position = 'absolute';
-                        printDiv.style.top = '0';
-                        printDiv.style.left = '0';
-                        printDiv.style.width = '100%';
-                        printDiv.style.background = 'white';
-                        printDiv.style.zIndex = '9999999';
-                        
-                        canvases.forEach(c => {
-                            let img = document.createElement('img');
-                            img.src = c.toDataURL('image/jpeg', 0.9);
-                            img.style.width = '100%';
-                            img.style.display = 'block';
-                            printDiv.appendChild(img);
-                        });
-                        
-                        document.body.appendChild(printDiv);
-                        
-                        const kids = Array.from(document.body.children);
-                        kids.forEach(k => {
-                            if(k.id !== 'daheehPrintArea' && k.tagName !== 'SCRIPT') {
-                                k.setAttribute('data-old-display', k.style.display);
-                                k.style.display = 'none';
+                        canvases.forEach((canvas, index) => {
+                            if (index > 0) {
+                                const currOrient = canvas.width > canvas.height ? 'l' : 'p';
+                                pdf.addPage([canvas.width, canvas.height], currOrient);
                             }
+                            pdf.addImage(canvas.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, canvas.width, canvas.height);
                         });
 
-                        window.print();
+                        const sName = localStorage.getItem('studentName') || "Student";
+                        const sCode = localStorage.getItem('studentCode') || "000";
+                        const fileName = `Daheeh_${sName}_${sCode}.pdf`;
 
-                        kids.forEach(k => {
-                            if(k.id !== 'daheehPrintArea' && k.tagName !== 'SCRIPT') {
-                                k.style.display = k.getAttribute('data-old-display') || '';
-                            }
-                        });
-                        document.body.removeChild(printDiv);
-                    };
-
-                    // الطريقة التالتة: التحميل العادي للكمبيوتر
-                    window.daheehDownloadPC = function() {
-                        pdf.save(fileName);
-                    };
-
-                    actionContainer.innerHTML = `
-                        <button onclick="daheehShareAPK()" style="background:var(--accent); color:#0A2647; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                            <span class="material-icons">share</span> إرسال ومشاركة (واتساب/تيليجرام)
-                        </button>
-                        
-                        <button onclick="daheehPrintAPK()" style="background:#2196f3; color:white; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                            <span class="material-icons">print</span> حفظ كـ PDF بالطابعة المدمجة
-                        </button>
-
-                        <button onclick="daheehDownloadPC()" style="background:#4caf50; color:white; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                            <span class="material-icons">file_download</span> تحميل عادي (للكمبيوتر)
-                        </button>
-                    `;
+                        // ندي الزرار الأخضر رابط مباشر للـ PDF
+                        const pcBtn = document.getElementById('pcDownloadBtn');
+                        pcBtn.style.display = 'inline-block';
+                        pcBtn.href = pdf.output('datauristring'); // الصيغة دي أقوى صيغة بتخترق الحماية
+                        pcBtn.download = fileName;
+                        pcBtn.target = "_blank";
+                    }
 
                 } catch(e) {
                     console.error(e);
