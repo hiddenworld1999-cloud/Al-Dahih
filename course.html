@@ -308,9 +308,7 @@
                 <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
-                
                 <span class="material-icons" onclick="downloadWatermarkedPDF()" style="color: var(--text); cursor: pointer;" title="تحميل الملف">file_download</span>
-
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
         </div>
@@ -337,7 +335,6 @@
         window.addEventListener('popstate', function(event) {
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
-            // إيقاف العداد لو الطالب خرج من الامتحان بالرجوع
             if(typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
             
             if (event.state && event.state.modalOpen) {
@@ -860,7 +857,6 @@
             const sCode = localStorage.getItem('studentCode') || "000"; 
             const watermarkText = `${sName} - ${sCode}`;
             
-            // التعديل هنا: استخدام سيرفر jsdelivr الأقوى لملفات الخرائط
             pdfjsLib.getDocument({
                 url: pdfUrl,
                 cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/cmaps/',
@@ -909,9 +905,6 @@
             });
         }
 
-        // ==========================================
-        // تعديلات العداد وحفظ الإجابات 🔥
-        // ==========================================
         let score = 0; 
         let activeQuizQuestions = []; 
         let currentLectureNum = ''; 
@@ -973,11 +966,9 @@
             if (data.questions && data.questions.length > 0) { 
                 activeQuizQuestions = data.questions; 
                 
-                // --- استرجاع الذاكرة والوقت لو كان بيمتحن وخرج ---
                 const stateKey = `quizState_${courseId}_${currentLectureNum}`;
                 const savedState = JSON.parse(localStorage.getItem(stateKey));
                 
-                // ميدتيرم أو فاينل (ساعة = 3600 ثانية)، كويز عادي (10 دقايق = 600 ثانية)
                 let defaultTime = (currentLectureNum === 'midterm' || currentLectureNum === 'final') ? 60 * 60 : 10 * 60;
                 
                 if (savedState && savedState.answers && savedState.answers.length === activeQuizQuestions.length && savedState.time > 0) {
@@ -1012,7 +1003,7 @@
                 if (remainingQuizTime <= 0) {
                     clearInterval(quizTimerInterval);
                     alert(currentLang === 'en' ? 'Time is up! Submitting automatically.' : 'انتهى الوقت! سيتم تسليم الامتحان تلقائياً بناءً على إجاباتك الحالية.');
-                    submitFullQuiz(true); // الإجبار على التسليم
+                    submitFullQuiz(true);
                 }
             }, 1000);
         }
@@ -1042,14 +1033,12 @@
             activeQuizQuestions.forEach((q, qIndex) => {
                 let optsHtml = ''; 
                 
-                // إيقاف التشفير في صفحة الأسئلة عشان الجداول والصور تظهر
                 let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
                 const qText = rawQText;
                 
                 const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => { 
-                    // تشفير الاختيارات لسه شغال عشان لو حطيت أكواد في الاختيارات متختفيش
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     
                     let isSelected = userAnswers[qIndex] === optIndex;
@@ -1191,14 +1180,12 @@
                 
                 let optsHtml = '';
                 
-                // إيقاف التشفير في صفحة النتيجة عشان الجداول متختفيش
                 let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
                 const qText = rawQText;
                 
                 const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => {
-                    // تشفير الاختيارات لسه شغال
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     
                     let optStyle = 'background: var(--quiz-option-bg); border: 2px solid transparent; opacity: 0.6;';
@@ -1341,9 +1328,6 @@
         updatePomoDisplay();
         fetchXPFromSheet(); 
 
-        // ==========================================
-        // نظام المراقبة الصامت (إرسال حالة الطالب ونبض القلب)
-        // ==========================================
         function sendOnlineStatus(status) {
             const sCode = localStorage.getItem('studentCode');
             const API_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec"; 
@@ -1381,16 +1365,20 @@
         });
 
         // ==========================================
-        // دالة التحميل الذكية (الضربة القاضية لمشاكل الـ APK)
+        // دالة تحميل الـ PDF مختوم (النسخة النهائية لأي موبايل و APK)
         // ==========================================
         async function downloadWatermarkedPDF() {
+            if (!window.jspdf) {
+                alert(currentLang === 'en' ? 'Library is loading, please wait...' : 'مكتبة التحميل لم تكتمل بعد، أرجوك انتظر ثواني...');
+                return;
+            }
+
             const canvases = document.querySelectorAll('#pdfWrapper canvas');
             if (canvases.length === 0) {
                 alert(currentLang === 'en' ? 'Wait for file to load.' : 'أرجوك انتظر فتح الملف بالكامل!');
                 return;
             }
 
-            // 1. إظهار شاشة التحميل
             let loadingMsg = document.getElementById('pdfLoadingOverlayDaheeh');
             if(!loadingMsg) {
                 loadingMsg = document.createElement('div');
@@ -1402,66 +1390,112 @@
                         <h2 id="loadingTextDaheeh" style="margin-top:20px; font-weight:900; line-height:1.5;" dir="auto">جاري تجهيز الملف... ⏳<br><span style="font-size:1rem; color:var(--grey); font-weight:normal;">الرجاء الانتظار</span></h2>
                     </div>
                     
-                    <div id="apkGalleryContainer" style="display:none; width:100%; max-width:500px; max-height:60vh; overflow-y:auto; margin-top:20px; padding:10px; background:var(--bg); border-radius:15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);"></div>
+                    <div id="downloadActionContainer" style="display:none; width:100%; max-width:350px; flex-direction:column; gap:15px; margin-top:20px;"></div>
                     
-                    <div style="display:flex; gap:10px; margin-top:30px;">
-                        <button id="pcDownloadBtn" style="display:none; background:#4caf50; color:white; font-size:1rem; font-weight:900; padding:12px 25px; border-radius:12px; border:none; cursor:pointer; box-shadow: 0 4px 15px rgba(76,175,80,0.3);">
-                            <span class="material-icons" style="vertical-align:middle;">picture_as_pdf</span> تحميل PDF (للكمبيوتر)
-                        </button>
-                        
-                        <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:12px 25px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق</button>
-                    </div>
+                    <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="margin-top:30px; background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:12px 25px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق</button>
                 </div>`;
                 document.body.appendChild(loadingMsg);
             }
 
-            // 2. معالجة الصور وعرضها
             setTimeout(() => {
                 try {
-                    // توليد الصور من الكانفاس (بدون ضغط رامات)
-                    const imagesHtml = Array.from(canvases).map(canvas => {
-                        const imgData = canvas.toDataURL('image/jpeg', 0.8);
-                        return `<img src="${imgData}" style="width:100%; margin-bottom:15px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">`;
-                    }).join('');
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    const orient = firstW > firstH ? 'l' : 'p';
+                    let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
 
-                    // تحديث الشاشة
+                    canvases.forEach((canvas, index) => {
+                        if (index > 0) {
+                            const currOrient = canvas.width > canvas.height ? 'l' : 'p';
+                            pdf.addPage([canvas.width, canvas.height], currOrient);
+                        }
+                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, canvas.width, canvas.height);
+                    });
+
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    const pdfBlob = pdf.output('blob');
+                    
                     document.getElementById('loadingIconDaheeh').innerText = 'check_circle';
                     document.getElementById('loadingIconDaheeh').style.animation = 'none';
                     document.getElementById('loadingIconDaheeh').style.color = '#4caf50';
-                    document.getElementById('loadingTextDaheeh').innerHTML = 'الملف جاهز ومختوم باسمك! 🎉<br><span style="font-size:1rem; color:var(--accent); font-weight:normal;">(اضغط مطولاً على أي صفحة لحفظها في الموبايل)</span>';
+                    document.getElementById('loadingTextDaheeh').innerHTML = 'الملف جاهز ومختوم باسمك! 🎉<br><span style="font-size:1rem; color:var(--accent); font-weight:normal;">اختر طريقة الحفظ المناسبة لجهازك:</span>';
                     
-                    const gallery = document.getElementById('apkGalleryContainer');
-                    gallery.style.display = 'block';
-                    gallery.innerHTML = imagesHtml;
+                    const actionContainer = document.getElementById('downloadActionContainer');
+                    actionContainer.style.display = 'flex';
 
-                    // تفعيل زرار الكمبيوتر لو عنده jsPDF
-                    if (window.jspdf) {
-                        const pcBtn = document.getElementById('pcDownloadBtn');
-                        pcBtn.style.display = 'block';
-                        pcBtn.onclick = function() {
-                            try {
-                                const { jsPDF } = window.jspdf;
-                                const firstW = canvases[0].width;
-                                const firstH = canvases[0].height;
-                                const orient = firstW > firstH ? 'l' : 'p';
-                                let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
-
-                                canvases.forEach((canvas, index) => {
-                                    if (index > 0) {
-                                        const currOrient = canvas.width > canvas.height ? 'l' : 'p';
-                                        pdf.addPage([canvas.width, canvas.height], currOrient);
-                                    }
-                                    pdf.addImage(canvas.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, canvas.width, canvas.height);
-                                });
-
-                                const sName = localStorage.getItem('studentName') || "Student";
-                                const sCode = localStorage.getItem('studentCode') || "000";
-                                pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
-                            } catch(err) {
-                                alert('فشل إنشاء الـ PDF.');
+                    // الطريقة الأولى: زرار المشاركة
+                    window.daheehShareAPK = async function() {
+                        try {
+                            const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                await navigator.share({ files: [file], title: fileName });
+                            } else {
+                                alert("جهازك لا يدعم المشاركة المباشرة، جرب الزرار الأزرق.");
                             }
-                        };
-                    }
+                        } catch(e) { console.log(e); }
+                    };
+
+                    // الطريقة التانية: زرار الطباعة الخارق للـ APK
+                    window.daheehPrintAPK = function() {
+                        let printDiv = document.createElement('div');
+                        printDiv.id = 'daheehPrintArea';
+                        printDiv.style.position = 'absolute';
+                        printDiv.style.top = '0';
+                        printDiv.style.left = '0';
+                        printDiv.style.width = '100%';
+                        printDiv.style.background = 'white';
+                        printDiv.style.zIndex = '9999999';
+                        
+                        canvases.forEach(c => {
+                            let img = document.createElement('img');
+                            img.src = c.toDataURL('image/jpeg', 0.9);
+                            img.style.width = '100%';
+                            img.style.display = 'block';
+                            printDiv.appendChild(img);
+                        });
+                        
+                        document.body.appendChild(printDiv);
+                        
+                        const kids = Array.from(document.body.children);
+                        kids.forEach(k => {
+                            if(k.id !== 'daheehPrintArea' && k.tagName !== 'SCRIPT') {
+                                k.setAttribute('data-old-display', k.style.display);
+                                k.style.display = 'none';
+                            }
+                        });
+
+                        window.print();
+
+                        kids.forEach(k => {
+                            if(k.id !== 'daheehPrintArea' && k.tagName !== 'SCRIPT') {
+                                k.style.display = k.getAttribute('data-old-display') || '';
+                            }
+                        });
+                        document.body.removeChild(printDiv);
+                    };
+
+                    // الطريقة التالتة: التحميل العادي للكمبيوتر
+                    window.daheehDownloadPC = function() {
+                        pdf.save(fileName);
+                    };
+
+                    actionContainer.innerHTML = `
+                        <button onclick="daheehShareAPK()" style="background:var(--accent); color:#0A2647; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-icons">share</span> إرسال ومشاركة (واتساب/تيليجرام)
+                        </button>
+                        
+                        <button onclick="daheehPrintAPK()" style="background:#2196f3; color:white; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-icons">print</span> حفظ كـ PDF بالطابعة المدمجة
+                        </button>
+
+                        <button onclick="daheehDownloadPC()" style="background:#4caf50; color:white; font-size:1.1rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <span class="material-icons">file_download</span> تحميل عادي (للكمبيوتر)
+                        </button>
+                    `;
 
                 } catch(e) {
                     console.error(e);
