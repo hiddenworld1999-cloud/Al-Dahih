@@ -1383,70 +1383,77 @@
             sendOnlineStatus('غير متصل 🔴');
         });
 
-        // ==========================================
-        // دالة التحميل النهائية (مُعالجة لـ WebView وكشف الأخطاء)
+                // ==========================================
+        // دالة التحميل المباشر (تعمل بنظام المشاركة لكسر حماية الموبايل)
         // ==========================================
         async function downloadWatermarkedPDF() {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-            if (isMobile) {
-                // حل الموبايل: استخدام رابط مخفي عشان نتخطى حظر الـ WebView للـ window.open
-                if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
-                    alert("جاري فتح المتصفح لتحميل الملف...");
-                    let link = document.createElement("a");
-                    link.href = window.currentOpenedPdf;
-                    link.target = "_blank";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } else {
-                    alert("عذراً، الرابط غير موجود. يرجى إغلاق الملف وفتحه مرة أخرى.");
-                }
-            } else {
-                // حل اللاب توب: مصيدة الأخطاء لمعرفة سبب الاختفاء
-                try {
-                    if (!window.jspdf) { alert("مكتبة jsPDF لم تحمل بعد، راجع اتصالك بالإنترنت!"); return; }
-                    const { jsPDF } = window.jspdf; 
-                    
-                    const canvases = document.querySelectorAll('#pdfWrapper canvas');
-                    if (canvases.length === 0) { alert("برجاء الانتظار حتى يتم فتح صفحات الملف بالكامل!"); return; }
-
-                    let overlay = document.createElement('div');
-                    overlay.id = "loadingOverlayTemp";
-                    overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
-                    overlay.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span><h2 style="margin-top:20px;">جاري ختم نسختك... ⏳</h2>`;
-                    document.body.appendChild(overlay);
-
-                    setTimeout(() => {
-                        try {
-                            const firstW = canvases[0].width;
-                            const firstH = canvases[0].height;
-                            let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
-
-                            for (let i = 0; i < canvases.length; i++) {
-                                if (i > 0) {
-                                    pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
-                                }
-                                // لو في مشكلة في حماية الصور (CORS) الإيرور هيتمسِك هنا
-                                pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
-                            }
-
-                            const sName = localStorage.getItem('studentName') || "Student";
-                            const sCode = localStorage.getItem('studentCode') || "000";
-                            pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
-                            
-                            document.getElementById("loadingOverlayTemp").remove();
-                        } catch (innerErr) {
-                            alert("حدث خطأ أثناء الختم (ممكن بسبب حماية الملف): " + innerErr.message);
-                            if(document.getElementById("loadingOverlayTemp")) document.getElementById("loadingOverlayTemp").remove();
-                        }
-                    }, 500);
-
-                } catch (err) {
-                    alert("خطأ عام في التجهيز: " + err.message);
-                    if(document.getElementById("loadingOverlayTemp")) document.getElementById("loadingOverlayTemp").remove();
-                }
+            // 1. التأكد من تحميل المكتبة والورق
+            if (!window.jspdf) { 
+                alert("مكتبة التحميل لم تكتمل بعد، يرجى الانتظار ثواني."); 
+                return; 
             }
+
+            const canvases = document.querySelectorAll('#pdfWrapper canvas');
+            if (canvases.length === 0) { 
+                alert("برجاء الانتظار حتى تظهر جميع صفحات الملف أولاً!"); 
+                return; 
+            }
+
+            // 2. إظهار رسالة تجهيز
+            let loadingMsg = document.createElement('div');
+            loadingMsg.id = 'pdfLoadingDaheeh';
+            loadingMsg.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
+            loadingMsg.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">engineering</span><h2 style="margin-top:20px;">جاري ختم نسختك... ⏳</h2>`;
+            document.body.appendChild(loadingMsg);
+
+            // 3. معالجة الملف
+            setTimeout(async () => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
+
+                    for (let i = 0; i < canvases.length; i++) {
+                        if (i > 0) {
+                            pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
+                        }
+                        // جودة 0.5 عشان تكون خفيفة جداً على رامات الموبايل
+                        pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.5), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
+                    }
+
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    const pdfBlob = pdf.output('blob');
+                    const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+                    // 4. كسر الحماية (لو فاتح من موبايل هيفتح قايمة الشير، لو لاب توب هيحمل مباشر)
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        document.getElementById('pdfLoadingDaheeh').remove();
+                        await navigator.share({
+                            files: [file],
+                            title: fileName,
+                            text: 'ملف المحاضرة الخاص بك'
+                        });
+                    } else {
+                        pdf.save(fileName);
+                        document.getElementById('pdfLoadingDaheeh').remove();
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    if(document.getElementById('pdfLoadingDaheeh')) document.getElementById('pdfLoadingDaheeh').remove();
+                    
+                    // خطة طوارئ: لو الموبايل هنج من الرامات، يحمل الرابط الأصلي مباشرة
+                    if (window.currentOpenedPdf) {
+                        window.location.href = window.currentOpenedPdf;
+                    } else {
+                        alert("حدث خطأ أثناء الختم، تأكد من اتصالك بالإنترنت.");
+                    }
+                }
+            }, 500);
         }
 
     </script>
