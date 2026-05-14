@@ -308,7 +308,9 @@
                 <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
+                
                 <span class="material-icons" onclick="downloadWatermarkedPDF()" style="color: var(--text); cursor: pointer;" title="تحميل الملف">file_download</span>
+
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
         </div>
@@ -445,7 +447,7 @@
         
         pdfWrapper.addEventListener('touchmove', (e) => { 
             if (e.touches.length === 2 && initialPinchDistance) { 
-                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
+                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageX - e.touches[1].pageY); 
                 let scaleChange = currentDistance / initialPinchDistance; 
                 let newWidth = pdfInitialWidth * scaleChange; 
                 if (newWidth < 100) newWidth = 100; 
@@ -1365,9 +1367,14 @@
         });
 
         // ==========================================
-        // دالة التحميل النهائية والأخيرة (معرض الصور لحماية الأندرويد)
+        // دالة التحميل النووية (octet-stream) لاختراق الـ APK
         // ==========================================
         async function downloadWatermarkedPDF() {
+            if (!window.jspdf) {
+                alert(currentLang === 'en' ? 'Library is loading, please wait...' : 'مكتبة التحميل لم تكتمل بعد، أرجوك انتظر ثواني...');
+                return;
+            }
+
             const canvases = document.querySelectorAll('#pdfWrapper canvas');
             if (canvases.length === 0) {
                 alert(currentLang === 'en' ? 'Wait for file to load.' : 'أرجوك انتظر فتح الملف بالكامل!');
@@ -1385,63 +1392,50 @@
                         <h2 id="loadingTextDaheeh" style="margin-top:20px; font-weight:900; line-height:1.5;" dir="auto">جاري تجهيز الملف... ⏳<br><span style="font-size:1rem; color:var(--grey); font-weight:normal;">الرجاء الانتظار</span></h2>
                     </div>
                     
-                    <div id="apkGalleryContainer" style="display:none; width:100%; max-width:500px; max-height:60vh; overflow-y:auto; margin-top:20px; padding:10px; background:var(--bg); border-radius:15px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);"></div>
+                    <div id="downloadActionContainer" style="display:none; width:100%; max-width:350px; flex-direction:column; gap:15px; margin-top:30px;"></div>
                     
-                    <div style="display:flex; gap:10px; margin-top:30px;">
-                        <a id="pcDownloadBtn" style="display:none; background:#4caf50; color:white; font-size:1rem; font-weight:900; padding:12px 25px; border-radius:12px; text-decoration:none; cursor:pointer; box-shadow: 0 4px 15px rgba(76,175,80,0.3);">
-                            <span class="material-icons" style="vertical-align:middle;">file_download</span> تحميل PDF المباشر
-                        </a>
-                        
-                        <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:12px 25px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق</button>
-                    </div>
+                    <button onclick="document.getElementById('pdfLoadingOverlayDaheeh').remove()" style="margin-top:30px; background:transparent; border:2px solid rgba(255,255,255,0.3); color:white; padding:12px 25px; border-radius:12px; font-weight:bold; cursor:pointer;">إغلاق</button>
                 </div>`;
                 document.body.appendChild(loadingMsg);
             }
 
             setTimeout(() => {
                 try {
-                    // استخراج الصور من الشاشة وعرضها للطالب
-                    const imagesHtml = Array.from(canvases).map(canvas => {
-                        const imgData = canvas.toDataURL('image/jpeg', 0.8);
-                        return `<img src="${imgData}" style="width:100%; margin-bottom:15px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">`;
-                    }).join('');
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    const orient = firstW > firstH ? 'l' : 'p';
+                    let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
 
+                    canvases.forEach((canvas, index) => {
+                        if (index > 0) {
+                            const currOrient = canvas.width > canvas.height ? 'l' : 'p';
+                            pdf.addPage([canvas.width, canvas.height], currOrient);
+                        }
+                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, canvas.width, canvas.height);
+                    });
+
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    // الخدعة النووية: تحويل الملف لـ octet-stream عشان الـ APK يضطر ينزله غصب عنه!
+                    const base64Uri = pdf.output('datauristring');
+                    const forceDownloadUri = base64Uri.replace('application/pdf', 'application/octet-stream');
+                    
                     document.getElementById('loadingIconDaheeh').innerText = 'check_circle';
                     document.getElementById('loadingIconDaheeh').style.animation = 'none';
                     document.getElementById('loadingIconDaheeh').style.color = '#4caf50';
-                    document.getElementById('loadingTextDaheeh').innerHTML = 'الملف جاهز ومختوم باسمك! 🎉<br><span style="font-size:1rem; color:var(--accent); font-weight:normal;">(اضغط مطولاً على أي صفحة لحفظها في الجهاز)</span>';
+                    document.getElementById('loadingTextDaheeh').innerHTML = 'الملف جاهز ومختوم باسمك! 🎉';
                     
-                    const gallery = document.getElementById('apkGalleryContainer');
-                    gallery.style.display = 'block';
-                    gallery.innerHTML = imagesHtml;
+                    const actionContainer = document.getElementById('downloadActionContainer');
+                    actionContainer.style.display = 'flex';
 
-                    // تجهيز الزرار الأخضر للتحميل السريع (للي مش بيستخدموا APK مقفول)
-                    if (window.jspdf) {
-                        const { jsPDF } = window.jspdf;
-                        const firstW = canvases[0].width;
-                        const firstH = canvases[0].height;
-                        const orient = firstW > firstH ? 'l' : 'p';
-                        let pdf = new jsPDF({ orientation: orient, unit: 'px', format: [firstW, firstH] });
-
-                        canvases.forEach((canvas, index) => {
-                            if (index > 0) {
-                                const currOrient = canvas.width > canvas.height ? 'l' : 'p';
-                                pdf.addPage([canvas.width, canvas.height], currOrient);
-                            }
-                            pdf.addImage(canvas.toDataURL('image/jpeg', 0.7), 'JPEG', 0, 0, canvas.width, canvas.height);
-                        });
-
-                        const sName = localStorage.getItem('studentName') || "Student";
-                        const sCode = localStorage.getItem('studentCode') || "000";
-                        const fileName = `Daheeh_${sName}_${sCode}.pdf`;
-
-                        // ندي الزرار الأخضر رابط مباشر للـ PDF
-                        const pcBtn = document.getElementById('pcDownloadBtn');
-                        pcBtn.style.display = 'inline-block';
-                        pcBtn.href = pdf.output('datauristring'); // الصيغة دي أقوى صيغة بتخترق الحماية
-                        pcBtn.download = fileName;
-                        pcBtn.target = "_blank";
-                    }
+                    actionContainer.innerHTML = `
+                        <a href="${forceDownloadUri}" download="${fileName}" onclick="setTimeout(() => document.getElementById('pdfLoadingOverlayDaheeh').remove(), 1500)" style="background:var(--accent); color:#0A2647; font-size:1.2rem; font-weight:900; padding:15px; border-radius:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; box-shadow: 0 4px 15px rgba(255,200,0,0.3);">
+                            <span class="material-icons">file_download</span> تحميل إجباري (للموبايل)
+                        </a>
+                    `;
 
                 } catch(e) {
                     console.error(e);
