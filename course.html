@@ -28,6 +28,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
     <style>
         :root { 
             --primary: #0A2647; --accent: #FFC800; --bg: #F8F9FA; --card: #fff; --text: #212529; --grey: #6c757d;
@@ -307,6 +310,10 @@
                 <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
+
+<span class="material-icons" onclick="downloadWatermarkedPDF()" style="color: var(--text); cursor: pointer;" title="تحميل الملف">file_download</span>
+
+
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
         </div>
@@ -1376,6 +1383,70 @@
             sendOnlineStatus('غير متصل 🔴');
         });
 
+
+
+// ==========================================
+        // دالة التحميل الذكية باستخدام سيرفرك القديم
+        // ==========================================
+        async function downloadWatermarkedPDF() {
+            if (!window.jspdf) { alert("جاري تحميل المكتبات..."); return; }
+
+            const canvases = document.querySelectorAll('#pdfWrapper canvas');
+            if (canvases.length === 0) { alert("أرجوك افتح الملف أولاً"); return; }
+
+            let overlay = document.createElement('div');
+            overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.98); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; text-align:center; padding:20px;";
+            overlay.innerHTML = `
+                <span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">cloud_upload</span>
+                <h2 style="margin-top:20px;">جاري ختم الملف ورفعه... ⏳</h2>
+                <p style="color:var(--accent);">برجاء الانتظار لضمان حماية نسختك</p>
+            `;
+            document.body.appendChild(overlay);
+
+            setTimeout(async () => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
+
+                    canvases.forEach((canvas, index) => {
+                        if (index > 0) pdf.addPage([canvas.width, canvas.height], canvas.width > canvas.height ? 'l' : 'p');
+                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvas.width, canvas.height);
+                    });
+
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    const base64String = pdf.output('datauristring').split(',')[1];
+
+                    // هنستخدم SCRIPT_URL بتاعك اللي شغال أصلاً!
+                    const response = await fetch(SCRIPT_URL, {
+                        method: "POST",
+                        body: JSON.stringify({ base64: base64String, fileName: fileName })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        window.open(result.url, '_blank'); // فتح الرابط للتحميل الإجباري
+                        overlay.innerHTML = `
+                            <span class="material-icons" style="font-size:70px; color:#4caf50;">check_circle</span>
+                            <h2 style="margin-top:20px;">تم التجهيز! 🎉</h2>
+                            <p>الملف بينزل دلوقتي في جهازك</p>
+                            <button onclick="this.parentElement.remove()" style="margin-top:20px; padding:10px 30px; border-radius:10px; border:none; background:white; font-weight:bold; color:var(--primary); cursor:pointer;">إغلاق</button>
+                        `;
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert("عذراً، فشل الرفع. تأكد من اتصال الإنترنت.");
+                    overlay.remove();
+                }
+            }, 500);
+        }
     </script>
 </body>
 </html>
