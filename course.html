@@ -1386,69 +1386,111 @@ window.currentOpenedPdf = pdfUrl;
             sendOnlineStatus('غير متصل 🔴');
         });
 
-              // ==========================================
-        // دالة التحميل النهائية (مُعالجة لـ WebView وكشف الأخطاء)
+            // ==========================================
+        // دالة التحميل الآمنة للرامات (تعمل على الكمبيوتر والموبايل)
         // ==========================================
         async function downloadWatermarkedPDF() {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (!window.jspdf) { alert("جاري تحميل المكتبات..."); return; }
 
-            if (isMobile) {
-                // حل الموبايل: استخدام رابط مخفي عشان نتخطى حظر الـ WebView للـ window.open
-                if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
-                    alert("جاري فتح المتصفح لتحميل الملف...");
-                    let link = document.createElement("a");
-                    link.href = window.currentOpenedPdf;
-                    link.target = "_blank";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } else {
-                    alert("عذراً، الرابط غير موجود. يرجى إغلاق الملف وفتحه مرة أخرى.");
-                }
-            } else {
-                // حل اللاب توب: مصيدة الأخطاء لمعرفة سبب الاختفاء
+            const canvases = document.querySelectorAll('#pdfWrapper canvas');
+            if (canvases.length === 0) { alert("أرجوك افتح الملف بالكامل أولاً"); return; }
+
+            // شاشة التحميل مع شريط تقدم عشان الطالب ميقفلش
+            let overlay = document.createElement('div');
+            overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.98); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; text-align:center; padding:20px;";
+            overlay.innerHTML = `
+                <span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">engineering</span>
+                <h2 style="margin-top:20px;" id="pdfLoadingText">جاري التجهيز (ورقة 1 من ${canvases.length})... ⏳</h2>
+                <p style="color:var(--accent); margin-top:5px;">برجاء عدم إغلاق الصفحة لحين الانتهاء</p>
+                <div style="width: 80%; background: rgba(255,255,255,0.2); height: 10px; border-radius: 5px; margin-top: 15px; overflow: hidden;">
+                    <div id="pdfProgressBar" style="width: 0%; height: 100%; background: #4caf50; transition: width 0.2s;"></div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            setTimeout(async () => {
                 try {
-                    if (!window.jspdf) { alert("مكتبة jsPDF لم تحمل بعد، راجع اتصالك بالإنترنت!"); return; }
-                    const { jsPDF } = window.jspdf; 
-                    
-                    const canvases = document.querySelectorAll('#pdfWrapper canvas');
-                    if (canvases.length === 0) { alert("برجاء الانتظار حتى يتم فتح صفحات الملف بالكامل!"); return; }
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
 
-                    let overlay = document.createElement('div');
-                    overlay.id = "loadingOverlayTemp";
-                    overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
-                    overlay.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span><h2 style="margin-top:20px;">جاري ختم نسختك... ⏳</h2>`;
-                    document.body.appendChild(overlay);
+                    // المعالجة البطيئة (ورقة ورقة) لمنع انهيار الموبايل (Out of Memory)
+                    for (let i = 0; i < canvases.length; i++) {
+                        document.getElementById('pdfLoadingText').innerText = `جاري الختم (ورقة ${i + 1} من ${canvases.length})... ⏳`;
+                        document.getElementById('pdfProgressBar').style.width = `${((i + 1) / canvases.length) * 100}%`;
 
-                    setTimeout(() => {
-                        try {
-                            const firstW = canvases[0].width;
-                            const firstH = canvases[0].height;
-                            let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
-
-                            for (let i = 0; i < canvases.length; i++) {
-                                if (i > 0) {
-                                    pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
-                                }
-                                // لو في مشكلة في حماية الصور (CORS) الإيرور هيتمسِك هنا
-                                pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
-                            }
-
-                            const sName = localStorage.getItem('studentName') || "Student";
-                            const sCode = localStorage.getItem('studentCode') || "000";
-                            pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
-                            
-                            document.getElementById("loadingOverlayTemp").remove();
-                        } catch (innerErr) {
-                            alert("حدث خطأ أثناء الختم (ممكن بسبب حماية الملف): " + innerErr.message);
-                            if(document.getElementById("loadingOverlayTemp")) document.getElementById("loadingOverlayTemp").remove();
+                        if (i > 0) {
+                            pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
                         }
-                    }, 500);
+                        
+                        // استخدام جودة 0.4 بيوفر 60% من الرامات والصورة بتفضل واضحة للقراءة
+                        let imgData = canvases[i].toDataURL('image/jpeg', 0.4);
+                        pdf.addImage(imgData, 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
+                        
+                        imgData = null; // مسح الصورة من الرامات فوراً
+                        await new Promise(resolve => setTimeout(resolve, 50)); // راحة للمعالج
+                    }
 
-                } catch (err) {
-                    alert("خطأ عام في التجهيز: " + err.message);
-                    if(document.getElementById("loadingOverlayTemp")) document.getElementById("loadingOverlayTemp").remove();
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    document.getElementById('pdfLoadingText').innerText = "جاري التصدير النهائي...";
+
+                    // فحص نوع الجهاز (كمبيوتر ولا موبايل)
+                    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+                    if (!isMobile) {
+                        // لو الكمبيوتر -> تحميل مباشر بدون سيرفر
+                        pdf.save(fileName);
+                        showSuccessMsg(overlay);
+                    } else {
+                        // لو موبايل (APK) -> تشغيل المشاركة الأصلية للموبايل
+                        const pdfBlob = pdf.output('blob');
+                        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                        
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            await navigator.share({ files: [file], title: fileName, text: 'ورق المحاضرة مختوم' });
+                            overlay.remove();
+                        } else {
+                            // لو الموبايل مفيهوش مشاركة -> نرفع للسيرفر كحل أخير
+                            document.getElementById('pdfLoadingText').innerText = "جاري الرفع للسيرفر ☁️...";
+                            
+                            const base64String = await new Promise((resolve) => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                                reader.readAsDataURL(pdfBlob);
+                            });
+
+                            const response = await fetch(SCRIPT_URL, {
+                                method: "POST",
+                                headers: { "Content-Type": "text/plain;charset=utf-8" }, // حل مشكلة الـ CORS
+                                body: JSON.stringify({ base64: base64String, fileName: fileName })
+                            });
+
+                            const result = await response.json();
+                            if (result.success) {
+                                window.open(result.url, '_blank');
+                                showSuccessMsg(overlay);
+                            } else {
+                                throw new Error("Server Error");
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert("حدث خطأ! لو سمحت اقفل بعض التطبيقات لتوفير مساحة في الرامات.");
+                    overlay.remove();
                 }
+            }, 500);
+
+            function showSuccessMsg(overlayEl) {
+                overlayEl.innerHTML = `
+                    <span class="material-icons" style="font-size:70px; color:#4caf50;">check_circle</span>
+                    <h2 style="margin-top:20px;">تم التجهيز بنجاح! 🎉</h2>
+                    <button onclick="this.parentElement.remove()" style="margin-top:20px; padding:10px 40px; border-radius:12px; border:none; background:white; font-weight:bold; color:var(--primary); font-size:1.1rem; cursor:pointer;">إغلاق</button>
+                `;
             }
         }
 
