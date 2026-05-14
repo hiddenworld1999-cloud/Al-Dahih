@@ -1382,65 +1382,66 @@
         window.addEventListener('beforeunload', () => {
             sendOnlineStatus('غير متصل 🔴');
         });
-                // ==========================================
-        // دالة التحميل المباشرة والآمنة (بدون ضغط على رامات الموبايل)
+                      // ==========================================
+        // دالة الختم والتحميل المباشرة (النسخة الكلاسيكية المستقرة)
         // ==========================================
-        async function downloadWatermarkedPDF() {
-            // فحص نوع الجهاز
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-            if (isMobile) {
-                // حل الموبايل (طريقة الشيت المباشرة): فتح رابط الـ PDF الأصلي فوراً بدون معالجة
-                if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
-                    alert("سيتم تحويلك للمتصفح لتحميل الملف مباشرة...");
-                    window.open(window.currentOpenedPdf, '_blank');
-                } else {
-                    alert("عذراً، رابط الملف غير متوفر. حاول فتح المحاضرة مرة أخرى.");
-                }
-                return; // إيقاف الكود هنا عشان الموبايل ميكملش تحت
+        function downloadWatermarkedPDF() {
+            if (!window.jspdf) { 
+                alert("جاري تحميل أدوات الختم، ثواني واضغط مرة أخرى..."); 
+                return; 
             }
 
-            // =====================================
-            // حل الكمبيوتر: معالجة وختم (لأن راماته تستحمل)
-            // =====================================
-            try {
-                if (!window.jspdf) { alert("المكتبة لم تحمل بعد، راجع اتصال الإنترنت."); return; }
-                const canvases = document.querySelectorAll('#pdfWrapper canvas');
-                if (canvases.length === 0) { alert("انتظر حتى تفتح صفحات الملف بالكامل!"); return; }
+            const canvases = document.querySelectorAll('#pdfWrapper canvas');
+            if (canvases.length === 0) { 
+                alert("برجاء الانتظار حتى يتم عرض جميع صفحات الملف أولاً!"); 
+                return; 
+            }
 
-                let overlay = document.createElement('div');
-                overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
-                overlay.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span><h2 style="margin-top:20px;">جاري ختم نسختك وتجهيزها... ⏳</h2>`;
-                document.body.appendChild(overlay);
+            // إظهار رسالة التجهيز
+            let overlay = document.createElement('div');
+            overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.98); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; text-align:center; padding:20px;";
+            overlay.innerHTML = `
+                <span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">engineering</span>
+                <h2 style="margin-top:20px;">جاري ختم نسختك وتجهيزها للتحميل... ⏳</h2>
+                <p style="color:var(--accent); margin-top:5px;">هذا الملف محمي ومسجل باسمك</p>
+            `;
+            document.body.appendChild(overlay);
 
-                setTimeout(() => {
-                    try {
-                        const { jsPDF } = window.jspdf;
-                        const firstW = canvases[0].width;
-                        const firstH = canvases[0].height;
-                        let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
+            // استخدام setTimeout عشان الشاشة تلحق تظهر رسالة التجهيز قبل ما الجهاز ينشغل
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
 
-                        for (let i = 0; i < canvases.length; i++) {
-                            if (i > 0) {
-                                pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
-                            }
-                            pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
+                    // تجميع الصفحات
+                    for (let i = 0; i < canvases.length; i++) {
+                        if (i > 0) {
+                            pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
                         }
-
-                        const sName = localStorage.getItem('studentName') || "Student";
-                        const sCode = localStorage.getItem('studentCode') || "000";
-                        pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
                         
-                        overlay.remove();
-                    } catch (e) {
-                        alert("حدث خطأ أثناء الختم: " + e.message);
-                        overlay.remove();
+                        // السر هنا: جودة 0.4 بتخلي حجم الملف صغير والرامات تستحمله من غير ما تفصل
+                        pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.4), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
                     }
-                }, 500);
 
-            } catch (err) {
-                alert("حدث خطأ عام: " + err.message);
-            }
+                    // سحب اسم الطالب والكود لختم اسم الملف
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    const fileName = `Daheeh_${sName}_${sCode}.pdf`;
+
+                    // أمر التحميل المباشر العادي (اللي بيشتغل معاك)
+                    pdf.save(fileName);
+                    
+                    // إزالة شاشة التحميل بعد الانتهاء
+                    overlay.remove();
+
+                } catch (error) {
+                    console.error("حدث خطأ:", error);
+                    alert("حصلت مشكلة تقنية أثناء المعالجة، الرجاء المحاولة لاحقاً.");
+                    overlay.remove();
+                }
+            }, 500);
         }
 
     </script>
