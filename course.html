@@ -1366,8 +1366,8 @@
             sendOnlineStatus('غير متصل 🔴');
         });
 
-   // ==========================================
-        // دالة عرض المحاضرة كصور قابلة للحفظ (الضربة القاضية للـ APK)
+  // ==========================================
+        // دالة عرض المحاضرة كصور قابلة للحفظ (مع فك حماية المنصة للصور فقط)
         // ==========================================
         async function downloadWatermarkedPDF() {
             const canvases = document.querySelectorAll('#pdfWrapper canvas');
@@ -1398,25 +1398,42 @@
             // 2. تحويل الـ PDF لصور وعرضها
             setTimeout(() => {
                 try {
-                    // استخراج الصور بجودة عالية 90%
-                    const imagesHtml = Array.from(canvases).map((canvas, i) => {
+                    const gallery = document.getElementById('apkGalleryContainer');
+                    gallery.innerHTML = ''; // تنضيف القديم
+
+                    // استخراج الصور بجودة عالية
+                    Array.from(canvases).forEach((canvas, i) => {
                         const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                        return `
-                        <div style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:25px; box-shadow:0 10px 20px rgba(0,0,0,0.5);">
-                            <div style="color:var(--primary); font-weight:900; margin-bottom:10px; font-size:1.2rem;">ورقة رقم ${i + 1}</div>
-                            <img src="${imgData}" style="width:100%; border-radius:8px; pointer-events:auto; user-select:auto; -webkit-user-callout:default;">
-                        </div>`;
-                    }).join('');
+                        
+                        const wrapper = document.createElement('div');
+                        wrapper.style = "background:var(--card); padding:15px; border-radius:15px; margin-bottom:25px; box-shadow:0 10px 20px rgba(0,0,0,0.5);";
+                        
+                        const title = document.createElement('div');
+                        title.style = "color:var(--primary); font-weight:900; margin-bottom:10px; font-size:1.2rem;";
+                        title.innerText = `ورقة رقم ${i + 1}`;
+                        
+                        const img = document.createElement('img');
+                        img.src = imgData;
+                        // السطر الجبار لفك الحماية عن الصورة دي بس!
+                        img.style = "width:100%; border-radius:8px; pointer-events:auto !important; user-select:auto !important; -webkit-user-select:auto !important; -webkit-touch-callout:default !important;";
+                        
+                        // نمنع كود الحماية بتاعك إنه يقفل القايمة هنا
+                        img.addEventListener('contextmenu', function(e) {
+                            e.stopPropagation(); 
+                        });
+
+                        wrapper.appendChild(title);
+                        wrapper.appendChild(img);
+                        gallery.appendChild(wrapper);
+                    });
 
                     // تحديث الرسالة للطالب
                     document.getElementById('loadingIconDaheeh').innerText = 'check_circle';
                     document.getElementById('loadingIconDaheeh').style.animation = 'none';
                     document.getElementById('loadingIconDaheeh').style.color = '#4caf50';
-                    document.getElementById('loadingTextDaheeh').innerHTML = 'المحاضرة جاهزة! 🎉<br><span style="font-size:1.1rem; color:var(--accent); font-weight:normal; line-height:1.6; display:block; margin-top:10px;">التطبيق يمنع التحميل المباشر للحماية.<br>👇 (اضغط مطولاً بصباعك على أي ورقة لحفظها في الموبايل أو إرسالها) 👇</span>';
+                    document.getElementById('loadingTextDaheeh').innerHTML = 'المحاضرة جاهزة! 🎉<br><span style="font-size:1.1rem; color:var(--accent); font-weight:normal; line-height:1.6; display:block; margin-top:10px;">التطبيق يمنع التحميل المباشر للحماية.<br>👇 (اضغط مطولاً بصباعك على أي ورقة لحفظها في الاستوديو) 👇</span>';
                     
-                    const gallery = document.getElementById('apkGalleryContainer');
                     gallery.style.display = 'block';
-                    gallery.innerHTML = imagesHtml;
 
                 } catch(e) {
                     console.error(e);
