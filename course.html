@@ -1386,57 +1386,71 @@ window.currentOpenedPdf = pdfUrl;
             sendOnlineStatus('غير متصل 🔴');
         });
 
-        // ==========================================
-        // دالة التحميل الهجينة (كمبيوتر = مختوم / موبايل = رابط مباشر)
+              // ==========================================
+        // دالة التحميل النهائية (مُعالجة لـ WebView وكشف الأخطاء)
         // ==========================================
         async function downloadWatermarkedPDF() {
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
             if (isMobile) {
-                // للموبايل: تحميل مباشر للرابط عشان الـ APK والرامات
-                if (window.currentOpenedPdf) {
-                    alert("جاري تحويلك للمتصفح لتحميل الملف بأمان...");
-                    window.open(window.currentOpenedPdf, '_blank');
+                // حل الموبايل: استخدام رابط مخفي عشان نتخطى حظر الـ WebView للـ window.open
+                if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
+                    alert("جاري فتح المتصفح لتحميل الملف...");
+                    let link = document.createElement("a");
+                    link.href = window.currentOpenedPdf;
+                    link.target = "_blank";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 } else {
-                    alert("عذراً، تعذر العثور على رابط الملف.");
+                    alert("عذراً، الرابط غير موجود. يرجى إغلاق الملف وفتحه مرة أخرى.");
                 }
             } else {
-                // للكمبيوتر: استخراج الـ PDF بختم الطالب
-                if (!window.jspdf) { alert("جاري تحميل المكتبات، برجاء الانتظار..."); return; }
-                const canvases = document.querySelectorAll('#pdfWrapper canvas');
-                if (canvases.length === 0) { alert("أرجوك انتظر فتح الملف بالكامل أولاً!"); return; }
+                // حل اللاب توب: مصيدة الأخطاء لمعرفة سبب الاختفاء
+                try {
+                    if (!window.jspdf) { alert("مكتبة jsPDF لم تحمل بعد، راجع اتصالك بالإنترنت!"); return; }
+                    const { jsPDF } = window.jspdf; 
+                    
+                    const canvases = document.querySelectorAll('#pdfWrapper canvas');
+                    if (canvases.length === 0) { alert("برجاء الانتظار حتى يتم فتح صفحات الملف بالكامل!"); return; }
 
-                let overlay = document.createElement('div');
-                overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
-                overlay.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span><h2 style="margin-top:20px;">جاري ختم الملف وتجهيزه... ⏳</h2>`;
-                document.body.appendChild(overlay);
+                    let overlay = document.createElement('div');
+                    overlay.id = "loadingOverlayTemp";
+                    overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
+                    overlay.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span><h2 style="margin-top:20px;">جاري ختم نسختك... ⏳</h2>`;
+                    document.body.appendChild(overlay);
 
-                setTimeout(() => {
-                    try {
-                        const { jsPDF } = window.jspdf;
-                        const firstW = canvases[0].width;
-                        const firstH = canvases[0].height;
-                        let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
+                    setTimeout(() => {
+                        try {
+                            const firstW = canvases[0].width;
+                            const firstH = canvases[0].height;
+                            let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
 
-                        canvases.forEach((canvas, index) => {
-                            if (index > 0) pdf.addPage([canvas.width, canvas.height], canvas.width > canvas.height ? 'l' : 'p');
-                            pdf.addImage(canvas.toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvas.width, canvas.height);
-                        });
+                            for (let i = 0; i < canvases.length; i++) {
+                                if (i > 0) {
+                                    pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
+                                }
+                                // لو في مشكلة في حماية الصور (CORS) الإيرور هيتمسِك هنا
+                                pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
+                            }
 
-                        const sName = localStorage.getItem('studentName') || "Student";
-                        const sCode = localStorage.getItem('studentCode') || "000";
-                        pdf.save(`Daheeh_${sName}_${sCode}.pdf`); 
-                        
-                        overlay.remove();
-                    } catch (e) {
-                        console.error(e);
-                        alert("حدث خطأ أثناء التجهيز!");
-                        overlay.remove();
-                    }
-                }, 500);
+                            const sName = localStorage.getItem('studentName') || "Student";
+                            const sCode = localStorage.getItem('studentCode') || "000";
+                            pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
+                            
+                            document.getElementById("loadingOverlayTemp").remove();
+                        } catch (innerErr) {
+                            alert("حدث خطأ أثناء الختم (ممكن بسبب حماية الملف): " + innerErr.message);
+                            if(document.getElementById("loadingOverlayTemp")) document.getElementById("loadingOverlayTemp").remove();
+                        }
+                    }, 500);
+
+                } catch (err) {
+                    alert("خطأ عام في التجهيز: " + err.message);
+                    if(document.getElementById("loadingOverlayTemp")) document.getElementById("loadingOverlayTemp").remove();
+                }
             }
         }
-
 
     </script>
 </body>
