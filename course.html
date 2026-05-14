@@ -841,8 +841,11 @@
             applyLanguage();
         }
 
-        function openPdfViewerInsideApp(pdfUrl) {
-            const wrapper = document.getElementById('pdfWrapper'); 
+        function openPdfViewerInsideApp(pdfUrl){
+window.currentOpenedPdf = pdfUrl;
+
+            const wrapper =
+ document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
             
             wrapper.style.width = '100%'; 
@@ -1383,16 +1386,14 @@
             sendOnlineStatus('غير متصل 🔴');
         });
 
-
-// ==========================================
-        // دالة التحميل الهجينة (كمبيوتر = مختوم / موبايل = رابط مباشر لحماية الرامات)
+        // ==========================================
+        // دالة التحميل الهجينة (كمبيوتر = مختوم / موبايل = رابط مباشر)
         // ==========================================
         async function downloadWatermarkedPDF() {
-            // فحص نوع الجهاز لمعرفة لو الطالب فاتح من موبايل ولا كمبيوتر
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
             if (isMobile) {
-                // لو موبايل: نفتح الرابط الأصلي في المتصفح الخارجي عشان الرامات متضربش والـ APK ميفصلش
+                // للموبايل: تحميل مباشر للرابط عشان الـ APK والرامات
                 if (window.currentOpenedPdf) {
                     alert("جاري تحويلك للمتصفح لتحميل الملف بأمان...");
                     window.open(window.currentOpenedPdf, '_blank');
@@ -1400,12 +1401,11 @@
                     alert("عذراً، تعذر العثور على رابط الملف.");
                 }
             } else {
-                // لو كمبيوتر: راماته قوية، نعمله الـ PDF المختوم
+                // للكمبيوتر: استخراج الـ PDF بختم الطالب
                 if (!window.jspdf) { alert("جاري تحميل المكتبات، برجاء الانتظار..."); return; }
                 const canvases = document.querySelectorAll('#pdfWrapper canvas');
                 if (canvases.length === 0) { alert("أرجوك انتظر فتح الملف بالكامل أولاً!"); return; }
 
-                // إظهار شاشة التحميل
                 let overlay = document.createElement('div');
                 overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.95); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white;";
                 overlay.innerHTML = `<span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">downloading</span><h2 style="margin-top:20px;">جاري ختم الملف وتجهيزه... ⏳</h2>`;
@@ -1420,13 +1420,12 @@
 
                         canvases.forEach((canvas, index) => {
                             if (index > 0) pdf.addPage([canvas.width, canvas.height], canvas.width > canvas.height ? 'l' : 'p');
-                            // جودة 0.6 ممتازة للكمبيوتر ومش هتهنج
                             pdf.addImage(canvas.toDataURL('image/jpeg', 0.6), 'JPEG', 0, 0, canvas.width, canvas.height);
                         });
 
                         const sName = localStorage.getItem('studentName') || "Student";
                         const sCode = localStorage.getItem('studentCode') || "000";
-                        pdf.save(`Daheeh_${sName}_${sCode}.pdf`); // التحميل المباشر للكمبيوتر
+                        pdf.save(`Daheeh_${sName}_${sCode}.pdf`); 
                         
                         overlay.remove();
                     } catch (e) {
@@ -1437,6 +1436,8 @@
                 }, 500);
             }
         }
+
+
     </script>
 </body>
 </html>
