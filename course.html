@@ -1421,9 +1421,12 @@
 
                     const base64String = pdf.output('datauristring').split(',')[1];
 
-                    // هنستخدم SCRIPT_URL بتاعك اللي شغال أصلاً!
+                    // إرسال الملف للسيرفر مع تخطي حماية جوجل (CORS)
                     const response = await fetch(SCRIPT_URL, {
                         method: "POST",
+                        headers: {
+                            "Content-Type": "text/plain;charset=utf-8" // السطر ده بيمنع جوجل من حظر الطلب
+                        },
                         body: JSON.stringify({ base64: base64String, fileName: fileName })
                     });
 
