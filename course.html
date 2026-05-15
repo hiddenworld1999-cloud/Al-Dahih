@@ -27,7 +27,6 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         :root { 
@@ -305,11 +304,9 @@
             <span style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
             
             <div class="header-icons" style="gap: 15px;">
-                <span class="material-icons" id="pdfDrawToggleBtn" onclick="togglePdfDrawMode()" style="color: var(--text); cursor: pointer;" title="شخبطة / حل">draw</span>
                 <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
-                <span class="material-icons" onclick="downloadWatermarkedPDF()" style="color: var(--text); cursor: pointer;" title="تحميل الملف">file_download</span>
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
         </div>
@@ -319,21 +316,9 @@
                 <div id="pdfWatermarkOverlay" class="watermark-overlay"></div>
             </div>
         </div>
-
-        <div id="pdfDrawTools" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:var(--card); padding:10px 20px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); display:none; gap:15px; z-index:3000; align-items:center; border: 1px solid rgba(0,0,0,0.05);">
-            <button class="color-btn active" style="background:#0A2647; width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#0A2647', 3, this)" title="قلم أزرق"></button>
-            <button class="color-btn" style="background:#f44336; width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#f44336', 3, this)" title="قلم أحمر"></button>
-            <button class="color-btn" style="background:rgba(255, 200, 0, 0.4); border: 2px solid #FFC800; width:32px; height:32px; border-radius:50%; cursor:pointer;" onclick="setPdfBrush('rgba(255, 200, 0, 0.4)', 15, this)" title="قلم تحديد"></button>
-            <button class="color-btn" style="background:#ffffff; border:1px solid #ccc; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; justify-content:center; align-items:center;" onclick="setPdfBrush('eraser', 20, this)" title="أستيكة">
-                <span class="material-icons" style="font-size:16px; color:#ccc;">ink_eraser</span>
-            </button>
-        </div>
     </div>
 
     <script>
-        // تعريف متغير الرابط للموبايل
-        window.currentOpenedPdf = "";
-
         if(localStorage.getItem('daheehVipMode') === 'true') {
             document.body.classList.add('vip-gold-mode');
         }
@@ -356,7 +341,6 @@
             }
         });
 
-        // ------------------ السبورة العادية ------------------
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
@@ -378,7 +362,7 @@
 
         function setBrushColor(color, btnEl) {
             brushColor = color;
-            document.querySelectorAll('.wb-tools .color-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
             if(btnEl) btnEl.classList.add('active');
         }
 
@@ -405,7 +389,10 @@
                 ctxCanvas.stroke();
                 e.preventDefault();
             };
-            const stopDraw = () => { isDrawing = false; ctxCanvas.closePath(); };
+            const stopDraw = () => { 
+                isDrawing = false; 
+                ctxCanvas.closePath(); 
+            };
 
             const getX = (e) => e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.clientX - canvas.getBoundingClientRect().left;
             const getY = (e) => e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.clientY - canvas.getBoundingClientRect().top;
@@ -414,12 +401,15 @@
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDraw);
             canvas.addEventListener('mouseout', stopDraw);
+
             canvas.addEventListener('touchstart', startDraw, {passive: false});
             canvas.addEventListener('touchmove', draw, {passive: false});
             canvas.addEventListener('touchend', stopDraw);
         }
 
-        let touchStartX = 0; let touchStartY = 0;
+        let touchStartX = 0; 
+        let touchStartY = 0;
+        
         document.addEventListener('touchstart', e => { 
             touchStartX = e.changedTouches[0].screenX; 
             touchStartY = e.changedTouches[0].screenY; 
@@ -428,31 +418,46 @@
         document.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX; 
             let touchEndY = e.changedTouches[0].screenY;
-            let diffX = touchStartX - touchEndX; let diffY = Math.abs(touchStartY - touchEndY); 
+            let diffX = touchStartX - touchEndX; 
+            let diffY = Math.abs(touchStartY - touchEndY); 
+            
             if (touchStartX > window.innerWidth - 80 && diffX > 60 && diffY < 50) {
                 const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable')).some(el => el.style.display === 'flex' || el.style.display === 'block');
-                if (isAnyModalOpen) { history.back(); } else { window.location.href = 'index.html'; }
+                if (isAnyModalOpen) { 
+                    history.back(); 
+                } else { 
+                    window.location.href = 'index.html'; 
+                }
             }
         }, {passive: true});
 
-        let pdfInitialWidth = 100; let initialPinchDistance = null; 
+        let pdfInitialWidth = 100; 
+        let initialPinchDistance = null; 
         const pdfWrapper = document.getElementById('pdfWrapper');
+        
         pdfWrapper.addEventListener('touchstart', (e) => { 
             if (e.touches.length === 2) { 
                 initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; 
             } 
         });
+        
         pdfWrapper.addEventListener('touchmove', (e) => { 
             if (e.touches.length === 2 && initialPinchDistance) { 
                 let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 let scaleChange = currentDistance / initialPinchDistance; 
                 let newWidth = pdfInitialWidth * scaleChange; 
-                if (newWidth < 100) newWidth = 100; if (newWidth > 400) newWidth = 400; 
+                if (newWidth < 100) newWidth = 100; 
+                if (newWidth > 400) newWidth = 400; 
                 pdfWrapper.style.width = newWidth + '%'; 
             } 
         });
-        pdfWrapper.addEventListener('touchend', (e) => { if (e.touches.length < 2) { initialPinchDistance = null; } });
+        
+        pdfWrapper.addEventListener('touchend', (e) => { 
+            if (e.touches.length < 2) { 
+                initialPinchDistance = null; 
+            } 
+        });
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
@@ -480,93 +485,177 @@
         
         function addXP(amount) { 
             let currentXP = parseInt(localStorage.getItem('daheehXP')) || 0; 
-            currentXP += amount; localStorage.setItem('daheehXP', currentXP); updateXPDisplay(); 
+            currentXP += amount; 
+            localStorage.setItem('daheehXP', currentXP); 
+            updateXPDisplay(); 
         }
         
         function updateXPDisplay() { 
             let xp = parseInt(localStorage.getItem('daheehXP')) || 0; 
             let level = getLevelName(xp); 
-            if(document.getElementById('courseXP')) { document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`; }
+            if(document.getElementById('courseXP')) {
+                document.getElementById('courseXP').innerText = `⭐ ${xp} XP - ${level}`; 
+            }
         }
 
         let currentLang = localStorage.getItem('daheehLang') || 'ar';
+        
         function applyLanguage() {
             document.documentElement.dir = currentLang === 'en' ? 'ltr' : 'rtl'; 
             document.documentElement.lang = currentLang;
-            document.querySelectorAll('[data-ar]').forEach(el => { el.innerText = el.getAttribute(`data-${currentLang}`); });
-            document.querySelectorAll('.close-arrow').forEach(el => { el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; });
+            
+            document.querySelectorAll('[data-ar]').forEach(el => { 
+                el.innerText = el.getAttribute(`data-${currentLang}`); 
+            });
+            
+            document.querySelectorAll('.close-arrow').forEach(el => { 
+                el.innerText = currentLang === 'en' ? 'arrow_back' : 'arrow_forward'; 
+            });
+            
             if (course) { 
                 document.getElementById('courseTitle').innerText = currentLang === 'en' ? course.titleEn : course.titleAr; 
                 document.getElementById('courseProf').innerText = currentLang === 'en' ? course.profEn : course.profAr; 
             }
             updateXPDisplay();
         }
-        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('daheehLang', currentLang); applyLanguage(); }
+        
+        function toggleLanguage() { 
+            currentLang = currentLang === 'ar' ? 'en' : 'ar'; 
+            localStorage.setItem('daheehLang', currentLang); 
+            applyLanguage(); 
+        }
 
         function toggleDarkMode() { 
             document.body.classList.toggle('dark-mode'); 
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('daheehDarkMode', isDark); 
             document.getElementById('darkModeToggle').innerText = isDark ? 'dark_mode' : 'light_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) { document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode'; }
-            if(isDark) { document.body.classList.remove('vip-gold-mode'); localStorage.setItem('daheehVipMode', 'false'); }
+            
+            if(document.getElementById('darkModeTogglePdf')) {
+                document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode';
+            }
+            
+            if(isDark) { 
+                document.body.classList.remove('vip-gold-mode'); 
+                localStorage.setItem('daheehVipMode', 'false'); 
+            }
         }
         
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
-            document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) { document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; }
+            document.body.classList.add('dark-mode'); 
+            document.getElementById('darkModeToggle').innerText = 'dark_mode'; 
+            if(document.getElementById('darkModeTogglePdf')) {
+                document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
+            }
         } else { 
             document.getElementById('darkModeToggle').innerText = 'light_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) { document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; }
+            if(document.getElementById('darkModeTogglePdf')) {
+                document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
+            }
         }
 
-        const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
+        const bgMusic = document.getElementById('bgMusic'); 
+        bgMusic.volume = 0.5;
+        
         function toggleMusic() { 
-            const btn = document.getElementById('musicToggle'); const btnPdf = document.getElementById('musicTogglePdf'); 
+            const btn = document.getElementById('musicToggle'); 
+            const btnPdf = document.getElementById('musicTogglePdf'); 
             if (bgMusic.paused) { 
-                bgMusic.play(); btn.innerText = 'music_note'; btn.classList.add('music-active'); 
-                if(btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); } 
+                bgMusic.play(); 
+                btn.innerText = 'music_note'; 
+                btn.classList.add('music-active'); 
+                if(btnPdf) { 
+                    btnPdf.innerText = 'music_note'; 
+                    btnPdf.classList.add('music-active'); 
+                } 
             } else { 
-                bgMusic.pause(); btn.innerText = 'music_off'; btn.classList.remove('music-active'); 
-                if(btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); } 
+                bgMusic.pause(); 
+                btn.innerText = 'music_off'; 
+                btn.classList.remove('music-active'); 
+                if(btnPdf) { 
+                    btnPdf.innerText = 'music_off'; 
+                    btnPdf.classList.remove('music-active'); 
+                } 
             } 
         }
 
         function toggleFloatingCalc() {
-            const box = document.getElementById('calculatorBox'); const btn = document.getElementById('calcFabBtn');
-            if (box.style.display === 'block') { box.style.display = 'none'; btn.classList.remove('active'); } 
-            else { box.style.display = 'block'; btn.classList.add('active'); }
+            const box = document.getElementById('calculatorBox');
+            const btn = document.getElementById('calcFabBtn');
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+                btn.classList.remove('active');
+            } else {
+                box.style.display = 'block';
+                btn.classList.add('active');
+            }
         }
-        function appendCalc(v) { document.getElementById('calcDisplay').value += v; } 
-        function clearCalc() { document.getElementById('calcDisplay').value = ''; }
-        function deleteLast() { let display = document.getElementById('calcDisplay'); display.value = display.value.toString().slice(0, -1); }
+        
+        function appendCalc(v) { 
+            document.getElementById('calcDisplay').value += v; 
+        } 
+        function clearCalc() { 
+            document.getElementById('calcDisplay').value = ''; 
+        }
+        function deleteLast() {
+            let display = document.getElementById('calcDisplay');
+            display.value = display.value.toString().slice(0, -1);
+        }
         function calculateResult() { 
             try { 
                 let expression = document.getElementById('calcDisplay').value.replace(/×/g, '*').replace(/÷/g, '/');
                 let result = eval(expression);
                 if(result === undefined) result = '';
                 document.getElementById('calcDisplay').value = result; 
-            } catch(e) { document.getElementById('calcDisplay').value = 'Error'; setTimeout(clearCalc, 1000); } 
-        }
-
-        let pomoInterval; let pomoTime = 25 * 60; let isPomoRunning = false;
-        function updatePomoDisplay() { 
-            let m = Math.floor(pomoTime / 60); let s = pomoTime % 60; 
-            document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); 
-        }
-        function togglePomodoro() { let t = document.getElementById('pomodoroTimer'); t.style.display = t.style.display === 'none' ? 'block' : 'none'; }
-        function startPomodoro() { 
-            if(isPomoRunning) { 
-                clearInterval(pomoInterval); document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; isPomoRunning = false; 
-            } else { 
-                pomoInterval = setInterval(() => { 
-                    if(pomoTime > 0) { pomoTime--; updatePomoDisplay(); } 
-                    else { clearInterval(pomoInterval); alert("وقت الراحة!"); resetPomodoro(); } 
-                }, 1000); 
-                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; 
+            } catch(e) { 
+                document.getElementById('calcDisplay').value = 'Error'; 
+                setTimeout(clearCalc, 1000); 
             } 
         }
-        function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+
+        let pomoInterval; 
+        let pomoTime = 25 * 60; 
+        let isPomoRunning = false;
+        
+        function updatePomoDisplay() { 
+            let m = Math.floor(pomoTime / 60); 
+            let s = pomoTime % 60; 
+            document.getElementById('pomoTimeDisplay').innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s); 
+        }
+        
+        function togglePomodoro() { 
+            let t = document.getElementById('pomodoroTimer'); 
+            t.style.display = t.style.display === 'none' ? 'block' : 'none'; 
+        }
+        
+        function startPomodoro() { 
+            if(isPomoRunning) { 
+                clearInterval(pomoInterval); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Resume' : 'استكمال'; 
+                isPomoRunning = false; 
+            } else { 
+                pomoInterval = setInterval(() => { 
+                    if(pomoTime > 0) { 
+                        pomoTime--; 
+                        updatePomoDisplay(); 
+                    } else { 
+                        clearInterval(pomoInterval); 
+                        alert("وقت الراحة!"); 
+                        resetPomodoro(); 
+                    } 
+                }, 1000); 
+                document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; 
+                isPomoRunning = true; 
+            } 
+        }
+        
+        function resetPomodoro() { 
+            clearInterval(pomoInterval); 
+            pomoTime = 25 * 60; 
+            isPomoRunning = false; 
+            document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; 
+            updatePomoDisplay(); 
+        }
 
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
@@ -579,14 +668,25 @@
             fetch(`${SCRIPT_URL}?action=getLectures&courseId=${courseId}&code=${studentCode}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                    if (data.success && data.lectures) { localStorage.setItem(cacheKey, JSON.stringify(data)); }
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access! Please login again.' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if (data.success && data.lectures) {
+                        localStorage.setItem(cacheKey, JSON.stringify(data));
+                    }
                     renderLectures(data);
                 })
                 .catch(error => { 
                     const cachedData = localStorage.getItem(cacheKey);
-                    if (cachedData) { renderLectures(JSON.parse(cachedData)); } 
-                    else { list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</p></div>`; applyLanguage(); }
+                    if (cachedData) {
+                        renderLectures(JSON.parse(cachedData));
+                    } else {
+                        list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</p></div>`; 
+                        applyLanguage(); 
+                    }
                 });
         }
 
@@ -597,7 +697,11 @@
                 data.lectures.forEach((lec, index) => { 
                     const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; 
                     const lectureNumber = index + 1; 
-                    list.innerHTML += `<div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})"><span>${lec.name}</span><span class="material-icons" style="color:var(--grey)">${arr}</span></div>`; 
+                    list.innerHTML += `
+                    <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber})">
+                        <span>${lec.name}</span>
+                        <span class="material-icons" style="color:var(--grey)">${arr}</span>
+                    </div>`; 
                 }); 
             } else { 
                 list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; 
@@ -610,11 +714,15 @@
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
             let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة'; 
-            let btnIcon = 'quiz'; let btnStyle = '';
+            let btnIcon = 'quiz'; 
+            let btnStyle = '';
+            
             if(isAlreadyCompleted) { 
-                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnIcon = 'replay'; 
+                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                btnIcon = 'replay'; 
                 btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
             }
+            
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
             let htmlContent = `
@@ -623,18 +731,22 @@
                 <h3 style="color:var(--primary); margin-bottom:10px;">${lectureName}</h3>
                 <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه." data-en="Content available in PDF. Click to open.">محتوى متوفر بصيغة PDF. اضغط على الزر لفتحه.</p>
                 <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
-                    <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
+                    <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
+                    <span data-ar="اقرأ الآن" data-en="Read Now">اقرأ الآن</span>
                 </button>
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
                 </button>
+                
                 <button class="btn-lecture-quiz" style="background: transparent; color: var(--accent); border: 2px solid var(--accent); margin-top: 15px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
                     <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
                 </button>
             </div>`;
+            
             document.getElementById('contentTitle').innerText = lectureName; 
             document.getElementById('contentBody').innerHTML = htmlContent; 
-            openModalWithHistory('contentModal'); applyLanguage();
+            openModalWithHistory('contentModal'); 
+            applyLanguage();
         }
 
         function openExam(type) {
@@ -645,7 +757,8 @@
             
             document.getElementById('contentTitle').innerText = title;
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
-            openModalWithHistory('contentModal'); applyLanguage();
+            openModalWithHistory('contentModal'); 
+            applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || '';
             const cacheKey = `daheeh_exams_cache_${courseId}`; 
@@ -653,57 +766,56 @@
             fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                    if(data.success) { localStorage.setItem(cacheKey, JSON.stringify(data)); renderExams(data, type, title); }
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if(data.success) {
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderExams(data, type, title);
+                    }
                 })
                 .catch(err => { 
                     const cachedData = localStorage.getItem(cacheKey);
-                    if (cachedData) { renderExams(JSON.parse(cachedData), type, title); } 
-                    else { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3></div>`; applyLanguage(); }
+                    if (cachedData) {
+                        renderExams(JSON.parse(cachedData), type, title);
+                    } else {
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3></div>`; 
+                        applyLanguage(); 
+                    }
                 });
         }
 
-        // تم إضافة زرار الأسئلة بدون إجابات هنا
         function renderExams(data, type, title) {
             const body = document.getElementById('contentBody');
             const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
-            
-            // قراءة رابط الملف الغير محلول من الشيت
-            const unsolvedFileName = type === 'midterm' ? data.exams.unsolved_midterm : data.exams.unsolved_final; 
-            
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
             let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
-            let btnIcon = 'quiz'; let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+            let btnIcon = 'quiz'; 
+            let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
             
             if(isAlreadyCompleted) { 
-                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnIcon = 'replay'; 
+                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                btnIcon = 'replay'; 
                 btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
             }
             
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
             let pdfHtml = ''; 
-            
-            // 1. زرار الامتحان بالحل (الأزرق)
             if(fileName) { 
-                pdfHtml += `
-                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 10px;">
+                pdfHtml = `
+                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
                     <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
                     <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
                 </button>`; 
             } else { 
-                pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:10px; font-weight:bold;">ملف الحل غير متوفر حالياً</p>`; 
+                pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; 
             }
-
-            // 2. زرار أسئلة بدون إجابات للحل بالقلم (البنفسجي)
-            let unsolvedAction = unsolvedFileName ? `openPdfViewerInsideApp('${unsolvedFileName}')` : `alert('سيتم إضافة ملف الأسئلة قريباً')`;
-            pdfHtml += `
-            <button onclick="${unsolvedAction}" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
-                <span class="material-icons" style="margin-inline-end:10px;">edit_document</span>
-                <span data-ar="أسئلة بدون إجابات (PDF للحل)" data-en="Unsolved Exam (PDF)">أسئلة بدون إجابات (PDF للحل)</span>
-            </button>`;
             
             body.innerHTML = `
             <div class="content-view" style="text-align:center; padding:30px 10px;">
@@ -714,6 +826,7 @@
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
                 </button>
+                
                 <button class="btn-lecture-quiz" style="background: transparent; color: var(--accent); border: 2px solid var(--accent); margin-top: 15px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
                     <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
                 </button>
@@ -721,114 +834,16 @@
             applyLanguage();
         }
 
-        // ==========================================
-        // نظام الشخبطة والحل جوه الـ PDF
-        // ==========================================
-        let isPdfDrawMode = false;
-        let pdfBrushColor = '#0A2647';
-        let pdfBrushSize = 3;
-        let isPdfDrawing = false;
-        let activePdfCtx = null;
-
-        function togglePdfDrawMode() {
-            isPdfDrawMode = !isPdfDrawMode;
-            const tools = document.getElementById('pdfDrawTools');
-            const toggleBtn = document.getElementById('pdfDrawToggleBtn');
-            const drawLayers = document.querySelectorAll('.pdf-draw-layer');
-            const wrapper = document.getElementById('pdfWrapper');
-
-            if(isPdfDrawMode) {
-                tools.style.display = 'flex';
-                toggleBtn.style.color = 'var(--accent)';
-                drawLayers.forEach(c => c.style.pointerEvents = 'auto');
-                wrapper.style.touchAction = 'none'; // منع التمرير وقت الرسم
-            } else {
-                tools.style.display = 'none';
-                toggleBtn.style.color = 'var(--text)';
-                drawLayers.forEach(c => c.style.pointerEvents = 'none');
-                wrapper.style.touchAction = 'auto'; // إرجاع التمرير
-            }
-        }
-
-        function setPdfBrush(color, size, btnEl) {
-            pdfBrushColor = color;
-            pdfBrushSize = size;
-            document.querySelectorAll('#pdfDrawTools .color-btn').forEach(b => b.classList.remove('active'));
-            btnEl.classList.add('active');
-        }
-
-        function attachPdfDrawEvents(drawCanvas) {
-            const ctx = drawCanvas.getContext('2d');
-
-            const getX = (e) => {
-                const rect = drawCanvas.getBoundingClientRect();
-                const scaleX = drawCanvas.width / rect.width;
-                return ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
-            };
-            const getY = (e) => {
-                const rect = drawCanvas.getBoundingClientRect();
-                const scaleY = drawCanvas.height / rect.height;
-                return ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
-            };
-
-            const startDraw = (e) => {
-                if(!isPdfDrawMode) return;
-                isPdfDrawing = true;
-                activePdfCtx = ctx;
-                ctx.beginPath();
-                ctx.moveTo(getX(e), getY(e));
-                e.preventDefault();
-            };
-
-            const draw = (e) => {
-                if(!isPdfDrawing || activePdfCtx !== ctx) return;
-                ctx.lineTo(getX(e), getY(e));
-                
-                if(pdfBrushColor === 'eraser') {
-                    ctx.globalCompositeOperation = 'destination-out';
-                    ctx.lineWidth = pdfBrushSize;
-                } else {
-                    ctx.globalCompositeOperation = 'source-over';
-                    ctx.strokeStyle = pdfBrushColor;
-                    ctx.lineWidth = pdfBrushSize;
-                }
-                
-                ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
-                e.preventDefault();
-            };
-
-            const stopDraw = () => {
-                isPdfDrawing = false;
-                if(activePdfCtx) activePdfCtx.closePath();
-                activePdfCtx = null;
-            };
-
-            drawCanvas.addEventListener('mousedown', startDraw);
-            drawCanvas.addEventListener('mousemove', draw);
-            drawCanvas.addEventListener('mouseup', stopDraw);
-            drawCanvas.addEventListener('mouseout', stopDraw);
-            drawCanvas.addEventListener('touchstart', startDraw, {passive: false});
-            drawCanvas.addEventListener('touchmove', draw, {passive: false});
-            drawCanvas.addEventListener('touchend', stopDraw);
-        }
-
-        // تم إضافة طبقات الرسم الشفافة هنا
         function openPdfViewerInsideApp(pdfUrl) {
-            window.currentOpenedPdf = pdfUrl; // تسجيل الرابط
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
             
             wrapper.style.width = '100%'; 
-            wrapper.querySelectorAll('div[style*="position: relative"]').forEach(c => c.remove()); 
-            wrapper.querySelectorAll('canvas').forEach(c => c.remove());
+            wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
             wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
+            
             if (watermark) watermark.innerHTML = ''; 
             
-            isPdfDrawMode = false;
-            if(document.getElementById('pdfDrawTools')) document.getElementById('pdfDrawTools').style.display = 'none';
-            if(document.getElementById('pdfDrawToggleBtn')) document.getElementById('pdfDrawToggleBtn').style.color = 'var(--text)';
-            wrapper.style.touchAction = 'auto';
-
             const loadingDiv = document.createElement('div'); 
             loadingDiv.className = 'loading-msg'; 
             loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
@@ -841,6 +856,7 @@
             const sCode = localStorage.getItem('studentCode') || "000"; 
             const watermarkText = `${sName} - ${sCode}`;
             
+            // التعديل هنا: استخدام سيرفر jsdelivr الأقوى لملفات الخرائط
             pdfjsLib.getDocument({
                 url: pdfUrl,
                 cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/cmaps/',
@@ -850,14 +866,10 @@
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
                         const viewport = page.getViewport({ scale: 1.5 }); 
-                        
-                        const pageContainer = document.createElement('div');
-                        pageContainer.style.position = 'relative';
-                        pageContainer.style.margin = '0 auto 15px auto';
-                        pageContainer.style.width = '100%';
-
                         const canvas = document.createElement('canvas'); 
+                        
                         canvas.style.display = 'block'; 
+                        canvas.style.margin = '0 auto 15px auto'; 
                         canvas.style.width = '100%'; 
                         canvas.style.borderRadius = '8px'; 
                         canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; 
@@ -865,42 +877,26 @@
                         canvas.style.zIndex = '1';
                         canvas.height = viewport.height; 
                         canvas.width = viewport.width; 
-
-                        // شريحة الرسم الشفافة
-                        const drawCanvas = document.createElement('canvas');
-                        drawCanvas.className = 'pdf-draw-layer';
-                        drawCanvas.style.position = 'absolute';
-                        drawCanvas.style.top = '0';
-                        drawCanvas.style.left = '0';
-                        drawCanvas.style.width = '100%';
-                        drawCanvas.style.height = '100%';
-                        drawCanvas.style.zIndex = '5';
-                        drawCanvas.style.borderRadius = '8px';
-                        drawCanvas.style.pointerEvents = 'none'; 
-                        drawCanvas.width = viewport.width;
-                        drawCanvas.height = viewport.height;
                         
-                        pageContainer.appendChild(canvas);
-                        pageContainer.appendChild(drawCanvas);
-                        wrapper.insertBefore(pageContainer, watermark);
+                        wrapper.insertBefore(canvas, watermark);
                         
                         const ctx = canvas.getContext('2d');
+                        
                         page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
                             ctx.save(); 
                             ctx.translate(canvas.width / 2, canvas.height / 2); 
                             ctx.rotate(-Math.PI / 4); 
+                            
                             ctx.font = "bold 28px 'IBM Plex Sans Arabic', sans-serif"; 
                             ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
                             ctx.textAlign = "center";
+                            
                             for (let x = -canvas.width; x < canvas.width * 2; x += 550) { 
                                 for (let y = -canvas.height; y < canvas.height * 2; y += 350) { 
                                     ctx.fillText(watermarkText, x, y); 
                                 } 
                             } 
                             ctx.restore();
-                            
-                            // تشغيل المراقبة للرسم
-                            attachPdfDrawEvents(drawCanvas);
                         });
                     });
                 }
@@ -925,14 +921,20 @@
             
             const courseName = currentLang === 'en' ? course.titleEn : course.titleAr;
             let dynamicTitle = '';
-            if (currentLectureNum === 'midterm') { dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`; } 
-            else if (currentLectureNum === 'final') { dynamicTitle = currentLang === 'en' ? `Final Exam - ${courseName}` : `امتحان الفاينل لمادة ${courseName}`; } 
-            else { dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`; }
+            if (currentLectureNum === 'midterm') {
+                dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`;
+            } else if (currentLectureNum === 'final') {
+                dynamicTitle = currentLang === 'en' ? `Final Exam - ${courseName}` : `امتحان الفاينل لمادة ${courseName}`;
+            } else {
+                dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`;
+            }
             document.getElementById('quizModalTitle').innerText = dynamicTitle;
 
             const body = document.getElementById('quizBody');
+            
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
-            openModalWithHistory('quizModal'); applyLanguage();
+            openModalWithHistory('quizModal'); 
+            applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || '';
             const cacheKey = `daheeh_quiz_cache_${courseId}_${currentLectureNum}`; 
@@ -940,13 +942,25 @@
             fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                    if (data.success && data.questions) { localStorage.setItem(cacheKey, JSON.stringify(data)); renderQuizData(data); }
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if (data.success && data.questions) {
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderQuizData(data);
+                    }
                 })
                 .catch(error => { 
                     const cachedData = localStorage.getItem(cacheKey);
-                    if (cachedData) { renderQuizData(JSON.parse(cachedData)); } 
-                    else { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لتحميل الأسئلة لأول مرة!" data-en="Internet needed for first time load!">تحتاج للإنترنت لتحميل الأسئلة لأول مرة!</h3></div>`; applyLanguage(); }
+                    if (cachedData) {
+                        renderQuizData(JSON.parse(cachedData));
+                    } else {
+                        body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لتحميل الأسئلة لأول مرة!" data-en="Internet needed for first time load!">تحتاج للإنترنت لتحميل الأسئلة لأول مرة!</h3></div>`; 
+                        applyLanguage(); 
+                    }
                 });
         }
 
@@ -954,31 +968,47 @@
             const body = document.getElementById('quizBody');
             if (data.questions && data.questions.length > 0) { 
                 activeQuizQuestions = data.questions; 
+                
+                // --- استرجاع الذاكرة والوقت لو كان بيمتحن وخرج ---
                 const stateKey = `quizState_${courseId}_${currentLectureNum}`;
                 const savedState = JSON.parse(localStorage.getItem(stateKey));
+                
+                // ميدتيرم أو فاينل (ساعة = 3600 ثانية)، كويز عادي (10 دقايق = 600 ثانية)
                 let defaultTime = (currentLectureNum === 'midterm' || currentLectureNum === 'final') ? 60 * 60 : 10 * 60;
                 
                 if (savedState && savedState.answers && savedState.answers.length === activeQuizQuestions.length && savedState.time > 0) {
-                    userAnswers = savedState.answers; remainingQuizTime = savedState.time;
+                    userAnswers = savedState.answers;
+                    remainingQuizTime = savedState.time;
                 } else {
-                    userAnswers = new Array(activeQuizQuestions.length).fill(null); remainingQuizTime = defaultTime;
+                    userAnswers = new Array(activeQuizQuestions.length).fill(null); 
+                    remainingQuizTime = defaultTime;
                 }
 
-                score = 0; showAllQuestions(); startQuizTimer(stateKey);
+                score = 0; 
+                showAllQuestions(); 
+                startQuizTimer(stateKey);
+                
             } else { 
-                body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; applyLanguage(); 
+                body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3><p style="margin-top:10px;" data-ar="لم يتم إضافة اختبار حتى الآن." data-en="No quiz has been added yet.">لم يتم إضافة اختبار حتى الآن.</p></div>`; 
+                applyLanguage(); 
             }
         }
         
         function startQuizTimer(stateKey) {
             clearInterval(quizTimerInterval);
             quizTimerInterval = setInterval(() => {
-                remainingQuizTime--; updateTimerDisplay();
-                localStorage.setItem(stateKey, JSON.stringify({ answers: userAnswers, time: remainingQuizTime }));
+                remainingQuizTime--;
+                updateTimerDisplay();
+                
+                localStorage.setItem(stateKey, JSON.stringify({
+                    answers: userAnswers,
+                    time: remainingQuizTime
+                }));
+                
                 if (remainingQuizTime <= 0) {
                     clearInterval(quizTimerInterval);
                     alert(currentLang === 'en' ? 'Time is up! Submitting automatically.' : 'انتهى الوقت! سيتم تسليم الامتحان تلقائياً بناءً على إجاباتك الحالية.');
-                    submitFullQuiz(true);
+                    submitFullQuiz(true); // الإجبار على التسليم
                 }
             }, 1000);
         }
@@ -986,13 +1016,19 @@
         function updateTimerDisplay() {
             const display = document.getElementById('quizTimerDisplay');
             if(!display) return;
-            let m = Math.floor(remainingQuizTime / 60); let s = remainingQuizTime % 60;
+            let m = Math.floor(remainingQuizTime / 60);
+            let s = remainingQuizTime % 60;
             display.innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s);
-            if(remainingQuizTime <= 60) { display.style.color = '#f44336'; display.style.animation = 'pulse 0.5s infinite'; }
+            
+            if(remainingQuizTime <= 60) {
+                display.style.color = '#f44336';
+                display.style.animation = 'pulse 0.5s infinite';
+            }
         }
 
         function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
+            
             let html = `
             <div style="position: sticky; top: -20px; background: var(--card); padding: 10px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
                 <div style="font-weight:bold; color:var(--primary); display:flex; align-items:center; gap:5px;"><span class="material-icons" style="color:var(--accent);">timer</span> <span data-ar="الوقت المتبقي:" data-en="Time Left:">الوقت المتبقي:</span></div>
@@ -1001,45 +1037,79 @@
             
             activeQuizQuestions.forEach((q, qIndex) => {
                 let optsHtml = ''; 
-                let rawQText = currentLang === 'en' ? q.qEn : q.qAr; const qText = rawQText; const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+                
+                // إيقاف التشفير في صفحة الأسئلة عشان الجداول والصور تظهر
+                let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
+                const qText = rawQText;
+                
+                const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => { 
+                    // تشفير الاختيارات لسه شغال عشان لو حطيت أكواد في الاختيارات متختفيش
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    
                     let isSelected = userAnswers[qIndex] === optIndex;
                     let optStyle = isSelected ? 'border-color: var(--accent); background: rgba(255, 200, 0, 0.1);' : '';
                     let iconDisplay = isSelected ? 'block' : 'none';
+                    
                     optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" style="${optStyle}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span><span class="material-icons opt-icon" style="display:${iconDisplay}; color:var(--accent); margin-inline-start:10px;">check_circle</span></div>`; 
                 });
                 
                 html += `
                 <div id="question_block_${qIndex}" style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); transition: 0.3s;">
-                    <div style="margin-bottom:10px; font-weight:bold; color:var(--accent); font-size:0.9rem;">${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}</div>
+                    <div style="margin-bottom:10px; font-weight:bold; color:var(--accent); font-size:0.9rem;">
+                        ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}
+                    </div>
                     <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3>
                     <div>${optsHtml}</div>
                 </div>`;
             });
             
-            html += `<button class="btn-card" onclick="submitFullQuiz(false)" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:15px;"><span class="material-icons" style="margin-inline-end:10px;">done_all</span>${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}</button>`;
-            body.innerHTML = html; body.scrollTop = 0; updateTimerDisplay(); applyLanguage();
+            html += `
+            <button class="btn-card" onclick="submitFullQuiz(false)" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:15px;">
+                <span class="material-icons" style="margin-inline-end:10px;">done_all</span>
+                ${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}
+            </button>`;
+            
+            body.innerHTML = html;
+            body.scrollTop = 0; 
+            updateTimerDisplay(); 
+            applyLanguage();
         }
         
         function selectAnswer(qIndex, optIndex) {
             userAnswers[qIndex] = optIndex; 
+            
             const opts = document.querySelectorAll(`[id^="opt_${qIndex}_"]`);
-            opts.forEach(opt => { opt.style.borderColor = 'transparent'; opt.style.background = 'var(--quiz-option-bg)'; opt.querySelector('.opt-icon').style.display = 'none'; });
+            opts.forEach(opt => {
+                opt.style.borderColor = 'transparent';
+                opt.style.background = 'var(--quiz-option-bg)';
+                opt.querySelector('.opt-icon').style.display = 'none';
+            });
+            
             const selectedOpt = document.getElementById(`opt_${qIndex}_${optIndex}`);
-            selectedOpt.style.borderColor = 'var(--accent)'; selectedOpt.style.background = 'rgba(255, 200, 0, 0.1)'; selectedOpt.querySelector('.opt-icon').style.display = 'block';
+            selectedOpt.style.borderColor = 'var(--accent)';
+            selectedOpt.style.background = 'rgba(255, 200, 0, 0.1)';
+            selectedOpt.querySelector('.opt-icon').style.display = 'block';
             
             const stateKey = `quizState_${courseId}_${currentLectureNum}`;
-            localStorage.setItem(stateKey, JSON.stringify({ answers: userAnswers, time: remainingQuizTime }));
+            localStorage.setItem(stateKey, JSON.stringify({
+                answers: userAnswers,
+                time: remainingQuizTime
+            }));
+            
             if (navigator.vibrate) { navigator.vibrate(20); }
         }
 
         function saveExamScoreToCloud(quizId, currentScore, totalScore) {
-            const sCode = localStorage.getItem('studentCode') || ''; const sName = localStorage.getItem('studentName') || ''; 
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            const sName = localStorage.getItem('studentName') || ''; 
             if(!sCode) return;
+            
             fetch(`${SCRIPT_URL}?action=saveExamScore&quizId=${quizId}&code=${sCode}&name=${encodeURIComponent(sName)}&score=${currentScore}&total=${totalScore}`)
-                .then(res => res.json()).then(data => console.log('تم الحفظ')).catch(err => console.log('خطأ بالحفظ'));
+                .then(res => res.json())
+                .then(data => console.log('تم حفظ نتيجة الامتحان للأوائل'))
+                .catch(err => console.log('خطأ في حفظ نتيجة الأوائل'));
         }
 
         function openExamLeaderboard(quizId) {
@@ -1048,141 +1118,263 @@
             openModalWithHistory('examLeaderboardModal');
             
             const sCode = localStorage.getItem('studentCode') || ''; 
+            
             fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}&code=${sCode}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.error === 'unauthorized') { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">gpp_bad</span><h3 style="margin-top:15px;">غير مصرح لك بعرض البيانات</h3></div>`; return; }
+                    if (data.error === 'unauthorized') {
+                        modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">gpp_bad</span><h3 style="margin-top:15px;">غير مصرح لك بعرض البيانات</h3></div>`;
+                        return;
+                    }
+
                     if(data.success && data.leaderboard && data.leaderboard.length > 0) {
                         let html = '';
                         data.leaderboard.forEach((student, index) => {
                             let medal = '';
-                            if(index === 0) medal = '🥇'; else if(index === 1) medal = '🥈'; else if(index === 2) medal = '🥉'; else medal = `<span style="display:inline-block; width:24px; text-align:center; font-weight:bold; color:var(--grey);">${index + 1}</span>`;
+                            if(index === 0) medal = '🥇';
+                            else if(index === 1) medal = '🥈';
+                            else if(index === 2) medal = '🥉';
+                            else medal = `<span style="display:inline-block; width:24px; text-align:center; font-weight:bold; color:var(--grey);">${index + 1}</span>`;
+                            
                             html += `
                             <div style="display:flex; align-items:center; justify-content:space-between; background:var(--card); padding:15px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(0,0,0,0.05); box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-                                <div style="display:flex; align-items:center; gap:10px;"><div style="font-size:1.5rem;">${medal}</div><div style="font-weight:bold; color:var(--text);">${student.name}</div></div>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <div style="font-size:1.5rem;">${medal}</div>
+                                    <div style="font-weight:bold; color:var(--text);">${student.name}</div>
+                                </div>
                                 <div style="font-weight:900; color:var(--primary); background:rgba(10,38,71,0.1); padding:5px 12px; border-radius:8px;">${student.score} <span style="font-size:0.8rem; color:var(--grey)">/ ${student.total}</span></div>
                             </div>`;
                         });
                         modalBody.innerHTML = html;
-                    } else { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:50px; opacity:0.5;">sentiment_dissatisfied</span><h3 style="margin-top:15px;">لا يوجد بيانات حتى الآن</h3><p>كن أول من يمتحن ويدخل لوحة الشرف!</p></div>`; }
+                    } else {
+                        modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:50px; opacity:0.5;">sentiment_dissatisfied</span><h3 style="margin-top:15px;">لا يوجد بيانات حتى الآن</h3><p>كن أول من يمتحن ويدخل لوحة الشرف!</p></div>`;
+                    }
                 })
-                .catch(err => { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">wifi_off</span><h3 style="margin-top:15px;">عفواً، فشل الاتصال بالخادم</h3></div>`; });
+                .catch(err => {
+                    modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">wifi_off</span><h3 style="margin-top:15px;">عفواً، فشل الاتصال بالخادم</h3></div>`;
+                });
         }
         
         function submitFullQuiz(forceSubmit = false) {
             const firstUnansweredIndex = userAnswers.indexOf(null);
             if (!forceSubmit && firstUnansweredIndex !== -1) {
                 alert(currentLang === 'en' ? 'Please answer all questions! You missed Question ' + (firstUnansweredIndex + 1) : 'عفواً، لازم تجاوب على كل الأسئلة! إنت نسيت السؤال رقم ' + (firstUnansweredIndex + 1));
+                
                 const missedQuestionEl = document.getElementById('question_block_' + firstUnansweredIndex);
                 if(missedQuestionEl) {
-                    missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); missedQuestionEl.style.boxShadow = '0 0 15px rgba(244, 67, 54, 0.5)'; missedQuestionEl.style.borderColor = '#f44336';
-                    setTimeout(() => { missedQuestionEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)'; missedQuestionEl.style.borderColor = 'rgba(0,0,0,0.05)'; }, 2000);
+                    missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    missedQuestionEl.style.boxShadow = '0 0 15px rgba(244, 67, 54, 0.5)';
+                    missedQuestionEl.style.borderColor = '#f44336';
+                    
+                    setTimeout(() => {
+                        missedQuestionEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)';
+                        missedQuestionEl.style.borderColor = 'rgba(0,0,0,0.05)';
+                    }, 2000);
                 }
                 return; 
             }
             
             clearInterval(quizTimerInterval);
-            localStorage.removeItem(`quizState_${courseId}_${currentLectureNum}`);
+            const stateKey = `quizState_${courseId}_${currentLectureNum}`;
+            localStorage.removeItem(stateKey);
             
-            score = 0; let reviewHtml = '';
+            score = 0;
+            let reviewHtml = '';
             
             activeQuizQuestions.forEach((q, qIndex) => {
-                const isCorrect = userAnswers[qIndex] === q.ans; if (isCorrect) score++;
-                let optsHtml = ''; let rawQText = currentLang === 'en' ? q.qEn : q.qAr; const qText = rawQText; const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+                const isCorrect = userAnswers[qIndex] === q.ans;
+                if (isCorrect) score++;
+                
+                let optsHtml = '';
+                
+                // إيقاف التشفير في صفحة النتيجة عشان الجداول متختفيش
+                let rawQText = currentLang === 'en' ? q.qEn : q.qAr;
+                const qText = rawQText;
+                
+                const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => {
+                    // تشفير الاختيارات لسه شغال
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    let optStyle = 'background: var(--quiz-option-bg); border: 2px solid transparent; opacity: 0.6;'; let iconHtml = '';
-                    if (optIndex === q.ans) { optStyle = 'background: #e8f5e9; border-color: #4caf50; color: #2e7d32; opacity: 1; font-weight: bold;'; iconHtml = '<span class="material-icons" style="color:#4caf50; margin-inline-start:10px;">check_circle</span>'; } 
-                    else if (optIndex === userAnswers[qIndex] && !isCorrect) { optStyle = 'background: #ffebee; border-color: #f44336; color: #c62828; opacity: 1;'; iconHtml = '<span class="material-icons" style="color:#f44336; margin-inline-start:10px;">cancel</span>'; }
+                    
+                    let optStyle = 'background: var(--quiz-option-bg); border: 2px solid transparent; opacity: 0.6;';
+                    let iconHtml = '';
+                    
+                    if (optIndex === q.ans) {
+                        optStyle = 'background: #e8f5e9; border-color: #4caf50; color: #2e7d32; opacity: 1; font-weight: bold;';
+                        iconHtml = '<span class="material-icons" style="color:#4caf50; margin-inline-start:10px;">check_circle</span>';
+                    } else if (optIndex === userAnswers[qIndex] && !isCorrect) {
+                        optStyle = 'background: #ffebee; border-color: #f44336; color: #c62828; opacity: 1;';
+                        iconHtml = '<span class="material-icons" style="color:#f44336; margin-inline-start:10px;">cancel</span>';
+                    }
+                    
                     optsHtml += `<div class="quiz-opt" style="${optStyle} pointer-events: none; display: flex; justify-content: space-between; align-items: center;"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span>${iconHtml}</div>`;
                 });
                 
-                const headerColor = isCorrect ? '#4caf50' : '#f44336'; const headerIcon = isCorrect ? 'check_circle' : 'cancel';
+                const headerColor = isCorrect ? '#4caf50' : '#f44336';
+                const headerIcon = isCorrect ? 'check_circle' : 'cancel';
                 const headerText = userAnswers[qIndex] === null ? (currentLang === 'en' ? 'Not Answered' : 'لم يتم الإجابة') : '';
+                
                 reviewHtml += `
                 <div style="background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 2px solid ${headerColor}; position: relative; overflow: hidden;">
                     <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: ${headerColor};"></div>
-                    <div style="margin-bottom:10px; font-weight:bold; color:${headerColor}; display:flex; align-items:center; gap:5px; font-size:0.9rem;"><span class="material-icons" style="font-size:18px;">${headerIcon}</span> ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span></div>
-                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div>
+                    <div style="margin-bottom:10px; font-weight:bold; color:${headerColor}; display:flex; align-items:center; gap:5px; font-size:0.9rem;">
+                        <span class="material-icons" style="font-size:18px;">${headerIcon}</span> 
+                        ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
+                    </div>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3>
+                    <div>${optsHtml}</div>
                 </div>`;
             });
             
-            const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
-            let xpRewardText = ''; let xpColor = '#4caf50';
+            const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; 
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
+            let xpRewardText = ''; 
+            let xpColor = '#4caf50';
+            
             saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
 
             if(score > 0) {
                 if (!isAlreadyCompleted) { 
-                    addXP(score * 10); localStorage.setItem(quizKey, 'true'); 
+                    addXP(score * 10); 
+                    localStorage.setItem(quizKey, 'true'); 
+                    
                     let savedQuizzes = localStorage.getItem('daheehAllCompleted') || '';
-                    if(!savedQuizzes.includes(quizKey)) { savedQuizzes += quizKey + ','; localStorage.setItem('daheehAllCompleted', savedQuizzes); }
+                    if(!savedQuizzes.includes(quizKey)) {
+                        savedQuizzes += quizKey + ',';
+                        localStorage.setItem('daheehAllCompleted', savedQuizzes);
+                    }
+                    
                     syncXPToCloud(); 
+                    
                     xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; 
                     let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); 
-                    if(btnTxtEl) { btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; btnTxtEl.parentElement.style.color = 'var(--text-grey)'; btnTxtEl.parentElement.style.boxShadow = 'none'; btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; btnTxtEl.previousElementSibling.innerText = 'replay'; } 
-                } else { xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; xpColor = 'var(--text-grey)'; }
+                    if(btnTxtEl) { 
+                        btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                        btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; 
+                        btnTxtEl.parentElement.style.color = 'var(--text-grey)'; 
+                        btnTxtEl.parentElement.style.boxShadow = 'none'; 
+                        btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; 
+                        btnTxtEl.previousElementSibling.innerText = 'replay'; 
+                    } 
+                } else { 
+                    xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; 
+                    xpColor = 'var(--text-grey)'; 
+                }
             }
             
-            const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; const finishBtn = currentLang === 'en' ? 'Return to Course' : 'العودة للمادة'; const leaderBtn = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل للامتحان';
+            const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; 
+            const finishBtn = currentLang === 'en' ? 'Return to Course' : 'العودة للمادة';
+            const leaderBtn = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل للامتحان';
+            
             document.getElementById('quizBody').innerHTML = `
             <div style="text-align:center; padding:20px 0 10px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
-                <h2 style="color: var(--primary);">${resTitle}</h2><h1 style="font-size:4rem; color:var(--accent); margin: 10px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1>
+                <h2 style="color: var(--primary);">${resTitle}</h2>
+                <h1 style="font-size:4rem; color:var(--accent); margin: 10px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1>
                 <p style="color:${xpColor}; font-weight:bold; font-size:1.1rem; margin-bottom:20px;">${xpRewardText}</p>
-                <button class="btn-card" onclick="openExamLeaderboard('${quizKey}')" style="justify-content:center; background:var(--accent); color:#0A2647; font-weight:900; margin-bottom:15px; border-radius:15px; padding: 15px; box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3); border:none;"><span class="material-icons" style="margin-inline-end:8px;">emoji_events</span> ${leaderBtn}</button>
+                
+                <button class="btn-card" onclick="openExamLeaderboard('${quizKey}')" style="justify-content:center; background:var(--accent); color:#0A2647; font-weight:900; margin-bottom:15px; border-radius:15px; padding: 15px; box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3); border:none;">
+                    <span class="material-icons" style="margin-inline-end:8px;">emoji_events</span> ${leaderBtn}
+                </button>
             </div>
-            <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:var(--primary);">fact_check</span>${currentLang === 'en' ? 'Answers Review:' : 'مراجعة الإجابات والتصحيح:'}</h3>
+            
+            <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px;">
+                <span class="material-icons" style="color:var(--primary);">fact_check</span>
+                ${currentLang === 'en' ? 'Answers Review:' : 'مراجعة الإجابات والتصحيح:'}
+            </h3>
+            
             ${reviewHtml}
-            <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white; margin-top:20px; border-radius:15px; padding: 15px;"><span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}</button>`;
+            
+            <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white; margin-top:20px; border-radius:15px; padding: 15px;">
+                <span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}
+            </button>`;
+            
             document.getElementById('quizBody').scrollTop = 0; 
         }
 
         function syncXPToCloud() {
-            const currentXP = localStorage.getItem('daheehXP') || 0; const sCode = localStorage.getItem('studentCode') || ''; const sName = localStorage.getItem('studentName') || ''; const completedQuizzes = localStorage.getItem('daheehAllCompleted') || ''; 
+            const currentXP = localStorage.getItem('daheehXP') || 0; 
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            const sName = localStorage.getItem('studentName') || ''; 
+            const completedQuizzes = localStorage.getItem('daheehAllCompleted') || ''; 
+            
             if(!sCode) return;
-            fetch(`${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}&completed=${completedQuizzes}`)
-                .then(res => res.json()).then(data => console.log('XP & Quizzes Saved to Cloud')).catch(err => console.log('Error Syncing'));
+            
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}&completed=${completedQuizzes}`;
+            
+            fetch(requestUrl)
+                .then(res => res.json())
+                .then(data => console.log('XP & Quizzes Saved to Cloud'))
+                .catch(err => console.log('Error Syncing'));
         }
 
         function fetchXPFromSheet() {
-            const sCode = localStorage.getItem('studentCode'); if(!sCode) return;
-            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`).then(res => res.json())
+            const sCode = localStorage.getItem('studentCode');
+            if(!sCode) return;
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
+            .then(res => res.json())
             .then(data => {
                 if(data.success && data.leaderboard) {
                     const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
                     if(myRecord && myRecord.xp !== undefined) {
-                        localStorage.setItem('daheehXP', myRecord.xp); updateXPDisplay();
-                        if (myRecord.completed) { localStorage.setItem('daheehAllCompleted', myRecord.completed); let quizzesArr = myRecord.completed.split(','); quizzesArr.forEach(q => { if(q.trim() !== '') localStorage.setItem(q, 'true'); }); }
+                        localStorage.setItem('daheehXP', myRecord.xp);
+                        updateXPDisplay();
+                        
+                        if (myRecord.completed) {
+                            localStorage.setItem('daheehAllCompleted', myRecord.completed);
+                            let quizzesArr = myRecord.completed.split(',');
+                            quizzesArr.forEach(q => {
+                                if(q.trim() !== '') localStorage.setItem(q, 'true'); 
+                            });
+                        }
                     }
                 }
-            }).catch(err => console.log('Syncing XP...'));
+            })
+            .catch(err => console.log('Syncing XP...'));
         }
 
-        applyLanguage(); updatePomoDisplay(); fetchXPFromSheet(); 
+        applyLanguage(); 
+        updatePomoDisplay();
+        fetchXPFromSheet(); 
 
         // ==========================================
-        // نظام المراقبة الصامت
+        // نظام المراقبة الصامت (إرسال حالة الطالب ونبض القلب)
         // ==========================================
         function sendOnlineStatus(status) {
             const sCode = localStorage.getItem('studentCode');
+            const API_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec"; 
+            
             if(!sCode) return; 
-            fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { keepalive: true })
-            .then(res => res.json()).then(data => console.log("حالة الطالب اتبعتت:", data)).catch(e => console.log("خطأ في الاتصال", e)); 
+            
+            fetch(`${API_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { 
+                keepalive: true 
+            })
+            .then(res => res.json())
+            .then(data => console.log("حالة الطالب اتبعتت:", data))
+            .catch(e => console.log("خطأ في الاتصال", e)); 
         }
-        window.addEventListener('load', () => { setTimeout(() => sendOnlineStatus('متصل 🟢'), 1500); setInterval(() => { if(document.visibilityState === 'visible') { sendOnlineStatus('متصل 🟢'); } }, 60 * 1000); });
-        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { sendOnlineStatus('غير متصل 🔴'); } else { sendOnlineStatus('متصل 🟢'); } });
-        window.addEventListener('beforeunload', () => { sendOnlineStatus('غير متصل 🔴'); });
 
-        // ==========================================
-        // دالة التحميل المباشر الآمنة للموبايل
-        // ==========================================
-        function downloadWatermarkedPDF() {
-            if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
-                window.open(window.currentOpenedPdf, '_blank');
+        window.addEventListener('load', () => {
+            setTimeout(() => sendOnlineStatus('متصل 🟢'), 1500);
+            
+            setInterval(() => {
+                if(document.visibilityState === 'visible') {
+                    sendOnlineStatus('متصل 🟢');
+                }
+            }, 60 * 1000); 
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                sendOnlineStatus('غير متصل 🔴');
             } else {
-                alert("عذراً، لم يتم العثور على رابط الملف. يرجى إعادة فتحه.");
+                sendOnlineStatus('متصل 🟢');
             }
-        }
+        });
+
+        window.addEventListener('beforeunload', () => {
+            sendOnlineStatus('غير متصل 🔴');
+        });
 
     </script>
 </body>
