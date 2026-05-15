@@ -27,9 +27,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         :root { 
@@ -260,6 +258,15 @@
             </div>
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
+
+        <div class="section-label"><span class="material-icons">draw</span> <span data-ar="التدريب العملي" data-en="Practical Training">التدريب العملي</span></div>
+        <button class="btn-card" style="border-inline-end: 5px solid #9c27b0;" onclick="openExam('unsolved')">
+            <div>
+                <div style="font-weight:900;" data-ar="أسئلة بدون إجابات (PDF)" data-en="Unsolved PDF">أسئلة بدون إجابات (PDF)</div>
+                <div style="font-size:0.8rem; opacity:0.7;" data-ar="افتح الـ PDF واستخدم القلم للحل" data-en="Open PDF and use the pen to solve">افتح الـ PDF واستخدم القلم للحل</div>
+            </div>
+            <div class="btn-icon" style="color:#9c27b0;"><span class="material-icons">edit_document</span></div>
+        </button>
     </div>
 
     <div id="summaryModal" class="modal modal-trackable">
@@ -307,13 +314,12 @@
             <span style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
             
             <div class="header-icons" style="gap: 15px;">
+                <span class="material-icons" id="pdfDrawToggleBtn" onclick="togglePdfDrawMode()" style="color: var(--text); cursor: pointer;" title="وضع الحل والرسم">draw</span>
+                
                 <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
-                
                 <span class="material-icons" onclick="downloadWatermarkedPDF()" style="color: var(--text); cursor: pointer;" title="تحميل الملف">file_download</span>
-
- 
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
         </div>
@@ -322,6 +328,15 @@
             <div id="pdfWrapper" class="images-wrapper">
                 <div id="pdfWatermarkOverlay" class="watermark-overlay"></div>
             </div>
+        </div>
+
+        <div id="pdfDrawTools" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:var(--card); padding:10px 20px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); display:none; gap:15px; z-index:3000; align-items:center; border: 1px solid rgba(0,0,0,0.05);">
+            <button class="color-btn active" style="background:#0A2647;" onclick="setPdfBrush('#0A2647', 3, this)" title="قلم أزرق"></button>
+            <button class="color-btn" style="background:#f44336;" onclick="setPdfBrush('#f44336', 3, this)" title="قلم أحمر"></button>
+            <button class="color-btn" style="background:rgba(255, 200, 0, 0.4); border: 2px solid #FFC800;" onclick="setPdfBrush('rgba(255, 200, 0, 0.4)', 15, this)" title="تحديد (Highlighter)"></button>
+            <button class="color-btn" style="background:#ffffff; border:1px solid #ccc; display:flex; justify-content:center; align-items:center;" onclick="setPdfBrush('eraser', 20, this)" title="أستيكة (ممحاة)">
+                <span class="material-icons" style="font-size:18px; color:#ccc;">ink_eraser</span>
+            </button>
         </div>
     </div>
 
@@ -756,14 +771,19 @@
             applyLanguage();
         }
 
+        // التعديل هنا لدعم زر "أسئلة بدون إجابات"
         function openExam(type) {
             const body = document.getElementById('contentBody'); 
-            const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
-            const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; 
+            
+            let titleAr = 'أسئلة بدون إجابات';
+            let titleEn = 'Unsolved Questions';
+            if (type === 'midterm') { titleAr = 'أسئلة الميدترم'; titleEn = 'Midterm Exam'; }
+            if (type === 'final') { titleAr = 'أسئلة الفاينل'; titleEn = 'Final Exam'; }
+            
             const title = currentLang === 'en' ? titleEn : titleAr;
             
             document.getElementById('contentTitle').innerText = title;
-            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الملفات..." data-en="Loading...">جاري جلب الملفات...</h3></div>`;
             openModalWithHistory('contentModal'); 
             applyLanguage();
             
@@ -795,9 +815,15 @@
                 });
         }
 
+        // التعديل هنا لدعم الملف الغير محلول
         function renderExams(data, type, title) {
             const body = document.getElementById('contentBody');
-            const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
+            let fileName = '';
+            
+            if (type === 'midterm') fileName = data.exams.midterm;
+            else if (type === 'final') fileName = data.exams.final;
+            else fileName = data.exams.unsolved; // هيسحب رابط الملف الغير محلول من الشيت
+            
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
@@ -813,12 +839,16 @@
             
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
+            let iconColor = '#9c27b0';
+            if (type === 'midterm') iconColor = '#ff9800';
+            if (type === 'final') iconColor = '#f44336';
+
             let pdfHtml = ''; 
             if(fileName) { 
                 pdfHtml = `
                 <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
                     <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
-                    <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
+                    <span data-ar="افتح الملف الآن (PDF)" data-en="Open PDF Now">افتح الملف الآن (PDF)</span>
                 </button>`; 
             } else { 
                 pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; 
@@ -826,7 +856,7 @@
             
             body.innerHTML = `
             <div class="content-view" style="text-align:center; padding:30px 10px;">
-                <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
+                <span class="material-icons" style="font-size:70px; color:${iconColor}; margin-bottom:15px;">assignment</span>
                 <h3 style="color:var(--primary); margin-bottom:10px;">${title}</h3>
                 <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>
                 ${pdfHtml}
@@ -841,16 +871,118 @@
             applyLanguage();
         }
 
+        // ==========================================
+        // تعديلات أدوات الرسم داخل الـ PDF
+        // ==========================================
+        let isPdfDrawMode = false;
+        let pdfBrushColor = '#0A2647';
+        let pdfBrushSize = 3;
+        let isPdfDrawing = false;
+        let activePdfCtx = null;
+
+        function togglePdfDrawMode() {
+            isPdfDrawMode = !isPdfDrawMode;
+            const tools = document.getElementById('pdfDrawTools');
+            const toggleBtn = document.getElementById('pdfDrawToggleBtn');
+            const drawLayers = document.querySelectorAll('.pdf-draw-layer');
+            const wrapper = document.getElementById('pdfWrapper');
+
+            if(isPdfDrawMode) {
+                tools.style.display = 'flex';
+                toggleBtn.style.color = 'var(--accent)';
+                drawLayers.forEach(c => c.style.pointerEvents = 'auto');
+                wrapper.style.touchAction = 'none'; // يمنع التمرير وقت الرسم
+            } else {
+                tools.style.display = 'none';
+                toggleBtn.style.color = 'var(--text)';
+                drawLayers.forEach(c => c.style.pointerEvents = 'none');
+                wrapper.style.touchAction = 'auto'; // يرجع التمرير
+            }
+        }
+
+        function setPdfBrush(color, size, btnEl) {
+            pdfBrushColor = color;
+            pdfBrushSize = size;
+            document.querySelectorAll('#pdfDrawTools .color-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+        }
+
+        function attachPdfDrawEvents(drawCanvas) {
+            const ctx = drawCanvas.getContext('2d');
+
+            const getX = (e) => {
+                const rect = drawCanvas.getBoundingClientRect();
+                const scaleX = drawCanvas.width / rect.width;
+                return ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
+            };
+            const getY = (e) => {
+                const rect = drawCanvas.getBoundingClientRect();
+                const scaleY = drawCanvas.height / rect.height;
+                return ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
+            };
+
+            const startDraw = (e) => {
+                if(!isPdfDrawMode) return;
+                isPdfDrawing = true;
+                activePdfCtx = ctx;
+                ctx.beginPath();
+                ctx.moveTo(getX(e), getY(e));
+                e.preventDefault();
+            };
+
+            const draw = (e) => {
+                if(!isPdfDrawing || activePdfCtx !== ctx) return;
+                ctx.lineTo(getX(e), getY(e));
+                
+                if(pdfBrushColor === 'eraser') {
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.lineWidth = pdfBrushSize;
+                } else {
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.strokeStyle = pdfBrushColor;
+                    ctx.lineWidth = pdfBrushSize;
+                }
+                
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+                e.preventDefault();
+            };
+
+            const stopDraw = () => {
+                isPdfDrawing = false;
+                if(activePdfCtx) activePdfCtx.closePath();
+                activePdfCtx = null;
+            };
+
+            drawCanvas.addEventListener('mousedown', startDraw);
+            drawCanvas.addEventListener('mousemove', draw);
+            drawCanvas.addEventListener('mouseup', stopDraw);
+            drawCanvas.addEventListener('mouseout', stopDraw);
+
+            drawCanvas.addEventListener('touchstart', startDraw, {passive: false});
+            drawCanvas.addEventListener('touchmove', draw, {passive: false});
+            drawCanvas.addEventListener('touchend', stopDraw);
+        }
+
         function openPdfViewerInsideApp(pdfUrl) {
+            window.currentOpenedPdf = pdfUrl; // تسجيل الرابط 
+
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
             
             wrapper.style.width = '100%'; 
-            wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
+            wrapper.querySelectorAll('div[style*="position: relative"]').forEach(c => c.remove()); // تنظيف الصفحات القديمة
             wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
             
             if (watermark) watermark.innerHTML = ''; 
             
+            // إعادة ضبط وضع الرسم
+            isPdfDrawMode = false;
+            document.getElementById('pdfDrawTools').style.display = 'none';
+            document.getElementById('pdfDrawToggleBtn').style.color = 'var(--text)';
+            wrapper.style.touchAction = 'auto';
+
             const loadingDiv = document.createElement('div'); 
             loadingDiv.className = 'loading-msg'; 
             loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
@@ -863,7 +995,6 @@
             const sCode = localStorage.getItem('studentCode') || "000"; 
             const watermarkText = `${sName} - ${sCode}`;
             
-            // التعديل هنا: استخدام سيرفر jsdelivr الأقوى لملفات الخرائط
             pdfjsLib.getDocument({
                 url: pdfUrl,
                 cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/cmaps/',
@@ -873,10 +1004,15 @@
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
                         const viewport = page.getViewport({ scale: 1.5 }); 
-                        const canvas = document.createElement('canvas'); 
                         
+                        // الإضافة الجديدة: حاوية لكل صفحة عشان نحط فوقها شريحة الرسم
+                        const pageContainer = document.createElement('div');
+                        pageContainer.style.position = 'relative';
+                        pageContainer.style.margin = '0 auto 15px auto';
+                        pageContainer.style.width = '100%';
+
+                        const canvas = document.createElement('canvas'); 
                         canvas.style.display = 'block'; 
-                        canvas.style.margin = '0 auto 15px auto'; 
                         canvas.style.width = '100%'; 
                         canvas.style.borderRadius = '8px'; 
                         canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; 
@@ -884,8 +1020,24 @@
                         canvas.style.zIndex = '1';
                         canvas.height = viewport.height; 
                         canvas.width = viewport.width; 
+
+                        // شريحة الرسم الشفافة فوق الـ PDF
+                        const drawCanvas = document.createElement('canvas');
+                        drawCanvas.className = 'pdf-draw-layer';
+                        drawCanvas.style.position = 'absolute';
+                        drawCanvas.style.top = '0';
+                        drawCanvas.style.left = '0';
+                        drawCanvas.style.width = '100%';
+                        drawCanvas.style.height = '100%';
+                        drawCanvas.style.zIndex = '5';
+                        drawCanvas.style.borderRadius = '8px';
+                        drawCanvas.style.pointerEvents = 'none'; // مقفولة في البداية عشان الطالب يقدر يعمل سكرول
+                        drawCanvas.width = viewport.width;
+                        drawCanvas.height = viewport.height;
                         
-                        wrapper.insertBefore(canvas, watermark);
+                        pageContainer.appendChild(canvas);
+                        pageContainer.appendChild(drawCanvas);
+                        wrapper.insertBefore(pageContainer, watermark);
                         
                         const ctx = canvas.getContext('2d');
                         
@@ -904,6 +1056,9 @@
                                 } 
                             } 
                             ctx.restore();
+
+                            // تفعيل الرسم على الشريحة
+                            attachPdfDrawEvents(drawCanvas);
                         });
                     });
                 }
@@ -1382,71 +1537,50 @@
         window.addEventListener('beforeunload', () => {
             sendOnlineStatus('غير متصل 🔴');
         });
-                      // ==========================================
-// دالة التحميل النهائية - نسخة خالية من الأخطاء
-// ==========================================
-async function downloadWatermarkedPDF() {
-    // تيست صغير: أول ما تدوس هيطلع الرسالة دي لو الكود واصل صح
-    // alert("تم الضغط على زر التحميل!"); 
 
-    // 1. فحص وجود المكتبة والورق
-    if (typeof window.jspdf === 'undefined') {
-        alert("خطأ: مكتبة jsPDF لم يتم تحميلها بعد. تأكد من وجود سطر المكتبة في الـ head");
-        return;
-    }
-
-    const canvases = document.querySelectorAll('#pdfWrapper canvas');
-    if (canvases.length === 0) {
-        alert("أرجوك افتح ملف المحاضرة بالكامل أولاً حتى تظهر الصفحات");
-        return;
-    }
-
-    // 2. فحص نوع الجهاز (موبايل أم كمبيوتر)
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    if (isMobile) {
-        // للموبايل: نفتح الرابط الأصلي فوراً عشان رامات الموبايل متخنقش والصفحة تروح
-        if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
-            alert("جاري فتح الملف للتحميل بأمان...");
-            window.location.href = window.currentOpenedPdf;
-        } else {
-            alert("عذراً، لم يتم العثور على رابط الملف. حاول فتح المحاضرة مرة أخرى.");
-        }
-    } else {
-        // للكمبيوتر: نختم الملف ونحمله
-        try {
-            // شاشة انتظار
-            let overlay = document.createElement('div');
-            overlay.id = "pdaheeh_overlay";
-            overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; display:flex; justify-content:center; align-items:center; color:#FFC800; font-size:20px; font-weight:bold;";
-            overlay.innerHTML = "جاري ختم نسختك.. برجاء الانتظار ثواني ⏳";
-            document.body.appendChild(overlay);
-
-            const { jsPDF } = window.jspdf;
-            const firstW = canvases[0].width;
-            const firstH = canvases[0].height;
-            let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
-
-            for (let i = 0; i < canvases.length; i++) {
-                if (i > 0) {
-                    pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
-                }
-                pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.5), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
+        // سيبتلك كود التحميل زي ما طلبت (اللي كان موجود عندك في آخر رسالة)
+        function downloadWatermarkedPDF() {
+            if (!window.jspdf) { 
+                alert("جاري تحميل أدوات الختم، ثواني واضغط مرة أخرى..."); 
+                return; 
             }
-
-            const sName = localStorage.getItem('studentName') || "Student";
-            pdf.save(`Dahih_${sName}.pdf`);
-            
-            if(document.getElementById("pdaheeh_overlay")) document.getElementById("pdaheeh_overlay").remove();
-
-        } catch (err) {
-            alert("حدث خطأ تقني: " + err.message);
-            if(document.getElementById("pdaheeh_overlay")) document.getElementById("pdaheeh_overlay").remove();
+            const canvases = document.querySelectorAll('#pdfWrapper canvas:not(.pdf-draw-layer)');
+            if (canvases.length === 0) { 
+                alert("برجاء الانتظار حتى يتم عرض جميع صفحات الملف أولاً!"); 
+                return; 
+            }
+            let overlay = document.createElement('div');
+            overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,38,71,0.98); z-index:10000; display:flex; flex-direction:column; justify-content:center; align-items:center; color:white; text-align:center; padding:20px;";
+            overlay.innerHTML = `
+                <span class="material-icons" style="font-size:70px; color:var(--accent); animation: pulse 1s infinite;">engineering</span>
+                <h2 style="margin-top:20px;">جاري ختم نسختك وتجهيزها للتحميل... ⏳</h2>
+                <p style="color:var(--accent); margin-top:5px;">هذا الملف محمي ومسجل باسمك</p>
+            `;
+            document.body.appendChild(overlay);
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const firstW = canvases[0].width;
+                    const firstH = canvases[0].height;
+                    let pdf = new jsPDF({ orientation: firstW > firstH ? 'l' : 'p', unit: 'px', format: [firstW, firstH] });
+                    for (let i = 0; i < canvases.length; i++) {
+                        if (i > 0) {
+                            pdf.addPage([canvases[i].width, canvases[i].height], canvases[i].width > canvases[i].height ? 'l' : 'p');
+                        }
+                        pdf.addImage(canvases[i].toDataURL('image/jpeg', 0.4), 'JPEG', 0, 0, canvases[i].width, canvases[i].height);
+                    }
+                    const sName = localStorage.getItem('studentName') || "Student";
+                    const sCode = localStorage.getItem('studentCode') || "000";
+                    pdf.save(`Daheeh_${sName}_${sCode}.pdf`);
+                    overlay.remove();
+                } catch (error) {
+                    console.error("حدث خطأ:", error);
+                    alert("حصلت مشكلة تقنية أثناء المعالجة، الرجاء المحاولة لاحقاً.");
+                    overlay.remove();
+                }
+            }, 500);
         }
-    }
-}
 
     </script>
 </body>
 </html>
-
