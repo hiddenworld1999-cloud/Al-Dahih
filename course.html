@@ -304,9 +304,11 @@
             <span style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
             
             <div class="header-icons" style="gap: 15px;">
+                <span class="material-icons" id="pdfDrawToggleBtn" onclick="togglePdfDrawMode()" style="color: var(--text); cursor: pointer;" title="شخبطة / حل">draw</span>
                 <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
                 <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
                 <span class="material-icons" id="musicTogglePdf" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
+                <span class="material-icons" onclick="downloadWatermarkedPDF()" style="color: var(--text); cursor: pointer;" title="تحميل الملف">file_download</span>
                 <span class="material-icons" id="darkModeTogglePdf" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
             </div>
         </div>
@@ -316,9 +318,21 @@
                 <div id="pdfWatermarkOverlay" class="watermark-overlay"></div>
             </div>
         </div>
+
+        <div id="pdfDrawTools" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:var(--card); padding:10px 20px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); display:none; gap:15px; z-index:3000; align-items:center; border: 1px solid rgba(0,0,0,0.05);">
+            <button class="color-btn active" style="background:#0A2647; width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#0A2647', 3, this)" title="قلم أزرق"></button>
+            <button class="color-btn" style="background:#f44336; width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#f44336', 3, this)" title="قلم أحمر"></button>
+            <button class="color-btn" style="background:rgba(255, 200, 0, 0.4); border: 2px solid #FFC800; width:32px; height:32px; border-radius:50%; cursor:pointer;" onclick="setPdfBrush('rgba(255, 200, 0, 0.4)', 15, this)" title="قلم تحديد"></button>
+            <button class="color-btn" style="background:#ffffff; border:1px solid #ccc; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; justify-content:center; align-items:center;" onclick="setPdfBrush('eraser', 20, this)" title="أستيكة">
+                <span class="material-icons" style="font-size:16px; color:#ccc;">ink_eraser</span>
+            </button>
+        </div>
     </div>
 
     <script>
+        // تعريف متغير الرابط للموبايل
+        window.currentOpenedPdf = "";
+
         if(localStorage.getItem('daheehVipMode') === 'true') {
             document.body.classList.add('vip-gold-mode');
         }
@@ -341,6 +355,7 @@
             }
         });
 
+        // ------------------ السبورة العادية ------------------
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
@@ -788,9 +803,14 @@
                 });
         }
 
+        // تم إضافة زرار الأسئلة بدون إجابات هنا
         function renderExams(data, type, title) {
             const body = document.getElementById('contentBody');
             const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
+            
+            // قراءة رابط الملف الغير محلول من الشيت
+            const unsolvedFileName = type === 'midterm' ? data.exams.unsolved_midterm : data.exams.unsolved_final; 
+            
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
@@ -807,15 +827,25 @@
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
             let pdfHtml = ''; 
+            
+            // 1. زرار الامتحان بالحل (الأزرق)
             if(fileName) { 
-                pdfHtml = `
-                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+                pdfHtml += `
+                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 10px;">
                     <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
                     <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
                 </button>`; 
             } else { 
-                pdfHtml = `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:15px; font-weight:bold;" data-ar="ملف الـ PDF غير متوفر حالياً" data-en="PDF file is not available currently">ملف الـ PDF غير متوفر حالياً</p>`; 
+                pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:10px; font-weight:bold;">ملف الحل غير متوفر حالياً</p>`; 
             }
+
+            // 2. زرار أسئلة بدون إجابات للحل بالقلم (البنفسجي)
+            let unsolvedAction = unsolvedFileName ? `openPdfViewerInsideApp('${unsolvedFileName}')` : `alert('سيتم إضافة ملف الأسئلة قريباً')`;
+            pdfHtml += `
+            <button onclick="${unsolvedAction}" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+                <span class="material-icons" style="margin-inline-end:10px;">edit_document</span>
+                <span data-ar="أسئلة بدون إجابات (PDF للحل)" data-en="Unsolved Exam (PDF)">أسئلة بدون إجابات (PDF للحل)</span>
+            </button>`;
             
             body.innerHTML = `
             <div class="content-view" style="text-align:center; padding:30px 10px;">
@@ -834,16 +864,114 @@
             applyLanguage();
         }
 
+        // ==========================================
+        // نظام الشخبطة والحل جوه الـ PDF
+        // ==========================================
+        let isPdfDrawMode = false;
+        let pdfBrushColor = '#0A2647';
+        let pdfBrushSize = 3;
+        let isPdfDrawing = false;
+        let activePdfCtx = null;
+
+        function togglePdfDrawMode() {
+            isPdfDrawMode = !isPdfDrawMode;
+            const tools = document.getElementById('pdfDrawTools');
+            const toggleBtn = document.getElementById('pdfDrawToggleBtn');
+            const drawLayers = document.querySelectorAll('.pdf-draw-layer');
+            const wrapper = document.getElementById('pdfWrapper');
+
+            if(isPdfDrawMode) {
+                tools.style.display = 'flex';
+                toggleBtn.style.color = 'var(--accent)';
+                drawLayers.forEach(c => c.style.pointerEvents = 'auto');
+                wrapper.style.touchAction = 'none'; // منع التمرير وقت الرسم
+            } else {
+                tools.style.display = 'none';
+                toggleBtn.style.color = 'var(--text)';
+                drawLayers.forEach(c => c.style.pointerEvents = 'none');
+                wrapper.style.touchAction = 'auto'; // إرجاع التمرير
+            }
+        }
+
+        function setPdfBrush(color, size, btnEl) {
+            pdfBrushColor = color;
+            pdfBrushSize = size;
+            document.querySelectorAll('#pdfDrawTools .color-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+        }
+
+        function attachPdfDrawEvents(drawCanvas) {
+            const ctx = drawCanvas.getContext('2d');
+
+            const getX = (e) => {
+                const rect = drawCanvas.getBoundingClientRect();
+                const scaleX = drawCanvas.width / rect.width;
+                return ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
+            };
+            const getY = (e) => {
+                const rect = drawCanvas.getBoundingClientRect();
+                const scaleY = drawCanvas.height / rect.height;
+                return ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
+            };
+
+            const startDraw = (e) => {
+                if(!isPdfDrawMode) return;
+                isPdfDrawing = true;
+                activePdfCtx = ctx;
+                ctx.beginPath();
+                ctx.moveTo(getX(e), getY(e));
+                e.preventDefault();
+            };
+
+            const draw = (e) => {
+                if(!isPdfDrawing || activePdfCtx !== ctx) return;
+                ctx.lineTo(getX(e), getY(e));
+                
+                if(pdfBrushColor === 'eraser') {
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.lineWidth = pdfBrushSize;
+                } else {
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.strokeStyle = pdfBrushColor;
+                    ctx.lineWidth = pdfBrushSize;
+                }
+                
+                ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+                e.preventDefault();
+            };
+
+            const stopDraw = () => {
+                isPdfDrawing = false;
+                if(activePdfCtx) activePdfCtx.closePath();
+                activePdfCtx = null;
+            };
+
+            drawCanvas.addEventListener('mousedown', startDraw);
+            drawCanvas.addEventListener('mousemove', draw);
+            drawCanvas.addEventListener('mouseup', stopDraw);
+            drawCanvas.addEventListener('mouseout', stopDraw);
+            drawCanvas.addEventListener('touchstart', startDraw, {passive: false});
+            drawCanvas.addEventListener('touchmove', draw, {passive: false});
+            drawCanvas.addEventListener('touchend', stopDraw);
+        }
+
+        // تم إضافة طبقات الرسم الشفافة هنا
         function openPdfViewerInsideApp(pdfUrl) {
+            window.currentOpenedPdf = pdfUrl; // تسجيل الرابط
             const wrapper = document.getElementById('pdfWrapper'); 
             const watermark = document.getElementById('pdfWatermarkOverlay');
             
             wrapper.style.width = '100%'; 
-            wrapper.querySelectorAll('canvas').forEach(c => c.remove()); 
+            wrapper.querySelectorAll('div[style*="position: relative"]').forEach(c => c.remove()); 
+            wrapper.querySelectorAll('canvas').forEach(c => c.remove());
             wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
-            
             if (watermark) watermark.innerHTML = ''; 
             
+            isPdfDrawMode = false;
+            if(document.getElementById('pdfDrawTools')) document.getElementById('pdfDrawTools').style.display = 'none';
+            if(document.getElementById('pdfDrawToggleBtn')) document.getElementById('pdfDrawToggleBtn').style.color = 'var(--text)';
+            wrapper.style.touchAction = 'auto';
+
             const loadingDiv = document.createElement('div'); 
             loadingDiv.className = 'loading-msg'; 
             loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
@@ -866,10 +994,14 @@
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     pdfDoc.getPage(num).then(page => {
                         const viewport = page.getViewport({ scale: 1.5 }); 
-                        const canvas = document.createElement('canvas'); 
                         
+                        const pageContainer = document.createElement('div');
+                        pageContainer.style.position = 'relative';
+                        pageContainer.style.margin = '0 auto 15px auto';
+                        pageContainer.style.width = '100%';
+
+                        const canvas = document.createElement('canvas'); 
                         canvas.style.display = 'block'; 
-                        canvas.style.margin = '0 auto 15px auto'; 
                         canvas.style.width = '100%'; 
                         canvas.style.borderRadius = '8px'; 
                         canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; 
@@ -877,26 +1009,44 @@
                         canvas.style.zIndex = '1';
                         canvas.height = viewport.height; 
                         canvas.width = viewport.width; 
+
+                        // شريحة الرسم الشفافة
+                        const drawCanvas = document.createElement('canvas');
+                        drawCanvas.className = 'pdf-draw-layer';
+                        drawCanvas.style.position = 'absolute';
+                        drawCanvas.style.top = '0';
+                        drawCanvas.style.left = '0';
+                        drawCanvas.style.width = '100%';
+                        drawCanvas.style.height = '100%';
+                        drawCanvas.style.zIndex = '5';
+                        drawCanvas.style.borderRadius = '8px';
+                        drawCanvas.style.pointerEvents = 'none'; 
+                        drawCanvas.width = viewport.width;
+                        drawCanvas.height = viewport.height;
                         
-                        wrapper.insertBefore(canvas, watermark);
+                        pageContainer.appendChild(canvas);
+                        pageContainer.appendChild(drawCanvas);
+                        wrapper.insertBefore(pageContainer, watermark);
                         
                         const ctx = canvas.getContext('2d');
-                        
                         page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
                             ctx.save(); 
                             ctx.translate(canvas.width / 2, canvas.height / 2); 
                             ctx.rotate(-Math.PI / 4); 
-                            
                             ctx.font = "bold 28px 'IBM Plex Sans Arabic', sans-serif"; 
                             ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; 
                             ctx.textAlign = "center";
-                            
                             for (let x = -canvas.width; x < canvas.width * 2; x += 550) { 
                                 for (let y = -canvas.height; y < canvas.height * 2; y += 350) { 
                                     ctx.fillText(watermarkText, x, y); 
                                 } 
                             } 
                             ctx.restore();
+                            
+                            // تشغيل المراقبة للرسم
+                            if(typeof attachPdfDrawEvents === 'function') {
+                                attachPdfDrawEvents(drawCanvas);
+                            }
                         });
                     });
                 }
@@ -1375,6 +1525,17 @@
         window.addEventListener('beforeunload', () => {
             sendOnlineStatus('غير متصل 🔴');
         });
+
+        // ==========================================
+        // دالة التحميل المباشر الآمنة للموبايل
+        // ==========================================
+        function downloadWatermarkedPDF() {
+            if (window.currentOpenedPdf && window.currentOpenedPdf !== "") {
+                window.open(window.currentOpenedPdf, '_blank');
+            } else {
+                alert("عذراً، لم يتم العثور على رابط الملف. يرجى إعادة فتحه.");
+            }
+        }
 
     </script>
 </body>
