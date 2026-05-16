@@ -449,23 +449,34 @@
 
 
 
-                let pdfInitialWidth = 100; 
+                    let pdfInitialWidth = 100; 
         let initialPinchDistance = null; 
+        let initialScrollTop = 0;
+        let initialScrollLeft = 0;
+        let pinchCenterX = 0;
+        let pinchCenterY = 0;
         const pdfWrapper = document.getElementById('pdfWrapper');
+        const pdfScrollContainer = document.getElementById('pdfScrollContainer'); // دي الحاوية اللي بتعمل سكرول
         
         pdfWrapper.addEventListener('touchstart', (e) => { 
             if (e.touches.length === 2) { 
                 initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; 
-                // إيقاف التأخير (Transition) وقت الزووم عشان يكون سريع جداً وسلس
                 pdfWrapper.style.transition = 'none'; 
+                
+                // 1. تحديد مكان صوابعك بالظبط على الشاشة (نقطة المنتصف بين الصابعين)
+                pinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                pinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                
+                // 2. حفظ مكان السكرول الحالي قبل ما نعمل أي زووم
+                initialScrollTop = pdfScrollContainer.scrollTop;
+                initialScrollLeft = pdfScrollContainer.scrollLeft;
             } 
         }, { passive: false });
         
         pdfWrapper.addEventListener('touchmove', (e) => { 
             if (e.touches.length === 2 && initialPinchDistance) { 
-                // السطر ده هو السحر: بيمنع الشاشة إنها تطلع أو تنزل وإنت بتعمل زووم
-                e.preventDefault(); 
+                e.preventDefault(); // منع تقطيع الشاشة
                 
                 let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 let scaleChange = currentDistance / initialPinchDistance; 
@@ -474,24 +485,25 @@
                 if (newWidth < 100) newWidth = 100; 
                 if (newWidth > 400) newWidth = 400; 
                 
+                // 3. حساب نسبة التكبير الفعلية اللي حصلت
+                let actualScale = newWidth / pdfInitialWidth;
+
+                // تكبير عرض الورق
                 pdfWrapper.style.width = newWidth + '%'; 
+                
+                // 4. السحر هنا: بنضرب السكرول في نسبة التكبير عشان الشاشة تفضل ثابتة تحت صباعك
+                pdfScrollContainer.scrollTop = (initialScrollTop + pinchCenterY) * actualScale - pinchCenterY;
+                pdfScrollContainer.scrollLeft = (initialScrollLeft + pinchCenterX) * actualScale - pinchCenterX;
             } 
         }, { passive: false });
         
         pdfWrapper.addEventListener('touchend', (e) => { 
             if (e.touches.length < 2) { 
                 initialPinchDistance = null; 
-                // إرجاع النعومة بعد ما تشيل صباعك
                 pdfWrapper.style.transition = 'width 0.2s ease-out';
             } 
         });
 
-        
-        pdfWrapper.addEventListener('touchend', (e) => { 
-            if (e.touches.length < 2) { 
-                initialPinchDistance = null; 
-            } 
-        });
 
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
