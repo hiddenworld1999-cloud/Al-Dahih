@@ -446,7 +446,10 @@
             }
         }, {passive: true});
 
-        let pdfInitialWidth = 100; 
+
+
+
+                let pdfInitialWidth = 100; 
         let initialPinchDistance = null; 
         const pdfWrapper = document.getElementById('pdfWrapper');
         
@@ -454,19 +457,35 @@
             if (e.touches.length === 2) { 
                 initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; 
+                // إيقاف التأخير (Transition) وقت الزووم عشان يكون سريع جداً وسلس
+                pdfWrapper.style.transition = 'none'; 
             } 
-        });
+        }, { passive: false });
         
         pdfWrapper.addEventListener('touchmove', (e) => { 
             if (e.touches.length === 2 && initialPinchDistance) { 
+                // السطر ده هو السحر: بيمنع الشاشة إنها تطلع أو تنزل وإنت بتعمل زووم
+                e.preventDefault(); 
+                
                 let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 let scaleChange = currentDistance / initialPinchDistance; 
                 let newWidth = pdfInitialWidth * scaleChange; 
+                
                 if (newWidth < 100) newWidth = 100; 
                 if (newWidth > 400) newWidth = 400; 
+                
                 pdfWrapper.style.width = newWidth + '%'; 
             } 
+        }, { passive: false });
+        
+        pdfWrapper.addEventListener('touchend', (e) => { 
+            if (e.touches.length < 2) { 
+                initialPinchDistance = null; 
+                // إرجاع النعومة بعد ما تشيل صباعك
+                pdfWrapper.style.transition = 'width 0.2s ease-out';
+            } 
         });
+
         
         pdfWrapper.addEventListener('touchend', (e) => { 
             if (e.touches.length < 2) { 
