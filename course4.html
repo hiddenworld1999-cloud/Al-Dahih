@@ -127,21 +127,75 @@
         
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 24px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
 
-        /* ================= ستايلات المحاضرة التفاعلية الاحترافية ================= */
+        /* ================= ستايلات المحاضرة التفاعلية الحديثة ================= */
+        #interactiveLectureModal .modal-body {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
         .interactive-hero { background: linear-gradient(135deg, #0A2647 0%, #144272 100%); border-radius: 20px; padding: 25px 20px; color: white; margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(10,38,71,0.25); }
         body.dark-mode .interactive-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
         .interactive-hero h2 { font-size: 1.35rem; font-weight: 900; margin-bottom: 6px; }
         .interactive-hero p { font-size: 0.9rem; opacity: 0.85; font-weight: 500; }
 
-        .interactive-nav { display: flex; gap: 8px; padding: 12px 10px; background: var(--card); border-radius: 18px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+        /* شريط التبويبات المنسق */
+        .interactive-nav { 
+            display: flex; 
+            justify-content: center;
+            gap: 8px; 
+            padding: 8px; 
+            background: var(--card); 
+            border-radius: 16px; 
+            margin: 0 auto 20px auto; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            max-width: 550px;
+        }
         .interactive-nav::-webkit-scrollbar { display: none; }
-        .tab-btn { flex: 1; padding: 12px 16px; border-radius: 14px; border: none; font-weight: 700; font-family: inherit; font-size: 0.95rem; cursor: pointer; white-space: nowrap; background: transparent; color: var(--grey); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 6px 15px rgba(10, 38, 71, 0.2); transform: translateY(-1px); }
-        body.dark-mode .tab-btn.active { background: var(--accent); color: #0A2647; box-shadow: 0 6px 15px rgba(255, 200, 0, 0.2); }
-        
-        .tab-content { display: none; animation: slideUpFade 0.35s ease; }
-        .tab-content.active { display: block; }
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tab-btn { 
+            flex: 1; 
+            min-width: 80px;
+            padding: 10px 14px; 
+            border-radius: 12px; 
+            border: none; 
+            font-weight: 700; 
+            font-family: inherit; 
+            font-size: 0.95rem; 
+            cursor: pointer; 
+            background: transparent; 
+            color: var(--grey); 
+            transition: all 0.2s ease; 
+            text-align: center;
+        }
+
+        .tab-btn.active { 
+            background: var(--primary) !important; 
+            color: white !important; 
+            box-shadow: 0 4px 12px rgba(10, 38, 71, 0.25); 
+        }
+        body.dark-mode .tab-btn.active { 
+            background: var(--accent) !important; 
+            color: #0A2647 !important; 
+        }
+
+        .tab-content { 
+            display: none; 
+            width: 100%;
+        }
+        .tab-content.active { 
+            display: block !important; 
+            animation: fadeInTab 0.3s ease forwards;
+        }
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .premium-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); position: relative; }
         .premium-card-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; color: var(--primary); margin-bottom: 12px; }
@@ -359,15 +413,16 @@
         <div class="modal-body" style="background: var(--bg); padding-top: 15px;">
             <div class="interactive-hero">
                 <span class="material-icons" style="font-size:36px; color:var(--accent); margin-bottom:5px;">auto_awesome</span>
-                <h2 id="interactiveHeaderTitle">دورة حياة تطوير البرمجيات</h2>
+                <h2 id="interactiveHeaderTitle">المحاضرة التفاعلية</h2>
                 <p>محتوى ذكي، مبسط ومعد لضمان الفهم والتحضير للامتحان 🎯</p>
             </div>
 
+            <!-- التبويبات المنسقة مباشرة -->
             <div class="interactive-nav" id="interactiveNav">
-                <button class="tab-btn active" onclick="switchInteractiveTab('objectives', this)"><span class="material-icons" style="font-size:18px;">flag</span> الأهداف</button>
-                <button class="tab-btn" onclick="switchInteractiveTab('explanation', this)"><span class="material-icons" style="font-size:18px;">menu_book</span> الشرح</button>
-                <button class="tab-btn" onclick="switchInteractiveTab('examples', this)"><span class="material-icons" style="font-size:18px;">tips_and_updates</span> أمثلة</button>
-                <button class="tab-btn" onclick="switchInteractiveTab('summary', this)"><span class="material-icons" style="font-size:18px;">offline_bolt</span> الخلاصة</button>
+                <button class="tab-btn active" data-tab="objectives" onclick="switchInteractiveTab('objectives', this)">🎯 الأهداف</button>
+                <button class="tab-btn" data-tab="explanation" onclick="switchInteractiveTab('explanation', this)">📚 الشرح</button>
+                <button class="tab-btn" data-tab="examples" onclick="switchInteractiveTab('examples', this)">💡 أمثلة</button>
+                <button class="tab-btn" data-tab="summary" onclick="switchInteractiveTab('summary', this)">⚡ الخلاصة</button>
             </div>
 
             <div id="tab-objectives" class="tab-content active"></div>
@@ -711,13 +766,33 @@
         }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // === تبويبات المحاضرة التفاعلية الحديثة ===
+        // === تبويبات المحاضرة التفاعلية الحديثة والمنسقة ===
         function switchInteractiveTab(tabId, el) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            if(el) { el.classList.add('active'); }
-            const target = document.getElementById('tab-' + tabId);
-            if(target) target.classList.add('active');
+            // إخفاء كل التبويبات
+            document.querySelectorAll('#interactiveLectureModal .tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+
+            // إزالة الكلاس النشط من جميع الأزرار
+            document.querySelectorAll('#interactiveNav .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // تفعيل الزر المناسب
+            if(el) { 
+                el.classList.add('active'); 
+            } else {
+                const targetBtn = document.querySelector(`#interactiveNav button[data-tab="${tabId}"]`);
+                if(targetBtn) targetBtn.classList.add('active');
+            }
+
+            // إظهار المحتوى المختار
+            const targetContent = document.getElementById('tab-' + tabId);
+            if(targetContent) {
+                targetContent.classList.add('active');
+                targetContent.style.display = 'block';
+            }
         }
 
         function openInteractiveLectureByIndex(cacheIndex, lectureNum) {
@@ -734,7 +809,7 @@
             document.getElementById('interactiveTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
             document.getElementById('interactiveHeaderTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
             
-            // 1. الأهداف التعليمية بتصميم عصري
+            // 1. الأهداف التعليمية
             let objHtml = `
             <div class="premium-card">
                 <div class="premium-card-title">
@@ -753,7 +828,7 @@
             objHtml += `</div>`;
             document.getElementById('tab-objectives').innerHTML = objHtml;
 
-            // 2. الشرح التفاعلي المفصل
+            // 2. الشرح التفاعلي
             let expHtml = '';
             if(jsonData.explanation) {
                 jsonData.explanation.forEach((section, idx) => {
@@ -802,7 +877,7 @@
             }
             document.getElementById('tab-examples').innerHTML = exHtml || '<p style="text-align:center; padding:30px; color:var(--grey);">لا توجد أمثلة مضافة.</p>';
 
-            // 4. الخلاصة السريعة
+            // 4. الخلاصة
             let sumHtml = `
             <div class="premium-card">
                 <div class="premium-card-title">
@@ -821,7 +896,7 @@
             sumHtml += `</div>`;
             document.getElementById('tab-summary').innerHTML = sumHtml;
 
-            // زر الانتقال للكويز التفاعلي
+            // زر الانتقال للكويز
             const promptBox = document.getElementById('interactiveQuizPrompt');
             if(jsonData.quiz && jsonData.quiz.length > 0) {
                 promptBox.innerHTML = `
@@ -833,8 +908,8 @@
                 promptBox.innerHTML = '';
             }
 
-            // تفعيل التبويب الأول
-            const firstTab = document.querySelectorAll('.interactive-nav .tab-btn')[0];
+            // تفعيل التبويب الأول مباشرة وبدقة
+            const firstTab = document.querySelector('#interactiveNav button[data-tab="objectives"]');
             switchInteractiveTab('objectives', firstTab);
 
             openModalWithHistory('interactiveLectureModal');
