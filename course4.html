@@ -200,20 +200,6 @@
         .premium-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); position: relative; }
         .premium-card-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; color: var(--primary); margin-bottom: 12px; }
         .premium-card-title .material-icons { background: rgba(255, 200, 0, 0.15); color: #e6b000; padding: 6px; border-radius: 10px; font-size: 20px; }
-        
-        .objective-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: rgba(33, 150, 243, 0.04); border-radius: 14px; margin-bottom: 10px; border: 1px solid rgba(33, 150, 243, 0.1); }
-        .objective-item .check-icon { color: #2196f3; font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-        
-        .summary-point { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: rgba(76, 175, 80, 0.05); border-radius: 14px; margin-bottom: 10px; border: 1px solid rgba(76, 175, 80, 0.15); }
-        .summary-point .material-icons { color: #4caf50; font-size: 22px; flex-shrink: 0; }
-
-        .terminal-box { background: #1e1e2e; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); border: 1px solid #313244; margin-top: 15px; text-align: left; direction: ltr; }
-        .terminal-header { background: #181825; padding: 10px 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #313244; }
-        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-        .terminal-dot.red { background: #f38ba8; }
-        .terminal-dot.yellow { background: #f9e2af; }
-        .terminal-dot.green { background: #a6e3a1; }
-        .terminal-code { padding: 18px; color: #cdd6f4; font-family: 'Courier New', Courier, monospace; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
 
         /* ستايل الكويز */
         .quiz-opt { padding: 18px 20px; background: var(--quiz-option-bg); border: 2px solid transparent; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.25s; font-family: inherit; font-size: 1rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
@@ -434,8 +420,8 @@
         </div>
     </div>
 
-    <!-- نافذة الكويز -->
-    <div id="quizModal" class="modal modal-trackable" style="z-index: 2000;">
+    <!-- نافذة الكويز مع رفع الـ z-index لتظهر مباشرة فوق المحاضرة -->
+    <div id="quizModal" class="modal modal-trackable" style="z-index: 3500;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:bold; font-size:1.1rem; color:var(--primary);" id="quizModalTitle">اختبار</span>
@@ -806,110 +792,70 @@
 
         function renderInteractiveLectureUI(jsonData, cacheIndex, lectureNum) {
             window.currentInteractiveData = jsonData;
-            document.getElementById('interactiveTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
-            document.getElementById('interactiveHeaderTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
             
-            // 1. الأهداف التعليمية
-            let objHtml = `
-            <div class="premium-card">
-                <div class="premium-card-title">
-                    <span class="material-icons">track_changes</span>
-                    <span>ماذا ستكتسب في نهاية هذه المحاضرة؟</span>
-                </div>`;
-            if(jsonData.objectives) {
-                jsonData.objectives.forEach(obj => { 
-                    objHtml += `
-                    <div class="objective-item">
-                        <span class="material-icons check-icon">check_circle</span>
-                        <div style="font-size:1rem; font-weight:600; line-height:1.6;">${obj}</div>
-                    </div>`; 
+            var titleText = jsonData.title || 'المحاضرة التفاعلية';
+            document.getElementById('interactiveTitle').innerText = titleText;
+            document.getElementById('interactiveHeaderTitle').innerText = titleText;
+            
+            // 1. الأهداف
+            var objHtml = '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06);">';
+            objHtml += '<h3 style="color:#0A2647; margin-bottom:15px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#e6b000;">track_changes</span> <span>ماذا ستكتسب في نهاية هذه المحاضرة؟</span></h3>';
+            if (jsonData.objectives && jsonData.objectives.length > 0) {
+                jsonData.objectives.forEach(function(obj) {
+                    objHtml += '<div style="display:flex; align-items:flex-start; gap:10px; background:#f8fafc; padding:14px 16px; border-radius:14px; margin-bottom:10px; border-right:4px solid #2196f3; color:#1e293b; font-weight:600; font-size:1rem; line-height:1.6;">';
+                    objHtml += '<span style="color:#2196f3; font-weight:900; font-size:1.1rem;">✓</span> <span>' + obj + '</span></div>';
                 });
             }
-            objHtml += `</div>`;
+            objHtml += '</div>';
             document.getElementById('tab-objectives').innerHTML = objHtml;
 
-            // 2. الشرح التفاعلي
-            let expHtml = '';
-            if(jsonData.explanation) {
-                jsonData.explanation.forEach((section, idx) => {
-                    expHtml += `
-                    <div class="premium-card">
-                        <div class="premium-card-title">
-                            <span class="material-icons">auto_stories</span>
-                            <span>${section.subtitle}</span>
-                        </div>
-                        <p style="line-height:1.8; font-size:1.02rem; color:var(--text); font-weight:500;">${section.content}</p>
-                    </div>`;
+            // 2. الشرح
+            var expHtml = '';
+            if (jsonData.explanation && jsonData.explanation.length > 0) {
+                jsonData.explanation.forEach(function(sec) {
+                    expHtml += '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #FFC800;">';
+                    expHtml += '<h3 style="color:#0A2647; margin-bottom:10px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#FFC800;">menu_book</span> <span>' + sec.subtitle + '</span></h3>';
+                    expHtml += '<p style="color:#334155; line-height:1.8; font-size:1.05rem; font-weight:500;">' + sec.content + '</p></div>';
                 });
             }
             document.getElementById('tab-explanation').innerHTML = expHtml;
 
-            // 3. التطبيق العملي ونماذج من الواقع
-            let exHtml = '';
-            if(jsonData.realLifeExample) {
-                exHtml += `
-                <div class="premium-card" style="border-inline-start: 5px solid #2196f3;">
-                    <div class="premium-card-title" style="color:#1976D2;">
-                        <span class="material-icons" style="background:rgba(33,150,243,0.1); color:#1976D2;">lightbulb</span>
-                        <span>موقف واقعي من سوق العمل</span>
-                    </div>
-                    <p style="line-height:1.8; font-size:1rem; color:var(--text); font-weight:500;">${jsonData.realLifeExample}</p>
-                </div>`;
+            // 3. الأمثلة والتطبيق
+            var exHtml = '';
+            if (jsonData.realLifeExample) {
+                exHtml += '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #2196f3;">';
+                exHtml += '<h3 style="color:#1976D2; margin-bottom:10px; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#2196f3;">lightbulb</span> <span>موقف واقعي من سوق العمل</span></h3>';
+                exHtml += '<p style="color:#334155; line-height:1.8; font-size:1.05rem; font-weight:500;">' + jsonData.realLifeExample + '</p></div>';
             }
-
-            if(jsonData.practicalExample) {
-                exHtml += `
-                <div class="premium-card" style="border-inline-start: 5px solid #ff9800;">
-                    <div class="premium-card-title" style="color:#f57c00;">
-                        <span class="material-icons" style="background:rgba(255,152,0,0.1); color:#f57c00;">terminal</span>
-                        <span>دراسة حالة عملية وتطبيق</span>
-                    </div>
-                    <div class="terminal-box">
-                        <div class="terminal-header">
-                            <span class="terminal-dot red"></span>
-                            <span class="terminal-dot yellow"></span>
-                            <span class="terminal-dot green"></span>
-                            <span style="color:#6c7086; font-size:0.75rem; font-weight:bold; margin-inline-start:8px; font-family:monospace;">case-study.log</span>
-                        </div>
-                        <div class="terminal-code">${jsonData.practicalExample}</div>
-                    </div>
-                </div>`;
+            if (jsonData.practicalExample) {
+                exHtml += '<div style="background:#1e1e2e; color:#cdd6f4; border-radius:18px; padding:20px; margin-bottom:15px; box-shadow:0 10px 30px rgba(0,0,0,0.25); border:1px solid #313244; direction:rtl; text-align:right;">';
+                exHtml += '<h3 style="color:#FFC800; margin-bottom:12px; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#FFC800;">terminal</span> <span>دراسة حالة عملية وتطبيق</span></h3>';
+                exHtml += '<pre style="white-space:pre-wrap; font-family:inherit; font-size:0.95rem; line-height:1.8; color:#cdd6f4;">' + jsonData.practicalExample + '</pre></div>';
             }
-            document.getElementById('tab-examples').innerHTML = exHtml || '<p style="text-align:center; padding:30px; color:var(--grey);">لا توجد أمثلة مضافة.</p>';
+            document.getElementById('tab-examples').innerHTML = exHtml;
 
             // 4. الخلاصة
-            let sumHtml = `
-            <div class="premium-card">
-                <div class="premium-card-title">
-                    <span class="material-icons">bolt</span>
-                    <span>الكبسولة الذهبية للمراجعة السريعة</span>
-                </div>`;
-            if(jsonData.summary) {
-                jsonData.summary.forEach(point => { 
-                    sumHtml += `
-                    <div class="summary-point">
-                        <span class="material-icons">verified</span>
-                        <div style="font-size:1rem; font-weight:700; line-height:1.6;">${point}</div>
-                    </div>`; 
+            var sumHtml = '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06);">';
+            sumHtml += '<h3 style="color:#0A2647; margin-bottom:15px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#e6b000;">bolt</span> <span>الكبسولة الذهبية للمراجعة السريعة</span></h3>';
+            if (jsonData.summary && jsonData.summary.length > 0) {
+                jsonData.summary.forEach(function(point) {
+                    sumHtml += '<div style="display:flex; align-items:flex-start; gap:10px; background:#f0fdf4; padding:14px 16px; border-radius:14px; margin-bottom:10px; border-right:4px solid #16a34a; color:#14532d; font-weight:700; font-size:1rem; line-height:1.6;">';
+                    sumHtml += '<span style="color:#16a34a; font-size:1.2rem;">★</span> <span>' + point + '</span></div>';
                 });
             }
-            sumHtml += `</div>`;
+            sumHtml += '</div>';
             document.getElementById('tab-summary').innerHTML = sumHtml;
 
-            // زر الانتقال للكويز
-            const promptBox = document.getElementById('interactiveQuizPrompt');
-            if(jsonData.quiz && jsonData.quiz.length > 0) {
-                promptBox.innerHTML = `
-                <button class="btn-lecture-quiz" onclick="openQuiz('${lectureNum}', ${cacheIndex})">
-                    <span class="material-icons">play_circle_filled</span> 
-                    <span>جاهز؟ ابدأ كويز المحاضرة التفاعلي (${jsonData.quiz.length} أسئلة)</span>
-                </button>`;
+            // زر الانتقال لاختبار المحاضرة
+            var promptBox = document.getElementById('interactiveQuizPrompt');
+            if (jsonData.quiz && jsonData.quiz.length > 0) {
+                promptBox.innerHTML = '<button class="btn-lecture-quiz" style="width:100%; padding:18px; font-size:1.1rem; border-radius:16px; font-weight:bold; cursor:pointer;" onclick="openQuiz(\'' + lectureNum + '\', ' + cacheIndex + ')">ابدأ اختبار المحاضرة التفاعلي (' + jsonData.quiz.length + ' أسئلة) 🚀</button>';
             } else {
                 promptBox.innerHTML = '';
             }
 
-            // تفعيل التبويب الأول مباشرة وبدقة
-            const firstTab = document.querySelector('#interactiveNav button[data-tab="objectives"]');
+            // تفعيل التبويب الأول مباشرة
+            var firstTab = document.querySelector('#interactiveNav button[data-tab="objectives"]');
             switchInteractiveTab('objectives', firstTab);
 
             openModalWithHistory('interactiveLectureModal');
@@ -1186,6 +1132,10 @@
         let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; let userAnswers = []; let quizTimerInterval; let remainingQuizTime = 0;
         
         function openQuiz(lectureNum, cacheIndex) { 
+            // قفل نافذة المحاضرة التفاعلية فوراً لظهور الكويز مباشرة بدون تداخل
+            const interModal = document.getElementById('interactiveLectureModal');
+            if (interModal) interModal.style.display = 'none';
+
             currentLectureNum = lectureNum.toString(); 
             const courseName = currentLang === 'en' ? course.titleEn : course.titleAr; let dynamicTitle = '';
             if (currentLectureNum === 'midterm') { dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`; } 
