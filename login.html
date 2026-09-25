@@ -254,22 +254,30 @@
             }
         })();
 
-        // التوجيه التلقائي مع حفظ مسار الدفعة (تالتة ولا رابعة)
+        // التوجيه التلقائي مع حفظ مسار الدفعة بدقة دون خطأ الرجوع لصفحة أخرى
         if (localStorage.getItem('isLoggedInDaheeh') === 'true') {
-            const targetPage = localStorage.getItem('daheeh_target_page') || 'index.html';
-            window.location.href = targetPage;
+            const targetPage = localStorage.getItem('daheeh_target_page');
+            if (targetPage) {
+                window.location.replace(targetPage);
+            }
         }
 
-        // ⚠️ مهم جداً: حط لينكات السيرفرات بتاعتك هنا (Apps Script)
-        const SCRIPT_URL_YEAR_3 = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec"; // لينك سنة تالتة القديم
-        const SCRIPT_URL_YEAR_4 = "https://script.google.com/macros/s/AKfycbzpfEw45PROo2CAkCz5Gr2UOQJuJDUZMB6R7U9dI7YI6D8fvrRlwVI4f67HJWidtc0I/exec"; // ⚠️ ضيف لينك سيرفر رابعة هنا
+        // روابط سيرفرات الفرق
+        const SCRIPT_URL_YEAR_3 = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
+        const SCRIPT_URL_YEAR_4 = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
+
+        function fetchWithTimeout(url, timeout = 9000) {
+            return Promise.race([
+                fetch(url).then(r => r.json()),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+            ]);
+        }
 
         function validateLogin() {
             const codeInput = document.getElementById('accessCode');
             const userCode = codeInput.value.toUpperCase().trim();
             const errorBox = document.getElementById('errorBox');
             const successBox = document.getElementById('successBox');
-            const successText = document.getElementById('successText');
             
             const btn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
@@ -285,31 +293,49 @@
             btnText.innerText = 'جاري التحقق...';
             btnSpinner.style.display = 'inline-block';
 
-            // 1. هنسأل سيرفر سنة رابعة الأول
-            fetch(`${SCRIPT_URL_YEAR_4}?action=login&code=${userCode}`)
-                .then(response => response.json())
-                .then(data4 => {
-                    if (data4.success) {
-                        // الكود صحيح وموجود في رابعة -> نوجهه لملفات رابعة
-                        loginSuccess(data4.name, userCode, 'index4.html');
-                    } else {
-                        // 2. الكود مش في رابعة، هنسأل سيرفر سنة تالتة
-                        return fetch(`${SCRIPT_URL_YEAR_3}?action=login&code=${userCode}`)
-                            .then(res => res.json())
-                            .then(data3 => {
-                                if (data3.success) {
-                                    // الكود صحيح وموجود في تالتة -> نوجهه لملفات تالتة
-                                    loginSuccess(data3.name, userCode, 'index.html');
-                                } else {
-                                    // الكود مش موجود في أي دفعة
-                                    loginFailed('الكود المدخل غير صحيح.');
-                                }
-                            });
-                    }
-                })
-                .catch(error => {
-                    loginFailed('حدث خطأ! تأكد من اتصالك بالإنترنت.');
-                });
+            // الاستعلام بالتوازي لتقليل زمن الاستجابة ومنع تكرار محاولات الدخول الخاطئة
+            const checkY4 = fetchWithTimeout(`${SCRIPT_URL_YEAR_4}?action=login&code=${encodeURIComponent(userCode)}`);
+            const checkY3 = fetchWithTimeout(`${SCRIPT_URL_YEAR_3}?action=login&code=${encodeURIComponent(userCode)}`);
+
+            checkY4.then(data4 => {
+                if (data4 && data4.success) {
+                    loginSuccess(data4.name, userCode, 'index4.html');
+                    return true;
+                }
+                return false;
+            }).then(foundIn4 => {
+                if (!foundIn4) {
+                    return checkY3.then(data3 => {
+                        if (data3 && data3.success) {
+                            loginSuccess(data3.name, userCode, 'index.html');
+                        } else {
+                            loginFailed('الكود المدخل غير صحيح.');
+                        }
+                    });
+                }
+            }).catch(() => {
+                // محاولة احتياطية تسلسلية سريعة قبل إظهار خطأ الاتصال
+                fetch(`${SCRIPT_URL_YEAR_4}?action=login&code=${encodeURIComponent(userCode)}`)
+                    .then(res => res.json())
+                    .then(data4 => {
+                        if (data4 && data4.success) {
+                            loginSuccess(data4.name, userCode, 'index4.html');
+                        } else {
+                            return fetch(`${SCRIPT_URL_YEAR_3}?action=login&code=${encodeURIComponent(userCode)}`)
+                                .then(res => res.json())
+                                .then(data3 => {
+                                    if (data3 && data3.success) {
+                                        loginSuccess(data3.name, userCode, 'index.html');
+                                    } else {
+                                        loginFailed('الكود المدخل غير صحيح.');
+                                    }
+                                });
+                        }
+                    })
+                    .catch(() => {
+                        loginFailed('حدث خطأ! تأكد من اتصالك بالإنترنت ثم حاول ثانية.');
+                    });
+            });
         }
 
         function loginSuccess(fullName, code, targetPage) {
@@ -328,11 +354,11 @@
             localStorage.setItem('isLoggedInDaheeh', 'true');
             localStorage.setItem('studentName', fullName);
             localStorage.setItem('studentCode', code);
-            localStorage.setItem('daheeh_target_page', targetPage); // ده اللي بيحدد هو في سنة كام
+            localStorage.setItem('daheeh_target_page', targetPage);
 
             setTimeout(() => {
-                window.location.href = targetPage; 
-            }, 1500);
+                window.location.replace(targetPage); 
+            }, 1000);
         }
 
         function loginFailed(msg) {
