@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <script>
+       <script>
+        // 1. إخفاء الصفحة فوراً لمنع أي وميض
         document.documentElement.style.visibility = 'hidden';
-        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
-            window.location.replace("login.html");
-        } else {
-            document.documentElement.style.visibility = 'visible';
-        }
-    </script>
 
-<script>
-    // --- حارس الصفحة الرئيسية الخفي (الذكي) ---
-    (function() {
+        // 2. فحص حارس التطبيق
         var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
         var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
         var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
@@ -23,9 +16,30 @@
             } else {
                 window.location.replace("download.html");
             }
+        } else {
+            // 3. فحص تسجيل الدخول وحماية التوجيه (منع طالب تالتة من فتح رابعة)
+            const isLoggedIn = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            const targetPage = localStorage.getItem('daheeh_target_page');
+
+            if (!isLoggedIn) {
+                window.location.replace("login.html");
+            } else if (targetPage && !targetPage.includes('index4.html')) {
+                window.location.replace(targetPage);
+            } else {
+                // مصرح له ومسجل في رابعة -> إظهار الصفحة فوراً
+                document.documentElement.style.visibility = 'visible';
+            }
         }
-    })();
-</script>
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { alert('عذراً، هذا المحتوى محمي.'); e.preventDefault(); }
+        });
+    </script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
