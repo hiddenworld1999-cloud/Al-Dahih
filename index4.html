@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script>
+        document.documentElement.style.visibility = 'hidden';
+        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
+            window.location.replace("login.html");
+        } else {
+            document.documentElement.style.visibility = 'visible';
+        }
+    </script>
+
 <script>
     // --- حارس الصفحة الرئيسية الخفي (الذكي) ---
     (function() {
