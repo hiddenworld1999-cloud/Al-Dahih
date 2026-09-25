@@ -372,6 +372,7 @@
     <script>
         window.currentOpenedPdf = "";
         window.currentInteractiveData = null;
+        window.lecturesDataCache = {};
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
             document.body.classList.add('vip-gold-mode');
@@ -656,46 +657,50 @@
             document.getElementById('tab-' + tabId).classList.add('active');
         }
 
-        function openInteractiveLecture(encodedJson) {
-            try {
-                const jsonData = JSON.parse(decodeURIComponent(encodedJson));
-                window.currentInteractiveData = jsonData;
-                document.getElementById('interactiveTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
-                
-                let objHtml = '<h3 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;">بحلول نهاية المحاضرة ستكون قادراً على:</h3><ul style="line-height:1.8; font-size:1rem; padding-inline-start: 20px;">';
-                if(jsonData.objectives) jsonData.objectives.forEach(obj => { objHtml += `<li style="margin-bottom: 8px;">${obj}</li>`; });
-                document.getElementById('tab-objectives').innerHTML = objHtml + '</ul>';
-
-                let expHtml = '';
-                if(jsonData.explanation) {
-                    jsonData.explanation.forEach(section => {
-                        expHtml += `<div style="background:var(--card); padding:20px; border-radius:15px; margin-bottom:15px; border-right: 4px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.03);"><h3 style="color:var(--primary); margin-bottom:10px; font-size:1.1rem;">${section.subtitle}</h3><p style="line-height:1.7; font-size:1rem; color:var(--text);">${section.content}</p></div>`;
-                    });
-                }
-                document.getElementById('tab-explanation').innerHTML = expHtml;
-
-                document.getElementById('tab-examples').innerHTML = `
-                    <div style="background:rgba(33, 150, 243, 0.1); padding:20px; border-radius:15px; margin-bottom:15px; border:1px solid rgba(33, 150, 243, 0.3);">
-                        <h3 style="color:#1976D2; margin-bottom:10px; display:flex; align-items:center; gap:5px;"><span class="material-icons">lightbulb</span> مثال من الحياة</h3>
-                        <p style="line-height:1.7; font-size:1rem; color:var(--text);">${jsonData.realLifeExample || 'لا يوجد مثال متاح حالياً.'}</p>
-                    </div>
-                    <div style="background:#2d2d2d; color:#e0e0e0; padding:20px; border-radius:15px; direction:ltr; text-align:left; overflow-x:auto;">
-                        <h3 style="color:#FFC800; margin-bottom:10px; text-align:right; display:flex; align-items:center; justify-content:flex-end; gap:5px;"><span class="material-icons">code</span> تطبيق عملي</h3>
-                        <pre style="white-space: pre-wrap; font-family: monospace; font-size:0.95rem; line-height: 1.5;">${jsonData.practicalExample || 'لا يوجد تطبيق عملي متاح حالياً.'}</pre>
-                    </div>
-                `;
-
-                let sumHtml = '<h3 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;">أهم النقاط للمراجعة السريعة:</h3><ul style="line-height:1.8; font-weight:bold; font-size:1rem; padding-inline-start: 20px;">';
-                if(jsonData.summary) jsonData.summary.forEach(point => { sumHtml += `<li style="margin-bottom: 8px;">${point}</li>`; });
-                document.getElementById('tab-summary').innerHTML = sumHtml + '</ul>';
-
-                switchInteractiveTab('objectives');
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-
-                openModalWithHistory('interactiveLectureModal');
-            } catch(e) {
-                alert('عذراً، المحتوى التفاعلي لهذه المحاضرة غير متوفر أو غير صالح.');
+        function openInteractiveLectureByIndex(cacheIndex) {
+            let data = window.lecturesDataCache[cacheIndex];
+            if (!data) return;
+            if (typeof data === 'string') {
+                try { data = JSON.parse(data); } catch(e) {}
             }
+            renderInteractiveLectureUI(data);
+        }
+
+        function renderInteractiveLectureUI(jsonData) {
+            window.currentInteractiveData = jsonData;
+            document.getElementById('interactiveTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
+            
+            let objHtml = '<h3 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;">بحلول نهاية المحاضرة ستكون قادراً على:</h3><ul style="line-height:1.8; font-size:1rem; padding-inline-start: 20px;">';
+            if(jsonData.objectives) jsonData.objectives.forEach(obj => { objHtml += `<li style="margin-bottom: 8px;">${obj}</li>`; });
+            document.getElementById('tab-objectives').innerHTML = objHtml + '</ul>';
+
+            let expHtml = '';
+            if(jsonData.explanation) {
+                jsonData.explanation.forEach(section => {
+                    expHtml += `<div style="background:var(--card); padding:20px; border-radius:15px; margin-bottom:15px; border-right: 4px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.03);"><h3 style="color:var(--primary); margin-bottom:10px; font-size:1.1rem;">${section.subtitle}</h3><p style="line-height:1.7; font-size:1rem; color:var(--text);">${section.content}</p></div>`;
+                });
+            }
+            document.getElementById('tab-explanation').innerHTML = expHtml;
+
+            document.getElementById('tab-examples').innerHTML = `
+                <div style="background:rgba(33, 150, 243, 0.1); padding:20px; border-radius:15px; margin-bottom:15px; border:1px solid rgba(33, 150, 243, 0.3);">
+                    <h3 style="color:#1976D2; margin-bottom:10px; display:flex; align-items:center; gap:5px;"><span class="material-icons">lightbulb</span> مثال من الحياة</h3>
+                    <p style="line-height:1.7; font-size:1rem; color:var(--text);">${jsonData.realLifeExample || 'لا يوجد مثال متاح حالياً.'}</p>
+                </div>
+                <div style="background:#2d2d2d; color:#e0e0e0; padding:20px; border-radius:15px; direction:ltr; text-align:left; overflow-x:auto;">
+                    <h3 style="color:#FFC800; margin-bottom:10px; text-align:right; display:flex; align-items:center; justify-content:flex-end; gap:5px;"><span class="material-icons">code</span> تطبيق عملي</h3>
+                    <pre style="white-space: pre-wrap; font-family: monospace; font-size:0.95rem; line-height: 1.5;">${jsonData.practicalExample || 'لا يوجد تطبيق عملي متاح حالياً.'}</pre>
+                </div>
+            `;
+
+            let sumHtml = '<h3 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;">أهم النقاط للمراجعة السريعة:</h3><ul style="line-height:1.8; font-weight:bold; font-size:1rem; padding-inline-start: 20px;">';
+            if(jsonData.summary) jsonData.summary.forEach(point => { sumHtml += `<li style="margin-bottom: 8px;">${point}</li>`; });
+            document.getElementById('tab-summary').innerHTML = sumHtml + '</ul>';
+
+            switchInteractiveTab('objectives');
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+
+            openModalWithHistory('interactiveLectureModal');
         }
 
         function loadLectures() {
@@ -727,14 +732,17 @@
         function renderLectures(data) {
             const list = document.getElementById('summaryList');
             list.innerHTML = ''; 
+            window.lecturesDataCache = {}; 
+
             if (data.success && data.lectures && data.lectures.length > 0) { 
                 data.lectures.forEach((lec, index) => { 
                     const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; 
                     const lectureNumber = index + 1; 
-                    const aiDataEncoded = lec.aiContent ? encodeURIComponent(typeof lec.aiContent === 'string' ? lec.aiContent : JSON.stringify(lec.aiContent)) : '';
+                    
+                    window.lecturesDataCache[index] = lec.aiContent || null;
 
                     list.innerHTML += `
-                    <div class="lecture-item" onclick="showDynamicLecture('${lec.name}', '${lec.file}', ${lectureNumber}, '${aiDataEncoded}')">
+                    <div class="lecture-item" onclick="showDynamicLecture('${lec.name.replace(/'/g, "\\'")}', '${lec.file || ''}', ${lectureNumber}, ${index})">
                         <span>${lec.name}</span>
                         <span class="material-icons" style="color:var(--grey)">${arr}</span>
                     </div>`; 
@@ -745,7 +753,7 @@
             applyLanguage();
         }
 
-        function showDynamicLecture(lectureName, fileName, num, aiDataEncoded = '') {
+        function showDynamicLecture(lectureName, fileName, num, cacheIndex) {
             const quizKey = `completed_quiz_${courseId}_${num}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
@@ -759,10 +767,12 @@
             
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
+            const rawAiData = window.lecturesDataCache[cacheIndex];
             let aiButtonHtml = '';
-            if (aiDataEncoded && aiDataEncoded !== '' && aiDataEncoded !== 'undefined') {
+            
+            if (rawAiData) {
                 aiButtonHtml = `
-                <button onclick="openInteractiveLecture('${aiDataEncoded}')" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);">
+                <button onclick="openInteractiveLectureByIndex(${cacheIndex})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);">
                     <span class="material-icons" style="margin-inline-end:10px;">auto_awesome</span> 
                     <span data-ar="المحاضرة التفاعلية ⚡" data-en="Interactive Lecture ⚡">المحاضرة التفاعلية ⚡</span>
                 </button>`;
@@ -786,7 +796,7 @@
                 ${aiButtonHtml}
                 ${pdfButtonHtml}
 
-                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}', '${aiDataEncoded}')">
+                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}', ${cacheIndex})">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
                 </button>
                 
@@ -958,7 +968,7 @@
 
         let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; let userAnswers = []; let quizTimerInterval; let remainingQuizTime = 0;
         
-        function openQuiz(lectureNum, aiDataEncoded = '') { 
+        function openQuiz(lectureNum, cacheIndex) { 
             currentLectureNum = lectureNum.toString(); 
             const courseName = currentLang === 'en' ? course.titleEn : course.titleAr; let dynamicTitle = '';
             if (currentLectureNum === 'midterm') { dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`; } 
@@ -966,11 +976,14 @@
             else { dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`; }
             document.getElementById('quizModalTitle').innerText = dynamicTitle;
 
-            // إذا توفر كويز تفاعلي داخل الـ JSON يتم استخدامه مباشرة
-            if (aiDataEncoded && aiDataEncoded !== '' && aiDataEncoded !== 'undefined') {
+            // إذا توفر كويز تفاعلي داخل الـ JSON المخزن في الذاكرة يتم استخدامه مباشرة
+            if (cacheIndex !== undefined && window.lecturesDataCache && window.lecturesDataCache[cacheIndex]) {
                 try {
-                    const parsedJson = JSON.parse(decodeURIComponent(aiDataEncoded));
-                    if (parsedJson.quiz && parsedJson.quiz.length > 0) {
+                    let parsedJson = window.lecturesDataCache[cacheIndex];
+                    if (typeof parsedJson === 'string') {
+                        parsedJson = JSON.parse(parsedJson);
+                    }
+                    if (parsedJson && parsedJson.quiz && parsedJson.quiz.length > 0) {
                         openModalWithHistory('quizModal');
                         applyLanguage();
                         renderQuizData({ questions: parsedJson.quiz });
