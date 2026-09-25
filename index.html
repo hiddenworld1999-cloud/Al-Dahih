@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-        <script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <script>
         // 1. إخفاء الصفحة فوراً لمنع أي وميض نهائياً
         document.documentElement.style.visibility = 'hidden';
 
@@ -30,7 +34,17 @@
                 document.documentElement.style.visibility = 'visible';
             }
         }
+
+        // حماية المحتوى من النسخ
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { 
+                alert('عذراً، هذا المحتوى محمي.'); 
+                e.preventDefault(); 
+            }
+        });
     </script>
+
 
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
