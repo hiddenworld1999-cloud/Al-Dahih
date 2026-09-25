@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-       <script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <script>
         // 1. إخفاء الصفحة فوراً لمنع أي وميض
         document.documentElement.style.visibility = 'hidden';
 
@@ -31,30 +35,13 @@
             }
         }
 
+        // حماية المحتوى من النسخ
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { alert('عذراً، هذا المحتوى محمي.'); e.preventDefault(); }
-        });
-    </script>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-    <script>
-        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') window.location.href = 'login.html';
-        
-        // حماية التوجيه: عشان لو طالب في تالتة حاول يفتح صفحة رابعة
-        const targetPage = localStorage.getItem('daheeh_target_page');
-        if(targetPage && !window.location.href.includes(targetPage)) {
-            window.location.href = targetPage;
-        }
-
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { alert('عذراً، هذا المحتوى محمي.'); e.preventDefault(); }
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { 
+                alert('عذراً، هذا المحتوى محمي.'); 
+                e.preventDefault(); 
+            }
         });
     </script>
     <meta charset="UTF-8">
