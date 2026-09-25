@@ -1,57 +1,37 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <script>
-        // إخفاء الصفحة فوراً لمنع وميض شاشة تالتة
+        <script>
+        // 1. إخفاء الصفحة فوراً لمنع أي وميض نهائياً
         document.documentElement.style.visibility = 'hidden';
 
-        // فحص فوري وسريع لتسجيل الدخول قبل تحميل أي عنصر
-        const isLoggedIn = localStorage.getItem('isLoggedInDaheeh') === 'true';
-        const targetPage = localStorage.getItem('daheeh_target_page');
-
-        if (!isLoggedIn) {
-            // لو مش مسجل دخول، حوله للوجين في جزء من الثانية
-            window.location.replace("login.html");
-        } else if (targetPage && targetPage.includes('index4.html')) {
-            // لو طالب في سنة رابعة ومسجل، حوله فوراً لصفحة رابعة
-            window.location.replace("index4.html");
-        } else {
-            // طالب تالتة ومسجل دخول، أظهر الصفحة فوراً
-            document.documentElement.style.visibility = 'visible';
-        }
-    </script>
-
-<script>
-    // --- حارس الصفحة الرئيسية الخفي (الذكي) ---
-    (function() {
+        // 2. فحص حارس التطبيق أولاً
         var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
         var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
         var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
 
-        // لو اللي فاتح ده مش التطبيق ولا الآيفون من الشاشة الرئيسية ولا برنامج الكمبيوتر
         if (!isAndroidApp && !isIOSStandalone && !isElectronApp) {
-            
-            // لو هو فاتح من آيفون أو آيباد (سفاري العادي)
             if (/iPhone|iPad|iPod|Mac/.test(navigator.userAgent)) {
-                // نوديه لشاشة الحماية الزرقا عشان يعرف إزاي يضيفه للشاشة الرئيسية
                 window.location.replace("login.html");
             } else {
-                // لو كمبيوتر أو متصفح عادي، نوديه صفحة التحميل يحمل البرنامج
                 window.location.replace("download.html");
             }
+        } else {
+            // 3. فحص تسجيل الدخول وتوجيه الدفعة
+            const isLoggedIn = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            const targetPage = localStorage.getItem('daheeh_target_page');
+
+            if (!isLoggedIn) {
+                window.location.replace("login.html");
+            } else if (targetPage && targetPage.includes('index4.html')) {
+                window.location.replace("index4.html");
+            } else {
+                // مصرح له ومسجل في تالتة -> إظهار الصفحة فوراً
+                document.documentElement.style.visibility = 'visible';
+            }
         }
-    })();
-</script>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-    <script>
-        if (localStorage.getItem('isLoggedInDaheeh') !== 'true') window.location.href = 'login.html';
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { alert('عذراً، هذا المحتوى محمي.'); e.preventDefault(); }
-        });
     </script>
+
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تطبيق الدحيح - الرئيسية</title>
