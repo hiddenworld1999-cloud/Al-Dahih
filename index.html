@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script>
+        // إخفاء الصفحة فوراً لمنع وميض شاشة تالتة
+        document.documentElement.style.visibility = 'hidden';
+
+        // فحص فوري وسريع لتسجيل الدخول قبل تحميل أي عنصر
+        const isLoggedIn = localStorage.getItem('isLoggedInDaheeh') === 'true';
+        const targetPage = localStorage.getItem('daheeh_target_page');
+
+        if (!isLoggedIn) {
+            // لو مش مسجل دخول، حوله للوجين في جزء من الثانية
+            window.location.replace("login.html");
+        } else if (targetPage && targetPage.includes('index4.html')) {
+            // لو طالب في سنة رابعة ومسجل، حوله فوراً لصفحة رابعة
+            window.location.replace("index4.html");
+        } else {
+            // طالب تالتة ومسجل دخول، أظهر الصفحة فوراً
+            document.documentElement.style.visibility = 'visible';
+        }
+    </script>
+
 <script>
     // --- حارس الصفحة الرئيسية الخفي (الذكي) ---
     (function() {
