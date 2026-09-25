@@ -371,6 +371,7 @@
 
     <script>
         window.currentOpenedPdf = "";
+        window.currentInteractiveData = null;
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
             document.body.classList.add('vip-gold-mode');
@@ -460,7 +461,7 @@
             let diffX = touchStartX - touchEndX; let diffY = Math.abs(touchStartY - touchEndY); 
             if (touchStartX > window.innerWidth - 80 && diffX > 60 && diffY < 50) {
                 const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable')).some(el => el.style.display === 'flex' || el.style.display === 'block');
-                if (isAnyModalOpen) { history.back(); } else { window.location.href = 'index4.html'; } // تعديل للرجوع لـ index4
+                if (isAnyModalOpen) { history.back(); } else { window.location.href = 'index4.html'; }
             }
         }, {passive: true});
 
@@ -499,8 +500,8 @@
             if (e.touches.length < 2) { initialPinchDistance = null; pdfWrapper.style.transition = 'width 0.2s ease-out'; } 
         });
 
-        // === السيرفر بتاع رابعة الجديد ===
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzpfEw45PROo2CAkCz5Gr2UOQJuJDUZMB6R7U9dI7YI6D8fvrRlwVI4f67HJWidtc0I/exec";
+        // === السيرفر بتاع رابعة الجديد الشغال ===
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
         // === مواد سنة رابعة (بـ IDs جديدة تبدأ من 400) ===
@@ -532,6 +533,39 @@
             updateXPDisplay(); 
         }
         
+        function syncXPToCloud() {
+            const currentXP = localStorage.getItem('daheehXP_Y4') || 0;
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            const sName = localStorage.getItem('studentName') || ''; 
+            const completedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || ''; 
+            if(!sCode) return;
+            const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}&completed=${completedQuizzes}`;
+            fetch(requestUrl).then(res => res.json()).catch(err => console.log('Error Syncing'));
+        }
+
+        function fetchXPFromSheet() {
+            const sCode = localStorage.getItem('studentCode');
+            if(!sCode) return;
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.success && data.leaderboard) {
+                    const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
+                    if(myRecord && myRecord.xp !== undefined) {
+                        localStorage.setItem('daheehXP_Y4', myRecord.xp);
+                        updateXPDisplay();
+                        if (myRecord.completed) {
+                            localStorage.setItem('daheehAllCompleted_Y4', myRecord.completed);
+                            let quizzesArr = myRecord.completed.split(',');
+                            quizzesArr.forEach(q => {
+                                if(q.trim() !== '') localStorage.setItem(q, 'true'); 
+                            });
+                        }
+                    }
+                }
+            }).catch(err => console.log('Syncing...'));
+        }
+
         function updateXPDisplay() { 
             let xp = parseInt(localStorage.getItem('daheehXP_Y4')) || 0; 
             let level = getLevelName(xp); 
@@ -616,13 +650,16 @@
         function switchInteractiveTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
             document.getElementById('tab-' + tabId).classList.add('active');
         }
 
         function openInteractiveLecture(encodedJson) {
             try {
                 const jsonData = JSON.parse(decodeURIComponent(encodedJson));
+                window.currentInteractiveData = jsonData;
                 document.getElementById('interactiveTitle').innerText = jsonData.title || 'المحاضرة التفاعلية';
                 
                 let objHtml = '<h3 style="color:var(--primary); margin-bottom:15px; font-size:1.1rem;">بحلول نهاية المحاضرة ستكون قادراً على:</h3><ul style="line-height:1.8; font-size:1rem; padding-inline-start: 20px;">';
@@ -652,9 +689,7 @@
                 if(jsonData.summary) jsonData.summary.forEach(point => { sumHtml += `<li style="margin-bottom: 8px;">${point}</li>`; });
                 document.getElementById('tab-summary').innerHTML = sumHtml + '</ul>';
 
-                // إظهار التبويب الأول افتراضياً
                 switchInteractiveTab('objectives');
-                // تظبيط الزرار الأول كأنه متداس عليه برمجياً
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
 
                 openModalWithHistory('interactiveLectureModal');
@@ -696,8 +731,6 @@
                 data.lectures.forEach((lec, index) => { 
                     const arr = currentLang === 'en' ? 'chevron_right' : 'chevron_left'; 
                     const lectureNumber = index + 1; 
-                    
-                    // تحويل بيانات الذكاء الاصطناعي لتشفير آمن لكي يمرر عبر الدالة دون كسر الـ HTML
                     const aiDataEncoded = lec.aiContent ? encodeURIComponent(typeof lec.aiContent === 'string' ? lec.aiContent : JSON.stringify(lec.aiContent)) : '';
 
                     list.innerHTML += `
@@ -727,7 +760,6 @@
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
             let aiButtonHtml = '';
-            // لو Backend بعت AI JSON Content بنعرض زرار المحاضرة التفاعلية
             if (aiDataEncoded && aiDataEncoded !== '' && aiDataEncoded !== 'undefined') {
                 aiButtonHtml = `
                 <button onclick="openInteractiveLecture('${aiDataEncoded}')" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);">
@@ -754,7 +786,7 @@
                 ${aiButtonHtml}
                 ${pdfButtonHtml}
 
-                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}')">
+                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}', '${aiDataEncoded}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
                 </button>
                 
@@ -926,13 +958,26 @@
 
         let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; let userAnswers = []; let quizTimerInterval; let remainingQuizTime = 0;
         
-        function openQuiz(lectureNum) { 
+        function openQuiz(lectureNum, aiDataEncoded = '') { 
             currentLectureNum = lectureNum.toString(); 
             const courseName = currentLang === 'en' ? course.titleEn : course.titleAr; let dynamicTitle = '';
             if (currentLectureNum === 'midterm') { dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`; } 
             else if (currentLectureNum === 'final') { dynamicTitle = currentLang === 'en' ? `Final Exam - ${courseName}` : `امتحان الفاينل لمادة ${courseName}`; } 
             else { dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`; }
             document.getElementById('quizModalTitle').innerText = dynamicTitle;
+
+            // إذا توفر كويز تفاعلي داخل الـ JSON يتم استخدامه مباشرة
+            if (aiDataEncoded && aiDataEncoded !== '' && aiDataEncoded !== 'undefined') {
+                try {
+                    const parsedJson = JSON.parse(decodeURIComponent(aiDataEncoded));
+                    if (parsedJson.quiz && parsedJson.quiz.length > 0) {
+                        openModalWithHistory('quizModal');
+                        applyLanguage();
+                        renderQuizData({ questions: parsedJson.quiz });
+                        return;
+                    }
+                } catch(e) {}
+            }
 
             const body = document.getElementById('quizBody');
             body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
@@ -991,7 +1036,7 @@
                 <div id="quizTimerDisplay" style="font-size:1.5rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div></div>`;
             
             activeQuizQuestions.forEach((q, qIndex) => {
-                let optsHtml = ''; const qText = currentLang === 'en' ? q.qEn : q.qAr; const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+                let optsHtml = ''; const qText = currentLang === 'en' ? (q.qEn || q.qAr) : q.qAr; const opts = currentLang === 'en' ? (q.optsEn || q.optsAr) : q.optsAr;
                 opts.forEach((opt, optIndex) => { 
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     let isSelected = userAnswers[qIndex] === optIndex; let optStyle = isSelected ? 'border-color: var(--accent); background: rgba(255, 200, 0, 0.1);' : ''; let iconDisplay = isSelected ? 'block' : 'none';
@@ -1055,7 +1100,7 @@
             
             activeQuizQuestions.forEach((q, qIndex) => {
                 const isCorrect = userAnswers[qIndex] === q.ans; if (isCorrect) score++;
-                let optsHtml = ''; const qText = currentLang === 'en' ? q.qEn : q.qAr; const opts = currentLang === 'en' ? q.optsEn : q.optsAr;
+                let optsHtml = ''; const qText = currentLang === 'en' ? (q.qEn || q.qAr) : q.qAr; const opts = currentLang === 'en' ? (q.optsEn || q.optsAr) : q.optsAr;
                 
                 opts.forEach((opt, optIndex) => {
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
