@@ -12,7 +12,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="الدحيح">
 <link rel="apple-touch-icon" href="logo.png">
-
 <link rel="icon" type="image/png" href="logo.png">
 
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -41,7 +40,6 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* قفلنا السكرول نهائياً عشان الشاشات متدخلش في بعض */
         body { 
             font-family: 'IBM Plex Sans Arabic', sans-serif; 
             background-color: var(--bg-light); 
@@ -51,15 +49,12 @@
             position: relative;
         }
 
-        /* ======================================= */
-        /* تصميم شاشة الحماية الزرقاء (الافتراضية) */
-        /* ======================================= */
         #protection-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #0A2647; 
             color: white; 
-            display: flex; /* ظاهرة من البداية */
+            display: flex; 
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
@@ -72,11 +67,8 @@
         .prot-box p { line-height: 1.8; color: #cbd5e1; font-size: 1.1rem;}
         .btn-fake { display: inline-block; background: white; color: black; padding: 8px 15px; border-radius: 8px; font-weight: bold; margin-top: 10px;}
 
-        /* ======================================= */
-        /* تصميم شاشة التطبيق الأصلية (مخفية مؤقتاً)*/
-        /* ======================================= */
         #main-app {
-            display: none; /* مخفية لحد ما نتأكد إنه فاتح من التطبيق */
+            display: none; 
             width: 100%;
             height: 100%;
             justify-content: center;
@@ -250,29 +242,27 @@
         (function() {
             var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
             var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-            
             var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
 
             if (isAndroidApp || isIOSStandalone || isElectronApp) {
-                // لو فاتح من التطبيق أو الآيفون أو برنامج اللاب توب: نحذف شاشة الحماية ونظهر التطبيق
                 const protScreen = document.getElementById('protection-screen');
                 if(protScreen) protScreen.remove();
-                
                 document.getElementById('main-app').style.display = 'flex';
             } else {
-                // لو فاتح من متصفح عادي: نحذف التطبيق نفسه من الكود عشان محدش يلعب فيه
                 const appScreen = document.getElementById('main-app');
                 if(appScreen) appScreen.remove();
             }
         })();
 
-        // توجيه تلقائي
+        // التوجيه التلقائي مع حفظ مسار الدفعة (تالتة ولا رابعة)
         if (localStorage.getItem('isLoggedInDaheeh') === 'true') {
-            window.location.href = 'index.html';
+            const targetPage = localStorage.getItem('daheeh_target_page') || 'index.html';
+            window.location.href = targetPage;
         }
 
-        // ⚠️ مهم: حط لينك السكريبت بتاعك هنا
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec";
+        // ⚠️ مهم جداً: حط لينكات السيرفرات بتاعتك هنا (Apps Script)
+        const SCRIPT_URL_YEAR_3 = "https://script.google.com/macros/s/AKfycbyukxDNMlKnRTCs42wNMmYyaYVZWJHXyxF4Qg_vRa2bWY7N1BNuS69BJxRmGoDOOyJKnw/exec"; // لينك سنة تالتة القديم
+        const SCRIPT_URL_YEAR_4 = "https://script.google.com/macros/s/AKfycbzpfEw45PROo2CAkCz5Gr2UOQJuJDUZMB6R7U9dI7YI6D8fvrRlwVI4f67HJWidtc0I/exec"; // ⚠️ ضيف لينك سيرفر رابعة هنا
 
         function validateLogin() {
             const codeInput = document.getElementById('accessCode');
@@ -295,46 +285,71 @@
             btnText.innerText = 'جاري التحقق...';
             btnSpinner.style.display = 'inline-block';
 
-            fetch(`${SCRIPT_URL}?action=login&code=${userCode}`)
+            // 1. هنسأل سيرفر سنة رابعة الأول
+            fetch(`${SCRIPT_URL_YEAR_4}?action=login&code=${userCode}`)
                 .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const studentName = data.name.split(' ')[0];
-                        
-                        btnSpinner.style.display = 'none';
-                        btnText.innerText = 'تم الدخول بنجاح ✓';
-                        btn.style.background = 'var(--success-color)';
-                        
-                        successText.innerText = `أهلاً بك يا ${studentName}!`;
-                        successBox.style.display = 'flex';
-                        
-                        localStorage.setItem('isLoggedInDaheeh', 'true');
-                        localStorage.setItem('studentName', data.name);
-                        localStorage.setItem('studentCode', userCode);
-
-                        setTimeout(() => {
-                            window.location.href = 'index.html'; 
-                        }, 1500);
-
+                .then(data4 => {
+                    if (data4.success) {
+                        // الكود صحيح وموجود في رابعة -> نوجهه لملفات رابعة
+                        loginSuccess(data4.name, userCode, 'index4.html');
                     } else {
-                        btn.disabled = false;
-                        btnSpinner.style.display = 'none';
-                        btnText.innerText = 'تأكيد الدخول';
-                        
-                        errorBox.style.display = 'flex';
-                        
-                        codeInput.classList.add('shake-animation');
-                        codeInput.value = '';
-                        codeInput.focus();
+                        // 2. الكود مش في رابعة، هنسأل سيرفر سنة تالتة
+                        return fetch(`${SCRIPT_URL_YEAR_3}?action=login&code=${userCode}`)
+                            .then(res => res.json())
+                            .then(data3 => {
+                                if (data3.success) {
+                                    // الكود صحيح وموجود في تالتة -> نوجهه لملفات تالتة
+                                    loginSuccess(data3.name, userCode, 'index.html');
+                                } else {
+                                    // الكود مش موجود في أي دفعة
+                                    loginFailed('الكود المدخل غير صحيح.');
+                                }
+                            });
                     }
                 })
                 .catch(error => {
-                    btn.disabled = false;
-                    btnSpinner.style.display = 'none';
-                    btnText.innerText = 'تأكيد الدخول';
-                    document.getElementById('errorText').innerText = 'حدث خطأ! تأكد من اتصالك بالإنترنت.';
-                    errorBox.style.display = 'flex';
+                    loginFailed('حدث خطأ! تأكد من اتصالك بالإنترنت.');
                 });
+        }
+
+        function loginSuccess(fullName, code, targetPage) {
+            const studentName = fullName.split(' ')[0];
+            const btn = document.getElementById('submitBtn');
+            const successBox = document.getElementById('successBox');
+            const successText = document.getElementById('successText');
+            
+            document.getElementById('btnSpinner').style.display = 'none';
+            document.getElementById('btnText').innerText = 'تم الدخول بنجاح ✓';
+            btn.style.background = 'var(--success-color)';
+            
+            successText.innerText = `أهلاً بك يا ${studentName}!`;
+            successBox.style.display = 'flex';
+            
+            localStorage.setItem('isLoggedInDaheeh', 'true');
+            localStorage.setItem('studentName', fullName);
+            localStorage.setItem('studentCode', code);
+            localStorage.setItem('daheeh_target_page', targetPage); // ده اللي بيحدد هو في سنة كام
+
+            setTimeout(() => {
+                window.location.href = targetPage; 
+            }, 1500);
+        }
+
+        function loginFailed(msg) {
+            const btn = document.getElementById('submitBtn');
+            const codeInput = document.getElementById('accessCode');
+            const errorBox = document.getElementById('errorBox');
+            
+            btn.disabled = false;
+            document.getElementById('btnSpinner').style.display = 'none';
+            document.getElementById('btnText').innerText = 'تأكيد الدخول';
+            
+            document.getElementById('errorText').innerText = msg;
+            errorBox.style.display = 'flex';
+            
+            codeInput.classList.add('shake-animation');
+            codeInput.value = '';
+            codeInput.focus();
         }
     </script>
 </body>
