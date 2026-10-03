@@ -378,14 +378,16 @@
         <div class="modal-body" id="summaryList"></div>
     </div>
 
-    <!-- نافذة المحتوى العادية -->
+    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe -->
     <div id="contentModal" class="modal modal-trackable">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:bold;" id="contentTitle">المحتوى</span>
             <span style="width: 28px;"></span>
         </div>
-        <div class="modal-body"><div class="content-view" id="contentBody"></div></div>
+        <div class="modal-body" id="contentModalBody" style="padding: 10px;">
+            <div class="content-view" id="contentBody"></div>
+        </div>
     </div>
 
     <!-- نافذة المحاضرة التفاعلية الحديثة (AI) -->
@@ -754,18 +756,15 @@
 
         // === تبويبات المحاضرة التفاعلية الحديثة والمنسقة ===
         function switchInteractiveTab(tabId, el) {
-            // إخفاء كل التبويبات
             document.querySelectorAll('#interactiveLectureModal .tab-content').forEach(content => {
                 content.classList.remove('active');
                 content.style.display = 'none';
             });
 
-            // إزالة الكلاس النشط من جميع الأزرار
             document.querySelectorAll('#interactiveNav .tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
 
-            // تفعيل الزر المناسب
             if(el) { 
                 el.classList.add('active'); 
             } else {
@@ -773,7 +772,6 @@
                 if(targetBtn) targetBtn.classList.add('active');
             }
 
-            // إظهار المحتوى المختار
             const targetContent = document.getElementById('tab-' + tabId);
             if(targetContent) {
                 targetContent.classList.add('active');
@@ -861,6 +859,17 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
+        // دالة مخصصة لفتح ملفات الـ HTML داخل iframe
+        function openHtmlLectureInsideApp(htmlUrl, title) {
+            document.getElementById('contentTitle').innerText = title || 'المحاضرة';
+            document.getElementById('contentBody').innerHTML = `
+                <div style="width:100%; height:calc(100vh - 120px); border-radius:16px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.05); background:#ffffff;">
+                    <iframe src="${htmlUrl}" style="width:100%; height:100%; border:none; border-radius:16px;"></iframe>
+                </div>
+            `;
+            openModalWithHistory('contentModal');
+        }
+
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
             list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
@@ -931,21 +940,44 @@
             const rawAiData = window.lecturesDataCache[cacheIndex];
             let aiButtonHtml = '';
             
+            // التحقق مما إذا كان المحتوى ملف HTML أو نص JSON
             if (rawAiData) {
-                aiButtonHtml = `
-                <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #144272 100%); color:white; border:none; padding:18px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(10, 38, 71, 0.25);">
-                    <span class="material-icons" style="margin-inline-end:10px; color:var(--accent);">auto_awesome</span> 
-                    <span data-ar="فتح المحاضرة التفاعلية الفاخرة ⚡" data-en="Open Premium Interactive Lecture ⚡">فتح المحاضرة التفاعلية الفاخرة ⚡</span>
-                </button>`;
+                const trimmedData = typeof rawAiData === 'string' ? rawAiData.trim() : '';
+                if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
+                    // رابط لملف HTML
+                    aiButtonHtml = `
+                    <button onclick="openHtmlLectureInsideApp('${trimmedData}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #144272 100%); color:white; border:none; padding:18px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(10, 38, 71, 0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px; color:var(--accent);">auto_awesome</span> 
+                        <span data-ar="فتح المحاضرة التفاعلية (HTML) ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
+                    </button>`;
+                } else {
+                    // كود JSON تفاعلي
+                    aiButtonHtml = `
+                    <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #144272 100%); color:white; border:none; padding:18px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(10, 38, 71, 0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px; color:var(--accent);">auto_awesome</span> 
+                        <span data-ar="فتح المحاضرة التفاعلية الفاخرة ⚡" data-en="Open Premium Interactive Lecture ⚡">فتح المحاضرة التفاعلية الفاخرة ⚡</span>
+                    </button>`;
+                }
             }
 
-            let pdfButtonHtml = '';
+            let fileButtonHtml = '';
             if (fileName && fileName.trim() !== '' && fileName !== 'undefined') {
-                pdfButtonHtml = `
-                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:16px; font-size:1.05rem; width:100%; margin-bottom: 15px;">
-                    <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
-                    <span data-ar="اقرأ المحاضرة (PDF)" data-en="Read Lecture (PDF)">اقرأ المحاضرة (PDF)</span>
-                </button>`;
+                const lowerFileName = fileName.toLowerCase().trim();
+                if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
+                    // إذا كان مسار الملف في الشيت بصيغة HTML يتم تشغيله كـ iframe
+                    fileButtonHtml = `
+                    <button onclick="openHtmlLectureInsideApp('${fileName}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:16px; font-size:1.05rem; width:100%; margin-bottom: 15px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">web</span> 
+                        <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
+                    </button>`;
+                } else {
+                    // ملف PDF عادي
+                    fileButtonHtml = `
+                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:16px; font-size:1.05rem; width:100%; margin-bottom: 15px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
+                        <span data-ar="اقرأ المحاضرة (PDF)" data-en="Read Lecture (PDF)">اقرأ المحاضرة (PDF)</span>
+                    </button>`;
+                }
             }
 
             let htmlContent = `
@@ -957,7 +989,7 @@
                 <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر مسار المذاكرة الذي تفضله:" data-en="Choose your study path:">اختر مسار المذاكرة الذي تفضله:</p>
                 
                 ${aiButtonHtml}
-                ${pdfButtonHtml}
+                ${fileButtonHtml}
 
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}', ${cacheIndex})">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
@@ -1132,7 +1164,6 @@
         let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; let userAnswers = []; let quizTimerInterval; let remainingQuizTime = 0;
         
         function openQuiz(lectureNum, cacheIndex) { 
-            // قفل نافذة المحاضرة التفاعلية فوراً لظهور الكويز مباشرة بدون تداخل
             const interModal = document.getElementById('interactiveLectureModal');
             if (interModal) interModal.style.display = 'none';
 
@@ -1143,7 +1174,6 @@
             else { dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`; }
             document.getElementById('quizModalTitle').innerText = dynamicTitle;
 
-            // استخدام الكويز التفاعلي من الذاكرة مباشرة
             if (cacheIndex !== undefined && window.lecturesDataCache && window.lecturesDataCache[cacheIndex]) {
                 try {
                     let parsedJson = window.lecturesDataCache[cacheIndex];
