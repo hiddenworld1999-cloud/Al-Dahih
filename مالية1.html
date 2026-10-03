@@ -12,30 +12,44 @@
     margin: 8mm;
   }
 
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     font-family: 'Cairo', Tahoma, sans-serif;
     background-color: #eef2f5;
     margin: 0;
-    padding: 20px;
+    padding: 10px 0;
     direction: rtl;
     color: #111;
     font-weight: 700;
+    overflow-x: hidden;
   }
 
   .sheet {
     background: #ffffff;
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0 auto 30px auto;
-    padding: 13mm 14mm 16mm 14mm;
+    width: 100%;
+    max-width: 210mm;
+    min-height: auto;
+    margin: 0 auto 20px auto;
+    padding: 16px 14px 45px 14px;
     box-sizing: border-box;
     position: relative;
-    border: 3px dashed #1a5276;
+    border: 2px dashed #1a5276;
     border-radius: 12px;
     box-shadow: 0 5px 18px rgba(0,0,0,0.08);
-    page-break-after: always;
     overflow: hidden;
     font-weight: 700;
+  }
+
+  @media (min-width: 768px) {
+    .sheet {
+      padding: 13mm 14mm 16mm 14mm;
+      min-height: 297mm;
+      margin-bottom: 30px;
+      border-width: 3px;
+    }
   }
 
   .sheet::before {
@@ -44,8 +58,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 380px;
-    height: 380px;
+    width: 280px;
+    height: 280px;
     background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
     background-repeat: no-repeat;
     background-position: center;
@@ -65,34 +79,40 @@
     background: linear-gradient(135deg, #e67e22, #d35400);
     color: white;
     font-weight: 900;
-    font-size: 13px;
-    padding: 4px 16px;
+    font-size: 12px;
+    padding: 4px 12px;
     border-radius: 20px;
+    white-space: nowrap;
   }
 
   .capsule-main {
     background: linear-gradient(180deg, #1b4f72, #154360);
     color: #ffffff;
-    font-size: 16.5px;
+    font-size: 14px;
     font-weight: 900;
     text-align: center;
-    padding: 9px 34px;
+    padding: 8px 18px;
     border-radius: 35px;
-    display: table;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
     margin: 10px auto 14px auto;
     box-shadow: 0 4px 8px rgba(21, 67, 96, 0.35);
     border: 2px solid #2980b9;
+    line-height: 1.5;
   }
 
   .capsule-purple {
     background: linear-gradient(180deg, #8e44ad, #6c3483);
     color: #fff;
-    font-size: 15px;
+    font-size: 13.5px;
     font-weight: 800;
     text-align: center;
-    padding: 7px 26px;
+    padding: 7px 20px;
     border-radius: 30px;
-    display: table;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
     margin: 14px auto 12px auto;
     box-shadow: 0 3px 6px rgba(108, 52, 131, 0.25);
   }
@@ -100,12 +120,14 @@
   .capsule-orange {
     background: linear-gradient(180deg, #d35400, #b94600);
     color: #fff;
-    font-size: 15px;
+    font-size: 13.5px;
     font-weight: 800;
     text-align: center;
-    padding: 7px 26px;
+    padding: 7px 20px;
     border-radius: 30px;
-    display: table;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
     margin: 14px auto 12px auto;
     box-shadow: 0 3px 6px rgba(211, 84, 0, 0.25);
   }
@@ -114,17 +136,18 @@
     background-color: #fdfefe;
     border: 1.5px solid #d5dbdb;
     border-radius: 10px;
-    padding: 11px 16px;
-    font-size: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
     line-height: 1.8;
-    text-align: center;
+    text-align: right;
     font-weight: 800;
     margin-bottom: 12px;
+    word-break: break-word;
   }
 
   .highlight-yellow {
     background-color: #fff176;
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 4px;
     font-weight: 900;
     display: inline-block;
@@ -136,19 +159,28 @@
 
   .term-row {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: 10px;
-    gap: 12px;
+    gap: 6px;
+  }
+
+  @media (min-width: 480px) {
+    .term-row {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
   }
 
   .term-badge-purple {
     background: linear-gradient(135deg, #a569bd, #8e44ad);
     color: white;
     font-weight: 800;
-    font-size: 13px;
-    padding: 6px 16px;
+    font-size: 12.5px;
+    padding: 5px 14px;
     border-radius: 20px;
-    min-width: 140px;
+    min-width: 120px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.12);
     flex-shrink: 0;
@@ -158,10 +190,10 @@
     background: linear-gradient(135deg, #27ae60, #1e8449);
     color: white;
     font-weight: 800;
-    font-size: 13px;
-    padding: 6px 16px;
+    font-size: 12.5px;
+    padding: 5px 14px;
     border-radius: 20px;
-    min-width: 140px;
+    min-width: 120px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.12);
     flex-shrink: 0;
@@ -171,17 +203,17 @@
     background: linear-gradient(135deg, #e67e22, #d35400);
     color: white;
     font-weight: 800;
-    font-size: 13px;
-    padding: 6px 16px;
+    font-size: 12.5px;
+    padding: 5px 14px;
     border-radius: 20px;
-    min-width: 140px;
+    min-width: 120px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.12);
     flex-shrink: 0;
   }
 
   .term-desc {
-    font-size: 13px;
+    font-size: 12.5px;
     line-height: 1.6;
     color: #2c3e50;
     font-weight: 800;
@@ -189,25 +221,30 @@
   }
 
   .cards-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     margin: 12px 0;
   }
 
+  @media (min-width: 600px) {
+    .cards-row {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
   .card-item {
-    flex: 1;
     background: #ffffff;
     border: 1.5px solid #d5dbdb;
     border-top: 4px solid #e74c3c;
     border-radius: 8px;
-    padding: 9px 6px;
+    padding: 8px 6px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
 
   .card-item-title {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 900;
     color: #1a5276;
     margin-bottom: 4px;
@@ -216,15 +253,22 @@
   .card-item-desc {
     font-size: 11px;
     color: #222;
-    line-height: 1.5;
+    line-height: 1.4;
     font-weight: 700;
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12px 0;
   }
 
   table.custom-table {
     width: 100%;
+    min-width: 480px;
     border-collapse: collapse;
-    margin: 12px 0;
-    font-size: 12.5px;
+    font-size: 12px;
     border-radius: 8px;
     overflow: hidden;
   }
@@ -239,9 +283,9 @@
   }
 
   table.custom-table td {
-    padding: 7px 10px;
+    padding: 7px 8px;
     border: 1px solid #d4e6f1;
-    line-height: 1.6;
+    line-height: 1.5;
     font-weight: 800;
   }
 
@@ -256,16 +300,18 @@
   }
 
   .q-header {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 800;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 8px;
     color: #111;
+    line-height: 1.5;
   }
 
   .q-correction {
-    font-size: 12px;
+    font-size: 11.5px;
     color: #1a5276;
     margin-top: 4px;
     background: #f8f9fa;
@@ -284,41 +330,52 @@
   .ans-badge-true {
     background: #27ae60;
     color: white;
-    padding: 2px 10px;
+    padding: 2px 8px;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 900;
     min-width: 45px;
     text-align: center;
+    flex-shrink: 0;
   }
 
   .ans-badge-false {
     background: #c0392b;
     color: white;
-    padding: 2px 10px;
+    padding: 2px 8px;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 900;
     min-width: 45px;
     text-align: center;
+    flex-shrink: 0;
   }
 
   .mcq-block {
     background: #fdfefe;
     border: 1.5px solid #d5dbdb;
-    padding: 10px 14px;
+    padding: 10px 12px;
     border-radius: 8px;
     margin-bottom: 10px;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 800;
   }
 
   .mcq-choices {
     display: flex;
-    gap: 16px;
+    flex-direction: column;
+    gap: 6px;
     margin-top: 6px;
     font-weight: 800;
     color: #111;
+  }
+
+  @media (min-width: 600px) {
+    .mcq-choices {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
   }
 
   .correct-choice {
@@ -328,19 +385,20 @@
     padding: 2px 8px;
     border-radius: 6px;
     font-weight: 900;
+    width: fit-content;
   }
 
   .footer-bar {
     position: absolute;
-    bottom: 5mm;
-    left: 14mm;
-    right: 14mm;
+    bottom: 8px;
+    left: 12px;
+    right: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-top: 1px dashed #bdc3c7;
-    padding-top: 5px;
-    font-size: 11px;
+    padding-top: 4px;
+    font-size: 10.5px;
     color: #555;
     font-weight: 800;
   }
@@ -348,19 +406,19 @@
   .footer-brand {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   .footer-logo {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1.5px solid #2980b9;
     object-fit: cover;
   }
 
   .footer-brand-name {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
     color: #1a5276;
   }
@@ -369,6 +427,7 @@
     flex-grow: 1;
     text-align: center;
     font-weight: 800;
+    font-size: 10px;
   }
 </style>
 </head>
@@ -376,14 +435,14 @@
 
   <!-- ==================== الصفحة الأولى ==================== -->
   <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">⭐ مذكرة المراجعة والتلخيص</div>
-      <div style="font-size:12px; font-weight:800; color:#555;">المستوى الرابع (محاسبة - نظم معلومات)</div>
+      <div style="font-size:11.5px; font-weight:800; color:#555;">المستوى الرابع (محاسبة - نظم معلومات)</div>
     </div>
 
     <div class="capsule-main">مبادئ المالية العامة - المحاضرة الأولى (د. فاطمة إبراهيم)</div>
 
-    <div style="background:#f4f6f7; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; border-right:4px solid #1a5276; font-weight:800;">
+    <div style="background:#f4f6f7; border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:12px; border-right:4px solid #1a5276; font-weight:800; line-height:1.6;">
       <strong>📌 محتوى المقرر:</strong> مفاهيم أساسية للمالية العامة • النفقات العامة • الإيرادات العامة • السياسة المالية • الموازنة العامة.
       <br>
       <strong>🎯 أهداف المقرر:</strong> التعرف على مفهوم المالية العامة والفرق بينها وبين الخاصة • مفهوم النفقات العامة وأنواعها • التفرقة بين إيرادات الدولة • مفهوم الموازنة العامة وطرق إعدادها • السياسة المالية وأهدافها.
@@ -398,33 +457,35 @@
 
     <div class="capsule-purple">ثانياً: مفهوم علم المالية العامة (مقارنة الفكرين)</div>
 
-    <table class="custom-table">
-      <tr>
-        <th style="width:20%;">وجه المقارنة</th>
-        <th style="width:40%;">الفكر التقليدي (المفهوم الضيق)</th>
-        <th style="width:40%;">الفكر المعاصر (المفهوم الحديث)</th>
-      </tr>
-      <tr>
-        <td style="text-align:center;">التعريف</td>
-        <td>دراسة النفقات العامة والإيرادات العامة التي تلزم لتغطية هذه النفقات فقط.</td>
-        <td>القواعد المنظمة للنشاط المالي للهيئات العامة لتحقيق أغراض الدولة الاقتصادية والاجتماعية والسياسية.</td>
-      </tr>
-      <tr>
-        <td style="text-align:center;">توازن الموازنة</td>
-        <td><div class="text-red" style="display:inline;">التقيد بمبدأ التساوي</div> التام بين النفقات والإيرادات وضغط النفقات لأقصى حد.</td>
-        <td><div class="text-blue" style="display:inline;">لا يُشترط التساوي</div>؛ وفي الكساد تفتعل الدولة عجزاً (زيادة النفقات) لتنشيط السوق.</td>
-      </tr>
-      <tr>
-        <td style="text-align:center;">مصادر التمويل</td>
-        <td>رفض اللجوء لمصادر استثنائية كالقروض أو الإصدار النقدي الجديد.</td>
-        <td>تمويل العجز عبر <div class="highlight-yellow">القروض والإصدار النقدي الجديد</div>.</td>
-      </tr>
-      <tr>
-        <td style="text-align:center;">دور الدولة</td>
-        <td>الدولة الحارسة (أمن، قضاء، دفاع) وعدم التدخل في النشاط الاقتصادي.</td>
-        <td>دولة متدخلة تسعى لتنفيذ <div class="text-red" style="display:inline;">السياسة المالية</div> الشاملة.</td>
-      </tr>
-    </table>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <tr>
+          <th style="width:20%;">وجه المقارنة</th>
+          <th style="width:40%;">الفكر التقليدي (المفهوم الضيق)</th>
+          <th style="width:40%;">الفكر المعاصر (المفهوم الحديث)</th>
+        </tr>
+        <tr>
+          <td style="text-align:center;">التعريف</td>
+          <td>دراسة النفقات العامة والإيرادات العامة التي تلزم لتغطية هذه النفقات فقط.</td>
+          <td>القواعد المنظمة للنشاط المالي للهيئات العامة لتحقيق أغراض الدولة الاقتصادية والاجتماعية والسياسية.</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">توازن الموازنة</td>
+          <td><div class="text-red" style="display:inline;">التقيد بمبدأ التساوي</div> التام بين النفقات والإيرادات وضغط النفقات لأقصى حد.</td>
+          <td><div class="text-blue" style="display:inline;">لا يُشترط التساوي</div>؛ وفي الكساد تفتعل الدولة عجزاً (زيادة النفقات) لتنشيط السوق.</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">مصادر التمويل</td>
+          <td>رفض اللجوء لمصادر استثنائية كالقروض أو الإصدار النقدي الجديد.</td>
+          <td>تمويل العجز عبر <div class="highlight-yellow">القروض والإصدار النقدي الجديد</div>.</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">دور الدولة</td>
+          <td>الدولة الحارسة (أمن، قضاء، دفاع) وعدم التدخل في النشاط الاقتصادي.</td>
+          <td>دولة متدخلة تسعى لتنفيذ <div class="text-red" style="display:inline;">السياسة المالية</div> الشاملة.</td>
+        </tr>
+      </table>
+    </div>
 
     <div class="capsule-purple">ثالثاً: أنواع الحاجات (السلع)</div>
 
@@ -447,15 +508,15 @@
         <div class="footer-brand-name">الدحيح</div>
       </div>
       <div class="footer-center-text">مبادئ المالية العامة - الفرقة الرابعة | صفحة 1</div>
-      <div style="width:60px;"></div>
+      <div style="width:20px;"></div>
     </div>
   </div>
 
   <!-- ==================== الصفحة الثانية ==================== -->
   <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">⭐ مذكرة المراجعة والتلخيص</div>
-      <div style="font-size:12px; font-weight:800; color:#555;">المستوى الرابع (محاسبة - نظم معلومات)</div>
+      <div style="font-size:11.5px; font-weight:800; color:#555;">المستوى الرابع (محاسبة - نظم معلومات)</div>
     </div>
 
     <div class="capsule-main">معايير تحديد الحاجة العامة وعناصر المالية</div>
@@ -480,8 +541,8 @@
     </div>
 
     <div style="text-align:center; margin:10px 0;">
-      <div class="highlight-yellow" style="font-size:14px;">عناصر المالية العامة الثلاثة:</div>
-      <div class="text-blue" style="font-weight:900; font-size:14px; margin-right:8px; display:inline;">[ النفقات العامة + الإيرادات العامة + الموازنة العامة ]</div>
+      <div class="highlight-yellow" style="font-size:13px;">عناصر المالية العامة الثلاثة:</div>
+      <div class="text-blue" style="font-weight:900; font-size:13px; margin-top:4px;">[ النفقات العامة + الإيرادات العامة + الموازنة العامة ]</div>
     </div>
 
     <div class="capsule-orange">رابعاً: أهداف المالية العامة</div>
@@ -507,39 +568,41 @@
 
     <div class="capsule-purple">خامساً: مظاهر المالية العامة</div>
 
-    <div style="display:flex; gap:10px; margin: 10px 0;">
-      <div style="flex:1; background:#eaf2f8; border-radius:8px; padding:8px 12px; font-size:12px; border-right:4px solid #2980b9; font-weight:800;">
+    <div style="display:flex; flex-direction:column; gap:8px; margin: 10px 0;">
+      <div style="background:#eaf2f8; border-radius:8px; padding:8px 12px; font-size:12px; border-right:4px solid #2980b9; font-weight:800;">
         <strong class="text-blue">المظهر التنظيمي:</strong> خضوع جميع تنظيمات المالية العامة لسلطة الدولة المباشرة أو غير المباشرة.
       </div>
-      <div style="flex:1; background:#fbeee6; border-radius:8px; padding:8px 12px; font-size:12px; border-right:4px solid #e67e22; font-weight:800;">
+      <div style="background:#fbeee6; border-radius:8px; padding:8px 12px; font-size:12px; border-right:4px solid #e67e22; font-weight:800;">
         <strong class="text-red">المظهر القانوني:</strong> المرافق العامة جزء من الإدارة العامة وتسري عليها أحكام القانون العام.
       </div>
     </div>
 
     <div class="capsule-purple">سادساً: مقارنة بين المالية العامة والمالية الخاصة</div>
 
-    <table class="custom-table">
-      <tr>
-        <th style="width:24%;">وجه المقارنة</th>
-        <th style="width:38%;">المالية العامة</th>
-        <th style="width:38%;">المالية الخاصة</th>
-      </tr>
-      <tr>
-        <td style="text-align:center;">من حيث الإنفاق (الهدف)</td>
-        <td>تستهدف <div class="highlight-yellow">تحقيق الصالح العام</div> حتى لو لم يسفر نشاطها عن تحقيق ربح.</td>
-        <td>يسعى الأفراد والمنشآت الخاصة لتحقيق <div class="text-red" style="display:inline;">المنفعة الشخصية والأرباح</div>.</td>
-      </tr>
-      <tr>
-        <td style="text-align:center;">من حيث الإيرادات</td>
-        <td>تعتمد على ما للدولة من <div class="text-blue" style="display:inline;">سلطة الإجبار والسيادة</div> في فرض الضرائب والرسوم.</td>
-        <td>يعتمد المشروع الخاص على <div class="text-green" style="display:inline;">التخصيص الاختياري والتعاقد</div> والتراضي.</td>
-      </tr>
-      <tr>
-        <td style="text-align:center;">من حيث الموازنة (الترتيب)</td>
-        <td>تبدأ الدولة بتقدير <div class="text-red" style="display:inline;">أوجه الإنفاق أولاً</div> ثم تدبير الإيرادات اللازمة لتغطيتها.</td>
-        <td>يبدأ الأفراد بتقدير <div class="text-blue" style="display:inline;">إيراداتهم أولاً</div> ثم ضبط أوجه الإنفاق في حدودها.</td>
-      </tr>
-    </table>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <tr>
+          <th style="width:24%;">وجه المقارنة</th>
+          <th style="width:38%;">المالية العامة</th>
+          <th style="width:38%;">المالية الخاصة</th>
+        </tr>
+        <tr>
+          <td style="text-align:center;">من حيث الإنفاق (الهدف)</td>
+          <td>تستهدف <div class="highlight-yellow">تحقيق الصالح العام</div> حتى لو لم يسفر نشاطها عن تحقيق ربح.</td>
+          <td>يسعى الأفراد والمنشآت الخاصة لتحقيق <div class="text-red" style="display:inline;">المنفعة الشخصية والأرباح</div>.</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">من حيث الإيرادات</td>
+          <td>تعتمد على ما للدولة من <div class="text-blue" style="display:inline;">سلطة الإجبار والسيادة</div> في فرض الضرائب والرسوم.</td>
+          <td>يعتمد المشروع الخاص على <div class="text-green" style="display:inline;">التخصيص الاختياري والتعاقد</div> والتراضي.</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">من حيث الموازنة (الترتيب)</td>
+          <td>تبدأ الدولة بتقدير <div class="text-red" style="display:inline;">أوجه الإنفاق أولاً</div> ثم تدبير الإيرادات اللازمة لتغطيتها.</td>
+          <td>يبدأ الأفراد بتقدير <div class="text-blue" style="display:inline;">إيراداتهم أولاً</div> ثم ضبط أوجه الإنفاق في حدودها.</td>
+        </tr>
+      </table>
+    </div>
 
     <div class="footer-bar">
       <div class="footer-brand">
@@ -547,15 +610,15 @@
         <div class="footer-brand-name">الدحيح</div>
       </div>
       <div class="footer-center-text">مبادئ المالية العامة - الفرقة الرابعة | صفحة 2</div>
-      <div style="width:60px;"></div>
+      <div style="width:20px;"></div>
     </div>
   </div>
 
   <!-- ==================== الصفحة الثالثة: التطبيقات والحل ==================== -->
   <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">📝 بنك الأسئلة والتطبيقات المحلولة</div>
-      <div style="font-size:12px; font-weight:800; color:#555;">إجابات نموذجية معتمدة من المحاضرة</div>
+      <div style="font-size:11.5px; font-weight:800; color:#555;">إجابات نموذجية معتمدة من المحاضرة</div>
     </div>
 
     <div class="capsule-main">أولاً: ضع علامة (صح) أو (خطأ) - مع التصحيح</div>
@@ -717,7 +780,7 @@
         <div class="footer-brand-name">الدحيح</div>
       </div>
       <div class="footer-center-text">مبادئ المالية العامة - الفرقة الرابعة | صفحة 3</div>
-      <div style="width:60px;"></div>
+      <div style="width:20px;"></div>
     </div>
   </div>
 
