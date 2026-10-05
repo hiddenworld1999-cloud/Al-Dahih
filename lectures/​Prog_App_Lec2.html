@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<title>تطبيقات في برمجة الحاسب - المحاضرة الثانية</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&display=swap');
+
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Cairo', Tahoma, sans-serif;
+    background-color: #0b132b;
+    margin: 0;
+    padding: 10px 0;
+    direction: rtl;
+    color: #e0e6ed;
+    font-weight: 700;
+    overflow-x: hidden;
+  }
+
+  .sheet {
+    background: #1c2541;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    padding: 16px 14px 45px 14px;
+    box-sizing: border-box;
+    position: relative;
+    border: 2px solid #48cae4;
+    border-radius: 12px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    font-weight: 700;
+  }
+
+  .sheet::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sheet > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .badge-top {
+    display: inline-block;
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  .capsule-main {
+    background: linear-gradient(180deg, #0077b6, #023e8a);
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 900;
+    text-align: center;
+    padding: 8px 20px;
+    border-radius: 8px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 10px auto 14px auto;
+    box-shadow: 0 4px 12px rgba(0, 180, 216, 0.25);
+    border-bottom: 3px solid #48cae4;
+    line-height: 1.5;
+  }
+
+  .capsule-tech {
+    background: linear-gradient(180deg, #1f4068, #162447);
+    color: #48cae4;
+    border: 1px solid #48cae4;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-align: center;
+    padding: 7px 20px;
+    border-radius: 6px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 14px auto 12px auto;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .capsule-cyan {
+    background: linear-gradient(180deg, #0096c7, #03045e);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-align: center;
+    padding: 7px 20px;
+    border-radius: 6px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 14px auto 12px auto;
+    box-shadow: 0 3px 8px rgba(0, 150, 199, 0.25);
+  }
+
+  .definition-box {
+    background-color: #0b132b;
+    border: 1.5px solid #3a506b;
+    border-right: 4px solid #48cae4;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: right;
+    font-weight: 800;
+    margin-bottom: 12px;
+    word-break: break-word;
+  }
+
+  .highlight-tech {
+    background-color: #1f4068;
+    color: #48cae4;
+    border: 1px solid #48cae4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 900;
+    display: inline-block;
+  }
+
+  .code-snip {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #000814;
+    color: #00f5d4;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #00b4d8;
+    font-size: 12.5px;
+    margin: 6px 0;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+
+  .text-red { color: #ff6b6b; font-weight: 900; }
+  .text-blue { color: #48cae4; font-weight: 900; }
+  .text-green { color: #51cf66; font-weight: 900; }
+  .text-yellow { color: #ffd166; font-weight: 900; }
+
+  .term-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 6px;
+  }
+
+  @media (min-width: 480px) {
+    .term-row {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+
+  .term-badge-navy {
+    background: linear-gradient(135deg, #0077b6, #023e8a);
+    color: white;
+    font-weight: 800;
+    font-size: 12.5px;
+    padding: 5px 14px;
+    border-radius: 6px;
+    min-width: 130px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+
+  .term-badge-teal {
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
+    color: white;
+    font-weight: 800;
+    font-size: 12.5px;
+    padding: 5px 14px;
+    border-radius: 6px;
+    min-width: 130px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+
+  .term-badge-blue {
+    background: linear-gradient(135deg, #1f4068, #162447);
+    border: 1px solid #48cae4;
+    color: #48cae4;
+    font-weight: 800;
+    font-size: 12.5px;
+    padding: 5px 14px;
+    border-radius: 6px;
+    min-width: 130px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+
+  .term-desc {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #e0e6ed;
+    font-weight: 800;
+    flex-grow: 1;
+  }
+
+  .cards-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  @media (min-width: 600px) {
+    .cards-row {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .card-item {
+    background: #0b132b;
+    border: 1px solid #3a506b;
+    border-top: 3.5px solid #48cae4;
+    border-radius: 6px;
+    padding: 8px 6px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .card-item-title {
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #48cae4;
+    margin-bottom: 4px;
+  }
+
+  .card-item-desc {
+    font-size: 11px;
+    color: #cbd5e1;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  table.custom-table {
+    width: 100%;
+    min-width: 480px;
+    border-collapse: collapse;
+    font-size: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  table.custom-table th {
+    background: #0077b6;
+    color: #ffffff;
+    font-weight: 900;
+    padding: 8px;
+    border: 1px solid #023e8a;
+    text-align: center;
+  }
+
+  table.custom-table td {
+    padding: 7px 8px;
+    border: 1px solid #3a506b;
+    line-height: 1.5;
+    font-weight: 800;
+    background-color: #0b132b;
+  }
+
+  table.custom-table tr:nth-child(even) td {
+    background-color: #141f36;
+  }
+
+  .q-container {
+    border-bottom: 1px dashed #3a506b;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  .q-header {
+    font-size: 13px;
+    font-weight: 800;
+    color: #f1f5f9;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .tf-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .btn-quiz {
+    background: #0b132b;
+    border: 1.5px solid #3a506b;
+    color: #48cae4;
+    padding: 5px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-quiz:hover {
+    border-color: #48cae4;
+  }
+
+  .mcq-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  @media (min-width: 600px) {
+    .mcq-btn-group {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+
+  .btn-choice {
+    background: #0b132b;
+    border: 1.5px solid #3a506b;
+    color: #cbd5e1;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: right;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-choice:hover {
+    border-color: #48cae4;
+    color: #48cae4;
+  }
+
+  .btn-choice.correct, .btn-quiz.correct {
+    background: #1b4332 !important;
+    border-color: #52b788 !important;
+    color: #d8f3dc !important;
+  }
+
+  .btn-choice.wrong, .btn-quiz.wrong {
+    background: #4a0e17 !important;
+    border-color: #e63946 !important;
+    color: #ffccd5 !important;
+  }
+
+  .feedback-box {
+    display: none;
+    font-size: 11.5px;
+    margin-top: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+
+  .feedback-box.show {
+    display: block;
+  }
+
+  .feedback-box.is-true {
+    background: #0d2818;
+    color: #52b788;
+    border-right: 3px solid #52b788;
+  }
+
+  .feedback-box.is-false {
+    background: #2b090e;
+    color: #ff6b6b;
+    border-right: 3px solid #ff6b6b;
+  }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 8px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px dashed #3a506b;
+    padding-top: 4px;
+    font-size: 10.5px;
+    color: #8da9c4;
+    font-weight: 800;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-logo {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid #48cae4;
+    object-fit: cover;
+  }
+
+  .footer-brand-name {
+    font-size: 12px;
+    font-weight: 900;
+    color: #48cae4;
+  }
+
+  .footer-center-text {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 800;
+    font-size: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ==================== الصفحة الأولى: لغات البرمجة والأنماط ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)[span_0](start_span)[span_0](end_span)</div>
+    </div>
+
+    <div class="capsule-main">تطبيقات في برمجة الحاسب - المحاضرة الثانية (د. مريم سامي)[span_1](start_span)[span_1](end_span)</div>
+
+    <div class="capsule-tech">أولاً: أنواع البرمجيات (Types of Software)[span_2](start_span)[span_2](end_span)</div>
+    <div class="definition-box">
+      البرمجيات بتنقسم لجزئين رئيسيين[span_3](start_span)[span_3](end_span):<br>
+      • <div class="highlight-tech">1. برمجيات النظام (System Software):</div> تشمل أنظمة التشغيل (زي Windows و Linux) ومعالجات اللغات وبرامج تعريف الأجهزة (زي Compiler و Interpreter)[span_4](start_span)[span_4](end_span).<br>
+      • <div class="highlight-tech">2. برمجيات التطبيقات (Application Software):</div> بتنقسم لنوعين: عامة الاستخدام (General Purpose) زي Word و Photoshop، ومخصصة لمجال معين (Customised Software) زي نظام حجز تذاكر القطارات[span_5](start_span)[span_5](end_span).
+    </div>
+
+    <div class="capsule-cyan">ثانياً: تصنيف لغات البرمجة (حسب المستوى والأسلوب)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)</div>
+    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+      <table class="custom-table">
+        <tr>
+          <th style="width:25%;">نوع التصنيف</th>
+          <th style="width:35%;">المفهوم والخصائص</th>
+          <th style="width:40%;">أمثلة من المحاضرة</th>
+        </tr>
+        <tr>
+          <td style="text-align:center;">لغات عالية المستوى[span_9](start_span)[span_9](end_span)</td>
+          <td>قريبة من لغة الإنسان وسهلة الفهم، وتحتاج مترجم (Compiler) أو مفسر (Interpreter) لتحويلها للغة الآلة[span_10](start_span)[span_10](end_span).</td>
+          <td>Python, Java, C, Ruby[span_11](start_span)[span_11](end_span)</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">لغات منخفضة المستوى[span_12](start_span)[span_12](end_span)</td>
+          <td>قريبة جداً من لغة العتاد والمعالج المباشرة (0 و 1)، سريعة جداً لكن صعبة ومعقدة في التعلم[span_13](start_span)[span_13](end_span)[span_14](start_span)[span_14](end_span).</td>
+          <td>لغة الآلة (Machine Language) ولغة التجميع (Assembly)[span_15](start_span)[span_15](end_span)</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">الأسلوب الإجرائي (Procedural)[span_16](start_span)[span_16](end_span)</td>
+          <td>برمجة تعتمد على تقسيم الكود لدوال وإجراءات متتالية خطوة بخطوة زي وصفة الطهي، ممتازة للبرامج البسيطة والمتوسطة[span_17](start_span)[span_17](end_span).</td>
+          <td>لغة C ولغة Pascal[span_18](start_span)[span_18](end_span)</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">الأسلوب الموجه للكائنات (OOP)[span_19](start_span)[span_19](end_span)</td>
+          <td>بناء البرنامج حول كائنات (Objects) وفئات (Classes) تحتوي على خصائص وأفعال، ممتاز للمشاريع الكبيرة ومرن للتوسع[span_20](start_span)[span_20](end_span).</td>
+          <td>Python, Java, C++[span_21](start_span)[span_21](end_span)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 1[span_22](start_span)[span_22](end_span)</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الثانية: هياكل البيانات ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)[span_23](start_span)[span_23](end_span)</div>
+    </div>
+
+    <div class="capsule-main">هياكل البيانات (Data Structures)[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span)</div>
+
+    <div class="capsule-tech">مفهوم هياكل البيانات وأهميتها في البرمجة[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span)[span_28](start_span)[span_28](end_span)</div>
+    <div class="definition-box">
+      طرق لتخزين وتنظيم البيانات في ذاكرة الحاسوب للوصول إليها ومعالجتها بكفاءة[span_29](start_span)[span_29](end_span).<br>
+      • <strong>الهدف الأساسي:</strong> تقليل تعقيد البرامج من حيث <div class="highlight-tech">مساحة الذاكرة وزمن التنفيذ</div>[span_30](start_span)[span_30](end_span).<br>
+      • <strong>العلاقة الذهبية:</strong> <div class="text-blue" style="display:inline;">الخوارزميات</div> تركز على خطوات حل المشكلة، بينما <div class="text-cyan" style="display:inline;">هياكل البيانات</div> تركز على أسلوب وطريقة تخزين البيانات في الذاكرة[span_31](start_span)[span_31](end_span).<br>
+      • <strong>أمثلة حياتية:</strong> حركات لعبة الشطرنج، شبكات علاقات الأصدقاء في Facebook، وزر الرجوع للخلف (Backward) في المتصفحات[span_32](start_span)[span_32](end_span).
+    </div>
+
+    <div class="capsule-cyan">أنواع هياكل البيانات الخطية (Linear) وغير الخطية (Non-linear)[span_33](start_span)[span_33](end_span)</div>
+    <div class="cards-row">
+      <div class="card-item">
+        <div class="card-item-title">١. المصفوفة (Array)[span_34](start_span)[span_34](end_span)</div>
+        <div class="card-item-desc">حجم ثابت، عناصر من نفس النوع في مواقع متتالية، ويبدأ فهرسها بالصفر[span_35](start_span)[span_35](end_span)[span_36](start_span)[span_36](end_span).</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-title">٢. الطابور (Queue)[span_37](start_span)[span_37](end_span)</div>
+        <div class="card-item-desc">قائم على مبدأ (FIFO) الداخل أولاً يخرج أولاً، زي طابور التذاكر وجدولة المهام[span_38](start_span)[span_38](end_span)[span_39](start_span)[span_39](end_span).</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-title">٣. المكدس (Stack)[span_40](start_span)[span_40](end_span)</div>
+        <div class="card-item-desc">قائم على مبدأ (LIFO) الداخل آخراً يخرج أولاً عبر Push و Pop، زي التراجع Undo في Word[span_41](start_span)[span_41](end_span).</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-title">٤. القائمة المرتبطة (Linked List)[span_42](start_span)[span_42](end_span)</div>
+        <div class="card-item-desc">عقد (Nodes) متصلة بمؤشرات (Pointers)، تخصيص ديناميكي مرن للذاكرة يبدأ بـ Head وينتهي بـ Tail[span_43](start_span)[span_43](end_span)[span_44](start_span)[span_44](end_span).</div>
+      </div>
+    </div>
+
+    <div class="capsule-tech">الهياكل غير الخطية: الشجرة (Tree Structure)[span_45](start_span)[span_45](end_span)[span_46](start_span)[span_46](end_span)</div>
+    <div class="definition-box">
+      هيكل هرمي غير خطي بيتكون من عقد (Nodes)، بيبدأ من عقدة رئيسية اسمها <div class="highlight-tech">الجذر (Root)</div> ويتفرع منها فروع وأبناء (Children)[span_47](start_span)[span_47](end_span).<br>
+      💡 <strong>استخداماتها:</strong> مناسبة جداً للبيانات الهرمية زي تنظيم أنظمة الملفات والمجلدات في الكمبيوتر والهياكل الإدارية[span_48](start_span)[span_48](end_span).
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 2[span_49](start_span)[span_49](end_span)</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الثالثة: لغة بايثون والحلقات ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)[span_50](start_span)[span_50](end_span)</div>
+    </div>
+
+    <div class="capsule-main">التحكم الشرطي والحلقات في بايثون (Python Control)[span_51](start_span)[span_51](end_span)[span_52](start_span)[span_52](end_span)[span_53](start_span)[span_53](end_span)[span_54](start_span)[span_54](end_span)</div>
+
+    <div class="capsule-tech">١. المسافات البادئة وجملة Match-Case[span_55](start_span)[span_55](end_span)[span_56](start_span)[span_56](end_span)</div>
+    <div class="definition-box">
+      • <strong>المسافة البادئة (Indentation):</strong> في بايثون إجبارية لتحديد كتلة الكود، وغيابها في جملة If أو الدوال يعطي <div class="text-red" style="display:inline;">IndentationError</div>[span_57](start_span)[span_57](end_span).<br>
+      • <strong>جملة Match-Case:</strong> شبيهة بـ switch-case في اللغات التانية لمطابقة قيم الحالات المتعددة[span_58](start_span)[span_58](end_span):
+      <div class="code-snip">day = 4
+match day:
+    case 1: print("Monday")
+    case 4: print("Thursday") # هذا السطر سينفذ ويطبع Thursday[span_59](start_span)[span_59](end_span)</div>
+    </div>
+
+    <div class="capsule-cyan">٢. جمل التحكم في التكرار: الفرق بين Break و Continue[span_60](start_span)[span_60](end_span)[span_61](start_span)[span_61](end_span)</div>
+    <div style="display:flex; gap:10px; margin:10px 0; flex-direction:column;">
+      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #ff6b6b;">
+        <strong class="text-red">أمر Break:</strong> بيوقف التكرار ويخرج بره الحلقة تماماً وينهيها فوراً بمجرد ما يقابله الكود[span_62](start_span)[span_62](end_span)[span_63](start_span)[span_63](end_span)[span_64](start_span)[span_64](end_span).
+      </div>
+      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #48cae4;">
+        <strong class="text-blue">أمر Continue:</strong> بيلغي الدورة الحالية بس (بيتخطى السطر الحالي) ويكمل اللف في الدورات اللي بعدها[span_65](start_span)[span_65](end_span)[span_66](start_span)[span_66](end_span).
+      </div>
+    </div>
+
+    <div class="capsule-tech">٣. أسرار دالة المدى range() في بايثون[span_67](start_span)[span_67](end_span)[span_68](start_span)[span_68](end_span)[span_69](start_span)[span_69](end_span)</div>
+    <div class="definition-box">
+      الدالة بتولد سلسلة أرقام وبتأخذ من 1 إلى 3 معاملات[span_70](start_span)[span_70](end_span)[span_71](start_span)[span_71](end_span)[span_72](start_span)[span_72](end_span):<br>
+      • <div class="text-cyan" style="display:inline;">range(6):</div> تبدأ افتراضياً من 0 وحتى 5 (الرقم الأخير 6 غير مشمول)[span_73](start_span)[span_73](end_span)[span_74](start_span)[span_74](end_span).<br>
+      • <div class="text-green" style="display:inline;">range(2, 6):</div> تبدأ من 2 وحتى 5[span_75](start_span)[span_75](end_span)[span_76](start_span)[span_76](end_span).<br>
+      • <div class="text-yellow" style="display:inline;">range(2, 30, 3):</div> تبدأ من 2 وتزيد بمقدار 3 في كل خطوة (Step)[span_77](start_span)[span_77](end_span)[span_78](start_span)[span_78](end_span):
+      <div class="code-snip"># المخرجات: 2, 5, 8, 11, 14, 17, 20, 23, 26, 29[span_79](start_span)[span_79](end_span)</div>
+      • <strong>حلقة While مع Else:</strong> كتلة else بتتنفذ لما شرط while يبقى False ومايكونش حصل خروج بـ break[span_80](start_span)[span_80](end_span).
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 3[span_81](start_span)[span_81](end_span)</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الرابعة: كويز تفاعلي (صح أو خطأ) ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">📝 كويز المحاضرة الثانية التفاعلي</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">اختبر معلوماتك وإجاباتك محفوظة تلقائياً</div>
+    </div>
+
+    <div class="capsule-main">أولاً: ضع علامة (صح) أو (خطأ) - 10 أسئلة تفاعلية</div>
+
+    <!-- س1 -->
+    <div class="q-container" data-qid="lec2_tf_1" data-correct="true" data-reason="إجابة صحيحة! نظام التشغيل ومترجمات اللغات تندرج تحت System Software[span_82](start_span)[span_82](end_span).">
+      <div class="q-header">١. تُعتبر أنظمة التشغيل (Operating Systems) وبرامج تشغيل الأجهزة من برمجيات النظام (System Software)[span_83](start_span)[span_83](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س2 -->
+    <div class="q-container" data-qid="lec2_tf_2" data-correct="false" data-reason="لغة التجميع ولغة الآلة هي لغات منخفضة المستوى (Low-Level)[span_84](start_span)[span_84](end_span).">
+      <div class="q-header">٢. تُعد لغة التجميع (Assembly Language) من اللغات عالية المستوى سهلة القراءة للإنسان[span_85](start_span)[span_85](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س3 -->
+    <div class="q-container" data-qid="lec2_tf_3" data-correct="true" data-reason="إجابة صحيحة! المصفوفة بنية خطية ذات حجم ثابت وعناصر من نوع واحد[span_86](start_span)[span_86](end_span).">
+      <div class="q-header">٣. المصفوفة (Array) هي بنية بيانات خطية ذات حجم ثابت تخزن عناصر من نفس نوع البيانات[span_87](start_span)[span_87](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س4 -->
+    <div class="q-container" data-qid="lec2_tf_4" data-correct="false" data-reason="الطابور يعمل بمبدأ FIFO (First In First Out) بينما المكدس هو LIFO[span_88](start_span)[span_88](end_span)[span_89](start_span)[span_89](end_span).">
+      <div class="q-header">٤. هيكل الطابور (Queue) يعمل بمبدأ الوارد أخيراً يخرج أولاً (LIFO)[span_90](start_span)[span_90](end_span)[span_91](start_span)[span_91](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س5 -->
+    <div class="q-container" data-qid="lec2_tf_5" data-correct="true" data-reason="إجابة صحيحة! وظيفة Undo في Word تعتمد على Stack حيث يتراجع عن آخر تعديل تم إدخاله[span_92](start_span)[span_92](end_span).">
+      <div class="q-header">٥. يُستخدم هيكل المكدس (Stack) في إدارة وظيفة التراجع (Undo) داخل برامج تحرير النصوص[span_93](start_span)[span_93](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س6 -->
+    <div class="q-container" data-qid="lec2_tf_6" data-correct="true" data-reason="إجابة صحيحة! القوائم المرتبطة تتكون من عقد ومؤشرات وتسمح بالتحجيم الديناميكي[span_94](start_span)[span_94](end_span)[span_95](start_span)[span_95](end_span).">
+      <div class="q-header">٦. تسمح القوائم المرتبطة (Linked Lists) بتخصيص الذاكرة الديناميكي على عكس المصفوفات[span_96](start_span)[span_96](end_span)[span_97](start_span)[span_97](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س7 -->
+    <div class="q-container" data-qid="lec2_tf_7" data-correct="false" data-reason="الأشجار (Trees) والرسومات (Graphs) هي هياكل بيانات غير خطية (Non-linear)[span_98](start_span)[span_98](end_span).">
+      <div class="q-header">٧. تُصنف الشجرة (Tree) ضمن هياكل البيانات الخطية (Linear Data Structures)[span_99](start_span)[span_99](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س8 -->
+    <div class="q-container" data-qid="lec2_tf_8" data-correct="false" data-reason="عدم وضع مسافة بادئة داخل جملة if ينتج عنه خطأ ترجمة IndentationError[span_100](start_span)[span_100](end_span).">
+      <div class="q-header">٨. في لغة بايثون، إهمال المسافات البادئة (Indentation) بعد جملة if لا يسبب أي خطأ برمجي[span_101](start_span)[span_101](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س9 -->
+    <div class="q-container" data-qid="lec2_tf_9" data-correct="true" data-reason="إجابة صحيحة! أمر continue يتخطى الدورة الحالية فقط ويتابع ما بعدها[span_102](start_span)[span_102](end_span).">
+      <div class="q-header">٩. يقوم أمر continue بتخطي الدورة الحالية للحلقة والانتقال مباشرة إلى التكرار التالي[span_103](start_span)[span_103](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س10 -->
+    <div class="q-container" data-qid="lec2_tf_10" data-correct="false" data-reason="دالة range(6) تولد الأرقام من 0 إلى 5 (الرقم 6 غير مشمول)[span_104](start_span)[span_104](end_span)[span_105](start_span)[span_105](end_span).">
+      <div class="q-header">١٠. التعبير range(6) في بايثون يقوم بتوليد الأرقام من 1 إلى 6[span_106](start_span)[span_106](end_span)[span_107](start_span)[span_107](end_span).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 4[span_108](start_span)[span_108](end_span)</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الخامسة: كويز تفاعلي (اختيار من متعدد) ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">📝 كويز المحاضرة الثانية التفاعلي</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">اختر الإجابة وشاهد التحليل والتفسير فوراً</div>
+    </div>
+
+    <div class="capsule-cyan">ثانياً: اختر الإجابة الصحيحة - 10 أسئلة تفاعلية</div>
+
+    <!-- س1 -->
+    <div class="q-container" data-qid="lec2_mcq_1" data-correct-idx="1" data-reason="الأسلوب الإجرائي يقسم البرنامج إلى دوال وإجراءات متتالية تنفذ كالوصفة خطوة بخطوة[span_109](start_span)[span_109](end_span).">
+      <div class="q-header">١. النمط البرمجي الذي يقسم البرنامج إلى مجموعة إجراءات ودوال تنفذ خطوة بخطوة مثل C و Pascal هو[span_110](start_span)[span_110](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الأسلوب الموجه للكائنات OOP[span_111](start_span)[span_111](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الأسلوب الإجرائي Procedural[span_112](start_span)[span_112](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) لغة الآلة Machine Language[span_113](start_span)[span_113](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) البرمجة الخطية[span_114](start_span)[span_114](end_span)</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س2 -->
+    <div class="q-container" data-qid="lec2_mcq_2" data-correct-idx="2" data-reason="فهرس المصفوفات يبدأ من 0 وينتهي عند n-1[span_115](start_span)[span_115](end_span).">
+      <div class="q-header">٢. يبدأ فهرس (Index) أول عنصر في المصفوفة الخطية (Array) عادةً بالقيمة[span_116](start_span)[span_116](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 1</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) -1</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 0[span_117](start_span)[span_117](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) n</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س3 -->
+    <div class="q-container" data-qid="lec2_mcq_3" data-correct-idx="0" data-reason="الطابور (Queue) يعمل وفق آلية FIFO: First In First Out[span_118](start_span)[span_118](end_span).">
+      <div class="q-header">٣. هيكل البيانات الذي يعتمد آلية (First In First Out - FIFO) لإضافة وحذف العناصر هو[span_119](start_span)[span_119](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الطابور (Queue)[span_120](start_span)[span_120](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) المكدس (Stack)[span_121](start_span)[span_121](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الشجرة (Tree)[span_122](start_span)[span_122](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) القائمة الدائرية</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س4 -->
+    <div class="q-container" data-qid="lec2_mcq_4" data-correct-idx="1" data-reason="العمليات الأساسية للمكدس هي Push للإضافة و Pop للحذف من أعلى الـ Stack[span_123](start_span)[span_123](end_span).">
+      <div class="q-header">٤. العمليات الأساسية المتبعة لإضافة وإزالة العناصر من أعلى المكدس (Stack) تُعرف بـ[span_124](start_span)[span_124](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) Enqueue و Dequeue[span_125](start_span)[span_125](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) Push و Pop[span_126](start_span)[span_126](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) Insert و Delete</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) Root و Child[span_127](start_span)[span_127](end_span)</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س5 -->
+    <div class="q-container" data-qid="lec2_mcq_5" data-correct-idx="3" data-reason="العقدة الأولى تسمى الرأس (Head) والعقدة الأخيرة تسمى الذيل (Tail)[span_128](start_span)[span_128](end_span)[span_129](start_span)[span_129](end_span).">
+      <div class="q-header">٥. يُعرف العنصر الأول في القائمة المرتبطة (Linked List) باسم[span_130](start_span)[span_130](end_span)[span_131](start_span)[span_131](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الذيل (Tail)[span_132](start_span)[span_132](end_span)[span_133](start_span)[span_133](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) المؤشر (Pointer)[span_134](start_span)[span_134](end_span)[span_135](start_span)[span_135](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الجذر (Root)[span_136](start_span)[span_136](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) الرأس (Head)[span_137](start_span)[span_137](end_span)[span_138](start_span)[span_138](end_span)</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س6 -->
+    <div class="q-container" data-qid="lec2_mcq_6" data-correct-idx="2" data-reason="الخوارزمية هي خطوات الحل، بينما هيكل البيانات هو طريقة التخزين في الذاكرة[span_139](start_span)[span_139](end_span).">
+      <div class="q-header">٦. العلاقة الأساسية بين الخوارزميات وهياكل البيانات تتمثل في أن[span_140](start_span)[span_140](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) كلاهما يستخدم فقط في لغة الآلة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الخوارزمية تخزن البيانات وهياكل البيانات تنفذ الحل</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الخوارزمية خطوات الحل وهيكل البيانات طريقة تخزين البيانات[span_141](start_span)[span_141](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) لا توجد أي علاقة تربطهما</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س7 -->
+    <div class="q-container" data-qid="lec2_mcq_7" data-correct-idx="0" data-reason="أمر break ينهي الحلقة فور تحقق الشرط، وهنا عندما تصل i إلى 3 يخرج ويطبع 1 و 2 و 3 فقط[span_142](start_span)[span_142](end_span).">
+      <div class="q-header">٧. في حلقة While التالية: عند وصول المتغير i للقيمة 3 تم تنفيذ break، المخرجات ستكون[span_143](start_span)[span_143](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 1, 2, 3[span_144](start_span)[span_144](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 1, 2, 4, 5, 6</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 1, 2 فقط</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) تكرار لانهائي</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س8 -->
+    <div class="q-container" data-qid="lec2_mcq_8" data-correct-idx="2" data-reason="أمر continue يتخطى الدورة الحالية فقط، لذا تم تخطي الرقم 3 وطباعة باقي الأرقام[span_145](start_span)[span_145](end_span).">
+      <div class="q-header">٨. عند استخدام جملة continue عندما تكون i == 3 داخل حلقة تطبع من 1 لـ 6، الناتج يكون[span_146](start_span)[span_146](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) طباعة 1, 2, 3 وتوقف الحلقة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) طباعة الرقم 3 فقط</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) طباعة 1, 2, 4, 5, 6 مع استبعاد 3[span_147](start_span)[span_147](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) حدوث خطأ برمجي</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س9 -->
+    <div class="q-container" data-qid="lec2_mcq_9" data-correct-idx="1" data-reason="range(2, 6) تبدأ من 2 وتقف قبل 6، فتنتج: 2, 3, 4, 5[span_148](start_span)[span_148](end_span)[span_149](start_span)[span_149](end_span).">
+      <div class="q-header">٩. ناتج تنفيذ حلقة التكرار for x in range(2, 6) هو طباعة الأرقام[span_150](start_span)[span_150](end_span)[span_151](start_span)[span_151](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 2, 3, 4, 5, 6</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 2, 3, 4, 5[span_152](start_span)[span_152](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 0, 1, 2, 3, 4, 5</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) 2, 6 فقط</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س10 -->
+    <div class="q-container" data-qid="lec2_mcq_10" data-correct-idx="0" data-reason="المعامل الثالث هو معدل الزيادة، فتبدأ من 2 وتزيد 3 كل دورة: 2, 5, 8... حتى 29[span_153](start_span)[span_153](end_span)[span_154](start_span)[span_154](end_span).">
+      <div class="q-header">١٠. في التعبير range(2, 30, 3) يمثل الرقم 3 في المعامل الأخير[span_155](start_span)[span_155](end_span):</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) معدل الزيادة والخطوة (Step)[span_156](start_span)[span_156](end_span)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) قيمة البداية</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) قيمة النهاية</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) عدد مرات تكرار الحلقة</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5[span_157](start_span)[span_157](end_span)</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+<script>
+  const STORAGE_KEY = 'prog_lec2_quiz_answers';
+
+  function getSavedAnswers() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  function saveAnswer(qid, answerVal) {
+    try {
+      const answers = getSavedAnswers();
+      answers[qid] = answerVal;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    } catch(e) {}
+  }
+
+  function checkTF(btn, userAns, autoLoad = false) {
+    const container = btn.closest('.q-container');
+    const qid = container.getAttribute('data-qid');
+    const correctAns = container.getAttribute('data-correct') === 'true';
+    const reason = container.getAttribute('data-reason');
+    const feedback = container.querySelector('.feedback-box');
+    const buttons = container.querySelectorAll('.btn-quiz');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (userAns === correctAns) {
+      btn.classList.add('correct');
+      feedback.className = 'feedback-box show is-true';
+      feedback.innerHTML = 'إجابة صحيحة ممتاز! ' + reason;
+    } else {
+      btn.classList.add('wrong');
+      buttons.forEach(b => {
+        if ((b.innerText.trim() === 'صح' && correctAns) || (b.innerText.trim() === 'خطأ' && !correctAns)) {
+          b.classList.add('correct');
+        }
+      });
+      feedback.className = 'feedback-box show is-false';
+      feedback.innerHTML = 'إجابة غير صحيحة. ' + reason;
+    }
+
+    if (!autoLoad && qid) {
+      saveAnswer(qid, userAns);
+    }
+  }
+
+  function checkMCQ(btn, selectedIdx, autoLoad = false) {
+    const container = btn.closest('.q-container');
+    const qid = container.getAttribute('data-qid');
+    const correctIdx = parseInt(container.getAttribute('data-correct-idx'), 10);
+    const reason = container.getAttribute('data-reason');
+    const feedback = container.querySelector('.feedback-box');
+    const buttons = container.querySelectorAll('.btn-choice');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (selectedIdx === correctIdx) {
+      btn.classList.add('correct');
+      feedback.className = 'feedback-box show is-true';
+      feedback.innerHTML = 'إجابة صحيحة ممتاز! ' + reason;
+    } else {
+      btn.classList.add('wrong');
+      if (buttons[correctIdx]) {
+        buttons[correctIdx].classList.add('correct');
+      }
+      feedback.className = 'feedback-box show is-false';
+      feedback.innerHTML = 'إجابة غير صحيحة. ' + reason;
+    }
+
+    if (!autoLoad && qid) {
+      saveAnswer(qid, selectedIdx);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = getSavedAnswers();
+    document.querySelectorAll('.q-container').forEach(container => {
+      const qid = container.getAttribute('data-qid');
+      if (saved.hasOwnProperty(qid)) {
+        const val = saved[qid];
+        if (typeof val === 'boolean') {
+          const buttons = container.querySelectorAll('.btn-quiz');
+          buttons.forEach(b => {
+            if ((b.innerText.trim() === 'صح' && val === true) || (b.innerText.trim() === 'خطأ' && val === false)) {
+              checkTF(b, val, true);
+            }
+          });
+        } else if (typeof val === 'number') {
+          const buttons = container.querySelectorAll('.btn-choice');
+          if (buttons[val]) {
+            checkMCQ(buttons[val], val, true);
+          }
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
+
