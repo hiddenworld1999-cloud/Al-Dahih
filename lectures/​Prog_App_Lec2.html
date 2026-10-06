@@ -1,4 +1,3 @@
-الكود بعد تنظيفه بالكامل سطر بسطر والتأكد من إزالة أي وسوم أو مسارات أو رموز غريبة:
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -149,19 +148,60 @@
     display: inline-block;
   }
 
+  .example-card {
+    background-color: #0d1b2a;
+    border: 1.5px solid #3a506b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+
+  .example-title {
+    color: #48cae4;
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
   .code-snip {
     direction: ltr;
     text-align: left;
     font-family: 'Courier New', Courier, monospace;
     background-color: #000814;
     color: #00f5d4;
-    padding: 8px 12px;
+    padding: 10px 12px;
     border-radius: 6px;
     border-left: 3px solid #00b4d8;
+    font-size: 12.5px;
+    margin: 6px 0;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .output-box {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #050505;
+    color: #ffbe0b;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #ffbe0b;
     font-size: 12px;
     margin: 6px 0;
     line-height: 1.5;
     overflow-x: auto;
+    white-space: pre;
+  }
+
+  .output-label {
+    direction: rtl;
+    text-align: right;
+    font-size: 11px;
+    color: #ffd166;
+    font-weight: 800;
+    margin-top: 4px;
   }
 
   .text-red { color: #ff6b6b; font-weight: 900; }
@@ -402,8 +442,8 @@
     <div class="capsule-tech">أولاً: تصنيف وأنواع البرمجيات (Types of Software)</div>
     <div class="definition-box">
       البرمجيات بتنقسم لقسمين أساسيين:<br>
-      • <div class="highlight-tech">1. برمجيات النظام (System Software):</div> تشمل أنظمة التشغيل (زي Windows و Linux) ومعالجات اللغات والمترجمات (Compiler و Interpreter) وبرامج تعريف الأجهزة.<br>
-      • <div class="highlight-tech">2. برمجيات التطبيقات (Application Software):</div> تشمل عامة الاستخدام (General Purpose) زي Word و Photoshop، ومخصصة لمجال محدد (Customised Software) زي نظام حجز تذاكر السكك الحديدية.
+      • <div class="highlight-tech">1. برمجيات النظام (System Software):</div> تشمل أنظمة التشغيل (زي Linux و Windows) ومعالجات اللغات والمترجمات (Compiler و Interpreter) وبرامج تعريف الأجهزة.<br>
+      • <div class="highlight-tech">2. برمجيات التطبيقات (Application Software):</div> تشمل عامة الاستخدام (General Purpose) زي Word و Photoshop، ومخصصة لمجال محدد (Customised Software) زي نظام حجز تذاكر القطارات.
     </div>
 
     <div class="capsule-cyan">ثانياً: تصنيف لغات البرمجة ومستوياتها</div>
@@ -498,51 +538,63 @@
     </div>
   </div>
 
-  <!-- ==================== الصفحة الثالثة: كل أمثلة بايثون بالكود والناتج ==================== -->
+  <!-- ==================== الصفحة الثالثة: أمثلة الشروط و Match وحلقات While ==================== -->
   <div class="sheet">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">💻 المحاضرة الثانية</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">أمثلة بايثون العملية مع النتائج بالتفصيل</div>
     </div>
 
-    <div class="capsule-main">كل أمثلة بايثون المشروحة بالمحاضرة مع نواتج التشغيل</div>
+    <div class="capsule-main">أمثلة الشروط و Match وحلقات While من المحاضرة</div>
 
-    <div class="capsule-tech">١. المسافات البادئة وجملة Match-Case</div>
-    <div class="definition-box">
-      • مثال الشرط (عدم وضع مسافة بادئة يعطي خطأ IndentationError):
-      <div class="code-snip">a = 33; b = 200
-if b &gt; a:
-    print("b is greater than a") # الناتج: b is greater than a</div>
-      • مثال جملة Match-Case:
+    <!-- مثال 1 -->
+    <div class="example-card">
+      <div class="example-title">١. جملة If والمسافة البادئة (مع مقارنة حالة الخطأ):</div>
+      <div class="code-snip">a = 33
+b = 200
+if b > a:
+    print("b is greater than a")</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">b is greater than a</div>
+      <div style="font-size:11.5px; color:#ff6b6b; margin-top:4px;">تنبيه المحاضرة: كتابة print بدون مسافة بادئة (Indentation) يسبب خطأ IndentationError مباشرة.</div>
+    </div>
+
+    <!-- مثال 2 -->
+    <div class="example-card">
+      <div class="example-title">٢. جملة Match-Case لاختيار اليوم:</div>
       <div class="code-snip">day = 4
 match day:
-    case 1: print("Monday")
-    case 4: print("Thursday") # يطابق الحالة 4 ويطبع: Thursday</div>
+    case 1:
+        print("Monday")
+    case 2:
+        print("Tuesday")
+    case 3:
+        print("Wednesday")
+    case 4:
+        print("Thursday")
+    case 5:
+        print("Friday")
+    case 6:
+        print("Saturday")
+    case 7:
+        print("Sunday")</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">Thursday</div>
     </div>
 
-    <div class="capsule-cyan">٢. أمثلة حلقات While والتحكم (Break, Continue, Else)</div>
-    <div class="definition-box">
-      • مثال While مع Break (يتوقف عند 3):
+    <!-- مثال 3 -->
+    <div class="example-card">
+      <div class="example-title">٣. حلقة While مع أمر الخروج Break:</div>
       <div class="code-snip">i = 1
 while i &lt; 6:
     print(i)
-    if (i == 3): break
-    i += 1
-# الناتج: 1 ثم 2 ثم 3</div>
-      • مثال While مع Continue (يتخطى الرقم 3):
-      <div class="code-snip">i = 0
-while i &lt; 6:
-    i += 1
-    if i == 3: continue
-    print(i)
-# الناتج: 1, 2, 4, 5, 6 (الرقم 3 تم تخطيه)</div>
-      • مثال While مع Else (تنفذ الكتلة عند انتهاء الشرط):
-      <div class="code-snip">i = 1
-while i &lt; 6:
-    print(i); i += 1
-else:
-    print("i is no longer less than 6")
-# الناتج: يطبع الأرقام من 1 إلى 5 ثم جملة: i is no longer less than 6</div>
+    if (i == 3):
+        break
+    i += 1</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">1
+2
+3</div>
     </div>
 
     <div class="footer-bar">
@@ -555,36 +607,74 @@ else:
     </div>
   </div>
 
-  <!-- ==================== الصفحة الرابعة: أمثلة حلقات For ودالة Range ==================== -->
+  <!-- ==================== الصفحة الرابعة: بقية أمثلة While و حلقات For ==================== -->
   <div class="sheet">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">💻 المحاضرة الثانية</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">أمثلة بايثون العملية مع النتائج بالتفصيل</div>
     </div>
 
-    <div class="capsule-main">أمثلة حلقات For ودالة range() وحالات موضع الامتحان</div>
+    <div class="capsule-main">حلقات While المتقدمة وحلقات For على القوائم والنصوص</div>
 
-    <div class="capsule-tech">١. التكرار عبر القوائم والنصوص</div>
-    <div class="definition-box">
-      • التكرار على قائمة الفواكه: يطبع apple ثم banana ثم cherry.<br>
-      • التكرار على نص ("banana"): يطبع حروف الكلمة رأسياً كل حرف في سطر (b, a, n, a, n, a).
+    <!-- مثال 4 -->
+    <div class="example-card">
+      <div class="example-title">٤. جملة Continue مع حلقة While (تخطي دورة واحدة):</div>
+      <div class="code-snip">i = 0
+while i &lt; 6:
+    i += 1
+    if i == 3:
+        continue
+    print(i)</div>
+      <div class="output-label">النتيجة بعد التشغيل (لاحظ اختفاء الرقم 3):</div>
+      <div class="output-box">1
+2
+4
+5
+6</div>
     </div>
 
-    <div class="capsule-cyan">٢. تريكة موضع Break قبل أو بعد أمر الطباعة</div>
-    <div class="definition-box">
-      • لو الطباعة قبل Break: يطبع apple ثم banana ثم يتوقف.<br>
-      • لو Break قبل الطباعة: يطبع apple فقط ويتوقف قبل طباعة banana.<br>
-      • مع Continue: يتخطى طباعة banana ويطبع فقط apple و cherry.
+    <!-- مثال 5 -->
+    <div class="example-card">
+      <div class="example-title">٥. حلقة While مع جملة Else:</div>
+      <div class="code-snip">i = 1
+while i &lt; 6:
+    print(i)
+    i += 1
+else:
+    print("i is no longer less than 6")</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">1
+2
+3
+4
+5
+i is no longer less than 6</div>
     </div>
 
-    <div class="capsule-tech">٣. حالات دالة range() مع الأمثلة</div>
-    <div class="definition-box">
-      • <div class="text-blue" style="display:inline;">for x in range(6):</div> يطبع من 0 إلى 5 (0, 1, 2, 3, 4, 5).<br>
-      • <div class="text-green" style="display:inline;">for x in range(2, 6):</div> يطبع من 2 إلى 5 (2, 3, 4, 5).<br>
-      • <div class="text-yellow" style="display:inline;">for x in range(2, 30, 3):</div> يبدأ بـ 2 ويزيد 3 كل خطوة لينتج: (2, 5, 8, 11, 14, 17, 20, 23, 26, 29).<br>
-      • <strong>برنامج طباعة الأرقام مع نص:</strong>
-      <div class="code-snip">for i in range(1, 11):
-    print("The number is", i) # يطبع من 1 إلى 10 بجانب النص</div>
+    <!-- مثال 6 -->
+    <div class="example-card">
+      <div class="example-title">٦. حلقة For على قائمة عناصر (List):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple
+banana
+cherry</div>
+    </div>
+
+    <!-- مثال 7 -->
+    <div class="example-card">
+      <div class="example-title">٧. حلقة For للمرور على حروف النص (String):</div>
+      <div class="code-snip">for x in "banana":
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">b
+a
+n
+a
+n
+a</div>
     </div>
 
     <div class="footer-bar">
@@ -597,7 +687,120 @@ else:
     </div>
   </div>
 
-  <!-- ==================== الصفحة الخامسة: كويز تفاعلي (صح أو خطأ) ==================== -->
+  <!-- ==================== الصفحة الخامسة: حالات Break و Continue ودالة Range ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">أمثلة بايثون العملية مع النتائج بالتفصيل</div>
+    </div>
+
+    <div class="capsule-main">تريكات Break و Continue مع القوائم ودالة range() كاملة</div>
+
+    <!-- مثال 8 -->
+    <div class="example-card">
+      <div class="example-title">٨. الخروج بـ Break (الطباعة قبل Break):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    print(x)
+    if x == "banana":
+        break</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple
+banana</div>
+    </div>
+
+    <!-- مثال 9 -->
+    <div class="example-card">
+      <div class="example-title">٩. الخروج بـ Break (Break قبل أمر الطباعة):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    if x == "banana":
+        break
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple</div>
+    </div>
+
+    <!-- مثال 10 -->
+    <div class="example-card">
+      <div class="example-title">١٠. استبعاد عنصر باستخدام Continue (تخطي banana):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    if x == "banana":
+        continue
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple
+cherry</div>
+    </div>
+
+    <!-- مثال 11 -->
+    <div class="example-card">
+      <div class="example-title">١١. استخدام دالة range(6) مع حلقة For:</div>
+      <div class="code-snip">for x in range(6):
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل (تبدأ من 0 وحتى 5):</div>
+      <div class="output-box">0
+1
+2
+3
+4
+5</div>
+    </div>
+
+    <!-- مثال 12 -->
+    <div class="example-card">
+      <div class="example-title">١٢. تحديد البداية والنهاية range(2, 6):</div>
+      <div class="code-snip">for x in range(2, 6):
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">2
+3
+4
+5</div>
+    </div>
+
+    <!-- مثال 13 -->
+    <div class="example-card">
+      <div class="example-title">١٣. تحديد معدل الزيادة والخطوة range(2, 30, 3):</div>
+      <div class="code-snip">for x in range(2, 30, 3):
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">2
+5
+8
+11
+14
+17
+20
+23
+26
+29</div>
+    </div>
+
+    <!-- مثال 14 -->
+    <div class="example-card">
+      <div class="example-title">١٤. مثال طباعة الأرقام مع جملة نصية من 1 إلى 10:</div>
+      <div class="code-snip">for i in range(1, 11):
+    print("The number is", i)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">The number is 1
+The number is 2
+...
+The number is 10</div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة السادسة: كويز تفاعلي (صح أو خطأ) ==================== -->
   <div class="sheet">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">📝 كويز المحاضرة الثانية التفاعلي</div>
@@ -711,12 +914,12 @@ else:
         <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
         <div class="footer-brand-name">الدحيح</div>
       </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5</div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 6</div>
       <div style="width:20px;"></div>
     </div>
   </div>
 
-  <!-- ==================== الصفحة السادسة: كويز تفاعلي (اختيار من متعدد) ==================== -->
+  <!-- ==================== الصفحة السابعة: كويز تفاعلي (اختيار من متعدد) ==================== -->
   <div class="sheet">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
       <div class="badge-top">📝 كويز المحاضرة الثانية التفاعلي</div>
@@ -799,7 +1002,7 @@ else:
 
     <!-- س7 -->
     <div class="q-container" data-qid="lec2_mcq_7" data-correct-idx="0" data-reason="أمر break ينهي الحلقة فور تحقق الشرط، وهنا عندما تصل i إلى 3 يخرج ويطبع 1 و 2 و 3 فقط.">
-      <div class="q-header">٧. في حلقة While التالية: عند وصول المتغير i للقيمة 3 تم تنفيذ break، المخرجات ستكون:</div>
+      <div class="q-header">٧. في حلقة While: عند وصول المتغير i للقيمة 3 تم تنفيذ break، المخرجات ستكون:</div>
       <div class="mcq-btn-group">
         <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 1, 2, 3</button>
         <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 1, 2, 4, 5, 6</button>
@@ -850,7 +1053,7 @@ else:
         <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
         <div class="footer-brand-name">الدحيح</div>
       </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 6</div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 7</div>
       <div style="width:20px;"></div>
     </div>
   </div>
