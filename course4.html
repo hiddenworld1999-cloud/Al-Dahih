@@ -305,6 +305,134 @@
 
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 24px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
 
+        /* ================= ستايل واجهة مشغل الفيديو والملخص الذكي ================= */
+        #videoLectureModal { background: #000000; }
+        .video-player-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: #000000;
+            overflow: hidden;
+        }
+        .video-player-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .video-top-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 10px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            color: #ffffff;
+            pointer-events: none;
+        }
+        .video-top-overlay * { pointer-events: auto; }
+        .video-header-title {
+            text-align: center;
+            flex: 1;
+        }
+        .video-header-title h4 {
+            margin: 0;
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .video-header-title span {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+        }
+        .video-sheet-scroll {
+            flex: 1;
+            background: var(--card);
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            margin-top: -16px;
+            position: relative;
+            z-index: 20;
+            overflow-y: auto;
+            padding: 20px 20px 30px;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.15);
+        }
+        .video-sheet-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .v-tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--grey);
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            font-family: inherit;
+        }
+        .v-tab-btn.active { color: var(--primary); }
+        .v-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 15%;
+            width: 70%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .ai-summary-card {
+            background: var(--light-grey);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border-color);
+        }
+        .ai-badge-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .ai-pill {
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+        .key-points-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .key-point-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        .key-point-item .material-icons {
+            font-size: 18px;
+            color: var(--primary);
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
         /* ================= ستايل المحاضرة التفاعلية الحديثة ================= */
         #interactiveLectureModal .modal-body { max-width: 800px; margin: 0 auto; width: 100%; }
         .interactive-hero { background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%); border-radius: 20px; padding: 25px 20px; color: white; margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; }
@@ -449,6 +577,55 @@
         </div>
         <div class="modal-body" id="contentModalBody" style="padding: 0;">
             <div class="content-view" id="contentBody" style="padding: 0; background: transparent; border: none; box-shadow: none;"></div>
+        </div>
+    </div>
+
+    <!-- ================= نافذة مشغل الفيديو والملخص الذكي المطابقة للتصميم ================= -->
+    <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
+        <div class="video-player-container">
+            <div class="video-top-overlay">
+                <span class="material-icons" onclick="history.back()" style="cursor:pointer; font-size: 26px;">arrow_forward</span>
+                <div class="video-header-title">
+                    <h4 id="vLecTitle">المحاضرة</h4>
+                    <span id="vLecSubtitle">المحاضرة 1</span>
+                </div>
+                <span class="material-icons" style="cursor:pointer; font-size: 24px;" title="حفظ">bookmark_border</span>
+            </div>
+            <iframe id="videoIframePlayer" class="video-player-frame" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+
+        <div class="video-sheet-scroll">
+            <div class="video-sheet-tabs">
+                <button class="v-tab-btn active" id="vTabSummaryBtn" onclick="switchVideoSheetTab('summary')">ملخص الذكاء الاصطناعي</button>
+                <button class="v-tab-btn" id="vTabNotesBtn" onclick="switchVideoSheetTab('notes')">ملاحظات الذكاء الاصطناعي</button>
+            </div>
+
+            <!-- محتوى الملخص -->
+            <div id="vSheetSummaryTab">
+                <div class="ai-summary-card">
+                    <div class="ai-badge-header">
+                        <span class="ai-pill">AI</span>
+                        <span style="font-weight: 800; font-size: 1rem; color: var(--text);">ملخص المحاضرة</span>
+                    </div>
+                    <p id="vSummaryText" style="line-height: 1.7; font-size: 0.95rem; color: var(--text); margin: 0; font-weight: 500;">
+                        في هذه المحاضرة تم التعرف على أهم مفاهيم الدرس، المفردات الرئيسية، والتطبيقات العملية اللازمة للامتحان.
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 12px; font-weight: 900; font-size: 1.05rem; color: var(--text);">أهم النقاط</div>
+                <div class="key-points-list" id="vKeyPointsList"></div>
+
+                <button class="btn-lecture-quiz" id="vActionBtn" style="margin-top: 10px;">
+                    <span class="material-icons">quiz</span> <span>بدء كويز المحاضرة</span>
+                </button>
+            </div>
+
+            <!-- محتوى الملاحظات -->
+            <div id="vSheetNotesTab" style="display: none;">
+                <div class="content-view" id="vNotesContent" style="padding: 16px; margin-bottom: 15px;">
+                    <p style="color: var(--grey); line-height: 1.8;">ملاحظات ونقاط هامة تم استخلاصها آلياً لتسهيل المراجعة السريعة قبل الامتحان.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -629,6 +806,11 @@
 
         window.addEventListener('popstate', function(event) {
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
+            
+            // إيقاف تشغيل الفيديو عند الرجوع لمنع استمرار الصوت
+            const vPlayer = document.getElementById('videoIframePlayer');
+            if (vPlayer) vPlayer.src = '';
+
             if(typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
             if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
@@ -645,6 +827,26 @@
             document.getElementById('section-info').style.display = 'none';
             
             document.getElementById('section-' + sec).style.display = 'block';
+        }
+
+        // تبديل شيت مشغل الفيديو
+        function switchVideoSheetTab(tab) {
+            const sumBtn = document.getElementById('vTabSummaryBtn');
+            const notBtn = document.getElementById('vTabNotesBtn');
+            const sumTab = document.getElementById('vSheetSummaryTab');
+            const notTab = document.getElementById('vSheetNotesTab');
+
+            if (tab === 'summary') {
+                sumBtn.classList.add('active');
+                notBtn.classList.remove('active');
+                sumTab.style.display = 'block';
+                notTab.style.display = 'none';
+            } else {
+                notBtn.classList.add('active');
+                sumBtn.classList.remove('active');
+                notTab.style.display = 'block';
+                sumTab.style.display = 'none';
+            }
         }
 
         // ------------------ السبورة العادية ------------------
@@ -740,7 +942,6 @@
         pdfWrapper.addEventListener('touchmove', (e) => { 
             if (e.touches.length === 2 && initialPinchDistance) { 
                 e.preventDefault(); 
-                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
                 let scaleChange = currentDistance / initialPinchDistance; 
                 let newWidth = pdfInitialWidth * scaleChange; 
                 if (newWidth < 100) newWidth = 100; 
@@ -775,7 +976,6 @@
         
         if (!course) window.location.href = 'index4.html';
 
-        // وضع صورة الغلاف تلقائياً للمادة
         document.getElementById('heroCover').style.backgroundImage = `url('${course.cover}')`;
 
         function getLevelName(xp) { 
@@ -904,6 +1104,90 @@
                 document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Pause' : 'إيقاف'; isPomoRunning = true; } 
         }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
+
+        // === دالة تحويل رابط الفيديو لـ Embed نظيف (سواء Google Drive أو YouTube) ===
+        function formatEmbedVideoUrl(rawUrl) {
+            if (!rawUrl) return "";
+            let url = rawUrl.trim();
+            // رابط جوجل درايف
+            if (url.includes('drive.google.com')) {
+                let idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (idMatch && idMatch[1]) {
+                    return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
+                }
+                return url.replace(/\/view(\?.*)?$/, '/preview');
+            }
+            // رابط يوتيوب
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                let ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                if (ytMatch && ytMatch[1]) {
+                    return `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0&modestbranding=1`;
+                }
+            }
+            return url;
+        }
+
+        // === فتح واجهة مشغل الفيديو والملخص الذكي ===
+        function openVideoLectureModal(videoUrl, lectureName, lectureNum, cacheIndex) {
+            const embedUrl = formatEmbedVideoUrl(videoUrl);
+            const playerIframe = document.getElementById('videoIframePlayer');
+            playerIframe.src = embedUrl;
+
+            document.getElementById('vLecTitle').innerText = lectureName;
+            document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lectureNum} من مقرر ${course ? course.titleAr : ''}`;
+
+            let rawAiData = window.lecturesDataCache[cacheIndex];
+            let parsedData = null;
+            if (rawAiData) {
+                try {
+                    parsedData = typeof rawAiData === 'string' ? JSON.parse(rawAiData) : rawAiData;
+                } catch(e) {}
+            }
+
+            // ملخص الـ AI
+            const summaryTextEl = document.getElementById('vSummaryText');
+            const keyPointsList = document.getElementById('vKeyPointsList');
+            keyPointsList.innerHTML = '';
+
+            if (parsedData && parsedData.explanation && parsedData.explanation.length > 0) {
+                summaryTextEl.innerText = parsedData.explanation[0].content || "في هذه المحاضرة تم التعرف على أهم مفاهيم الدرس ومفرداته الأساسية وتطبيقاته.";
+            } else {
+                summaryTextEl.innerText = "شرح تفصيلي ومبسط يغطي جميع جوانب المحاضرة وأهم الأسئلة التطبيقية لامتحان الفاينل والميدترم.";
+            }
+
+            // أهم النقاط
+            if (parsedData && parsedData.summary && parsedData.summary.length > 0) {
+                parsedData.summary.forEach(pt => {
+                    keyPointsList.innerHTML += `
+                        <div class="key-point-item">
+                            <span class="material-icons">check_circle</span>
+                            <span>${pt}</span>
+                        </div>`;
+                });
+            } else if (parsedData && parsedData.objectives && parsedData.objectives.length > 0) {
+                parsedData.objectives.forEach(obj => {
+                    keyPointsList.innerHTML += `
+                        <div class="key-point-item">
+                            <span class="material-icons">check_circle</span>
+                            <span>${obj}</span>
+                        </div>`;
+                });
+            } else {
+                keyPointsList.innerHTML = `
+                    <div class="key-point-item"><span class="material-icons">check_circle</span> <span>فهم الأساسيات والنقاط المحورية في المحاضرة</span></div>
+                    <div class="key-point-item"><span class="material-icons">check_circle</span> <span>حل التطبيقات والتمارين المرتبطة بسوق العمل</span></div>
+                    <div class="key-point-item"><span class="material-icons">check_circle</span> <span>التحضير لأسئلة الامتحان والكويزات</span></div>`;
+            }
+
+            // ربط زر الكويز
+            const actionBtn = document.getElementById('vActionBtn');
+            actionBtn.onclick = function() {
+                openQuiz(lectureNum, cacheIndex);
+            };
+
+            switchVideoSheetTab('summary');
+            openModalWithHistory('videoLectureModal');
+        }
 
         // === تبويبات المحاضرة التفاعلية الحديثة والمنسقة ===
         function switchInteractiveTab(tabId, el) {
@@ -1080,7 +1364,7 @@
                     let activeCardClass = index === 0 ? 'active-now' : '';
 
                     listCard.innerHTML += `
-                    <div class="lecture-row-card ${activeCardClass}" onclick="showDynamicLecture('${lec.name.replace(/'/g, "\\'")}', '${lec.file || ''}', ${lectureNumber}, ${index})">
+                    <div class="lecture-row-card ${activeCardClass}" onclick="showDynamicLecture('${lec.name.replace(/'/g, "\\'")}', '${lec.file || ''}', ${lectureNumber}, ${index}, '${lec.videoUrl || ''}')">
                         <div class="lec-info">
                             <span class="lec-title">${lec.name}</span>
                             <span class="lec-meta"><span class="material-icons" style="font-size:14px;">schedule</span> المحاضرة ${lectureNumber} • شرح متكامل</span>
@@ -1096,10 +1380,16 @@
             applyLanguage();
         }
 
-        function showDynamicLecture(lectureName, fileName, num, cacheIndex) {
+        function showDynamicLecture(lectureName, fileName, num, cacheIndex, videoUrl) {
             const quizKey = `completed_quiz_${courseId}_${num}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
+            // فحص هل المحاضرة فيديو (سواء من videoUrl أو fileName ينتهي برابط drive أو youtube)
+            let resolvedVideoUrl = videoUrl && videoUrl.trim() !== '' ? videoUrl : '';
+            if (!resolvedVideoUrl && fileName && (fileName.includes('drive.google.com') || fileName.includes('youtu'))) {
+                resolvedVideoUrl = fileName;
+            }
+
             let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة'; 
             let btnIcon = 'quiz'; let btnStyle = '';
             
@@ -1130,8 +1420,18 @@
                 }
             }
 
+            // زر مشاهدة الفيديو إذا كان موجوداً
+            let videoButtonHtml = '';
+            if (resolvedVideoUrl && resolvedVideoUrl.trim() !== '') {
+                videoButtonHtml = `
+                <button onclick="openVideoLectureModal('${resolvedVideoUrl}', '${lectureName.replace(/'/g, "\\'")}', ${num}, ${cacheIndex})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(15,23,42,0.3);">
+                    <span class="material-icons" style="margin-inline-end:10px; color:#2563EB;">smart_display</span> 
+                    <span data-ar="مشاهدة فيديو الشرح الذكي 🎬" data-en="Watch AI Video Lecture 🎬">مشاهدة فيديو الشرح الذكي 🎬</span>
+                </button>`;
+            }
+
             let fileButtonHtml = '';
-            if (fileName && fileName.trim() !== '' && fileName !== 'undefined') {
+            if (fileName && fileName.trim() !== '' && fileName !== 'undefined' && !resolvedVideoUrl) {
                 const lowerFileName = fileName.toLowerCase().trim();
                 if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
                     fileButtonHtml = `
@@ -1156,6 +1456,7 @@
                 <h3 style="color:var(--primary); margin-bottom:8px; font-weight:900; font-size:1.3rem;">${lectureName}</h3>
                 <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;">اختر مسار المذاكرة الذي تفضله:</p>
                 
+                ${videoButtonHtml}
                 ${aiButtonHtml}
                 ${fileButtonHtml}
 
