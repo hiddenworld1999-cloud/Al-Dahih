@@ -1,3 +1,10 @@
+تمت إعادة تصميم واجهة course4.html بالكامل لتتحول إلى واجهة EdTech/FinTech فائقة الاحترافية متناسقة 100% مع روح التخرج والفرقة الرابعة، مع مراعاة أدق التفاصيل:
+ما تم تحديثه في التصميم:
+ * بانر المادة (Executive Hero Banner): تصميم زجاجي متدرج فخم مع شارة تخرج وتأثيرات ضوئية خافتة (Glow Effects) وبطاقة XP بتصميم نيون.
+ * كروت الأقسام وقائمة المحاضرات: أزرار مقعرة بنعومة (Soft Lifted Cards) مع حدود مضيئة خفيفة وانتقالات تفاعلية انسيابية تعطي إحساساً بالتطبيقات العالمية المدفوعة.
+ * أزرار فتح المحاضرة (HTML & PDF): تصميم أزرار نيون بارزة وسلسة تملأ العرض بشكل أنيق مع أيقونات معبرة.
+ * عرض ملفات الـ HTML داخل الـ iframe: ضبط الحاوية لتكون بملء الشاشة ومضبوطة بدون هوامش جانبية خانقة ومضبوطة للسكرول الانسيابي.
+ * الاحتفاظ الصارم بكامل المنظومة الوظيفية: كل أنظمة الحماية، حارس التوجيه، التايمر، الآلة الحاسبة، سبورة الشخبطة، قارئ الـ PDF مع الرسم والوترمارك، كويزات الـ AI التفاعلية، لوحة الشرف، والمزامنة السحابية تعمل كما هي تماماً دون نقصان سطر واحد.
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -37,95 +44,105 @@
     <style>
         :root { 
             --primary: #0A2647; 
-            --primary-light: #144272;
-            --accent: #FFC800; 
-            --bg: #F8F9FA; 
+            --primary-light: #164E87;
+            --accent: #FFB703; 
+            --accent-glow: rgba(255, 183, 3, 0.3);
+            --bg: #F4F7FB; 
             --card: #ffffff; 
-            --text: #1e293b; 
-            --grey: #64748b;
-            --calc-bg: #f8f9fa; 
+            --text: #0F172A; 
+            --grey: #64748B;
+            --calc-bg: #F8FAFC; 
             --calc-btn: #ffffff; 
-            --quiz-option-bg: #f1f5f9;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --border-color: rgba(0,0,0,0.06);
+            --quiz-option-bg: #F1F5F9;
+            --card-shadow: 0 14px 35px rgba(10, 38, 71, 0.06);
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --border-color: rgba(10, 38, 71, 0.08);
         }
         body.dark-mode { 
-            --bg: #0f172a; 
-            --card: #1e293b; 
-            --text: #f8fafc; 
-            --grey: #94a3b8; 
-            --primary: #FFC800;
-            --primary-light: #f59e0b;
-            --calc-bg: #2d2d2d; 
-            --calc-btn: #3e3e3e; 
-            --quiz-option-bg: #334155;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            --glass-bg: rgba(30, 41, 59, 0.85);
-            --border-color: rgba(255,255,255,0.08);
+            --bg: #0B1120; 
+            --card: #151F32; 
+            --text: #F8FAFC; 
+            --grey: #94A3B8; 
+            --primary: #FFB703;
+            --primary-light: #F59E0B;
+            --accent: #FFB703;
+            --accent-glow: rgba(255, 183, 3, 0.2);
+            --calc-bg: #1A2438; 
+            --calc-btn: #243049; 
+            --quiz-option-bg: #1E293B;
+            --card-shadow: 0 16px 40px rgba(0,0,0,0.45);
+            --glass-bg: rgba(21, 31, 50, 0.88);
+            --border-color: rgba(255,255,255,0.07);
         }
 
         body.vip-gold-mode {
             --primary: #FFD700; 
-            --primary-light: #DAA520;
+            --primary-light: #D4AF37;
             --accent: #FFFFFF; 
-            --bg: #0a0a0a; 
-            --card: #171717; 
+            --accent-glow: rgba(255, 215, 0, 0.35);
+            --bg: #080808; 
+            --card: #141414; 
             --text: #FFD700; 
-            --grey: #aaaaaa;
-            --calc-bg: #1a1a1a; 
-            --calc-btn: #222; 
-            --quiz-option-bg: #222;
-            --border-color: rgba(255,215,0,0.2);
+            --grey: #B3B3B3;
+            --calc-bg: #1C1C1C; 
+            --calc-btn: #262626; 
+            --quiz-option-bg: #1F1F1F;
+            --border-color: rgba(255,215,0,0.25);
+            --card-shadow: 0 16px 40px rgba(255, 215, 0, 0.12);
+            --glass-bg: rgba(14, 14, 14, 0.92);
         }
-        body.vip-gold-mode .hero-banner { background: linear-gradient(135deg, #111 0%, #222 100%); border-bottom: 1px solid rgba(255,215,0,0.3); box-shadow: 0 15px 40px rgba(255,215,0,0.15); }
-        body.vip-gold-mode .btn-card { border: 1px solid rgba(255,215,0,0.2); box-shadow: 0 4px 15px rgba(255,215,0,0.05); }
+        body.vip-gold-mode .hero-banner { background: linear-gradient(135deg, #111 0%, #242424 100%); border: 1px solid rgba(255,215,0,0.35); box-shadow: 0 20px 45px rgba(255,215,0,0.18); }
+        body.vip-gold-mode .btn-card { border: 1px solid rgba(255,215,0,0.25); box-shadow: 0 6px 20px rgba(255,215,0,0.06); }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
-        body { margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; overflow-x: hidden; user-select: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; overflow-x: hidden; user-select: none; transition: background-color 0.3s ease, color 0.3s ease; }
         html[lang="en"] body { font-family: 'Poppins', sans-serif; }
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
 
-        .xp-badge { background: rgba(255, 200, 0, 0.15); color: var(--accent); padding: 6px 14px; border-radius: 14px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; box-shadow: 0 4px 12px rgba(255,200,0,0.2); }
+        .xp-badge { background: rgba(255, 183, 3, 0.16); color: var(--accent); padding: 6px 14px; border-radius: 14px; font-size: 0.95rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; box-shadow: 0 3px 12px var(--accent-glow); border: 1px solid rgba(255, 183, 3, 0.3); }
 
-        .course-header { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
-        .back-btn { font-size: 26px; cursor: pointer; color: var(--text); padding: 5px; }
+        .course-header { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: calc(14px + env(safe-area-inset-top, 35px)) 20px 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
+        .back-btn { font-size: 26px; cursor: pointer; color: var(--text); padding: 6px; border-radius: 12px; background: rgba(0,0,0,0.03); transition: 0.2s; }
+        body.dark-mode .back-btn { background: rgba(255,255,255,0.05); }
         html[dir="ltr"] .back-btn { transform: rotate(180deg); }
-        .header-icons { display: flex; align-items: center; gap: 14px; }
-        .header-icons .material-icons { color: var(--text); font-size: 26px; cursor: pointer; transition: 0.2s; }
-        .music-active { color: var(--accent) !important; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .header-icons { display: flex; align-items: center; gap: 12px; }
+        .header-icons .material-icons { color: var(--text); font-size: 25px; cursor: pointer; transition: 0.2s; padding: 6px; border-radius: 12px; background: rgba(0,0,0,0.03); }
+        body.dark-mode .header-icons .material-icons { background: rgba(255,255,255,0.05); }
+        .music-active { color: var(--accent) !important; animation: pulse 1.5s infinite; background: rgba(255, 183, 3, 0.15) !important; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
         
-        .hero-banner { padding: 35px 20px; background: var(--card); text-align: center; border-bottom-left-radius: 32px; border-bottom-right-radius: 32px; box-shadow: var(--card-shadow); margin-bottom: 25px; border-bottom: 1px solid var(--border-color); position: relative; overflow: hidden; }
-        .hero-banner::before { content: ''; position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 250px; height: 100px; background: radial-gradient(circle, rgba(255,200,0,0.15), transparent 70%); border-radius: 50%; }
-        .course-title { font-size: 1.5rem; color: var(--primary); margin: 0 0 6px 0; font-weight: 900; letter-spacing: -0.3px; }
-        .course-prof { color: var(--grey); font-size: 0.95rem; font-weight: 500; }
+        .hero-banner { padding: 32px 22px; background: linear-gradient(135deg, #0A2647 0%, #164E87 100%); text-align: center; border-radius: 28px; box-shadow: 0 20px 40px rgba(10, 38, 71, 0.22); margin: 18px 20px 24px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        body.dark-mode .hero-banner { background: linear-gradient(135deg, #151F32 0%, #0F172A 100%); box-shadow: 0 20px 45px rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.08); }
+        .hero-banner::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 280px; height: 120px; background: radial-gradient(circle, rgba(255, 183, 3, 0.28), transparent 70%); border-radius: 50%; pointer-events: none; }
+        .senior-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); color: #FFB703; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; margin-bottom: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255, 183, 3, 0.3); }
+        .course-title { font-size: 1.6rem; color: #ffffff; margin: 0 0 8px 0; font-weight: 900; letter-spacing: -0.3px; position: relative; z-index: 2; }
+        .course-prof { color: rgba(255,255,255,0.85); font-size: 0.96rem; font-weight: 600; position: relative; z-index: 2; }
         
         .container { padding: 0 20px; }
-        .section-label { margin: 25px 0 15px 0; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; font-size: 1.05rem; }
-        .section-label::before { content: ''; display: block; width: 5px; height: 18px; background: var(--accent); border-radius: 4px; }
+        .section-label { margin: 26px 0 16px 0; font-weight: 900; color: var(--text); display: flex; align-items: center; gap: 10px; font-size: 1.15rem; }
+        .section-label::before { content: ''; display: block; width: 6px; height: 22px; background: var(--accent); border-radius: 4px; box-shadow: 0 0 12px var(--accent-glow); }
         
-        .btn-card { width: 100%; padding: 20px; border-radius: 20px; border: 1px solid var(--border-color); font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 15px; box-shadow: var(--card-shadow); transition: transform 0.2s, box-shadow 0.2s; background: var(--card); color: var(--text); text-align: start; }
+        .btn-card { width: 100%; padding: 20px; border-radius: 24px; border: 1px solid var(--border-color); font-family: inherit; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 16px; box-shadow: var(--card-shadow); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: var(--card); color: var(--text); text-align: start; }
         .btn-card:active { transform: scale(0.97); }
         .btn-summary { border-inline-end: 6px solid #2196f3; }
         .btn-midterm { border-inline-end: 6px solid #ff9800; }
         .btn-final { border-inline-end: 6px solid #f44336; }
         
-        .btn-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.04); flex-shrink: 0; }
+        .btn-icon { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.04); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         body.dark-mode .btn-icon, body.vip-gold-mode .btn-icon { background: rgba(255,255,255,0.05); }
 
-        .btn-lecture-quiz { width: 100%; margin-top: 15px; padding: 18px; background: linear-gradient(135deg, #FFC800, #ffb700); color: #0A2647; border: none; border-radius: 16px; font-weight: 800; font-size: 1.05rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; box-shadow: 0 8px 25px rgba(255, 200, 0, 0.3); transition: 0.2s; }
-        .btn-lecture-quiz:active { transform: scale(0.96); }
+        .btn-lecture-quiz { width: 100%; margin-top: 15px; padding: 18px; background: linear-gradient(135deg, #FFB703, #FFA200); color: #0A2647; border: none; border-radius: 20px; font-weight: 900; font-size: 1.05rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: inherit; box-shadow: 0 10px 25px var(--accent-glow); transition: 0.2s; }
+        .btn-lecture-quiz:active { transform: scale(0.97); }
         
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; display: none; flex-direction: column; overflow: hidden; }
-        .modal-head { padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.04); z-index: 10; border-bottom: 1px solid var(--border-color); }
+        .modal-head { padding: calc(14px + env(safe-area-inset-top, 35px)) 20px 14px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04); z-index: 10; border-bottom: 1px solid var(--border-color); }
         .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
-        .close-arrow { cursor: pointer; font-size: 28px; padding: 5px; color: var(--text); }
+        .close-arrow { cursor: pointer; font-size: 28px; padding: 5px; color: var(--text); border-radius: 12px; transition: 0.2s; }
         
-        .lecture-item { background: var(--card); padding: 18px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid var(--border-color); font-weight: 800; font-size: 1.05rem; box-shadow: var(--card-shadow); transition: all 0.2s; }
-        .lecture-item:active { transform: scale(0.98); }
+        .lecture-item { background: var(--card); padding: 18px 20px; border-radius: 20px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid var(--border-color); font-weight: 800; font-size: 1.05rem; box-shadow: var(--card-shadow); transition: all 0.25s ease; }
+        .lecture-item:active { transform: scale(0.97); }
         
-        .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 24px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
+        .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 28px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
 
         /* ================= ستايلات المحاضرة التفاعلية الحديثة ================= */
         #interactiveLectureModal .modal-body {
@@ -134,22 +151,21 @@
             width: 100%;
         }
 
-        .interactive-hero { background: linear-gradient(135deg, #0A2647 0%, #144272 100%); border-radius: 20px; padding: 25px 20px; color: white; margin-bottom: 20px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(10,38,71,0.25); }
-        body.dark-mode .interactive-hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
-        .interactive-hero h2 { font-size: 1.35rem; font-weight: 900; margin-bottom: 6px; }
-        .interactive-hero p { font-size: 0.9rem; opacity: 0.85; font-weight: 500; }
+        .interactive-hero { background: linear-gradient(135deg, #0A2647 0%, #164E87 100%); border-radius: 24px; padding: 26px 20px; color: white; margin-bottom: 22px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(10,38,71,0.25); border: 1px solid rgba(255,255,255,0.1); }
+        body.dark-mode .interactive-hero { background: linear-gradient(135deg, #151F32 0%, #0F172A 100%); }
+        .interactive-hero h2 { font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; }
+        .interactive-hero p { font-size: 0.92rem; opacity: 0.88; font-weight: 500; }
 
-        /* شريط التبويبات المنسق */
         .interactive-nav { 
             display: flex; 
             justify-content: center;
             gap: 8px; 
             padding: 8px; 
             background: var(--card); 
-            border-radius: 16px; 
-            margin: 0 auto 20px auto; 
+            border-radius: 20px; 
+            margin: 0 auto 22px auto; 
             border: 1px solid var(--border-color); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04); 
             overflow-x: auto;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
@@ -160,24 +176,24 @@
 
         .tab-btn { 
             flex: 1; 
-            min-width: 80px;
-            padding: 10px 14px; 
-            border-radius: 12px; 
+            min-width: 85px;
+            padding: 11px 16px; 
+            border-radius: 14px; 
             border: none; 
-            font-weight: 700; 
+            font-weight: 800; 
             font-family: inherit; 
             font-size: 0.95rem; 
             cursor: pointer; 
             background: transparent; 
             color: var(--grey); 
-            transition: all 0.2s ease; 
+            transition: all 0.25s ease; 
             text-align: center;
         }
 
         .tab-btn.active { 
             background: var(--primary) !important; 
             color: white !important; 
-            box-shadow: 0 4px 12px rgba(10, 38, 71, 0.25); 
+            box-shadow: 0 6px 16px rgba(10, 38, 71, 0.25); 
         }
         body.dark-mode .tab-btn.active { 
             background: var(--accent) !important; 
@@ -193,54 +209,53 @@
             animation: fadeInTab 0.3s ease forwards;
         }
         @keyframes fadeInTab {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .premium-card { background: var(--card); border-radius: 20px; padding: 22px; margin-bottom: 16px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); position: relative; }
-        .premium-card-title { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; color: var(--primary); margin-bottom: 12px; }
-        .premium-card-title .material-icons { background: rgba(255, 200, 0, 0.15); color: #e6b000; padding: 6px; border-radius: 10px; font-size: 20px; }
+        .premium-card { background: var(--card); border-radius: 24px; padding: 24px; margin-bottom: 18px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); position: relative; }
+        .premium-card-title { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.15rem; color: var(--primary); margin-bottom: 14px; }
+        .premium-card-title .material-icons { background: rgba(255, 183, 3, 0.16); color: #FFB703; padding: 6px; border-radius: 12px; font-size: 20px; }
 
-        /* ستايل الكويز */
-        .quiz-opt { padding: 18px 20px; background: var(--quiz-option-bg); border: 2px solid transparent; border-radius: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.25s; font-family: inherit; font-size: 1rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+        .quiz-opt { padding: 18px 20px; background: var(--quiz-option-bg); border: 2px solid transparent; border-radius: 18px; margin-bottom: 12px; cursor: pointer; transition: 0.25s; font-family: inherit; font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
         .quiz-opt.correct { background: #e8f5e9; border-color: #4caf50; color: #2e7d32; }
         .quiz-opt.wrong { background: #ffebee; border-color: #f44336; color: #c62828; }
 
         .img-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2500; display: none; flex-direction: column; }
-        .img-head { padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--card); display: flex; justify-content: space-between; align-items: center; z-index: 2501; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); } 
-        .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: inherit; }
+        .img-head { padding: calc(14px + env(safe-area-inset-top, 35px)) 20px 14px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center; z-index: 2501; border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.06); } 
+        .close-img-btn { color: white; background: #d32f2f; border: none; padding: 8px 22px; border-radius: 14px; font-weight: bold; cursor: pointer; font-family: inherit; box-shadow: 0 4px 12px rgba(211,47,47,0.3); }
         .images-scroll-container { flex: 1; overflow: auto; width: 100%; padding: 10px; background: #e9ecef; text-align: center; }
         .images-wrapper { position: relative; width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: center; margin: 0 auto; padding-top: 15px; transition: width 0.1s ease-out; }
         .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; overflow: hidden; z-index: 10; }
         .watermark-text { color: rgba(0, 0, 0, 0.15); font-size: 26px; font-weight: 900; transform: rotate(-45deg); padding: 80px; white-space: nowrap; user-select: none; }
         
         .calc-floating-container { position: fixed; bottom: 30px; left: 20px; z-index: 4500; display: flex; flex-direction: column; align-items: flex-start; }
-        .calc-fab { width: 55px; height: 55px; border-radius: 50%; background: #0A2647; color: white; border: 2px solid #FFC800; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; z-index: 4501; }
-        .calc-fab.active { background: #FFC800; color: #0A2647; border-color: #0A2647; }
-        .calc-box { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 2px solid var(--accent); width: 280px; display: none; direction: ltr; position: absolute; bottom: 70px; left: 0; transform-origin: bottom left; animation: scaleUp 0.2s ease-out; z-index: 4500; }
+        .calc-fab { width: 56px; height: 56px; border-radius: 50%; background: #0A2647; color: white; border: 2px solid #FFB703; box-shadow: 0 6px 20px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; z-index: 4501; }
+        .calc-fab.active { background: #FFB703; color: #0A2647; border-color: #0A2647; }
+        .calc-box { background: var(--card); padding: 16px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); border: 2px solid var(--accent); width: 285px; display: none; direction: ltr; position: absolute; bottom: 70px; left: 0; transform-origin: bottom left; animation: scaleUp 0.2s ease-out; z-index: 4500; }
         @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; direction: rtl; }
         .calc-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
-        .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 12px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
+        .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 16px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn { padding: 15px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text); transition: 0.2s; }
+        .calc-btn { padding: 15px; border: none; border-radius: 14px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--calc-btn); color: var(--text); transition: 0.2s; }
         .calc-btn:active { transform: scale(0.9); }
         .calc-btn.op { background: rgba(10, 38, 71, 0.1); color: var(--primary); }
         .calc-btn.eq { background: var(--accent); color: #0A2647; grid-column: span 2; }
         
         .pomodoro-container { position: fixed; bottom: 30px; z-index: 400; display: flex; flex-direction: column; align-items: center; right: 20px; }
-        .pomo-fab { width: 55px; height: 55px; border-radius: 50%; background: var(--accent); color: #0A2647; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .pomo-timer { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); margin-bottom: 15px; border: 2px solid var(--accent); width: 180px; text-align: center; display: none; }
-        .pomo-header { font-size: 0.9rem; color: var(--primary); font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .pomo-fab { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #0A2647; border: none; box-shadow: 0 6px 20px var(--accent-glow); cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .pomo-timer { background: var(--card); padding: 16px; border-radius: 22px; box-shadow: var(--card-shadow); margin-bottom: 15px; border: 2px solid var(--accent); width: 190px; text-align: center; display: none; }
+        .pomo-header { font-size: 0.95rem; color: var(--primary); font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .pomo-time { font-size: 2.2rem; font-weight: 900; color: #0A2647; margin-bottom: 15px; direction: ltr; font-family: monospace; }
         body.dark-mode .pomo-time { color: var(--primary); }
         .pomo-controls { display: flex; justify-content: center; gap: 10px; }
-        .pomo-controls button { background: #0A2647; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
+        .pomo-controls button { background: #0A2647; color: white; border: none; padding: 9px 16px; border-radius: 12px; cursor: pointer; font-family: inherit; font-weight: bold; flex: 1; }
 
         #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; display: none; flex-direction: column; }
-        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(15px + env(safe-area-inset-top, 35px)) 20px 15px; background: var(--card); box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 10px; background: var(--card); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .color-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
+        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(14px + env(safe-area-inset-top, 35px)) 20px 14px; background: var(--glass-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); }
+        .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 12px; background: var(--card); box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 10; border-bottom: 1px solid var(--border-color); }
+        .color-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s; }
         .color-btn.active { transform: scale(1.2); border-color: var(--text); }
         #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
     </style>
@@ -335,17 +350,21 @@
     </div>
 
     <div class="hero-banner">
+        <div class="senior-tag">
+            <span class="material-icons" style="font-size: 15px;">school</span>
+            <span data-ar="الفرقة الرابعة • سنة التخرج 🎓" data-en="Senior Year • Class of 2026 🎓">الفرقة الرابعة • سنة التخرج 🎓</span>
+        </div>
         <h1 class="course-title" id="courseTitle">جاري التحميل...</h1>
         <p class="course-prof" id="courseProf">...</p>
-        <div class="xp-badge" id="courseXP" style="margin-top:12px;">⭐ 0 XP</div>
+        <div class="xp-badge" id="courseXP" style="margin-top:14px;">⭐ 0 XP</div>
     </div>
 
     <div class="container">
         <div class="section-label"><span class="material-icons">menu_book</span> <span data-ar="محتوى المادة" data-en="Course Content">محتوى المادة</span></div>
         <button class="btn-card btn-summary" onclick="openModalWithHistory('summaryModal', true)">
             <div>
-                <div style="font-weight:900;" data-ar="المحاضرات والاختبارات" data-en="Lectures & Quizzes">المحاضرات والاختبارات</div>
-                <div style="font-size:0.8rem; opacity:0.7; margin-top:3px;" data-ar="الشرح التفاعلي وأسئلة كل محاضرة" data-en="Interactive explanation and quizzes">الشرح التفاعلي وأسئلة كل محاضرة</div>
+                <div style="font-weight:900; font-size:1.1rem;" data-ar="المحاضرات والاختبارات" data-en="Lectures & Quizzes">المحاضرات والاختبارات</div>
+                <div style="font-size:0.85rem; opacity:0.75; margin-top:4px;" data-ar="الشرح التفاعلي وأسئلة كل محاضرة" data-en="Interactive explanation and quizzes">الشرح التفاعلي وأسئلة كل محاضرة</div>
             </div>
             <div class="btn-icon" style="color:#2196f3;"><span class="material-icons">description</span></div>
         </button>
@@ -353,16 +372,16 @@
         <div class="section-label"><span class="material-icons">assignment</span> <span data-ar="الامتحانات السابقة" data-en="Previous Exams">الامتحانات السابقة</span></div>
         <button class="btn-card btn-midterm" onclick="openExam('midterm')">
             <div>
-                <div style="font-weight:900;" data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
-                <div style="font-size:0.8rem; opacity:0.7;" data-ar="امتحانات نص السنة" data-en="Mid-year exams">امتحانات نص السنة</div>
+                <div style="font-weight:900; font-size:1.1rem;" data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
+                <div style="font-size:0.85rem; opacity:0.75; margin-top:4px;" data-ar="امتحانات نص السنة" data-en="Mid-year exams">امتحانات نص السنة</div>
             </div>
             <div class="btn-icon" style="color:#ff9800;"><span class="material-icons">history_edu</span></div>
         </button>
 
         <button class="btn-card btn-final" onclick="openExam('final')">
             <div>
-                <div style="font-weight:900;" data-ar="أسئلة الفاينل" data-en="Final Exams">أسئلة الفاينل</div>
-                <div style="font-size:0.8rem; opacity:0.7;" data-ar="امتحانات آخر السنة" data-en="End-of-year exams">امتحانات آخر السنة</div>
+                <div style="font-weight:900; font-size:1.1rem;" data-ar="أسئلة الفاينل" data-en="Final Exams">أسئلة الفاينل</div>
+                <div style="font-size:0.85rem; opacity:0.75; margin-top:4px;" data-ar="امتحانات آخر السنة" data-en="End-of-year exams">امتحانات آخر السنة</div>
             </div>
             <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
         </button>
@@ -372,17 +391,17 @@
     <div id="summaryModal" class="modal modal-trackable">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:bold;" data-ar="قائمة المحاضرات" data-en="Lectures List">قائمة المحاضرات</span>
+            <span style="font-weight:900; font-size:1.1rem;" data-ar="قائمة المحاضرات" data-en="Lectures List">قائمة المحاضرات</span>
             <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="summaryList"></div>
     </div>
 
-    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe -->
+    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe بملء الشاشة -->
     <div id="contentModal" class="modal modal-trackable">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:bold;" id="contentTitle">المحتوى</span>
+            <span style="font-weight:900; font-size:1.1rem;" id="contentTitle">المحتوى</span>
             <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="contentModalBody" style="padding: 0;">
@@ -394,18 +413,17 @@
     <div id="interactiveLectureModal" class="modal modal-trackable" style="z-index: 3000;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:900; color:var(--primary);" id="interactiveTitle">المحاضرة التفاعلية</span>
+            <span style="font-weight:900; color:var(--primary); font-size:1.15rem;" id="interactiveTitle">المحاضرة التفاعلية</span>
             <span style="width: 28px;"></span>
         </div>
         
         <div class="modal-body" style="background: var(--bg); padding-top: 15px;">
             <div class="interactive-hero">
-                <span class="material-icons" style="font-size:36px; color:var(--accent); margin-bottom:5px;">auto_awesome</span>
+                <span class="material-icons" style="font-size:38px; color:var(--accent); margin-bottom:5px;">auto_awesome</span>
                 <h2 id="interactiveHeaderTitle">المحاضرة التفاعلية</h2>
                 <p>محتوى ذكي، مبسط ومعد لضمان الفهم والتحضير للامتحان 🎯</p>
             </div>
 
-            <!-- التبويبات المنسقة مباشرة -->
             <div class="interactive-nav" id="interactiveNav">
                 <button class="tab-btn active" data-tab="objectives" onclick="switchInteractiveTab('objectives', this)">🎯 الأهداف</button>
                 <button class="tab-btn" data-tab="explanation" onclick="switchInteractiveTab('explanation', this)">📚 الشرح</button>
@@ -426,7 +444,7 @@
     <div id="quizModal" class="modal modal-trackable" style="z-index: 3500;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:bold; font-size:1.1rem; color:var(--primary);" id="quizModalTitle">اختبار</span>
+            <span style="font-weight:900; font-size:1.15rem; color:var(--primary);" id="quizModalTitle">اختبار</span>
             <span style="width: 28px;"></span>
         </div>
         <div class="modal-body" id="quizBody"></div>
@@ -436,7 +454,7 @@
     <div id="examLeaderboardModal" class="modal modal-trackable" style="z-index: 2500;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:bold; font-size:1.1rem; color:var(--accent); display:flex; align-items:center; gap:5px;">
+            <span style="font-weight:900; font-size:1.15rem; color:var(--accent); display:flex; align-items:center; gap:6px;">
                 <span class="material-icons">emoji_events</span> أوائل الامتحان
             </span>
             <span style="width: 28px;"></span>
@@ -449,7 +467,7 @@
     <div id="pdfViewer" class="img-viewer modal-trackable">
         <div class="img-head">
             <button class="close-img-btn" onclick="history.back()" data-ar="إنهاء القراءة" data-en="Close PDF">إنهاء القراءة</button>
-            <span style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
+            <span style="color: var(--primary); font-weight: 900; font-size: 1rem;" data-ar="القارئ الذكي" data-en="Smart Reader">القارئ الذكي</span>
             
             <div class="header-icons" style="gap: 15px;">
                 <span class="material-icons" id="pdfDrawToggleBtn" onclick="togglePdfDrawMode()" style="color: var(--text); cursor: pointer;" title="شخبطة / حل">draw</span>
@@ -467,10 +485,10 @@
         </div>
 
         <div id="pdfDrawTools" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:var(--card); padding:10px 20px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); display:none; gap:15px; z-index:3000; align-items:center; border: 1px solid rgba(0,0,0,0.05);">
-            <button class="color-btn active" style="background:#0A2647; width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#0A2647', 3, this)" title="قلم أزرق"></button>
-            <button class="color-btn" style="background:#f44336; width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#f44336', 3, this)" title="قلم أحمر"></button>
-            <button class="color-btn" style="background:rgba(255, 200, 0, 0.4); border: 2px solid #FFC800; width:32px; height:32px; border-radius:50%; cursor:pointer;" onclick="setPdfBrush('rgba(255, 200, 0, 0.4)', 15, this)" title="قلم تحديد"></button>
-            <button class="color-btn" style="background:#ffffff; border:1px solid #ccc; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; justify-content:center; align-items:center;" onclick="setPdfBrush('eraser', 20, this)" title="أستيكة">
+            <button class="color-btn active" style="background:#0A2647; width:34px; height:34px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#0A2647', 3, this)" title="قلم أزرق"></button>
+            <button class="color-btn" style="background:#f44336; width:34px; height:34px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#f44336', 3, this)" title="قلم أحمر"></button>
+            <button class="color-btn" style="background:rgba(255, 200, 0, 0.4); border: 2px solid #FFC800; width:34px; height:34px; border-radius:50%; cursor:pointer;" onclick="setPdfBrush('rgba(255, 200, 0, 0.4)', 15, this)" title="قلم تحديد"></button>
+            <button class="color-btn" style="background:#ffffff; border:1px solid #ccc; width:34px; height:34px; border-radius:50%; cursor:pointer; display:flex; justify-content:center; align-items:center;" onclick="setPdfBrush('eraser', 20, this)" title="أستيكة">
                 <span class="material-icons" style="font-size:16px; color:#ccc;">ink_eraser</span>
             </button>
         </div>
@@ -612,7 +630,7 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // === مواد سنة رابعة (بـ IDs جديدة تبدأ من 400) ===
+        // === مواد سنة رابعة ===
         const allCourses = {
             401: { titleAr: "تطبيقات في برمجة الحاسب الآلي", titleEn: "Programming Applications", profAr: "د. مريم سامي", profEn: "Dr. Maryam Samy" },
             402: { titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Information Systems", profAr: "د. مريم سامي", profEn: "Dr. Maryam Samy" },
@@ -796,12 +814,12 @@
             document.getElementById('interactiveHeaderTitle').innerText = titleText;
             
             // 1. الأهداف
-            var objHtml = '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06);">';
-            objHtml += '<h3 style="color:#0A2647; margin-bottom:15px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#e6b000;">track_changes</span> <span>ماذا ستكتسب في نهاية هذه المحاضرة؟</span></h3>';
+            var objHtml = '<div style="background:#ffffff; border-radius:22px; padding:24px; box-shadow:0 6px 20px rgba(0,0,0,0.04); margin-bottom:16px; border:1px solid rgba(0,0,0,0.06);">';
+            objHtml += '<h3 style="color:#0A2647; margin-bottom:16px; font-size:1.18rem; font-weight:900; display:flex; align-items:center; gap:10px;"><span class="material-icons" style="color:#FFB703;">track_changes</span> <span>ماذا ستكتسب في نهاية هذه المحاضرة؟</span></h3>';
             if (jsonData.objectives && jsonData.objectives.length > 0) {
                 jsonData.objectives.forEach(function(obj) {
-                    objHtml += '<div style="display:flex; align-items:flex-start; gap:10px; background:#f8fafc; padding:14px 16px; border-radius:14px; margin-bottom:10px; border-right:4px solid #2196f3; color:#1e293b; font-weight:600; font-size:1rem; line-height:1.6;">';
-                    objHtml += '<span style="color:#2196f3; font-weight:900; font-size:1.1rem;">✓</span> <span>' + obj + '</span></div>';
+                    objHtml += '<div style="display:flex; align-items:flex-start; gap:12px; background:#f8fafc; padding:15px 18px; border-radius:16px; margin-bottom:10px; border-right:4px solid #2196f3; color:#1e293b; font-weight:700; font-size:1rem; line-height:1.65;">';
+                    objHtml += '<span style="color:#2196f3; font-weight:900; font-size:1.15rem;">✓</span> <span>' + obj + '</span></div>';
                 });
             }
             objHtml += '</div>';
@@ -811,9 +829,9 @@
             var expHtml = '';
             if (jsonData.explanation && jsonData.explanation.length > 0) {
                 jsonData.explanation.forEach(function(sec) {
-                    expHtml += '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #FFC800;">';
-                    expHtml += '<h3 style="color:#0A2647; margin-bottom:10px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#FFC800;">menu_book</span> <span>' + sec.subtitle + '</span></h3>';
-                    expHtml += '<p style="color:#334155; line-height:1.8; font-size:1.05rem; font-weight:500;">' + sec.content + '</p></div>';
+                    expHtml += '<div style="background:#ffffff; border-radius:22px; padding:24px; box-shadow:0 6px 20px rgba(0,0,0,0.04); margin-bottom:16px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #FFB703;">';
+                    expHtml += '<h3 style="color:#0A2647; margin-bottom:12px; font-size:1.18rem; font-weight:900; display:flex; align-items:center; gap:10px;"><span class="material-icons" style="color:#FFB703;">menu_book</span> <span>' + sec.subtitle + '</span></h3>';
+                    expHtml += '<p style="color:#334155; line-height:1.85; font-size:1.05rem; font-weight:500;">' + sec.content + '</p></div>';
                 });
             }
             document.getElementById('tab-explanation').innerHTML = expHtml;
@@ -821,24 +839,24 @@
             // 3. الأمثلة والتطبيق
             var exHtml = '';
             if (jsonData.realLifeExample) {
-                exHtml += '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #2196f3;">';
-                exHtml += '<h3 style="color:#1976D2; margin-bottom:10px; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#2196f3;">lightbulb</span> <span>موقف واقعي من سوق العمل</span></h3>';
-                exHtml += '<p style="color:#334155; line-height:1.8; font-size:1.05rem; font-weight:500;">' + jsonData.realLifeExample + '</p></div>';
+                exHtml += '<div style="background:#ffffff; border-radius:22px; padding:24px; box-shadow:0 6px 20px rgba(0,0,0,0.04); margin-bottom:16px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #2196f3;">';
+                exHtml += '<h3 style="color:#1976D2; margin-bottom:12px; font-weight:900; display:flex; align-items:center; gap:10px;"><span class="material-icons" style="color:#2196f3;">lightbulb</span> <span>موقف واقعي من سوق العمل</span></h3>';
+                exHtml += '<p style="color:#334155; line-height:1.85; font-size:1.05rem; font-weight:500;">' + jsonData.realLifeExample + '</p></div>';
             }
             if (jsonData.practicalExample) {
-                exHtml += '<div style="background:#1e1e2e; color:#cdd6f4; border-radius:18px; padding:20px; margin-bottom:15px; box-shadow:0 10px 30px rgba(0,0,0,0.25); border:1px solid #313244; direction:rtl; text-align:right;">';
-                exHtml += '<h3 style="color:#FFC800; margin-bottom:12px; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#FFC800;">terminal</span> <span>دراسة حالة عملية وتطبيق</span></h3>';
-                exHtml += '<pre style="white-space:pre-wrap; font-family:inherit; font-size:0.95rem; line-height:1.8; color:#cdd6f4;">' + jsonData.practicalExample + '</pre></div>';
+                exHtml += '<div style="background:#1e1e2e; color:#cdd6f4; border-radius:22px; padding:22px; margin-bottom:16px; box-shadow:0 12px 35px rgba(0,0,0,0.3); border:1px solid #313244; direction:rtl; text-align:right;">';
+                exHtml += '<h3 style="color:#FFB703; margin-bottom:14px; font-weight:900; display:flex; align-items:center; gap:10px;"><span class="material-icons" style="color:#FFB703;">terminal</span> <span>دراسة حالة عملية وتطبيق</span></h3>';
+                exHtml += '<pre style="white-space:pre-wrap; font-family:inherit; font-size:0.98rem; line-height:1.85; color:#cdd6f4;">' + jsonData.practicalExample + '</pre></div>';
             }
             document.getElementById('tab-examples').innerHTML = exHtml;
 
             // 4. الخلاصة
-            var sumHtml = '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06);">';
-            sumHtml += '<h3 style="color:#0A2647; margin-bottom:15px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#e6b000;">bolt</span> <span>الكبسولة الذهبية للمراجعة السريعة</span></h3>';
+            var sumHtml = '<div style="background:#ffffff; border-radius:22px; padding:24px; box-shadow:0 6px 20px rgba(0,0,0,0.04); margin-bottom:16px; border:1px solid rgba(0,0,0,0.06);">';
+            sumHtml += '<h3 style="color:#0A2647; margin-bottom:16px; font-size:1.18rem; font-weight:900; display:flex; align-items:center; gap:10px;"><span class="material-icons" style="color:#FFB703;">bolt</span> <span>الكبسولة الذهبية للمراجعة السريعة</span></h3>';
             if (jsonData.summary && jsonData.summary.length > 0) {
                 jsonData.summary.forEach(function(point) {
-                    sumHtml += '<div style="display:flex; align-items:flex-start; gap:10px; background:#f0fdf4; padding:14px 16px; border-radius:14px; margin-bottom:10px; border-right:4px solid #16a34a; color:#14532d; font-weight:700; font-size:1rem; line-height:1.6;">';
-                    sumHtml += '<span style="color:#16a34a; font-size:1.2rem;">★</span> <span>' + point + '</span></div>';
+                    sumHtml += '<div style="display:flex; align-items:flex-start; gap:12px; background:#f0fdf4; padding:15px 18px; border-radius:16px; margin-bottom:10px; border-right:4px solid #16a34a; color:#14532d; font-weight:800; font-size:1rem; line-height:1.65;">';
+                    sumHtml += '<span style="color:#16a34a; font-size:1.25rem;">★</span> <span>' + point + '</span></div>';
                 });
             }
             sumHtml += '</div>';
@@ -847,19 +865,18 @@
             // زر الانتقال لاختبار المحاضرة
             var promptBox = document.getElementById('interactiveQuizPrompt');
             if (jsonData.quiz && jsonData.quiz.length > 0) {
-                promptBox.innerHTML = '<button class="btn-lecture-quiz" style="width:100%; padding:18px; font-size:1.1rem; border-radius:16px; font-weight:bold; cursor:pointer;" onclick="openQuiz(\'' + lectureNum + '\', ' + cacheIndex + ')">ابدأ اختبار المحاضرة التفاعلي (' + jsonData.quiz.length + ' أسئلة) 🚀</button>';
+                promptBox.innerHTML = '<button class="btn-lecture-quiz" style="width:100%; padding:20px; font-size:1.12rem; border-radius:20px; font-weight:900; cursor:pointer;" onclick="openQuiz(\'' + lectureNum + '\', ' + cacheIndex + ')">ابدأ اختبار المحاضرة التفاعلي (' + jsonData.quiz.length + ' أسئلة) 🚀</button>';
             } else {
                 promptBox.innerHTML = '';
             }
 
-            // تفعيل التبويب الأول مباشرة
             var firstTab = document.querySelector('#interactiveNav button[data-tab="objectives"]');
             switchInteractiveTab('objectives', firstTab);
 
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // دالة مخصصة لفتح ملفات الـ HTML داخل iframe مع ضبط الزوم والتجاوب
+        // دالة مخصصة لفتح ملفات الـ HTML داخل iframe مع ضبط الزوم والتجاوب بملء الشاشة
         function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
@@ -889,7 +906,7 @@
 
         function loadLectures() {
             const list = document.getElementById('summaryList'); 
-            list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
+            list.innerHTML = `<div style="text-align:center; padding:35px; color:var(--primary);"><span class="material-icons" style="font-size:42px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:12px;" data-ar="جاري تحميل المحاضرات..." data-en="Loading lectures...">جاري تحميل المحاضرات...</p></div>`;
             applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || '';
@@ -909,7 +926,7 @@
                 .catch(error => { 
                     const cachedData = localStorage.getItem(cacheKey);
                     if (cachedData) { renderLectures(JSON.parse(cachedData)); } 
-                    else { list.innerHTML = `<div style="text-align:center; padding:30px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</p></div>`; applyLanguage(); }
+                    else { list.innerHTML = `<div style="text-align:center; padding:35px; color:#d32f2f;"><span class="material-icons" style="font-size:42px; margin-bottom:10px;">wifi_off</span><p data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</p></div>`; applyLanguage(); }
                 });
         }
 
@@ -927,15 +944,15 @@
 
                     list.innerHTML += `
                     <div class="lecture-item" onclick="showDynamicLecture('${lec.name.replace(/'/g, "\\'")}', '${lec.file || ''}', ${lectureNumber}, ${index})">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span class="material-icons" style="color:var(--primary); background:rgba(255,200,0,0.15); padding:8px; border-radius:12px; font-size:22px;">auto_stories</span>
+                        <div style="display:flex; align-items:center; gap:14px;">
+                            <span class="material-icons" style="color:var(--primary); background:rgba(255,183,3,0.16); padding:9px; border-radius:14px; font-size:24px;">auto_stories</span>
                             <span>${lec.name}</span>
                         </div>
                         <span class="material-icons" style="color:var(--grey)">${arr}</span>
                     </div>`; 
                 }); 
             } else { 
-                list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; 
+                list.innerHTML = `<div style="text-align:center; padding:35px; color:var(--grey);"><span class="material-icons" style="font-size:42px; margin-bottom:10px;">folder_off</span><p data-ar="لا توجد محاضرات متاحة حالياً." data-en="No lectures available yet.">لا توجد محاضرات متاحة حالياً.</p></div>`; 
             }
             applyLanguage();
         }
@@ -957,20 +974,17 @@
             const rawAiData = window.lecturesDataCache[cacheIndex];
             let aiButtonHtml = '';
             
-            // التحقق مما إذا كان المحتوى ملف HTML أو نص JSON
             if (rawAiData) {
                 const trimmedData = typeof rawAiData === 'string' ? rawAiData.trim() : '';
                 if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
-                    // رابط لملف HTML
                     aiButtonHtml = `
-                    <button onclick="openHtmlLectureInsideApp('${trimmedData}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #144272 100%); color:white; border:none; padding:18px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(10, 38, 71, 0.25);">
+                    <button onclick="openHtmlLectureInsideApp('${trimmedData}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #164E87 100%); color:white; border:none; padding:18px; border-radius:20px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(10, 38, 71, 0.25);">
                         <span class="material-icons" style="margin-inline-end:10px; color:var(--accent);">auto_awesome</span> 
-                        <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
+                        <span data-ar="فتح المحاضرة التفاعلية (HTML) ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
                     </button>`;
                 } else {
-                    // كود JSON تفاعلي
                     aiButtonHtml = `
-                    <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #144272 100%); color:white; border:none; padding:18px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(10, 38, 71, 0.25);">
+                    <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0A2647 0%, #164E87 100%); color:white; border:none; padding:18px; border-radius:20px; font-size:1.1rem; width:100%; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(10, 38, 71, 0.25);">
                         <span class="material-icons" style="margin-inline-end:10px; color:var(--accent);">auto_awesome</span> 
                         <span data-ar="فتح المحاضرة التفاعلية الفاخرة ⚡" data-en="Open Premium Interactive Lecture ⚡">فتح المحاضرة التفاعلية الفاخرة ⚡</span>
                     </button>`;
@@ -981,16 +995,14 @@
             if (fileName && fileName.trim() !== '' && fileName !== 'undefined') {
                 const lowerFileName = fileName.toLowerCase().trim();
                 if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
-                    // إذا كان مسار الملف في الشيت بصيغة HTML يتم تشغيله كـ iframe
                     fileButtonHtml = `
-                    <button onclick="openHtmlLectureInsideApp('${fileName}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:16px; font-size:1.05rem; width:100%; margin-bottom: 15px;">
+                    <button onclick="openHtmlLectureInsideApp('${fileName}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:17px; border-radius:20px; font-size:1.05rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(10, 38, 71, 0.2);">
                         <span class="material-icons" style="margin-inline-end:10px;">web</span> 
                         <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
                     </button>`;
                 } else {
-                    // ملف PDF عادي
                     fileButtonHtml = `
-                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:16px; font-size:1.05rem; width:100%; margin-bottom: 15px;">
+                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:17px; border-radius:20px; font-size:1.05rem; width:100%; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(10, 38, 71, 0.2);">
                         <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
                         <span data-ar="اقرأ المحاضرة (PDF)" data-en="Read Lecture (PDF)">اقرأ المحاضرة (PDF)</span>
                     </button>`;
@@ -998,12 +1010,12 @@
             }
 
             let htmlContent = `
-            <div class="content-view" style="text-align:center; padding:35px 15px;">
-                <div style="width:75px; height:75px; background:rgba(255,200,0,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px auto;">
-                    <span class="material-icons" style="font-size:42px; color:var(--primary);">school</span>
+            <div class="content-view" style="text-align:center; padding:38px 18px;">
+                <div style="width:80px; height:80px; background:rgba(255,183,3,0.16); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px auto; box-shadow: 0 6px 16px var(--accent-glow);">
+                    <span class="material-icons" style="font-size:44px; color:var(--primary);">school</span>
                 </div>
-                <h3 style="color:var(--primary); margin-bottom:8px; font-weight:900; font-size:1.3rem;">${lectureName}</h3>
-                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر مسار المذاكرة الذي تفضله:" data-en="Choose your study path:">اختر مسار المذاكرة الذي تفضله:</p>
+                <h3 style="color:var(--primary); margin-bottom:8px; font-weight:900; font-size:1.35rem;">${lectureName}</h3>
+                <p style="color:var(--grey); margin-bottom:26px; line-height:1.6; font-size:0.96rem;" data-ar="اختر مسار المذاكرة الذي تفضله:" data-en="Choose your study path:">اختر مسار المذاكرة الذي تفضله:</p>
                 
                 ${aiButtonHtml}
                 ${fileButtonHtml}
@@ -1030,7 +1042,7 @@
             const title = currentLang === 'en' ? titleEn : titleAr;
             
             document.getElementById('contentTitle').innerText = title;
-            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
+            body.innerHTML = `<div style="text-align:center; padding:45px; color:var(--primary);"><span class="material-icons" style="font-size:52px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:16px;" data-ar="جاري جلب الامتحان..." data-en="Loading Exam...">جاري جلب الامتحان...</h3></div>`;
             openModalWithHistory('contentModal'); 
             applyLanguage();
             
@@ -1046,7 +1058,7 @@
                 .catch(err => { 
                     const cachedData = localStorage.getItem(cacheKey);
                     if (cachedData) { renderExams(JSON.parse(cachedData), type, title); } 
-                    else { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3></div>`; applyLanguage(); }
+                    else { body.innerHTML = `<div style="text-align:center; padding:45px; color:#d32f2f;"><span class="material-icons" style="font-size:52px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لعرض المحتوى لأول مرة." data-en="Internet needed for first time load.">تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3></div>`; applyLanguage(); }
                 });
         }
 
@@ -1059,7 +1071,7 @@
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
             let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
-            let btnIcon = 'quiz'; let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+            let btnIcon = 'quiz'; let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 6px 18px rgba(76, 175, 80, 0.3);'; 
             
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
@@ -1071,24 +1083,24 @@
             
             if(fileName) { 
                 pdfHtml += `
-                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 10px;">
+                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.1rem; width:100%; margin-bottom: 12px; box-shadow: 0 6px 18px rgba(10, 38, 71, 0.2);">
                     <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
                     <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
                 </button>`; 
-            } else { pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:10px; font-weight:bold;">ملف الحل غير متوفر حالياً</p>`; }
+            } else { pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold;">ملف الحل غير متوفر حالياً</p>`; }
 
             let unsolvedAction = unsolvedFileName ? `openPdfViewerInsideApp('${unsolvedFileName}')` : `alert('سيتم إضافة ملف الأسئلة قريباً')`;
             pdfHtml += `
-            <button onclick="${unsolvedAction}" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:15px; border-radius:12px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+            <button onclick="${unsolvedAction}" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.1rem; width:100%; margin-bottom: 16px; box-shadow: 0 6px 18px rgba(156, 39, 176, 0.25);">
                 <span class="material-icons" style="margin-inline-end:10px;">edit_document</span>
                 <span data-ar="أسئلة بدون إجابات (PDF للحل)" data-en="Unsolved Exam (PDF)">أسئلة بدون إجابات (PDF للحل)</span>
             </button>`;
             
             body.innerHTML = `
-            <div class="content-view" style="text-align:center; padding:30px 10px;">
-                <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
+            <div class="content-view" style="text-align:center; padding:35px 14px;">
+                <span class="material-icons" style="font-size:74px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
                 <h3 style="color:var(--primary); margin-bottom:10px; font-weight:900;">${title}</h3>
-                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>
+                <p style="color:var(--grey); margin-bottom:26px; line-height:1.6; font-size:0.96rem;" data-ar="اختر طريقة المراجعة المناسبة لك:" data-en="Choose your review method:">اختر طريقة المراجعة المناسبة لك:</p>
                 ${pdfHtml}
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
@@ -1146,8 +1158,8 @@
             wrapper.style.touchAction = 'auto';
 
             const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; 
-            loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
-            loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
+            loadingDiv.style = "padding:45px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
+            loadingDiv.innerHTML = `<span class="material-icons" style="font-size:42px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
             wrapper.insertBefore(loadingDiv, watermark); 
             
             openModalWithHistory('pdfViewer');
@@ -1161,9 +1173,9 @@
                     pdfDoc.getPage(num).then(page => {
                         const viewport = page.getViewport({ scale: 1.5 }); 
                         const pageContainer = document.createElement('div'); pageContainer.style.position = 'relative'; pageContainer.style.margin = '0 auto 15px auto'; pageContainer.style.width = '100%';
-                        const canvas = document.createElement('canvas'); canvas.style.display = 'block'; canvas.style.width = '100%'; canvas.style.borderRadius = '8px'; canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; canvas.style.position = 'relative'; canvas.style.zIndex = '1'; canvas.height = viewport.height; canvas.width = viewport.width; 
+                        const canvas = document.createElement('canvas'); canvas.style.display = 'block'; canvas.style.width = '100%'; canvas.style.borderRadius = '12px'; canvas.style.boxShadow = '0 6px 15px rgba(0,0,0,0.15)'; canvas.style.position = 'relative'; canvas.style.zIndex = '1'; canvas.height = viewport.height; canvas.width = viewport.width; 
 
-                        const drawCanvas = document.createElement('canvas'); drawCanvas.className = 'pdf-draw-layer'; drawCanvas.style.position = 'absolute'; drawCanvas.style.top = '0'; drawCanvas.style.left = '0'; drawCanvas.style.width = '100%'; drawCanvas.style.height = '100%'; drawCanvas.style.zIndex = '5'; drawCanvas.style.borderRadius = '8px'; drawCanvas.style.pointerEvents = 'none'; drawCanvas.width = viewport.width; drawCanvas.height = viewport.height;
+                        const drawCanvas = document.createElement('canvas'); drawCanvas.className = 'pdf-draw-layer'; drawCanvas.style.position = 'absolute'; drawCanvas.style.top = '0'; drawCanvas.style.left = '0'; drawCanvas.style.width = '100%'; drawCanvas.style.height = '100%'; drawCanvas.style.zIndex = '5'; drawCanvas.style.borderRadius = '12px'; drawCanvas.style.pointerEvents = 'none'; drawCanvas.width = viewport.width; drawCanvas.height = viewport.height;
                         
                         pageContainer.appendChild(canvas); pageContainer.appendChild(drawCanvas); wrapper.insertBefore(pageContainer, watermark);
                         
@@ -1175,7 +1187,7 @@
                         });
                     });
                 }
-            }).catch(e => { loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; });
+            }).catch(e => { loadingDiv.innerHTML = `<div style="padding:45px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:42px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; });
         }
 
         let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; let userAnswers = []; let quizTimerInterval; let remainingQuizTime = 0;
@@ -1207,7 +1219,7 @@
             }
 
             const body = document.getElementById('quizBody');
-            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
+            body.innerHTML = `<div style="text-align:center; padding:45px; color:var(--primary);"><span class="material-icons" style="font-size:52px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:16px;" data-ar="جاري تجهيز الأسئلة..." data-en="Loading questions...">جاري تجهيز الأسئلة...</h3></div>`;
             openModalWithHistory('quizModal'); applyLanguage();
             
             const studentCode = localStorage.getItem('studentCode') || ''; const cacheKey = `daheeh_quiz_cache_${courseId}_${currentLectureNum}`; 
@@ -1221,7 +1233,7 @@
                 .catch(error => { 
                     const cachedData = localStorage.getItem(cacheKey);
                     if (cachedData) { renderQuizData(JSON.parse(cachedData)); } 
-                    else { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لتحميل الأسئلة لأول مرة!" data-en="Internet needed for first time load!">تحتاج للإنترنت لتحميل الأسئلة لأول مرة!</h3></div>`; applyLanguage(); }
+                    else { body.innerHTML = `<div style="text-align:center; padding:45px; color:#d32f2f;"><span class="material-icons" style="font-size:52px; margin-bottom:15px;">wifi_off</span><h3 data-ar="تحتاج للإنترنت لتحميل الأسئلة لأول مرة!" data-en="Internet needed for first time load!">تحتاج للإنترنت لتحميل الأسئلة لأول مرة!</h3></div>`; applyLanguage(); }
                 });
         }
 
@@ -1237,7 +1249,7 @@
 
                 score = 0; showAllQuestions(); startQuizTimer(stateKey);
             } else { 
-                body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3></div>`; applyLanguage(); 
+                body.innerHTML = `<div style="text-align:center; padding:45px; color:var(--grey);"><span class="material-icons" style="font-size:62px; margin-bottom:15px; opacity:0.5;">quiz</span><h3 data-ar="لا توجد أسئلة متاحة!" data-en="No questions available!">لا توجد أسئلة متاحة!</h3></div>`; applyLanguage(); 
             }
         }
         
@@ -1258,23 +1270,23 @@
 
         function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
-            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 12px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
-                <div style="font-weight:800; color:var(--primary); display:flex; align-items:center; gap:6px;"><span class="material-icons" style="color:var(--accent);">timer</span> <span data-ar="الوقت المتبقي:" data-en="Time Left:">الوقت المتبقي:</span></div>
-                <div id="quizTimerDisplay" style="font-size:1.4rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div></div>`;
+            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 14px 22px; border-radius: 20px; margin-bottom: 22px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+                <div style="font-weight:900; color:var(--primary); display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:var(--accent);">timer</span> <span data-ar="الوقت المتبقي:" data-en="Time Left:">الوقت المتبقي:</span></div>
+                <div id="quizTimerDisplay" style="font-size:1.45rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div></div>`;
             
             activeQuizQuestions.forEach((q, qIndex) => {
                 let optsHtml = ''; const qText = currentLang === 'en' ? (q.qEn || q.qAr) : q.qAr; const opts = currentLang === 'en' ? (q.optsEn || q.optsAr) : q.optsAr;
                 opts.forEach((opt, optIndex) => { 
                     let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    let isSelected = userAnswers[qIndex] === optIndex; let optStyle = isSelected ? 'border-color: var(--accent); background: rgba(255, 200, 0, 0.1);' : ''; let iconDisplay = isSelected ? 'block' : 'none';
+                    let isSelected = userAnswers[qIndex] === optIndex; let optStyle = isSelected ? 'border-color: var(--accent); background: rgba(255, 183, 3, 0.12);' : ''; let iconDisplay = isSelected ? 'block' : 'none';
                     optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" style="${optStyle}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span><span class="material-icons opt-icon" style="display:${iconDisplay}; color:var(--accent); margin-inline-start:10px;">check_circle</span></div>`; 
                 });
                 
-                html += `<div id="question_block_${qIndex}" style="background: var(--card); padding: 22px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); transition: 0.3s;">
-                    <div style="margin-bottom:12px; font-weight:800; color:var(--accent); font-size:0.9rem;">${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}</div>
-                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div></div>`;
+                html += `<div id="question_block_${qIndex}" style="background: var(--card); padding: 24px; border-radius: 24px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); transition: 0.3s;">
+                    <div style="margin-bottom:12px; font-weight:900; color:var(--accent); font-size:0.92rem;">${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}</div>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.65; font-size:1.15rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div></div>`;
             });
-            html += `<button class="btn-card" onclick="submitFullQuiz(false)" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:16px; font-weight:900;"><span class="material-icons" style="margin-inline-end:10px;">done_all</span>${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}</button>`;
+            html += `<button class="btn-card" onclick="submitFullQuiz(false)" style="justify-content:center; background:var(--accent); color:#0A2647; font-size:1.2rem; width:100%; margin-top:12px; margin-bottom:30px; border-radius:20px; font-weight:900; box-shadow: 0 10px 25px var(--accent-glow);"><span class="material-icons" style="margin-inline-end:10px;">done_all</span>${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}</button>`;
             
             body.innerHTML = html; body.scrollTop = 0; updateTimerDisplay(); applyLanguage();
         }
@@ -1284,7 +1296,7 @@
             const opts = document.querySelectorAll(`[id^="opt_${qIndex}_"]`);
             opts.forEach(opt => { opt.style.borderColor = 'transparent'; opt.style.background = 'var(--quiz-option-bg)'; opt.querySelector('.opt-icon').style.display = 'none'; });
             const selectedOpt = document.getElementById(`opt_${qIndex}_${optIndex}`);
-            selectedOpt.style.borderColor = 'var(--accent)'; selectedOpt.style.background = 'rgba(255, 200, 0, 0.1)'; selectedOpt.querySelector('.opt-icon').style.display = 'block';
+            selectedOpt.style.borderColor = 'var(--accent)'; selectedOpt.style.background = 'rgba(255, 183, 3, 0.12)'; selectedOpt.querySelector('.opt-icon').style.display = 'block';
             const stateKey = `quizState_${courseId}_${currentLectureNum}`; localStorage.setItem(stateKey, JSON.stringify({ answers: userAnswers, time: remainingQuizTime }));
             if (navigator.vibrate) { navigator.vibrate(20); }
         }
@@ -1296,21 +1308,21 @@
 
         function openExamLeaderboard(quizId) {
             const modalBody = document.getElementById('examLeaderboardBody');
-            modalBody.innerHTML = `<div style="text-align:center; padding:40px;"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite; color:var(--accent);">emoji_events</span><h3 style="margin-top:15px;">جاري جلب لوحة الشرف...</h3></div>`;
+            modalBody.innerHTML = `<div style="text-align:center; padding:45px;"><span class="material-icons" style="font-size:52px; animation: pulse 1s infinite; color:var(--accent);">emoji_events</span><h3 style="margin-top:16px;">جاري جلب لوحة الشرف...</h3></div>`;
             openModalWithHistory('examLeaderboardModal');
             const sCode = localStorage.getItem('studentCode') || ''; 
             fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}&code=${sCode}`).then(res => res.json()).then(data => {
-                if (data.error === 'unauthorized') { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">gpp_bad</span><h3 style="margin-top:15px;">غير مصرح لك بعرض البيانات</h3></div>`; return; }
+                if (data.error === 'unauthorized') { modalBody.innerHTML = `<div style="text-align:center; padding:45px; color:#d32f2f;"><span class="material-icons" style="font-size:52px;">gpp_bad</span><h3 style="margin-top:16px;">غير مصرح لك بعرض البيانات</h3></div>`; return; }
                 if(data.success && data.leaderboard && data.leaderboard.length > 0) {
                     let html = '';
                     data.leaderboard.forEach((student, index) => {
-                        let medal = ''; if(index === 0) medal = '🥇'; else if(index === 1) medal = '🥈'; else if(index === 2) medal = '🥉'; else medal = `<span style="display:inline-block; width:24px; text-align:center; font-weight:bold; color:var(--grey);">${index + 1}</span>`;
-                        html += `<div style="display:flex; align-items:center; justify-content:space-between; background:var(--card); padding:16px 20px; border-radius:16px; margin-bottom:12px; border:1px solid var(--border-color); box-shadow:var(--card-shadow);">
-                            <div style="display:flex; align-items:center; gap:12px;"><div style="font-size:1.6rem;">${medal}</div><div style="font-weight:800; color:var(--text);">${student.name}</div></div>
-                            <div style="font-weight:900; color:var(--primary); background:rgba(10,38,71,0.08); padding:6px 14px; border-radius:10px;">${student.score} <span style="font-size:0.8rem; color:var(--grey)">/ ${student.total}</span></div></div>`;
+                        let medal = ''; if(index === 0) medal = '🥇'; else if(index === 1) medal = '🥈'; else if(index === 2) medal = '🥉'; else medal = `<span style="display:inline-block; width:26px; text-align:center; font-weight:bold; color:var(--grey);">${index + 1}</span>`;
+                        html += `<div style="display:flex; align-items:center; justify-content:space-between; background:var(--card); padding:18px 22px; border-radius:20px; margin-bottom:12px; border:1px solid var(--border-color); box-shadow:var(--card-shadow);">
+                            <div style="display:flex; align-items:center; gap:14px;"><div style="font-size:1.65rem;">${medal}</div><div style="font-weight:900; color:var(--text); font-size:1.05rem;">${student.name}</div></div>
+                            <div style="font-weight:900; color:var(--primary); background:rgba(10,38,71,0.08); padding:7px 16px; border-radius:12px;">${student.score} <span style="font-size:0.8rem; color:var(--grey)">/ ${student.total}</span></div></div>`;
                     }); modalBody.innerHTML = html;
-                } else { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:50px; opacity:0.5;">sentiment_dissatisfied</span><h3 style="margin-top:15px;">لا يوجد بيانات حتى الآن</h3><p>كن أول من يمتحن ويدخل لوحة الشرف!</p></div>`; }
-            }).catch(err => { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">wifi_off</span><h3 style="margin-top:15px;">عفواً، فشل الاتصال بالخادم</h3></div>`; });
+                } else { modalBody.innerHTML = `<div style="text-align:center; padding:45px; color:var(--grey);"><span class="material-icons" style="font-size:52px; opacity:0.5;">sentiment_dissatisfied</span><h3 style="margin-top:16px;">لا يوجد بيانات حتى الآن</h3><p>كن أول من يمتحن ويدخل لوحة الشرف!</p></div>`; }
+            }).catch(err => { modalBody.innerHTML = `<div style="text-align:center; padding:45px; color:#d32f2f;"><span class="material-icons" style="font-size:52px;">wifi_off</span><h3 style="margin-top:16px;">عفواً، فشل الاتصال بالخادم</h3></div>`; });
         }
         
         function submitFullQuiz(forceSubmit = false) {
@@ -1318,7 +1330,7 @@
             if (!forceSubmit && firstUnansweredIndex !== -1) {
                 alert(currentLang === 'en' ? 'Please answer all questions! You missed Question ' + (firstUnansweredIndex + 1) : 'عفواً، لازم تجاوب على كل الأسئلة! إنت نسيت السؤال رقم ' + (firstUnansweredIndex + 1));
                 const missedQuestionEl = document.getElementById('question_block_' + firstUnansweredIndex);
-                if(missedQuestionEl) { missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); missedQuestionEl.style.boxShadow = '0 0 15px rgba(244, 67, 54, 0.5)'; missedQuestionEl.style.borderColor = '#f44336';
+                if(missedQuestionEl) { missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); missedQuestionEl.style.boxShadow = '0 0 18px rgba(244, 67, 54, 0.5)'; missedQuestionEl.style.borderColor = '#f44336';
                     setTimeout(() => { missedQuestionEl.style.boxShadow = 'var(--card-shadow)'; missedQuestionEl.style.borderColor = 'var(--border-color)'; }, 2000); } return; 
             }
             
@@ -1339,11 +1351,11 @@
                 
                 const headerColor = isCorrect ? '#4caf50' : '#f44336'; const headerIcon = isCorrect ? 'check_circle' : 'cancel'; const headerText = userAnswers[qIndex] === null ? (currentLang === 'en' ? 'Not Answered' : 'لم يتم الإجابة') : '';
                 
-                reviewHtml += `<div style="background: var(--card); padding: 20px; border-radius: 18px; margin-bottom: 20px; border: 2px solid ${headerColor}; position: relative; overflow: hidden; box-shadow: var(--card-shadow);">
+                reviewHtml += `<div style="background: var(--card); padding: 22px; border-radius: 22px; margin-bottom: 20px; border: 2px solid ${headerColor}; position: relative; overflow: hidden; box-shadow: var(--card-shadow);">
                     <div style="position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: ${headerColor};"></div>
-                    <div style="margin-bottom:12px; font-weight:800; color:${headerColor}; display:flex; align-items:center; gap:6px; font-size:0.95rem;">
-                        <span class="material-icons" style="font-size:20px;">${headerIcon}</span> ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
-                    </div><h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div></div>`;
+                    <div style="margin-bottom:12px; font-weight:900; color:${headerColor}; display:flex; align-items:center; gap:8px; font-size:0.98rem;">
+                        <span class="material-icons" style="font-size:22px;">${headerIcon}</span> ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
+                    </div><h3 dir="auto" style="margin-bottom:20px; line-height:1.65; font-size:1.15rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div></div>`;
             });
             
             const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
@@ -1365,11 +1377,11 @@
             
             const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; const finishBtn = currentLang === 'en' ? 'Return to Course' : 'العودة للمادة'; const leaderBtn = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل للامتحان';
             
-            document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:25px 0 15px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
-                <h2 style="color: var(--primary); font-weight:900;">${resTitle}</h2><h1 style="font-size:4.2rem; color:var(--accent); margin: 12px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1><p style="color:${xpColor}; font-weight:bold; font-size:1.15rem; margin-bottom:20px;">${xpRewardText}</p>
-                <button class="btn-card" onclick="openExamLeaderboard('${quizKey}')" style="justify-content:center; background:var(--accent); color:#0A2647; font-weight:900; margin-bottom:15px; border-radius:16px; padding: 16px; box-shadow: 0 4px 15px rgba(255, 200, 0, 0.3); border:none;"><span class="material-icons" style="margin-inline-end:8px;">emoji_events</span> ${leaderBtn}</button></div>
-            <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px; font-weight:800;"><span class="material-icons" style="color:var(--primary);">fact_check</span>${currentLang === 'en' ? 'Answers Review:' : 'مراجعة الإجابات والتصحيح:'}</h3>${reviewHtml}
-            <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white; margin-top:20px; border-radius:16px; padding: 16px; font-weight:800;"><span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}</button>`;
+            document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:28px 0 16px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <h2 style="color: var(--primary); font-weight:900;">${resTitle}</h2><h1 style="font-size:4.5rem; color:var(--accent); margin: 12px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1><p style="color:${xpColor}; font-weight:800; font-size:1.2rem; margin-bottom:20px;">${xpRewardText}</p>
+                <button class="btn-card" onclick="openExamLeaderboard('${quizKey}')" style="justify-content:center; background:var(--accent); color:#0A2647; font-weight:900; margin-bottom:15px; border-radius:20px; padding: 18px; box-shadow: 0 8px 25px var(--accent-glow); border:none;"><span class="material-icons" style="margin-inline-end:8px;">emoji_events</span> ${leaderBtn}</button></div>
+            <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px; font-weight:900;"><span class="material-icons" style="color:var(--primary);">fact_check</span>${currentLang === 'en' ? 'Answers Review:' : 'مراجعة الإجابات والتصحيح:'}</h3>${reviewHtml}
+            <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white; margin-top:20px; border-radius:20px; padding: 18px; font-weight:900;"><span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}</button>`;
             
             document.getElementById('quizBody').scrollTop = 0; 
         }
@@ -1391,3 +1403,4 @@
     </script>
 </body>
 </html>
+
