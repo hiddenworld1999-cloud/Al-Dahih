@@ -120,7 +120,7 @@
         .page-section.active { display: block; }
         @keyframes fadeInView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= Header العصري بعد تحسين المساحة ================= */
+        /* ================= Header العصري المضبوط للشاشات ================= */
         .app-top-bar {
             display: flex;
             justify-content: space-between;
@@ -443,6 +443,33 @@
         .c-pill-blue { background: rgba(37, 99, 235, 0.1); color: #2563EB; }
         .c-pill-green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
 
+        /* تأثير النقطة والشارة للمحاضرات الجديدة */
+        .new-lec-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(37, 99, 235, 0.12);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+        .pulsing-blue-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2563EB;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 rgba(37, 99, 235, 0.6);
+            animation: bluePulse 1.6s infinite;
+        }
+        @keyframes bluePulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
         .c-title {
             font-size: 1.05rem;
             font-weight: 800;
@@ -479,6 +506,7 @@
             height: 100%;
             background: var(--primary);
             border-radius: 10px;
+            transition: width 0.4s ease;
         }
         .progress-percent-text {
             font-size: 0.78rem;
@@ -898,16 +926,16 @@
 
     <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
-    <!-- السكربت البرمجي الكامل بدون تعديل في المنطق -->
+    <!-- ================= سكربت التطبيق الأصلي بالكامل ================= -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
 
         const coursesData = [
-            { id: 401, category: 'cs', titleAr: "تطبيقات في برمجة الحاسب", titleEn: "Programming Apps", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80", lessonsCount: 12 },
-            { id: 402, category: 'cs', titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Info Systems", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=300&q=80", lessonsCount: 10 },
-            { id: 403, category: 'stats', titleAr: "الأساليب الكمية والقرارات", titleEn: "Quantitative Methods", instructorAr: "أ.د. عبير الهلباوي", instructorEn: "Prof. Abeer El-Helbawy", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80", lessonsCount: 8 },
-            { id: 404, category: 'accounting', titleAr: "نظم المعلومات المحاسبية", titleEn: "Accounting Info Systems", instructorAr: "د. سمر محمد", instructorEn: "Dr. Samar Mohamed", img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=300&q=80", lessonsCount: 14 },
-            { id: 405, category: 'economics', titleAr: "مبادئ المالية العامة", titleEn: "Public Finance", instructorAr: "د. فاطمة إبراهيم", instructorEn: "Dr. Fatima Ibrahim", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=300&q=80", lessonsCount: 9 }
+            { id: 401, category: 'cs', titleAr: "تطبيقات في برمجة الحاسب", titleEn: "Programming Apps", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80" },
+            { id: 402, category: 'cs', titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Info Systems", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=300&q=80" },
+            { id: 403, category: 'stats', titleAr: "الأساليب الكمية والقرارات", titleEn: "Quantitative Methods", instructorAr: "أ.د. عبير الهلباوي", instructorEn: "Prof. Abeer El-Helbawy", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80" },
+            { id: 404, category: 'accounting', titleAr: "نظم المعلومات المحاسبية", titleEn: "Accounting Info Systems", instructorAr: "د. سمر محمد", instructorEn: "Dr. Samar Mohamed", img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=300&q=80" },
+            { id: 405, category: 'economics', titleAr: "مبادئ المالية العامة", titleEn: "Public Finance", instructorAr: "د. فاطمة إبراهيم", instructorEn: "Dr. Fatima Ibrahim", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=300&q=80" }
         ];
 
         const studentFullName = localStorage.getItem('studentName') || "طالب دحيح";
@@ -1251,7 +1279,6 @@
         }
         function closeLeaderboard() { document.getElementById('leaderboardModal').style.display = 'none'; }
 
-        // فلترة وعرض الكروت المطابقة لتصميم الصورة
         let activeFilter = 'all';
         function filterCourses(category, element) { 
             activeFilter = category; 
@@ -1267,6 +1294,7 @@
             document.getElementById('completedCountBadge').innerText = count; 
         }
 
+        // دالة عرض الكروت وحساب التقدم وإشعار المحاضرة الجديدة
         function renderCourses(list) {
             const container = document.getElementById('coursesListContainer');
             const myContainer = document.getElementById('myCoursesListContainer');
@@ -1279,17 +1307,57 @@
             }
             
             list.forEach((course) => {
-                const isCompleted = localStorage.getItem('completed_' + course.id) === 'true';
-                const progressPercent = isCompleted ? 100 : Math.floor(Math.random() * 40 + 20);
+                // 1. فحص الكاش لمعرفة عدد المحاضرات الفعلي المرفوع
+                const cacheKey = `daheeh_lectures_cache_${course.id}`;
+                const cachedData = localStorage.getItem(cacheKey);
+                let actualLessonsCount = 0;
+                
+                if (cachedData) {
+                    try {
+                        const parsed = JSON.parse(cachedData);
+                        if (parsed.success && parsed.lectures) {
+                            actualLessonsCount = parsed.lectures.length;
+                        }
+                    } catch(e) {}
+                }
+
+                // 2. فحص هل نزلت محاضرة جديدة لم يفتحها الطالب؟
+                const lastSeenCount = parseInt(localStorage.getItem(`last_seen_count_${course.id}`)) || 0;
+                const hasNewLecture = actualLessonsCount > lastSeenCount && actualLessonsCount > 0;
+
+                // 3. حساب الكويزات المحلولة لمعرفة التقدم الفعلي
+                let completedCount = 0;
+                for (let i = 1; i <= Math.max(actualLessonsCount, 25); i++) {
+                    if (localStorage.getItem(`completed_quiz_${course.id}_${i}`) === 'true') {
+                        completedCount++;
+                    }
+                }
+                
+                let progressPercent = 0;
+                if (actualLessonsCount > 0) {
+                    progressPercent = Math.min(100, Math.round((completedCount / actualLessonsCount) * 100));
+                }
+
+                const isCompleted = progressPercent === 100 && actualLessonsCount > 0;
+
+                // تحديد البادج والنقطة
+                let badgeHtml = '';
+                if (hasNewLecture) {
+                    badgeHtml = `<span class="new-lec-indicator"><span class="pulsing-blue-dot"></span> محاضرة جديدة ⚡</span>`;
+                } else if (isCompleted) {
+                    badgeHtml = `<span class="c-pill c-pill-green">مكتملة ✓</span>`;
+                } else {
+                    badgeHtml = `<span class="c-pill c-pill-blue">مستمرة</span>`;
+                }
 
                 let cardHtml = `
-                <div class="modern-course-card" onclick="window.location.href='course4.html?id=${course.id}'">
+                <div class="modern-course-card" onclick="openCoursePage(${course.id}, ${actualLessonsCount})">
                     <div class="course-card-top">
                         <img src="${course.img}" class="course-thumbnail" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
                         <div class="course-main-meta">
                             <div class="course-badge-row">
-                                <span class="c-pill ${isCompleted ? 'c-pill-green' : 'c-pill-blue'}">${isCompleted ? 'مكتملة ✓' : 'مستوى متقدم'}</span>
-                                <span style="font-size:0.75rem; color:var(--text-grey); font-weight:700;">• ${course.lessonsCount} محاضرة</span>
+                                ${badgeHtml}
+                                <span style="font-size:0.75rem; color:var(--text-grey); font-weight:700;">• ${actualLessonsCount} محاضرة</span>
                             </div>
                             <h4 class="c-title">${currentLang === 'en' ? course.titleEn : course.titleAr}</h4>
                             <p class="c-prof"><span class="material-icons" style="font-size:15px; color:var(--primary);">school</span> ${currentLang === 'en' ? course.instructorEn : course.instructorAr}</p>
@@ -1306,6 +1374,29 @@
                 
                 container.innerHTML += cardHtml;
                 if (myContainer) myContainer.innerHTML += cardHtml;
+            });
+        }
+
+        // دالة تفتح المادة وتسجل أن الطالب شاهد العدد الحالي حتى تختفي النقطة الزرقاء
+        function openCoursePage(courseId, currentCount) {
+            if (currentCount > 0) {
+                localStorage.setItem(`last_seen_count_${courseId}`, currentCount);
+            }
+            window.location.href = `course4.html?id=${courseId}`;
+        }
+
+        // دالة تقوم بتحديث أعداد المحاضرات تلقائياً من السيرفر في الخلفية عند فتح التطبيق
+        function fetchAllCoursesRealCounts() {
+            coursesData.forEach(c => {
+                fetch(`${SCRIPT_URL}?action=getLectures&courseId=${c.id}&code=${studentCode}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.lectures) {
+                            localStorage.setItem(`daheeh_lectures_cache_${c.id}`, JSON.stringify(data));
+                            renderCourses(activeFilter === 'all' ? coursesData : coursesData.filter(x => x.category === activeFilter));
+                        }
+                    })
+                    .catch(() => {});
             });
         }
 
@@ -1362,6 +1453,7 @@
         }
 
         applyLanguage(); updateCompletedCountBadge(); updateXPDisplay(); checkLatestNews(); fetchXPFromSheet();
+        fetchAllCoursesRealCounts();
 
         function sendOnlineStatus(status) {
             if(!studentCode) return; 
