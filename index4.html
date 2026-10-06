@@ -70,6 +70,9 @@
             --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
             --filter-bg: #F1F5F9;
             --calc-bg: #F8FAFC;
+            --glass-nav: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
         }
 
         body.dark-mode {
@@ -85,6 +88,9 @@
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             --filter-bg: #1E293B;
             --calc-bg: #1A2438;
+            --glass-nav: rgba(21, 31, 50, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
         }
 
         body.vip-gold-mode {
@@ -100,71 +106,100 @@
             --card-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
             --filter-bg: #1F1F1F;
             --calc-bg: #1C1C1C;
+            --glass-nav: rgba(20, 20, 20, 0.9);
+            --glass-border: rgba(255, 215, 0, 0.3);
+            --glass-shadow: 0 16px 36px rgba(255, 215, 0, 0.15);
         }
 
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 95px; overflow-x: hidden; user-select: none; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 110px; overflow-x: hidden; user-select: none; }
         html[lang="en"] body { font-family: 'Poppins', sans-serif; }
 
         .page-section { display: none; animation: fadeInView 0.35s ease forwards; }
         .page-section.active { display: block; }
         @keyframes fadeInView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= Header العصري المطابق للتصميم ================= */
+        /* ================= Header العصري بعد تحسين المساحة ================= */
         .app-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: calc(14px + env(safe-area-inset-top, 25px)) 20px 14px;
+            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 12px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
+            gap: 8px;
         }
 
         .user-greeting {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            min-width: 0;
+            flex-shrink: 1;
         }
 
         .user-avatar-circle {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary);
             box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+            flex-shrink: 0;
+        }
+
+        .user-greeting-meta {
+            min-width: 0;
         }
 
         .user-greeting-meta h3 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: var(--text-main);
             margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-greeting-sub {
             display: flex;
             align-items: center;
             gap: 6px;
+            margin-top: 3px;
         }
 
-        .user-greeting-meta p {
-            font-size: 0.8rem;
-            color: var(--text-grey);
-            font-weight: 500;
-            margin-top: 2px;
+        .xp-top-pill {
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            white-space: nowrap;
         }
 
         .top-bar-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .top-action-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: var(--filter-bg);
             border: 1px solid var(--border-color);
@@ -174,21 +209,12 @@
             cursor: pointer;
             color: var(--text-main);
             transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .top-action-btn .material-icons {
+            font-size: 19px;
         }
         .top-action-btn:active { transform: scale(0.92); }
-
-        .xp-top-pill {
-            background: var(--primary-soft);
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 0.85rem;
-            padding: 6px 14px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            border: 1px solid rgba(37, 99, 235, 0.2);
-        }
 
         .news-ticker {
             background: linear-gradient(90deg, #1E40AF, #2563EB);
@@ -234,7 +260,7 @@
         }
         html[dir="ltr"] .search-lens { left: 15px; right: auto; }
 
-        /* ================= كارد "مستقبلك يبدأ من هنا" ================= */
+        /* ================= كارد الترويجي الرئيسي ================= */
         .hero-banner-promo {
             margin: 0 20px 22px;
             border-radius: 24px;
@@ -297,7 +323,7 @@
         }
         .promo-cta-btn:active { transform: scale(0.95); }
 
-        /* ================= أقسام المواد (Category Grid) ================= */
+        /* ================= شبكة الأقسام الدراسية ================= */
         .section-headline {
             display: flex;
             justify-content: space-between;
@@ -360,7 +386,7 @@
             line-height: 1.3;
         }
 
-        /* ================= كروت أحدث المحاضرات والمقررات ================= */
+        /* ================= كروت المقررات الحديثة ================= */
         .courses-stream-wrapper {
             padding: 0 20px;
         }
@@ -462,19 +488,29 @@
             text-align: end;
         }
 
-        /* ================= شريط التنقل السفلي ================= */
-        .bottom-nav-modern {
+        /* ================= شريط التنقل السفلي المائي العائم ================= */
+        .bottom-nav-floating-container {
             position: fixed;
-            bottom: 0;
+            bottom: calc(12px + env(safe-area-inset-bottom, 8px));
             left: 0;
             width: 100%;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border-color);
+            padding: 0 16px;
+            z-index: 300;
+            pointer-events: none;
+        }
+
+        .bottom-nav-modern {
+            pointer-events: auto;
+            background: var(--glass-nav);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
             display: flex;
             justify-content: space-around;
-            padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 12px));
-            z-index: 200;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+            align-items: center;
+            padding: 8px 12px;
+            box-shadow: var(--glass-shadow);
         }
 
         .nav-tab-item {
@@ -486,14 +522,24 @@
             font-weight: 700;
             flex: 1;
             cursor: pointer;
-            gap: 4px;
-            transition: 0.2s;
+            gap: 3px;
+            transition: all 0.25s ease;
+            padding: 4px 0;
+            border-radius: 16px;
         }
-        .nav-tab-item .material-icons { font-size: 24px; transition: 0.2s; }
-        .nav-tab-item.active { color: var(--primary); }
-        .nav-tab-item.active .material-icons { transform: translateY(-2px); }
+        .nav-tab-item .material-icons { 
+            font-size: 23px; 
+            transition: 0.25s ease; 
+        }
+        .nav-tab-item.active { 
+            color: var(--primary); 
+        }
+        .nav-tab-item.active .material-icons { 
+            transform: translateY(-2px); 
+            color: var(--primary);
+        }
 
-        /* باقي مكونات البروفايل والكشكول من الكود الأصلي */
+        /* مكونات الصفحات الإضافية */
         .profile-card-unified { background: var(--bg-card); border-radius: 24px; padding: 25px 20px; text-align: center; border: 1px solid var(--border-color); margin-top: 15px; box-shadow: var(--card-shadow); }
         .profile-avatar-big { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px auto; border: 3px solid var(--primary); }
         .stat-badge-grid { display: flex; justify-content: space-around; background: var(--bg-card); padding: 18px 10px; border-radius: 20px; margin: 15px 0 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
@@ -548,23 +594,24 @@
 </head>
 <body>
 
-    <!-- الهيدر العلوي النظيف -->
+    <!-- الهيدر العلوي النظيف بعد إتاحة المساحة لجميع الأزرار -->
     <header class="app-top-bar" id="mainHeader">
         <div class="user-greeting">
             <img src="logo.png" class="user-avatar-circle" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'" onclick="adminCheat()">
             <div class="user-greeting-meta">
-                <h3><span data-ar="أهلاً، " data-en="Hello, ">أهلاً، </span><span id="welcomeName" style="color: var(--primary);">دحيح</span> <span>👋</span></h3>
-                <p id="topGreetingSubtitle" data-ar="استمر في رحلتك نحو التخرج" data-en="Continue your journey to graduation">استمر في رحلتك نحو التخرج</p>
+                <h3><span data-ar="أهلاً، " data-en="Hi, ">أهلاً، </span><span id="welcomeName" style="color: var(--primary);">دحيح</span> <span>👋</span></h3>
+                <div class="user-greeting-sub">
+                    <span class="xp-top-pill" id="heroXP">⭐ 0 XP</span>
+                </div>
             </div>
         </div>
 
         <div class="top-bar-actions">
-            <div class="xp-top-pill" id="heroXP">⭐ 0 XP</div>
-            <div class="top-action-btn" onclick="toggleWhiteboard()" title="السبورة الذكية"><span class="material-icons" style="font-size:20px;">palette</span></div>
-            <div class="top-action-btn" onclick="toggleCalculator()" title="الآلة الحاسبة"><span class="material-icons" style="font-size:20px;">calculate</span></div>
-            <div class="top-action-btn" id="musicToggle" onclick="toggleMusic()" title="الموسيقى"><span class="material-icons" style="font-size:20px;">music_off</span></div>
-            <div class="top-action-btn" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي"><span class="material-icons" style="font-size:20px;">light_mode</span></div>
-            <div class="top-action-btn" onclick="toggleLanguage()" title="اللغة"><span class="material-icons" style="font-size:20px;">language</span></div>
+            <div class="top-action-btn" onclick="toggleWhiteboard()" title="السبورة الذكية"><span class="material-icons">palette</span></div>
+            <div class="top-action-btn" onclick="toggleCalculator()" title="الآلة الحاسبة"><span class="material-icons">calculate</span></div>
+            <div class="top-action-btn" id="musicToggle" onclick="toggleMusic()" title="الموسيقى"><span class="material-icons">music_off</span></div>
+            <div class="top-action-btn" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي"><span class="material-icons">light_mode</span></div>
+            <div class="top-action-btn" onclick="toggleLanguage()" title="اللغة"><span class="material-icons">language</span></div>
         </div>
     </header>
 
@@ -586,7 +633,7 @@
             <span class="material-icons search-lens">search</span>
         </div>
 
-        <!-- كارد "مستقبلك يبدأ من هنا" المطابق للتصميم -->
+        <!-- كارد الترويجي الرئيسي -->
         <div class="hero-banner-promo" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80');">
             <div class="promo-content">
                 <span class="promo-tag">🎓 الفرقة الرابعة - سنة التخرج</span>
@@ -598,7 +645,7 @@
             </div>
         </div>
 
-        <!-- شبكة الأقسام الملونة المطابقة تماماً للتصميم -->
+        <!-- شبكة الأقسام الدراسية -->
         <div class="section-headline">
             <h3 data-ar="أقسامك الدراسية" data-en="Categories">أقسامك الدراسية</h3>
             <span class="see-all-btn" onclick="filterCourses('all', null)" data-ar="عرض الكل" data-en="View All">عرض الكل</span>
@@ -634,7 +681,7 @@
             </div>
         </div>
 
-        <!-- قائمة المواد بالـ Progress Bar -->
+        <!-- قائمة المواد -->
         <div class="section-headline" id="coursesAnchor">
             <h3 data-ar="أحدث المحاضرات والمقررات" data-en="Recent Courses">أحدث المحاضرات والمقررات</h3>
         </div>
@@ -740,26 +787,28 @@
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي المطابق للتصميم تماماً -->
-    <nav class="bottom-nav-modern" id="bottomNav">
-        <div class="nav-tab-item active" onclick="switchTab('home', this)">
-            <span class="material-icons">home</span><span data-ar="الرئيسية" data-en="Home">الرئيسية</span>
-        </div>
-        <div class="nav-tab-item" onclick="switchTab('courses', this)">
-            <span class="material-icons">menu_book</span><span data-ar="مكتبتي" data-en="My Library">مكتبتي</span>
-        </div>
-        <div class="nav-tab-item" onclick="switchTab('posts', this); loadPosts();">
-            <span class="material-icons">dynamic_feed</span><span data-ar="المنشورات" data-en="Posts">المنشورات</span>
-        </div>
-        <div class="nav-tab-item" onclick="switchTab('notebook', this)">
-            <span class="material-icons">edit_note</span><span data-ar="كشكولي" data-en="Notebook">كشكولي</span>
-        </div>
-        <div class="nav-tab-item" onclick="switchTab('profile', this)">
-            <span class="material-icons">person</span><span data-ar="حسابي" data-en="Profile">حسابي</span>
-        </div>
-    </nav>
+    <!-- شريط التنقل السفلي المائي العائم -->
+    <div class="bottom-nav-floating-container">
+        <nav class="bottom-nav-modern" id="bottomNav">
+            <div class="nav-tab-item active" onclick="switchTab('home', this)">
+                <span class="material-icons">home</span><span data-ar="الرئيسية" data-en="Home">الرئيسية</span>
+            </div>
+            <div class="nav-tab-item" onclick="switchTab('courses', this)">
+                <span class="material-icons">menu_book</span><span data-ar="مكتبتي" data-en="My Library">مكتبتي</span>
+            </div>
+            <div class="nav-tab-item" onclick="switchTab('posts', this); loadPosts();">
+                <span class="material-icons">dynamic_feed</span><span data-ar="المنشورات" data-en="Posts">المنشورات</span>
+            </div>
+            <div class="nav-tab-item" onclick="switchTab('notebook', this)">
+                <span class="material-icons">edit_note</span><span data-ar="كشكولي" data-en="Notebook">كشكولي</span>
+            </div>
+            <div class="nav-tab-item" onclick="switchTab('profile', this)">
+                <span class="material-icons">person</span><span data-ar="حسابي" data-en="Profile">حسابي</span>
+            </div>
+        </nav>
+    </div>
 
-    <!-- النوافذ والموديلات الاحتياطية المتبقية -->
+    <!-- النوافذ والموديلات التفاعلية -->
     <div id="leaderboardModal" class="page-section" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 1000; overflow-y: auto; display: none;">
         <div class="app-top-bar" style="position: sticky; top: 0;">
             <span class="material-icons" onclick="closeLeaderboard()" style="cursor:pointer; font-size:26px;">arrow_forward</span>
@@ -849,12 +898,10 @@
 
     <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
-    <!-- ================= سكربت التطبيق الأصلي بالكامل ================= -->
+    <!-- السكربت البرمجي الكامل بدون تعديل في المنطق -->
     <script>
-        // === السيرفر بتاع سنة رابعة الجديد الشغال ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
 
-        // === مواد سنة رابعة الأصلية الخمسة بالكامل مع نفس البيانات ===
         const coursesData = [
             { id: 401, category: 'cs', titleAr: "تطبيقات في برمجة الحاسب", titleEn: "Programming Apps", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80", lessonsCount: 12 },
             { id: 402, category: 'cs', titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Info Systems", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=300&q=80", lessonsCount: 10 },
@@ -1233,7 +1280,7 @@
             
             list.forEach((course) => {
                 const isCompleted = localStorage.getItem('completed_' + course.id) === 'true';
-                const progressPercent = isCompleted ? 100 : Math.floor(Math.random() * 40 + 20); // محاكاة نسبة الإنجاز مثل الصورة
+                const progressPercent = isCompleted ? 100 : Math.floor(Math.random() * 40 + 20);
 
                 let cardHtml = `
                 <div class="modern-course-card" onclick="window.location.href='course4.html?id=${course.id}'">
