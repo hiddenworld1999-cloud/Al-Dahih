@@ -298,7 +298,7 @@
 
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 24px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
 
-        /* ================= مشغل الفيديو المحسن ================= */
+        /* ================= مشغل الفيديو المحسن بدون أي فراغات سوداء ================= */
         #videoLectureModal { 
             background: #000000; 
             display: none; 
@@ -351,13 +351,14 @@
         }
         .video-action-icon:active { transform: scale(0.9); }
 
+        /* ضبط ابعاد الفيديو بنسبة 16:9 تماماً ليلتصق بالشيت دون فراغات سوداء */
         .video-screen-box {
             position: relative;
             width: 100%;
-            height: 38vh;
-            min-height: 270px;
-            max-height: 480px;
+            aspect-ratio: 16 / 9;
+            height: auto;
             background: #000000;
+            display: block;
         }
 
         .video-player-frame {
@@ -585,7 +586,7 @@
         </div>
     </div>
 
-    <!-- شيت المحتوى الأبيض المرتفع فوق الصورة -->
+    <!-- شيت المحتوى الأبيض المنحني المرتفع فوق الصورة -->
     <div class="content-sheet-card">
         <div class="tabs-header">
             <button class="tab-head-btn active" onclick="switchCourseSection('content', this)" data-ar="المحتوى" data-en="Content">المحتوى</button>
@@ -640,7 +641,7 @@
         </div>
     </div>
 
-    <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود وقائمة المحاضرات وقسم التعليقات ================= -->
+    <!-- ================= نافذة مشغل الفيديو المحسنة بدون فراغات سوداء وبدون قص للأدوات ================= -->
     <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
         <div class="video-player-wrapper">
             <div class="video-top-bar">
@@ -652,6 +653,7 @@
                 <span class="material-icons video-action-icon" style="font-size: 24px;" title="حفظ">bookmark_border</span>
             </div>
 
+            <!-- حاوية الفيديو بنسبة 16:9 تماماً ليلتصق بالشيت دون أي سواد زائد -->
             <div class="video-screen-box">
                 <iframe id="videoIframePlayer" class="video-player-frame" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -661,7 +663,6 @@
         </div>
 
         <div class="video-playlist-scroll" id="videoPlaylistScrollArea">
-            <!-- رأس القائمة: به عدد المحاضرات وزر القفز السريع للتعليقات -->
             <div class="video-section-title">
                 <div style="display:flex; align-items:center; gap:8px;">
                     <span>📚 باقي المحاضرات</span>
@@ -675,7 +676,7 @@
             
             <div id="videoPlaylistContainer"></div>
 
-            <!-- قسم التعليقات المباشر السريع -->
+            <!-- قسم التعليقات المباشر -->
             <div class="comments-section-wrapper" id="commentsWrapperTarget">
                 <div class="comments-header-row">
                     <span class="material-icons" style="color:var(--primary); font-size:22px;">chat</span>
