@@ -310,6 +310,7 @@
             background: #000000; 
             display: none; 
             flex-direction: column;
+            overflow: hidden;
         }
 
         .video-player-wrapper {
@@ -317,25 +318,21 @@
             width: 100%;
             background: #000000;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* البار العلوي الأسود الداكن النازل بشفافية ناعمة مع عناصر بيضاء ناصعة */
+        /* البار العلوي الأسود المستقل تماماً عن الفيديو لمنع أي حجب */
         .video-top-bar {
             width: 100%;
-            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 14px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%);
+            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 12px;
+            background: #000000;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: #ffffff;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 25;
-            pointer-events: none;
-        }
-        .video-top-bar * {
-            pointer-events: auto;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            z-index: 10;
         }
 
         .video-header-title {
@@ -348,34 +345,30 @@
             font-size: 1rem;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
         .video-header-title span {
             font-size: 0.76rem;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 700;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
         }
 
         .video-action-icon {
             color: #ffffff !important;
             cursor: pointer;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9));
             transition: 0.2s;
         }
         .video-action-icon:active {
             transform: scale(0.9);
         }
 
-        /* حاوية الفيديو: ارتفاع محسوب يضمن ظهور شريط الأدوات بالكامل على كل الهواتف */
+        /* حاوية الفيديو: ارتفاع محسوب يعطي مساحة كاملة لأدوات الفيديو للظهور دون قص */
         .video-screen-box {
             position: relative;
             width: 100%;
-            height: 250px; /* يعطي مساحة كافية لتظهر أدوات درايف ويوتيوب كاملة */
+            height: 38vh;
+            min-height: 270px;
+            max-height: 480px;
             background: #000000;
-        }
-        @media (min-width: 768px) {
-            .video-screen-box { height: 420px; }
         }
 
         .video-player-frame {
@@ -385,13 +378,13 @@
             display: block;
         }
 
-        /* قائمة المحاضرات تبدأ أسفل الفيديو مباشرة بدون أي ركوب أو حجب لأدوات الفيديو */
+        /* قائمة المحاضرات والتعليقات تبدأ أسفل المشغل مباشرة وبدون أي تداخل سلبي */
         .video-playlist-scroll {
             flex: 1;
             background: var(--card);
             border-top-left-radius: 28px;
             border-top-right-radius: 28px;
-            margin-top: 0; /* تم إلغاء التداخل السلبي تماماً لضمان عدم تغطية شريط التحكم */
+            margin-top: 0;
             overflow-y: auto;
             padding: 20px 20px 80px;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.3);
@@ -406,6 +399,102 @@
             font-weight: 900;
             font-size: 1.1rem;
             color: var(--text);
+        }
+
+        /* ================= ستايل قسم التعليقات (نظام يوتيوب) ================= */
+        .comments-section-wrapper {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        .comments-header-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 900;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+        .comment-input-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        .comment-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid var(--primary);
+        }
+        .comment-input-field {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 10px 14px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.92rem;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+        .comment-input-field:focus {
+            border-color: var(--primary);
+        }
+        .comment-send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .comment-send-btn:active { transform: scale(0.92); }
+
+        .comment-card {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .comment-card-content {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: 16px;
+        }
+        .comment-author-name {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .comment-time {
+            font-size: 0.72rem;
+            color: var(--grey);
+            font-weight: 500;
+        }
+        .comment-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         /* ================= ستايل المحاضرة التفاعلية الحديثة ================= */
@@ -547,10 +636,10 @@
         </div>
     </div>
 
-    <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود الشفاف وقائمة المحاضرات ================= -->
+    <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود الشفاف وقائمة المحاضرات وقسم التعليقات ================= -->
     <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
         <div class="video-player-wrapper">
-            <!-- شريط العنوان الأسود الشفاف النازل بانسيابية مع أيقونات بيضاء ناصعة -->
+            <!-- شريط العنوان الأسود المستقل تماماً في الأعلى مع عناصر بيضاء ناصعة -->
             <div class="video-top-bar">
                 <span class="material-icons video-action-icon" onclick="history.back()" style="font-size: 28px;">arrow_forward</span>
                 <div class="video-header-title">
@@ -560,7 +649,7 @@
                 <span class="material-icons video-action-icon" style="font-size: 24px;" title="حفظ">bookmark_border</span>
             </div>
 
-            <!-- شاشة الفيديو بمساحة حرة تضمن ظهور شريط الأدوات بالكامل -->
+            <!-- شاشة الفيديو بمساحة حرة تضمن ظهور شريط الأدوات بالكامل على كل الهواتف -->
             <div class="video-screen-box">
                 <iframe id="videoIframePlayer" class="video-player-frame" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -569,13 +658,34 @@
             </div>
         </div>
 
-        <!-- شيت أسفل الفيديو مباشرة بدون أي تداخل يعرض قائمة باقي محاضرات المادة -->
+        <!-- قائمة المحاضرات والتعليقات تبدأ أسفل المشغل مباشرة وبدون أي تداخل سلبي -->
         <div class="video-playlist-scroll">
             <div class="video-section-title">
                 <span>📚 باقي محاضرات المادة</span>
                 <span style="font-size:0.82rem; color:var(--grey); font-weight:700;" id="vPlaylistCount"></span>
             </div>
             <div id="videoPlaylistContainer"></div>
+
+            <!-- ================= قسم التعليقات (نظام يوتيوب المباشر) ================= -->
+            <div class="comments-section-wrapper">
+                <div class="comments-header-row">
+                    <span class="material-icons" style="color:var(--primary); font-size:22px;">chat</span>
+                    <span>التعليقات والاستفسارات</span>
+                    <span style="font-size:0.8rem; color:var(--grey); font-weight:700;" id="commentsCountBadge">(0)</span>
+                </div>
+
+                <!-- حقل كتابة التعليق -->
+                <div class="comment-input-box">
+                    <img src="logo.png" class="comment-avatar" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                    <textarea id="commentTextInput" class="comment-input-field" rows="1" placeholder="اكتب سؤالك أو استفسارك هنا..."></textarea>
+                    <button class="comment-send-btn" onclick="submitVideoComment()" title="إرسال التعليق">
+                        <span class="material-icons" style="font-size:20px;">send</span>
+                    </button>
+                </div>
+
+                <!-- قائمة التعليقات السحابية -->
+                <div id="commentsStreamContainer"></div>
+            </div>
         </div>
     </div>
 
@@ -741,15 +851,13 @@
                 <span data-ar="مؤقت المذاكرة" data-en="Study Timer">مؤقت المذاكرة</span>
                 <span class="material-icons" onclick="togglePomodoro()" style="cursor:pointer; font-size:20px;">close</span>
             </div>
-            <div class="pomo-time" id="pomoTimeDisplay" style="font-size:25px; font-weight:900; color:var(--primary); font-family:monospace; margin-bottom:12px;">25:00</div>
+            <div class="pomo-time" id="pomoTimeDisplay">25:00</div>
             <div class="pomo-controls">
                 <button onclick="startPomodoro()" id="pomoStartBtn" data-ar="بدأ" data-en="Start">بدأ</button>
                 <button onclick="resetPomodoro()" style="background:#d32f2f;" data-ar="إعادة" data-en="Reset">إعادة</button>
             </div>
         </div>
-        <button class="pomo-fab" onclick="togglePomodoro()">
-            <span class="material-icons" style="font-size: 26px;">timer</span>
-        </button>
+        <button class="pomo-fab" onclick="togglePomodoro()"><span class="material-icons">timer</span></button>
     </div>
 
     <script>
@@ -757,6 +865,7 @@
         window.currentInteractiveData = null;
         window.lecturesDataCache = {};
         window.rawLecturesList = [];
+        let currentVideoLecNum = 1; // رقم المحاضرة المعروضة في مشغل الفيديو
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
             document.body.classList.add('vip-gold-mode');
@@ -1058,7 +1167,7 @@
         }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // === دالة تحويل رابط الفيديو لـ Embed نظيف مع كامل الصلاحيات لليوتيوب ودرايف ===
+        // === دالة تحويل رابط الفيديو لـ Embed نظيف ومحترف مع كامل الصلاحيات لليوتيوب ودرايف ===
         function formatEmbedVideoUrl(rawUrl) {
             if (!rawUrl) return "";
             let url = rawUrl.trim();
@@ -1070,7 +1179,7 @@
                 }
                 return url.replace(/\/view(\?.*)?$/, '/preview');
             }
-            // رابط يوتيوب مع تفعيل كامل أدوات التحكم الأصلية والسرعة
+            // رابط يوتيوب مع تفعيل كامل أدوات التحكم الأصلية والسرعة والشاشة الكاملة
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 let ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
                 if (ytMatch && ytMatch[1]) {
@@ -1080,8 +1189,9 @@
             return url;
         }
 
-        // === فتح واجهة مشغل الفيديو مع التحكم الكامل وقائمة المحاضرات بالأسفل ===
+        // === فتح واجهة مشغل الفيديو مع التحكم الكامل وقائمة المحاضرات وقسم التعليقات ===
         function openVideoLectureModal(videoUrl, lectureName, lectureNum, cacheIndex) {
+            currentVideoLecNum = lectureNum;
             const embedUrl = formatEmbedVideoUrl(videoUrl);
             const playerIframe = document.getElementById('videoIframePlayer');
             playerIframe.src = embedUrl;
@@ -1090,6 +1200,7 @@
             document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lectureNum} من مقرر ${course ? course.titleAr : ''}`;
 
             renderVideoPlaylist(lectureNum);
+            loadLectureComments(courseId, lectureNum);
 
             openModalWithHistory('videoLectureModal');
         }
@@ -1138,15 +1249,89 @@
             }
 
             if(resolvedVideoUrl) {
+                currentVideoLecNum = lecNum;
                 const embedUrl = formatEmbedVideoUrl(resolvedVideoUrl);
                 document.getElementById('videoIframePlayer').src = embedUrl;
                 document.getElementById('vLecTitle').innerText = lectureName;
                 document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lecNum} من مقرر ${course ? course.titleAr : ''}`;
                 renderVideoPlaylist(lecNum);
+                loadLectureComments(courseId, lecNum);
             } else {
                 history.back();
                 showDynamicLecture(lectureName, fileName, lecNum, cacheIndex, '');
             }
+        }
+
+        // ================= دوال نظام التعليقات السحابية (على غرار يوتيوب) =================
+        function loadLectureComments(cId, lecNum) {
+            const container = document.getElementById('commentsStreamContainer');
+            const badge = document.getElementById('commentsCountBadge');
+            if(!container) return;
+            container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--grey);"><span class="material-icons" style="animation:pulse 1s infinite; font-size:24px;">autorenew</span><p style="margin-top:6px; font-weight:600; font-size:0.85rem;">جاري جلب التعليقات...</p></div>`;
+
+            fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.comments) {
+                        badge.innerText = `(${data.comments.length})`;
+                        if (data.comments.length === 0) {
+                            container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem; padding:15px 0;">لا توجد تعليقات حتى الآن. كن أول من يطرح سؤاله! 💡</p>`;
+                            return;
+                        }
+                        let html = '';
+                        data.comments.forEach(c => {
+                            html += `
+                            <div class="comment-card">
+                                <img src="logo.png" class="comment-avatar" alt="طالب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                                <div class="comment-card-content">
+                                    <div class="comment-author-name">
+                                        <span>${c.studentName || 'طالب دحيح'}</span>
+                                        <span class="comment-time">${c.timestamp || ''}</span>
+                                    </div>
+                                    <p class="comment-text">${c.comment}</p>
+                                </div>
+                            </div>`;
+                        });
+                        container.innerHTML = html;
+                    }
+                })
+                .catch(() => {
+                    container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem;">تعذر جلب التعليقات حالياً.</p>`;
+                });
+        }
+
+        function submitVideoComment() {
+            const input = document.getElementById('commentTextInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const sCode = localStorage.getItem('studentCode') || '';
+            const sName = localStorage.getItem('studentName') || 'طالب دحيح';
+
+            const formData = new URLSearchParams();
+            formData.append('action', 'addComment');
+            formData.append('courseId', courseId);
+            formData.append('lectureNum', currentVideoLecNum);
+            formData.append('studentCode', sCode);
+            formData.append('studentName', sName);
+            formData.append('comment', text);
+
+            input.value = '';
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    loadLectureComments(courseId, currentVideoLecNum);
+                }
+            })
+            .catch(() => {
+                alert('تعذر إرسال التعليق، يرجى المحاولة مرة أخرى.');
+            });
         }
 
         // === تبويبات المحاضرة التفاعلية الحديثة والمنسقة ===
