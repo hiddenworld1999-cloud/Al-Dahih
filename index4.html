@@ -142,11 +142,12 @@
             flex-shrink: 1;
         }
 
-        /* حاوية الأفاتار مع زر الكاميرا */
+        /* حاوية الأفاتار مع زر الكاميرا عبر label تفاعلي */
         .avatar-upload-wrapper {
             position: relative;
             cursor: pointer;
             flex-shrink: 0;
+            display: inline-block;
         }
 
         .user-avatar-circle {
@@ -173,6 +174,7 @@
             justify-content: center;
             border: 2px solid var(--bg-card);
             font-size: 11px;
+            pointer-events: none;
         }
         .avatar-cam-badge .material-icons {
             font-size: 11px;
@@ -597,6 +599,7 @@
             height: 90px;
             margin: 0 auto 12px auto;
             cursor: pointer;
+            display: inline-block;
         }
         .profile-avatar-big { 
             width: 100%; 
@@ -604,6 +607,7 @@
             border-radius: 50%; 
             object-fit: cover; 
             border: 3px solid var(--primary); 
+            display: block;
         }
         .profile-cam-badge-big {
             position: absolute;
@@ -618,6 +622,7 @@
             align-items: center;
             justify-content: center;
             border: 2px solid var(--bg-card);
+            pointer-events: none;
         }
         .profile-cam-badge-big .material-icons { font-size: 16px; }
 
@@ -672,16 +677,16 @@
 </head>
 <body>
 
-    <!-- حقل اختيار الصورة المخفي -->
-    <input type="file" id="userAvatarFileInput" accept="image/*" style="display:none;" onchange="handleUserAvatarUpload(event)">
+    <!-- حقل اختيار الصورة متوافق 100% مع الهواتف دون حظر أمني -->
+    <input type="file" id="userAvatarFileInput" accept="image/*" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleUserAvatarUpload(event)">
 
-    <!-- الهيدر العلوي مع الصورة الشخصية وزر الكاميرا بجانب الترحيب -->
+    <!-- الهيدر العلوي مع الصورة الشخصية وزر الكاميرا عبر label تفاعلي -->
     <header class="app-top-bar" id="mainHeader">
         <div class="user-greeting">
-            <div class="avatar-upload-wrapper" onclick="triggerAvatarUpload()" title="تغيير الصورة الشخصية">
+            <label for="userAvatarFileInput" class="avatar-upload-wrapper" title="تغيير الصورة الشخصية">
                 <img src="logo.png" id="topUserAvatarImg" class="user-avatar-circle" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
                 <div class="avatar-cam-badge"><span class="material-icons">camera_alt</span></div>
-            </div>
+            </label>
             <div class="user-greeting-meta">
                 <h3><span data-ar="أهلاً، " data-en="Hi, ">أهلاً، </span><span id="welcomeName" style="color: var(--primary);">دحيح</span> <span>👋</span></h3>
                 <div class="user-greeting-sub">
@@ -798,6 +803,823 @@
     <div id="page-notebook" class="page-section">
         <div class="courses-stream-wrapper">
             <div class="notebook-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom:تم ضبط كود **`index4.html`** بالكامل مع حل مشكلة عدم استجابة الكاميرا بدقة واحترافية:
+
+### ما تم تصحيحه في هذا الكود:
+1. **حل مشكلة عدم فتح المعرض:** تم تحويل حاوية الصورة بالكامل إلى وسم `<label for="userAvatarFileInput">` في الهيدر العلوي وفي صفحة البروفايل، مع إزالة `display: none` من حقل الإدخال واستبداله بإخفاء شفاف متوافق مع نظام أندرويد وiOS. بمجرد لمس الصورة أو الكاميرا يفتح الهاتف المعرض فوراً وبشكل طبيعي.
+2. **ضغط وتخزين الصورة:** تم تفعيل دالة ضغط الصورة التلقائي بمقاس خفيف (150x150) وتخزينها تحت المفتاح `daheehUserAvatar` لتظهر في الهيدر، والبروفايل، وتكون جاهزة للتعليقات.
+3. **الحفاظ التام على كامل الكود:** حماية الدخول، التوجيه، منع النسخ، المؤقت، السبورة، الآلة الحاسبة، المنشورات، ولوحات الشرف.
+
+---
+
+### الكود الكامل والنهائي لـ `index4.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <script>
+        // 1. إخفاء الصفحة فوراً لمنع أي وميض
+        document.documentElement.style.visibility = 'hidden';
+
+        // 2. فحص حارس التطبيق
+        var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
+        var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+        var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
+
+        if (!isAndroidApp && !isIOSStandalone && !isElectronApp) {
+            if (/iPhone|iPad|iPod|Mac/.test(navigator.userAgent)) {
+                window.location.replace("login.html");
+            } else {
+                window.location.replace("download.html");
+            }
+        } else {
+            // 3. فحص تسجيل الدخول وحماية التوجيه
+            const isLoggedIn = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            const targetPage = localStorage.getItem('daheeh_target_page');
+
+            if (!isLoggedIn) {
+                window.location.replace("login.html");
+            } else if (targetPage && !targetPage.includes('index4.html')) {
+                window.location.replace(targetPage);
+            } else {
+                document.documentElement.style.visibility = 'visible';
+            }
+        }
+
+        // حماية المحتوى من النسخ
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { 
+                alert('عذراً، هذا المحتوى محمي.'); 
+                e.preventDefault(); 
+            }
+        });
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>تطبيق الدحيح - الرئيسية (الفرقة الرابعة)</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="الدحيح">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link href="[https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap)" rel="stylesheet">
+    <link href="[https://fonts.googleapis.com/icon?family=Material+Icons](https://fonts.googleapis.com/icon?family=Material+Icons)" rel="stylesheet">
+
+    <style>
+        :root { 
+            --primary: #2563EB; 
+            --primary-dark: #1D4ED8;
+            --primary-soft: #EFF6FF;
+            --accent: #F59E0B;
+            --bg-main: #F8FAFC; 
+            --bg-card: #FFFFFF; 
+            --text-main: #0F172A; 
+            --text-grey: #64748B;
+            --border-color: #E2E8F0;
+            --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+            --filter-bg: #F1F5F9;
+            --calc-bg: #F8FAFC;
+            --glass-nav: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+        }
+
+        body.dark-mode {
+            --primary: #3B82F6; 
+            --primary-dark: #60A5FA;
+            --primary-soft: rgba(59, 130, 246, 0.15);
+            --accent: #FBBF24;
+            --bg-main: #0B1120; 
+            --bg-card: #151F32; 
+            --text-main: #F8FAFC; 
+            --text-grey: #94A3B8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --filter-bg: #1E293B;
+            --calc-bg: #1A2438;
+            --glass-nav: rgba(21, 31, 50, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+        }
+
+        body.vip-gold-mode {
+            --primary: #D4AF37; 
+            --primary-dark: #FFD700;
+            --primary-soft: rgba(212, 175, 55, 0.15);
+            --accent: #FFFFFF;
+            --bg-main: #0A0A0A; 
+            --bg-card: #141414; 
+            --text-main: #FFD700; 
+            --text-grey: #AAAAAA;
+            --border-color: rgba(255, 215, 0, 0.25);
+            --card-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+            --filter-bg: #1F1F1F;
+            --calc-bg: #1C1C1C;
+            --glass-nav: rgba(20, 20, 20, 0.9);
+            --glass-border: rgba(255, 215, 0, 0.3);
+            --glass-shadow: 0 16px 36px rgba(255, 215, 0, 0.15);
+        }
+
+        .material-icons { font-family: 'Material Icons'; font-weight: normal; font-size: 24px; display: inline-block; line-height: 1; direction: ltr; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'IBM Plex Sans Arabic', sans-serif; background-color: var(--bg-main); color: var(--text-main); padding-bottom: 110px; overflow-x: hidden; user-select: none; }
+        html[lang="en"] body { font-family: 'Poppins', sans-serif; }
+
+        .page-section { display: none; animation: fadeInView 0.35s ease forwards; }
+        .page-section.active { display: block; }
+        @keyframes fadeInView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= Header العصري المضبوط ================= */
+        .app-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 12px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 8px;
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex-shrink: 1;
+        }
+
+        /* حاوية الأفاتار مع زر الكاميرا المتوافقة مع اللمس عبر label */
+        .avatar-upload-wrapper {
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: inline-block;
+        }
+
+        .user-avatar-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+            display: block;
+        }
+
+        .avatar-cam-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: var(--primary);
+            color: #ffffff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+            font-size: 11px;
+            pointer-events: none;
+        }
+        .avatar-cam-badge .material-icons {
+            font-size: 11px;
+        }
+
+        .user-greeting-meta {
+            min-width: 0;
+        }
+
+        .user-greeting-meta h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-greeting-sub {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 3px;
+        }
+
+        .xp-top-pill {
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            white-space: nowrap;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .top-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--filter-bg);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .top-action-btn .material-icons { font-size: 19px; }
+        .top-action-btn:active { transform: scale(0.92); }
+
+        .news-ticker {
+            background: linear-gradient(90deg, #1E40AF, #2563EB);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 7px 16px;
+        }
+        .news-ticker .material-icons { color: #FBBF24; font-size: 18px; margin: 0 8px; }
+        .news-ticker marquee { font-weight: 700; font-size: 0.88rem; }
+
+        /* ================= شريط البحث ================= */
+        .search-wrapper-box {
+            position: relative;
+            margin: 18px 20px 14px;
+        }
+        .search-bar-input {
+            width: 100%;
+            padding: 14px 46px 14px 16px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: inherit;
+            font-weight: 600;
+            box-shadow: var(--card-shadow);
+            outline: none;
+            transition: 0.2s;
+        }
+        .search-bar-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.12);
+        }
+        .search-lens {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 15px;
+            color: var(--text-grey);
+            font-size: 22px;
+            pointer-events: none;
+        }
+        html[dir="ltr"] .search-lens { left: 15px; right: auto; }
+
+        /* ================= كارد الترويجي الرئيسي ================= */
+        .hero-banner-promo {
+            margin: 0 20px 22px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            padding: 24px 22px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hero-banner-promo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.6) 100%);
+        }
+        .promo-content {
+            position: relative;
+            z-index: 2;
+        }
+        .promo-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            backdrop-filter: blur(8px);
+        }
+        .promo-title {
+            font-size: 1.35rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+        .promo-desc {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .promo-cta-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+            transition: 0.2s;
+        }
+        .promo-cta-btn:active { transform: scale(0.95); }
+
+        /* ================= شبكة الأقسام الدراسية ================= */
+        .section-headline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 14px;
+        }
+        .section-headline h3 {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+        .section-headline .see-all-btn {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 0 20px 20px;
+        }
+
+        .cat-card-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 14px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+        }
+        .cat-card-item:active { transform: scale(0.94); }
+        .cat-card-item.active {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+        .cat-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .cat-card-item span.cat-label {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* ================= كروت المقررات الحديثة ================= */
+        .courses-stream-wrapper {
+            padding: 0 20px;
+        }
+
+        .modern-course-card {
+            background: var(--bg-card);
+            border-radius: 22px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .modern-course-card:active { transform: scale(0.98); }
+
+        .course-card-top {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .course-thumbnail {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--filter-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .course-main-meta {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .course-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .c-pill {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .c-pill-blue { background: rgba(37, 99, 235, 0.1); color: #2563EB; }
+        .c-pill-green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+
+        .new-lec-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(37, 99, 235, 0.12);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+        .pulsing-blue-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2563EB;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 rgba(37, 99, 235, 0.6);
+            animation: bluePulse 1.6s infinite;
+        }
+        @keyframes bluePulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        .c-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .c-prof {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .course-progress-container {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 6px;
+            border-radius: 10px;
+            background: var(--filter-bg);
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .progress-percent-text {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--primary);
+            min-width: 32px;
+            text-align: end;
+        }
+
+        /* ================= شريط التنقل السفلي ================= */
+        .bottom-nav-floating-container {
+            position: fixed;
+            bottom: calc(12px + env(safe-area-inset-bottom, 8px));
+            left: 0;
+            width: 100%;
+            padding: 0 16px;
+            z-index: 300;
+            pointer-events: none;
+        }
+
+        .bottom-nav-modern {
+            pointer-events: auto;
+            background: var(--glass-nav);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 12px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .nav-tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-grey);
+            font-weight: 700;
+            flex: 1;
+            cursor: pointer;
+            gap: 3px;
+            transition: all 0.25s ease;
+            padding: 4px 0;
+            border-radius: 16px;
+        }
+        .nav-tab-item .material-icons { 
+            font-size: 23px; 
+            transition: 0.25s ease; 
+        }
+        .nav-tab-item.active { color: var(--primary); }
+        .nav-tab-item.active .material-icons { 
+            transform: translateY(-2px); 
+            color: var(--primary);
+        }
+
+        /* مكونات البروفايل */
+        .profile-card-unified { background: var(--bg-card); border-radius: 24px; padding: 25px 20px; text-align: center; border: 1px solid var(--border-color); margin-top: 15px; box-shadow: var(--card-shadow); }
+        
+        .profile-avatar-big-wrap {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 12px auto;
+            cursor: pointer;
+            display: block;
+        }
+        .profile-avatar-big { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 3px solid var(--primary); 
+            display: block;
+        }
+        .profile-cam-badge-big {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+            pointer-events: none;
+        }
+        .profile-cam-badge-big .material-icons { font-size: 16px; }
+
+        .stat-badge-grid { display: flex; justify-content: space-around; background: var(--bg-card); padding: 18px 10px; border-radius: 20px; margin: 15px 0 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
+        .stat-col { text-align: center; flex: 1; }
+        .stat-col:not(:first-child) { border-inline-start: 1px solid var(--border-color); }
+        .stat-number { font-size: 1.35rem; font-weight: 900; color: var(--primary); }
+        .stat-sub { font-size: 0.75rem; color: var(--text-grey); font-weight: 700; margin-top: 4px; }
+
+        .settings-list-box { background: var(--bg-card); border-radius: 22px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--card-shadow); margin-bottom: 20px; }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
+        .settings-row:last-child { border-bottom: none; }
+        .settings-row-left { display: flex; align-items: center; gap: 14px; font-weight: 800; font-size: 0.95rem; }
+        .settings-row-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--filter-bg); color: var(--primary); }
+
+        .btn-universal { width: 100%; padding: 16px; border-radius: 18px; border: none; font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-universal:active { transform: scale(0.97); }
+
+        .notebook-box { background: var(--bg-card); border-radius: 24px; padding: 22px; border: 1px solid var(--border-color); height: calc(100vh - 250px); display: flex; flex-direction: column; box-shadow: var(--card-shadow); margin-top: 15px; }
+        .notebook-text-area { flex: 1; width: 100%; border: none; outline: none; background: transparent; font-family: inherit; font-size: 1.05rem; line-height: 1.8; color: var(--text-main); resize: none; }
+
+        .post-card { background: var(--bg-card); border-radius: 22px; padding: 20px; margin-bottom: 18px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
+        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .post-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .post-author { font-weight: 800; color: var(--text-main); font-size: 1.05rem; }
+        .post-date { font-size: 0.75rem; color: var(--text-grey); margin-top: 2px; }
+        .post-content { color: var(--text-main); line-height: 1.7; font-size: 0.96rem; margin-bottom: 15px; white-space: pre-wrap; }
+        .post-actions { display: flex; align-items: center; gap: 20px; border-top: 1px solid var(--border-color); padding-top: 14px; }
+        .like-btn { display: flex; align-items: center; gap: 6px; color: var(--text-grey); cursor: pointer; font-weight: 700; font-size: 0.95rem; user-select: none; }
+        .like-btn.liked { color: #E11D48; }
+
+        /* السبورة والآلة الحاسبة */
+        #whiteboardModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 4000; display: none; flex-direction: column; }
+        .wb-header { display: flex; justify-content: space-between; align-items: center; padding: calc(14px + env(safe-area-inset-top, 25px)) 20px 14px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
+        .wb-tools { display: flex; justify-content: center; gap: 15px; padding: 12px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
+        .color-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+        .color-btn.active { transform: scale(1.15); border-color: var(--text-main); }
+        #drawingCanvas { flex: 1; width: 100%; background: #ffffff; touch-action: none; cursor: crosshair; }
+
+        .calculator-modal { position: fixed; top: 75px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; background: var(--bg-card); padding: 20px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); z-index: 500; display: none; flex-direction: column; border: 1px solid var(--border-color); direction: ltr; }
+        .calc-display { width: 100%; height: 60px; background: var(--calc-bg); border: none; border-radius: 14px; font-size: 1.8rem; text-align: right; padding: 10px; color: var(--primary); font-family: monospace; margin-bottom: 15px; outline: none; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { padding: 15px 0; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; background: var(--bg-main); color: var(--text-main); }
+        .calc-btn.op { background: var(--primary-soft); color: var(--primary); }
+        .calc-btn.eq { background: var(--primary); color: #ffffff; grid-column: span 2; }
+
+        .pomodoro-container { position: fixed; bottom: 85px; z-index: 400; display: flex; flex-direction: column; align-items: center; left: 20px; }
+        html[dir="ltr"] .pomodoro-container { right: 20px; left: auto; }
+        .pomo-fab { width: 52px; height: 52px; border-radius: 50%; background: var(--primary); color: #ffffff; border: none; box-shadow: 0 8px 20px rgba(37,99,235,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .pomo-timer { background: var(--bg-card); padding: 16px; border-radius: 20px; box-shadow: var(--card-shadow); margin-bottom: 12px; border: 2px solid var(--primary); width: 190px; text-align: center; display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- حقل اختيار الصورة المتوافق مع الهواتف دون حظر أمني -->
+    <input type="file" id="userAvatarFileInput" accept="image/*" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="handleUserAvatarUpload(event)">
+
+    <!-- الهيدر العلوي مع تفعيل زر الكاميرا عبر label -->
+    <header class="app-top-bar" id="mainHeader">
+        <div class="user-greeting">
+            <label for="userAvatarFileInput" class="avatar-upload-wrapper" title="تغيير الصورة الشخصية">
+                <img src="logo.png" id="topUserAvatarImg" class="user-avatar-circle" alt="الصورة الشخصية" onerror="this.src='[https://cdn-icons-png.flaticon.com/512/3048/3048122.png](https://cdn-icons-png.flaticon.com/512/3048/3048122.png)'">
+                <div class="avatar-cam-badge"><span class="material-icons">camera_alt</span></div>
+            </label>
+            <div class="user-greeting-meta">
+                <h3><span data-ar="أهلاً، " data-en="Hi, ">أهلاً، </span><span id="welcomeName" style="color: var(--primary);">دحيح</span> <span>👋</span></h3>
+                <div class="user-greeting-sub">
+                    <span class="xp-top-pill" id="heroXP">⭐ 0 XP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="top-bar-actions">
+            <div class="top-action-btn" onclick="toggleWhiteboard()" title="السبورة الذكية"><span class="material-icons">palette</span></div>
+            <div class="top-action-btn" onclick="toggleCalculator()" title="الآلة الحاسبة"><span class="material-icons">calculate</span></div>
+            <div class="top-action-btn" id="musicToggle" onclick="toggleMusic()" title="الموسيقى"><span class="material-icons">music_off</span></div>
+            <div class="top-action-btn" id="darkModeToggle" onclick="toggleDarkMode()" title="المظهر الليلي"><span class="material-icons">light_mode</span></div>
+            <div class="top-action-btn" onclick="toggleLanguage()" title="اللغة"><span class="material-icons">language</span></div>
+        </div>
+    </header>
+
+    <!-- شريط الصلاة على النبي -->
+    <div class="news-ticker">
+        <span class="material-icons">auto_awesome</span>
+        <marquee direction="right" scrollamount="5">
+            <span data-ar="✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨" data-en="✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨">
+                ✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨
+            </span>
+        </marquee>
+    </div>
+
+    <!-- التبويب 1: الرئيسية -->
+    <div id="page-home" class="page-section active">
+        <div class="search-wrapper-box">
+            <input type="text" id="searchInput" class="search-bar-input" placeholder="ابحث عن مادة أو دكتور..." data-ph-ar="ابحث عن مادة أو دكتور..." data-ph-en="Search course or instructor...">
+            <span class="material-icons search-lens">search</span>
+        </div>
+
+        <div class="hero-banner-promo" style="background-image: url('[https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80](https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80)');">
+            <div class="promo-content">
+                <span class="promo-tag">🎓 الفرقة الرابعة - سنة التخرج</span>
+                <h2 class="promo-title">مستقبلك يبدأ من هنا</h2>
+                <p class="promo-desc" id="motivationQuote">دورات ومحاضرات مكثفة معدة لضمان التفوق والامتياز.</p>
+                <button class="promo-cta-btn" onclick="document.getElementById('coursesAnchor').scrollIntoView({behavior:'smooth'})">
+                    <span>تصفح المواد</span> <span class="material-icons" style="font-size:18px;">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-headline">
+            <h3 data-ar="أقسامك الدراسية" data-en="Categories">أقسامك الدراسية</h3>
+            <span class="see-all-btn" onclick="filterCourses('all', null)" data-ar="عرض الكل" data-en="View All">عرض الكل</span>
+        </div>
+
+        <div class="category-grid">
+            <div class="cat-card-item active" onclick="filterCourses('all', this)">
+                <div class="cat-icon-wrap" style="background: rgba(37,99,235,0.1); color: #2563EB;">
+                    <span class="material-icons">apps</span>
+                </div>
+                <span class="cat-label" data-ar="الكل" data-en="All">الكل</span>
+            </div>
+
+            <div class="cat-card-item" onclick="filterCourses('cs', this)">
+                <div class="cat-icon-wrap" style="background: rgba(139,92,246,0.1); color: #8B5CF6;">
+                    <span class="material-icons">code</span>
+                </div>
+                <span class="cat-label" data-ar="الحاسب الآلي" data-en="CS & IT">الحاسب الآلي</span>
+            </div>
+
+            <div class="cat-card-item" onclick="filterCourses('stats', this)">
+                <div class="cat-icon-wrap" style="background: rgba(245,158,11,0.1); color: #F59E0B;">
+                    <span class="material-icons">analytics</span>
+                </div>
+                <span class="cat-label" data-ar="أساليب كمية" data-en="Quantitative">أساليب كمية</span>
+            </div>
+
+            <div class="cat-card-item" onclick="filterCourses('accounting', this)">
+                <div class="cat-icon-wrap" style="background: rgba(16,185,129,0.1); color: #10B981;">
+                    <span class="material-icons">calculate</span>
+                </div>
+                <span class="cat-label" data-ar="المحاسبة" data-en="Accounting">المحاسبة</span>
+            </div>
+        </div>
+
+        <div class="section-headline" id="coursesAnchor">
+            <h3 data-ar="أحدث المحاضرات والمقررات" data-en="Recent Courses">أحدث المحاضرات والمقررات</h3>
+        </div>
+
+        <div class="courses-stream-wrapper" id="coursesListContainer"></div>
+    </div>
+
+    <!-- التبويب 2: دوراتي -->
+    <div id="page-courses" class="page-section">
+        <div class="courses-stream-wrapper" style="margin-top: 20px;">
+            <div class="section-headline" style="padding: 0;">
+                <h3 data-ar="المقررات المسجلة لك" data-en="My Enrolled Courses">المقررات المسجلة لك</h3>
+            </div>
+            <div id="myCoursesListContainer"></div>
+        </div>
+    </div>
+
+    <!-- التبويب 3: المنشورات -->
+    <div id="page-posts" class="page-section">
+        <div class="courses-stream-wrapper" style="margin-top: 20px;">
+            <div class="section-headline" style="padding: 0;">
+                <h3 data-ar="آخر التحديثات والمنشورات" data-en="Posts & Updates">آخر التحديثات والمنشورات</h3>
+            </div>
+            <div id="postsContainer">
+                <div style="text-align:center; padding:50px 0; color:var(--primary);">
+                    <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">autorenew</span>
+                    <p style="margin-top:10px; font-weight:bold;">جاري جلب المنشورات...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- التبويب 4: كشكولي -->
+    <div id="page-notebook" class="page-section">
+        <div class="courses-stream-wrapper">
+            <div class="notebook-box">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                     <span style="color: var(--text-grey); font-size: 0.85rem;" data-ar="كشكول الملاحظات الذكي 📝" data-en="Smart Notebook 📝">كشكول الملاحظات الذكي 📝</span>
                     <span id="saveIndicator" style="color:#10B981; display:none; align-items:center; gap:4px; font-weight:bold; font-size:0.85rem;"><span class="material-icons" style="font-size: 16px;">cloud_done</span> <span>تم الحفظ</span></span>
@@ -811,10 +1633,10 @@
     <div id="page-profile" class="page-section">
         <div class="courses-stream-wrapper">
             <div class="profile-card-unified">
-                <div class="profile-avatar-big-wrap" onclick="triggerAvatarUpload()" title="تغيير صورتك">
-                    <img src="logo.png" id="profileUserAvatarImg" class="profile-avatar-big" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                <label for="userAvatarFileInput" class="profile-avatar-big-wrap" title="تغيير صورتك">
+                    <img src="logo.png" id="profileUserAvatarImg" class="profile-avatar-big" onerror="this.src='[https://cdn-icons-png.flaticon.com/512/3048/3048122.png](https://cdn-icons-png.flaticon.com/512/3048/3048122.png)'">
                     <div class="profile-cam-badge-big"><span class="material-icons">camera_alt</span></div>
-                </div>
+                </label>
                 <h2 id="profileName" style="font-size: 1.3rem; margin-bottom: 4px; font-weight: 800;">...</h2>
                 <p id="profileCode" style="color: var(--text-grey); font-size: 0.9rem; font-family:monospace;">...</p>
             </div>
@@ -854,7 +1676,7 @@
                     </div>
                 </div>
 
-                <a href="https://t.me/Hidden2003A" class="settings-row" style="text-decoration: none; color: inherit;">
+                <a href="[https://t.me/Hidden2003A](https://t.me/Hidden2003A)" class="settings-row" style="text-decoration: none; color: inherit;">
                     <div class="settings-row-left">
                         <div class="settings-row-icon" style="background: rgba(37,99,235,0.1); color: #2563EB;"><span class="material-icons">support_agent</span></div>
                         <span>الدعم الفني المباشر</span>
@@ -983,14 +1805,14 @@
 
     <!-- ================= سكربت التطبيق الأصلي بالكامل مع رفع الصورة ================= -->
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
+        const SCRIPT_URL = "[https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec](https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec)";
 
         const coursesData = [
-            { id: 401, category: 'cs', titleAr: "تطبيقات في برمجة الحاسب", titleEn: "Programming Apps", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80" },
-            { id: 402, category: 'cs', titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Info Systems", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=300&q=80" },
-            { id: 403, category: 'stats', titleAr: "الأساليب الكمية والقرارات", titleEn: "Quantitative Methods", instructorAr: "أ.د. عبير الهلباوي", instructorEn: "Prof. Abeer El-Helbawy", img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80" },
-            { id: 404, category: 'accounting', titleAr: "نظم المعلومات المحاسبية", titleEn: "Accounting Info Systems", instructorAr: "د. سمر محمد", instructorEn: "Dr. Samar Mohamed", img: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=300&q=80" },
-            { id: 405, category: 'economics', titleAr: "مبادئ المالية العامة", titleEn: "Public Finance", instructorAr: "د. فاطمة إبراهيم", instructorEn: "Dr. Fatima Ibrahim", img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=300&q=80" }
+            { id: 401, category: 'cs', titleAr: "تطبيقات في برمجة الحاسب", titleEn: "Programming Apps", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "[https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80](https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=300&q=80)" },
+            { id: 402, category: 'cs', titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Info Systems", instructorAr: "د. مريم سامي", instructorEn: "Dr. Maryam Samy", img: "[https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=300&q=80](https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=300&q=80)" },
+            { id: 403, category: 'stats', titleAr: "الأساليب الكمية والقرارات", titleEn: "Quantitative Methods", instructorAr: "أ.د. عبير الهلباوي", instructorEn: "Prof. Abeer El-Helbawy", img: "[https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80)" },
+            { id: 404, category: 'accounting', titleAr: "نظم المعلومات المحاسبية", titleEn: "Accounting Info Systems", instructorAr: "د. سمر محمد", instructorEn: "Dr. Samar Mohamed", img: "[https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=300&q=80](https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=300&q=80)" },
+            { id: 405, category: 'economics', titleAr: "مبادئ المالية العامة", titleEn: "Public Finance", instructorAr: "د. فاطمة إبراهيم", instructorEn: "Dr. Fatima Ibrahim", img: "[https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=300&q=80](https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=300&q=80)" }
         ];
 
         const studentFullName = localStorage.getItem('studentName') || "طالب دحيح";
@@ -1012,18 +1834,19 @@
         }
 
         function triggerAvatarUpload() {
-            document.getElementById('userAvatarFileInput').click();
+            const inputEl = document.getElementById('userAvatarFileInput');
+            if (inputEl) inputEl.click();
         }
 
         function handleUserAvatarUpload(event) {
-            const file = event.target.files[0];
+            const file = event.target.files && event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    // ضغط وتصغير الصورة لمقاس 150x150 بدقة خفيفة جداً
+                    // ضغط وتصغير الصورة لمقاس 150x150 بدقة خفيفة جداً وسريعة
                     const canvas = document.createElement('canvas');
                     const MAX_SIZE = 150;
                     let width = img.width;
@@ -1031,12 +1854,12 @@
 
                     if (width > height) {
                         if (width > MAX_SIZE) {
-                            height *= MAX_SIZE / width;
+                            height = Math.round(height * (MAX_SIZE / width));
                             width = MAX_SIZE;
                         }
                     } else {
                         if (height > MAX_SIZE) {
-                            width *= MAX_SIZE / height;
+                            width = Math.round(width * (MAX_SIZE / height));
                             height = MAX_SIZE;
                         }
                     }
@@ -1046,7 +1869,6 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // تحويل الصورة لنص Base64 خفيف بجودة 0.7
                     const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
                     localStorage.setItem('daheehUserAvatar', compressedBase64);
                     loadSavedAvatar();
@@ -1335,7 +2157,7 @@
                             tempHtml += `
                             <div class="post-card">
                                 <div class="post-header">
-                                    <img src="logo.png" class="post-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                                    <img src="logo.png" class="post-avatar" onerror="this.src='[https://cdn-icons-png.flaticon.com/512/3048/3048122.png](https://cdn-icons-png.flaticon.com/512/3048/3048122.png)'">
                                     <div>
                                         <div class="post-author">الدحيح</div>
                                         <div class="post-date">منذ فترة</div>
@@ -1420,7 +2242,6 @@
             }
             
             list.forEach((course) => {
-                // 1. فحص الكاش لمعرفة عدد المحاضرات الفعلي المرفوع
                 const cacheKey = `daheeh_lectures_cache_${course.id}`;
                 const cachedData = localStorage.getItem(cacheKey);
                 let actualLessonsCount = 0;
@@ -1434,11 +2255,9 @@
                     } catch(e) {}
                 }
 
-                // 2. فحص هل نزلت محاضرة جديدة لم يفتحها الطالب؟
                 const lastSeenCount = parseInt(localStorage.getItem(`last_seen_count_${course.id}`)) || 0;
                 const hasNewLecture = actualLessonsCount > lastSeenCount && actualLessonsCount > 0;
 
-                // 3. حساب الكويزات المحلولة لمعرفة التقدم الفعلي
                 let completedCount = 0;
                 for (let i = 1; i <= Math.max(actualLessonsCount, 25); i++) {
                     if (localStorage.getItem(`completed_quiz_${course.id}_${i}`) === 'true') {
@@ -1465,7 +2284,7 @@
                 let cardHtml = `
                 <div class="modern-course-card" onclick="openCoursePage(${course.id}, ${actualLessonsCount})">
                     <div class="course-card-top">
-                        <img src="${course.img}" class="course-thumbnail" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                        <img src="${course.img}" class="course-thumbnail" onerror="this.src='[https://cdn-icons-png.flaticon.com/512/3048/3048122.png](https://cdn-icons-png.flaticon.com/512/3048/3048122.png)'">
                         <div class="course-main-meta">
                             <div class="course-badge-row">
                                 ${badgeHtml}
