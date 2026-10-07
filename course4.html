@@ -636,7 +636,7 @@
         </div>
     </div>
 
-    <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود الشفاف وقائمة المحاضرات وقسم التعليقات ================= -->
+    <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود وقائمة المحاضرات وقسم التعليقات ================= -->
     <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
         <div class="video-player-wrapper">
             <!-- شريط العنوان الأسود المستقل تماماً في الأعلى مع عناصر بيضاء ناصعة -->
@@ -865,7 +865,7 @@
         window.currentInteractiveData = null;
         window.lecturesDataCache = {};
         window.rawLecturesList = [];
-        let currentVideoLecNum = 1; // رقم المحاضرة المعروضة في مشغل الفيديو
+        let currentVideoLecNum = 1;
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
             document.body.classList.add('vip-gold-mode');
@@ -1262,14 +1262,16 @@
             }
         }
 
-        // ================= دوال نظام التعليقات السحابية (على غرار يوتيوب) =================
+        // ================= دوال نظام التعليقات السحابية المصححة 100% =================
         function loadLectureComments(cId, lecNum) {
             const container = document.getElementById('commentsStreamContainer');
             const badge = document.getElementById('commentsCountBadge');
+            const sCode = localStorage.getItem('studentCode') || '';
             if(!container) return;
             container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--grey);"><span class="material-icons" style="animation:pulse 1s infinite; font-size:24px;">autorenew</span><p style="margin-top:6px; font-weight:600; font-size:0.85rem;">جاري جلب التعليقات...</p></div>`;
 
-            fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}`)
+            // إرسال كود الطالب في الرابط للتوثيق
+            fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}&code=${encodeURIComponent(sCode)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.comments) {
@@ -1293,6 +1295,8 @@
                             </div>`;
                         });
                         container.innerHTML = html;
+                    } else {
+                        container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem;">لا توجد تعليقات حتى الآن. كن أول من يسأل! 💡</p>`;
                     }
                 })
                 .catch(() => {
@@ -1310,9 +1314,10 @@
 
             const formData = new URLSearchParams();
             formData.append('action', 'addComment');
+            formData.append('code', sCode); // معرّف التوثيق الأساسي لـ doPost
+            formData.append('studentCode', sCode);
             formData.append('courseId', courseId);
             formData.append('lectureNum', currentVideoLecNum);
-            formData.append('studentCode', sCode);
             formData.append('studentName', sName);
             formData.append('comment', text);
 
@@ -1327,10 +1332,12 @@
             .then(data => {
                 if (data.success) {
                     loadLectureComments(courseId, currentVideoLecNum);
+                } else {
+                    alert('تعذر إضافة التعليق: غير مصرح');
                 }
             })
             .catch(() => {
-                alert('تعذر إرسال التعليق، يرجى المحاولة مرة أخرى.');
+                alert('تعذر إرسال التعليق، يرجى التأكد من الاتصال بالإنترنت.');
             });
         }
 
