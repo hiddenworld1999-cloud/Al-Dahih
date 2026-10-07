@@ -120,7 +120,7 @@
         .page-section.active { display: block; }
         @keyframes fadeInView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= Header العصري المضبوط للشاشات ================= */
+        /* ================= Header العصري المضبوط ================= */
         .app-top-bar {
             display: flex;
             justify-content: space-between;
@@ -142,14 +142,40 @@
             flex-shrink: 1;
         }
 
+        /* حاوية الأفاتار مع زر الكاميرا */
+        .avatar-upload-wrapper {
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
         .user-avatar-circle {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary);
             box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
-            flex-shrink: 0;
+            display: block;
+        }
+
+        .avatar-cam-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: var(--primary);
+            color: #ffffff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+            font-size: 11px;
+        }
+        .avatar-cam-badge .material-icons {
+            font-size: 11px;
         }
 
         .user-greeting-meta {
@@ -211,9 +237,7 @@
             transition: 0.2s;
             flex-shrink: 0;
         }
-        .top-action-btn .material-icons {
-            font-size: 19px;
-        }
+        .top-action-btn .material-icons { font-size: 19px; }
         .top-action-btn:active { transform: scale(0.92); }
 
         .news-ticker {
@@ -443,7 +467,6 @@
         .c-pill-blue { background: rgba(37, 99, 235, 0.1); color: #2563EB; }
         .c-pill-green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
 
-        /* تأثير النقطة والشارة للمحاضرات الجديدة */
         .new-lec-indicator {
             display: inline-flex;
             align-items: center;
@@ -516,7 +539,7 @@
             text-align: end;
         }
 
-        /* ================= شريط التنقل السفلي المائي العائم ================= */
+        /* ================= شريط التنقل السفلي ================= */
         .bottom-nav-floating-container {
             position: fixed;
             bottom: calc(12px + env(safe-area-inset-bottom, 8px));
@@ -559,17 +582,45 @@
             font-size: 23px; 
             transition: 0.25s ease; 
         }
-        .nav-tab-item.active { 
-            color: var(--primary); 
-        }
+        .nav-tab-item.active { color: var(--primary); }
         .nav-tab-item.active .material-icons { 
             transform: translateY(-2px); 
             color: var(--primary);
         }
 
-        /* مكونات الصفحات الإضافية */
+        /* مكونات البروفايل */
         .profile-card-unified { background: var(--bg-card); border-radius: 24px; padding: 25px 20px; text-align: center; border: 1px solid var(--border-color); margin-top: 15px; box-shadow: var(--card-shadow); }
-        .profile-avatar-big { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px auto; border: 3px solid var(--primary); }
+        
+        .profile-avatar-big-wrap {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 12px auto;
+            cursor: pointer;
+        }
+        .profile-avatar-big { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 3px solid var(--primary); 
+        }
+        .profile-cam-badge-big {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+        }
+        .profile-cam-badge-big .material-icons { font-size: 16px; }
+
         .stat-badge-grid { display: flex; justify-content: space-around; background: var(--bg-card); padding: 18px 10px; border-radius: 20px; margin: 15px 0 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
         .stat-col { text-align: center; flex: 1; }
         .stat-col:not(:first-child) { border-inline-start: 1px solid var(--border-color); }
@@ -594,7 +645,6 @@
         .post-author { font-weight: 800; color: var(--text-main); font-size: 1.05rem; }
         .post-date { font-size: 0.75rem; color: var(--text-grey); margin-top: 2px; }
         .post-content { color: var(--text-main); line-height: 1.7; font-size: 0.96rem; margin-bottom: 15px; white-space: pre-wrap; }
-        .post-image { width: 100%; border-radius: 14px; margin-bottom: 15px; display: none; }
         .post-actions { display: flex; align-items: center; gap: 20px; border-top: 1px solid var(--border-color); padding-top: 14px; }
         .like-btn { display: flex; align-items: center; gap: 6px; color: var(--text-grey); cursor: pointer; font-weight: 700; font-size: 0.95rem; user-select: none; }
         .like-btn.liked { color: #E11D48; }
@@ -622,10 +672,16 @@
 </head>
 <body>
 
-    <!-- الهيدر العلوي النظيف بعد إتاحة المساحة لجميع الأزرار -->
+    <!-- حقل اختيار الصورة المخفي -->
+    <input type="file" id="userAvatarFileInput" accept="image/*" style="display:none;" onchange="handleUserAvatarUpload(event)">
+
+    <!-- الهيدر العلوي مع الصورة الشخصية وزر الكاميرا بجانب الترحيب -->
     <header class="app-top-bar" id="mainHeader">
         <div class="user-greeting">
-            <img src="logo.png" class="user-avatar-circle" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'" onclick="adminCheat()">
+            <div class="avatar-upload-wrapper" onclick="triggerAvatarUpload()" title="تغيير الصورة الشخصية">
+                <img src="logo.png" id="topUserAvatarImg" class="user-avatar-circle" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                <div class="avatar-cam-badge"><span class="material-icons">camera_alt</span></div>
+            </div>
             <div class="user-greeting-meta">
                 <h3><span data-ar="أهلاً، " data-en="Hi, ">أهلاً، </span><span id="welcomeName" style="color: var(--primary);">دحيح</span> <span>👋</span></h3>
                 <div class="user-greeting-sub">
@@ -655,13 +711,11 @@
 
     <!-- التبويب 1: الرئيسية -->
     <div id="page-home" class="page-section active">
-        <!-- شريط البحث العصري -->
         <div class="search-wrapper-box">
             <input type="text" id="searchInput" class="search-bar-input" placeholder="ابحث عن مادة أو دكتور..." data-ph-ar="ابحث عن مادة أو دكتور..." data-ph-en="Search course or instructor...">
             <span class="material-icons search-lens">search</span>
         </div>
 
-        <!-- كارد الترويجي الرئيسي -->
         <div class="hero-banner-promo" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80');">
             <div class="promo-content">
                 <span class="promo-tag">🎓 الفرقة الرابعة - سنة التخرج</span>
@@ -673,7 +727,6 @@
             </div>
         </div>
 
-        <!-- شبكة الأقسام الدراسية -->
         <div class="section-headline">
             <h3 data-ar="أقسامك الدراسية" data-en="Categories">أقسامك الدراسية</h3>
             <span class="see-all-btn" onclick="filterCourses('all', null)" data-ar="عرض الكل" data-en="View All">عرض الكل</span>
@@ -709,7 +762,6 @@
             </div>
         </div>
 
-        <!-- قائمة المواد -->
         <div class="section-headline" id="coursesAnchor">
             <h3 data-ar="أحدث المحاضرات والمقررات" data-en="Recent Courses">أحدث المحاضرات والمقررات</h3>
         </div>
@@ -759,7 +811,10 @@
     <div id="page-profile" class="page-section">
         <div class="courses-stream-wrapper">
             <div class="profile-card-unified">
-                <img src="logo.png" class="profile-avatar-big" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                <div class="profile-avatar-big-wrap" onclick="triggerAvatarUpload()" title="تغيير صورتك">
+                    <img src="logo.png" id="profileUserAvatarImg" class="profile-avatar-big" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                    <div class="profile-cam-badge-big"><span class="material-icons">camera_alt</span></div>
+                </div>
                 <h2 id="profileName" style="font-size: 1.3rem; margin-bottom: 4px; font-weight: 800;">...</h2>
                 <p id="profileCode" style="color: var(--text-grey); font-size: 0.9rem; font-family:monospace;">...</p>
             </div>
@@ -836,7 +891,7 @@
         </nav>
     </div>
 
-    <!-- النوافذ والموديلات التفاعلية -->
+    <!-- الموديلات والنوافذ -->
     <div id="leaderboardModal" class="page-section" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 1000; overflow-y: auto; display: none;">
         <div class="app-top-bar" style="position: sticky; top: 0;">
             <span class="material-icons" onclick="closeLeaderboard()" style="cursor:pointer; font-size:26px;">arrow_forward</span>
@@ -926,7 +981,7 @@
 
     <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
 
-    <!-- ================= سكربت التطبيق الأصلي بالكامل ================= -->
+    <!-- ================= سكربت التطبيق الأصلي بالكامل مع رفع الصورة ================= -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
 
@@ -945,6 +1000,64 @@
         document.getElementById('welcomeName').innerText = studentFirstName;
         document.getElementById('profileName').innerText = studentFullName;
         
+        // ================= نظام الصورة الشخصية الذكي =================
+        function loadSavedAvatar() {
+            const savedAvatar = localStorage.getItem('daheehUserAvatar');
+            if (savedAvatar) {
+                const topAvatar = document.getElementById('topUserAvatarImg');
+                const profileAvatar = document.getElementById('profileUserAvatarImg');
+                if (topAvatar) topAvatar.src = savedAvatar;
+                if (profileAvatar) profileAvatar.src = savedAvatar;
+            }
+        }
+
+        function triggerAvatarUpload() {
+            document.getElementById('userAvatarFileInput').click();
+        }
+
+        function handleUserAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // ضغط وتصغير الصورة لمقاس 150x150 بدقة خفيفة جداً
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 150;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // تحويل الصورة لنص Base64 خفيف بجودة 0.7
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    localStorage.setItem('daheehUserAvatar', compressedBase64);
+                    loadSavedAvatar();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        loadSavedAvatar();
+
         const quotesAr = [`"هانت يا ${studentFirstName}.. كلها كام شهر ونقولك يا خريج!"`, `"شد حيلك في سنة رابعة.. مسك الختام!"`];
         const quotesEn = [`"Almost there, ${studentFirstName}! The final year!"`, `"Finish strong.. You are a future leader!"`];
 
@@ -1340,7 +1453,6 @@
 
                 const isCompleted = progressPercent === 100 && actualLessonsCount > 0;
 
-                // تحديد البادج والنقطة
                 let badgeHtml = '';
                 if (hasNewLecture) {
                     badgeHtml = `<span class="new-lec-indicator"><span class="pulsing-blue-dot"></span> محاضرة جديدة ⚡</span>`;
@@ -1377,7 +1489,6 @@
             });
         }
 
-        // دالة تفتح المادة وتسجل أن الطالب شاهد العدد الحالي حتى تختفي النقطة الزرقاء
         function openCoursePage(courseId, currentCount) {
             if (currentCount > 0) {
                 localStorage.setItem(`last_seen_count_${courseId}`, currentCount);
@@ -1385,7 +1496,6 @@
             window.location.href = `course4.html?id=${courseId}`;
         }
 
-        // دالة تقوم بتحديث أعداد المحاضرات تلقائياً من السيرفر في الخلفية عند فتح التطبيق
         function fetchAllCoursesRealCounts() {
             coursesData.forEach(c => {
                 fetch(`${SCRIPT_URL}?action=getLectures&courseId=${c.id}&code=${studentCode}`)
