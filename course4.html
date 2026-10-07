@@ -660,9 +660,16 @@
 
         <!-- قائمة المحاضرات والتعليقات تبدأ أسفل المشغل مباشرة وبدون أي تداخل سلبي -->
         <div class="video-playlist-scroll">
+            <!-- عنوان قائمة المحاضرات ومعه زر القفز السريع للتعليقات في الأعلى -->
             <div class="video-section-title">
                 <span>📚 باقي محاضرات المادة</span>
-                <span style="font-size:0.82rem; color:var(--grey); font-weight:700;" id="vPlaylistCount"></span>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:0.82rem; color:var(--grey); font-weight:700;" id="vPlaylistCount"></span>
+                    <button onclick="scrollToCommentsSection()" style="background: rgba(37,99,235,0.1); color: var(--primary); border: 1px solid rgba(37,99,235,0.25); border-radius: 12px; padding: 4px 10px; font-size: 0.78rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-family: inherit;">
+                        <span class="material-icons" style="font-size:15px;">chat</span>
+                        <span>التعليقات</span>
+                    </button>
+                </div>
             </div>
             <div id="videoPlaylistContainer"></div>
 
@@ -775,7 +782,7 @@
             </div>
         </div>
 
-        <div id="pdfDrawTools" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:var(--card); padding:10px 20px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); display:none; gap:15px; z-index:3000; align-items:center; border: 1px solid rgba(0,0,0,0.05);">
+        <div id="pdfDrawTools" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:var(--card); padding:10px 20px; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); display:none; gap:15px; z-index:3000; align-items:center; border: 1px solid rgba(0,0,0,0.05); cursor:pointer;">
             <button class="color-btn active" style="background:#0A2647; width:34px; height:34px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#0A2647', 3, this)" title="قلم أزرق"></button>
             <button class="color-btn" style="background:#f44336; width:34px; height:34px; border-radius:50%; border:2px solid transparent; cursor:pointer;" onclick="setPdfBrush('#f44336', 3, this)" title="قلم أحمر"></button>
             <button class="color-btn" style="background:rgba(255, 200, 0, 0.4); border: 2px solid #FFC800; width:34px; height:34px; border-radius:50%; cursor:pointer;" onclick="setPdfBrush('rgba(255, 200, 0, 0.4)', 15, this)" title="قلم تحديد"></button>
@@ -1262,45 +1269,72 @@
             }
         }
 
-        // ================= دوال نظام التعليقات السحابية المصححة 100% =================
+        // ================= دوال نظام التعليقات السحابية فائقة السرعة مع الكاش المحلي =================
+        function scrollToCommentsSection() {
+            const commentsBox = document.querySelector('.comments-section-wrapper');
+            const inputField = document.getElementById('commentTextInput');
+            if (commentsBox) {
+                commentsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (inputField) {
+                    setTimeout(() => inputField.focus(), 400);
+                }
+            }
+        }
+
+        function renderCommentsHTML(comments, container, badge) {
+            if(badge) badge.innerText = `(${comments.length})`;
+            if (comments.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem; padding:15px 0;">لا توجد تعليقات حتى الآن. كن أول من يطرح سؤاله! 💡</p>`;
+                return;
+            }
+            let html = '';
+            comments.forEach(c => {
+                html += `
+                <div class="comment-card">
+                    <img src="logo.png" class="comment-avatar" alt="طالب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                    <div class="comment-card-content">
+                        <div class="comment-author-name">
+                            <span>${c.studentName || 'طالب دحيح'}</span>
+                            <span class="comment-time">${c.timestamp || ''}</span>
+                        </div>
+                        <p class="comment-text">${c.comment}</p>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
         function loadLectureComments(cId, lecNum) {
             const container = document.getElementById('commentsStreamContainer');
             const badge = document.getElementById('commentsCountBadge');
             const sCode = localStorage.getItem('studentCode') || '';
+            const cacheKey = `daheeh_comments_${cId}_${lecNum}`;
             if(!container) return;
-            container.innerHTML = `<div style="text-align:center; padding:15px; color:var(--grey);"><span class="material-icons" style="animation:pulse 1s infinite; font-size:24px;">autorenew</span><p style="margin-top:6px; font-weight:600; font-size:0.85rem;">جاري جلب التعليقات...</p></div>`;
 
-            // إرسال كود الطالب في الرابط للتوثيق
+            // عرض الكاش المحفوظ فوراً في 0 ثانية دون أي انتظار
+            const cachedComments = localStorage.getItem(cacheKey);
+            if (cachedComments) {
+                try {
+                    const parsed = JSON.parse(cachedComments);
+                    renderCommentsHTML(parsed, container, badge);
+                } catch(e) {}
+            } else {
+                container.innerHTML = `<div style="text-align:center; padding:12px; color:var(--grey);"><span class="material-icons" style="animation:pulse 1s infinite; font-size:22px;">autorenew</span><p style="margin-top:4px; font-weight:600; font-size:0.82rem;">جاري جلب التعليقات...</p></div>`;
+            }
+
+            // جلب أحدث التعليقات وتحديث الكاش بالخلفية
             fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}&code=${encodeURIComponent(sCode)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.comments) {
-                        badge.innerText = `(${data.comments.length})`;
-                        if (data.comments.length === 0) {
-                            container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem; padding:15px 0;">لا توجد تعليقات حتى الآن. كن أول من يطرح سؤاله! 💡</p>`;
-                            return;
-                        }
-                        let html = '';
-                        data.comments.forEach(c => {
-                            html += `
-                            <div class="comment-card">
-                                <img src="logo.png" class="comment-avatar" alt="طالب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
-                                <div class="comment-card-content">
-                                    <div class="comment-author-name">
-                                        <span>${c.studentName || 'طالب دحيح'}</span>
-                                        <span class="comment-time">${c.timestamp || ''}</span>
-                                    </div>
-                                    <p class="comment-text">${c.comment}</p>
-                                </div>
-                            </div>`;
-                        });
-                        container.innerHTML = html;
-                    } else {
-                        container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem;">لا توجد تعليقات حتى الآن. كن أول من يسأل! 💡</p>`;
+                        localStorage.setItem(cacheKey, JSON.stringify(data.comments));
+                        renderCommentsHTML(data.comments, container, badge);
                     }
                 })
                 .catch(() => {
-                    container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem;">تعذر جلب التعليقات حالياً.</p>`;
+                    if (!cachedComments) {
+                        container.innerHTML = `<p style="text-align:center; color:var(--grey); font-size:0.85rem; padding:10px 0;">تعذر جلب التعليقات حالياً.</p>`;
+                    }
                 });
         }
 
@@ -1311,34 +1345,38 @@
 
             const sCode = localStorage.getItem('studentCode') || '';
             const sName = localStorage.getItem('studentName') || 'طالب دحيح';
-
-            const formData = new URLSearchParams();
-            formData.append('action', 'addComment');
-            formData.append('code', sCode); // معرّف التوثيق الأساسي لـ doPost
-            formData.append('studentCode', sCode);
-            formData.append('courseId', courseId);
-            formData.append('lectureNum', currentVideoLecNum);
-            formData.append('studentName', sName);
-            formData.append('comment', text);
+            const cacheKey = `daheeh_comments_${courseId}_${currentVideoLecNum}`;
+            const container = document.getElementById('commentsStreamContainer');
+            const badge = document.getElementById('commentsCountBadge');
 
             input.value = '';
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    loadLectureComments(courseId, currentVideoLecNum);
-                } else {
-                    alert('تعذر إضافة التعليق: غير مصرح');
-                }
-            })
-            .catch(() => {
-                alert('تعذر إرسال التعليق، يرجى التأكد من الاتصال بالإنترنت.');
-            });
+            // Optimistic UI: إظهار التعليق فوراً أمام الطالب بدون انتظار
+            let currentList = [];
+            try { currentList = JSON.parse(localStorage.getItem(cacheKey)) || []; } catch(e) {}
+            const newCommentObj = {
+                studentCode: sCode,
+                studentName: sName,
+                comment: text,
+                timestamp: "الآن"
+            };
+            currentList.unshift(newCommentObj);
+            localStorage.setItem(cacheKey, JSON.stringify(currentList));
+            renderCommentsHTML(currentList, container, badge);
+
+            // الإرسال السريع للخادم
+            const url = `${SCRIPT_URL}?action=addComment&code=${encodeURIComponent(sCode)}&studentCode=${encodeURIComponent(sCode)}&studentName=${encodeURIComponent(sName)}&courseId=${encodeURIComponent(courseId)}&lectureNum=${encodeURIComponent(currentVideoLecNum)}&comment=${encodeURIComponent(text)}`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        loadLectureComments(courseId, currentVideoLecNum);
+                    }
+                })
+                .catch(() => {
+                    setTimeout(() => loadLectureComments(courseId, currentVideoLecNum), 1500);
+                });
         }
 
         // === تبويبات المحاضرة التفاعلية الحديثة والمنسقة ===
