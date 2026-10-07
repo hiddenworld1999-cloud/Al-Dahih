@@ -305,7 +305,7 @@
 
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 24px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
 
-        /* ================= مشغل الفيديو المحسن بالكامل ================= */
+        /* ================= مشغل الفيديو المحسن بالكامل بدون حجب للأزرار ================= */
         #videoLectureModal { 
             background: #000000; 
             display: none; 
@@ -319,11 +319,11 @@
             flex-shrink: 0;
         }
 
-        /* البار العلوي الأسود الداكن مع تدرج شفاف نازل بنعومة */
+        /* البار العلوي الأسود الداكن النازل بشفافية ناعمة مع عناصر بيضاء ناصعة */
         .video-top-bar {
             width: 100%;
-            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 16px;
-            background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0.9) 65%, rgba(0, 0, 0, 0) 100%);
+            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 14px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -331,7 +331,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 20;
+            z-index: 25;
             pointer-events: none;
         }
         .video-top-bar * {
@@ -345,37 +345,37 @@
         }
         .video-header-title h4 {
             margin: 0;
-            font-size: 1.05rem;
-            font-weight: 800;
+            font-size: 1rem;
+            font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
         .video-header-title span {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: rgba(255, 255, 255, 0.85);
-            font-weight: 600;
-            text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
         }
 
         .video-action-icon {
             color: #ffffff !important;
             cursor: pointer;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9));
             transition: 0.2s;
         }
         .video-action-icon:active {
             transform: scale(0.9);
         }
 
-        /* حاوية الفيديو بنسبة 16:9 مستقلة بدون أي حجب */
+        /* حاوية الفيديو: ارتفاع محسوب يضمن ظهور شريط الأدوات بالكامل على كل الهواتف */
         .video-screen-box {
             position: relative;
             width: 100%;
-            height: 240px;
+            height: 250px; /* يعطي مساحة كافية لتظهر أدوات درايف ويوتيوب كاملة */
             background: #000000;
         }
         @media (min-width: 768px) {
-            .video-screen-box { height: 400px; }
+            .video-screen-box { height: 420px; }
         }
 
         .video-player-frame {
@@ -385,13 +385,13 @@
             display: block;
         }
 
-        /* قائمة المحاضرات تبدأ تحت الفيديو مباشرة بدون أي ركوب أو تداخل */
+        /* قائمة المحاضرات تبدأ أسفل الفيديو مباشرة بدون أي ركوب أو حجب لأدوات الفيديو */
         .video-playlist-scroll {
             flex: 1;
             background: var(--card);
             border-top-left-radius: 28px;
             border-top-right-radius: 28px;
-            margin-top: 0; /* منع التداخل مع شريط الفيديو السفلي نهائياً */
+            margin-top: 0; /* تم إلغاء التداخل السلبي تماماً لضمان عدم تغطية شريط التحكم */
             overflow-y: auto;
             padding: 20px 20px 80px;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.3);
@@ -550,7 +550,7 @@
     <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود الشفاف وقائمة المحاضرات ================= -->
     <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
         <div class="video-player-wrapper">
-            <!-- شريط العنوان الأسود الشفاف النازل بانسيابية وتوهج أبيض ناصع -->
+            <!-- شريط العنوان الأسود الشفاف النازل بانسيابية مع أيقونات بيضاء ناصعة -->
             <div class="video-top-bar">
                 <span class="material-icons video-action-icon" onclick="history.back()" style="font-size: 28px;">arrow_forward</span>
                 <div class="video-header-title">
@@ -560,7 +560,7 @@
                 <span class="material-icons video-action-icon" style="font-size: 24px;" title="حفظ">bookmark_border</span>
             </div>
 
-            <!-- شاشة الفيديو مع كامل صلاحيات التحكم والسرعة والشاشة الكاملة -->
+            <!-- شاشة الفيديو بمساحة حرة تضمن ظهور شريط الأدوات بالكامل -->
             <div class="video-screen-box">
                 <iframe id="videoIframePlayer" class="video-player-frame" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -741,7 +741,7 @@
                 <span data-ar="مؤقت المذاكرة" data-en="Study Timer">مؤقت المذاكرة</span>
                 <span class="material-icons" onclick="togglePomodoro()" style="cursor:pointer; font-size:20px;">close</span>
             </div>
-            <div class="pomo-time" id="pomoTimeDisplay">25:00</div>
+            <div class="pomo-time" id="pomoTimeDisplay" style="font-size:25px; font-weight:900; color:var(--primary); font-family:monospace; margin-bottom:12px;">25:00</div>
             <div class="pomo-controls">
                 <button onclick="startPomodoro()" id="pomoStartBtn" data-ar="بدأ" data-en="Start">بدأ</button>
                 <button onclick="resetPomodoro()" style="background:#d32f2f;" data-ar="إعادة" data-en="Reset">إعادة</button>
@@ -756,7 +756,7 @@
         window.currentOpenedPdf = "";
         window.currentInteractiveData = null;
         window.lecturesDataCache = {};
-        window.rawLecturesList = []; // حفظ مصفوفة المحاضرات للتنقل الفوري
+        window.rawLecturesList = [];
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
             document.body.classList.add('vip-gold-mode');
@@ -770,7 +770,6 @@
         window.addEventListener('popstate', function(event) {
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
-            // إيقاف تشغيل الفيديو عند الرجوع لمنع استمرار الصوت
             const vPlayer = document.getElementById('videoIframePlayer');
             if (vPlayer) vPlayer.src = '';
 
@@ -791,7 +790,6 @@
             
             document.getElementById('section-' + sec).style.display = 'block';
 
-            // في حال الانتقال لقسم آخر نعيد قائمة المحاضرات لوضعها الأصلي
             if(sec === 'content') {
                 closeLectureInline();
             }
@@ -1091,7 +1089,6 @@
             document.getElementById('vLecTitle').innerText = lectureName;
             document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lectureNum} من مقرر ${course ? course.titleAr : ''}`;
 
-            // ملء قائمة المحاضرات تحت الفيديو مباشرة
             renderVideoPlaylist(lectureNum);
 
             openModalWithHistory('videoLectureModal');
@@ -1147,7 +1144,7 @@
                 document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lecNum} من مقرر ${course ? course.titleAr : ''}`;
                 renderVideoPlaylist(lecNum);
             } else {
-                history.back(); // الخروج من الفيديو وعرض خيارات المحاضرة في المكان الأصلي
+                history.back();
                 showDynamicLecture(lectureName, fileName, lecNum, cacheIndex, '');
             }
         }
@@ -1349,7 +1346,6 @@
             const quizKey = `completed_quiz_${courseId}_${num}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
-            // فحص هل المحاضرة فيديو
             let resolvedVideoUrl = videoUrl && videoUrl.trim() !== '' ? videoUrl : '';
             if (!resolvedVideoUrl && fileName && (fileName.includes('drive.google.com') || fileName.includes('youtu'))) {
                 resolvedVideoUrl = fileName;
@@ -1385,7 +1381,6 @@
                 }
             }
 
-            // زر مشاهدة الفيديو
             let videoButtonHtml = '';
             if (resolvedVideoUrl && resolvedVideoUrl.trim() !== '') {
                 videoButtonHtml = `
@@ -1413,7 +1408,6 @@
                 }
             }
 
-            // حقن الأزرار في نفس المكان بالشيت الأبيض وإخفاء قائمة المحاضرات مؤقتاً
             const detailContainer = document.getElementById('lectureDetailInline');
             const listCard = document.getElementById('lecturesListCard');
 
@@ -1449,7 +1443,6 @@
             applyLanguage();
         }
 
-        // دالة العودة لقائمة المحاضرات في نفس المكان
         function closeLectureInline() {
             const detailContainer = document.getElementById('lectureDetailInline');
             const listCard = document.getElementById('lecturesListCard');
