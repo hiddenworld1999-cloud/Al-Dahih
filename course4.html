@@ -310,7 +310,6 @@
             background: #000000; 
             display: none; 
             flex-direction: column;
-            overflow: hidden;
         }
 
         .video-player-wrapper {
@@ -318,21 +317,25 @@
             width: 100%;
             background: #000000;
             flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* البار العلوي الأسود المستقل تماماً عن الفيديو لمنع أي حجب */
+        /* البار العلوي الأسود الداكن النازل بشفافية ناعمة مع عناصر بيضاء ناصعة */
         .video-top-bar {
             width: 100%;
-            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 12px;
-            background: #000000;
+            padding: calc(12px + env(safe-area-inset-top, 20px)) 16px 14px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%);
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: #ffffff;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            z-index: 10;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 25;
+            pointer-events: none;
+        }
+        .video-top-bar * {
+            pointer-events: auto;
         }
 
         .video-header-title {
@@ -345,30 +348,34 @@
             font-size: 1rem;
             font-weight: 900;
             color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
         .video-header-title span {
             font-size: 0.76rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
         }
 
         .video-action-icon {
             color: #ffffff !important;
             cursor: pointer;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.9));
             transition: 0.2s;
         }
         .video-action-icon:active {
             transform: scale(0.9);
         }
 
-        /* حاوية الفيديو: ارتفاع محسوب يعطي مساحة كاملة لأدوات درايف ويوتيوب للظهور دون قص */
+        /* حاوية الفيديو: ارتفاع محسوب يضمن ظهور شريط الأدوات بالكامل على كل الهواتف */
         .video-screen-box {
             position: relative;
             width: 100%;
-            height: 38vh;
-            min-height: 270px;
-            max-height: 480px;
+            height: 250px; /* يعطي مساحة كافية لتظهر أدوات درايف ويوتيوب كاملة */
             background: #000000;
+        }
+        @media (min-width: 768px) {
+            .video-screen-box { height: 420px; }
         }
 
         .video-player-frame {
@@ -378,13 +385,13 @@
             display: block;
         }
 
-        /* قائمة المحاضرات تبدأ أسفل المشغل مباشرة وبدون أي تداخل سلبي */
+        /* قائمة المحاضرات تبدأ أسفل الفيديو مباشرة بدون أي ركوب أو حجب لأدوات الفيديو */
         .video-playlist-scroll {
             flex: 1;
             background: var(--card);
             border-top-left-radius: 28px;
             border-top-right-radius: 28px;
-            margin-top: 0;
+            margin-top: 0; /* تم إلغاء التداخل السلبي تماماً لضمان عدم تغطية شريط التحكم */
             overflow-y: auto;
             padding: 20px 20px 80px;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.3);
@@ -543,7 +550,7 @@
     <!-- ================= نافذة مشغل الفيديو المحسنة مع البار الأسود الشفاف وقائمة المحاضرات ================= -->
     <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
         <div class="video-player-wrapper">
-            <!-- شريط العنوان الأسود المستقل تماماً في الأعلى مع عناصر بيضاء ناصعة -->
+            <!-- شريط العنوان الأسود الشفاف النازل بانسيابية مع أيقونات بيضاء ناصعة -->
             <div class="video-top-bar">
                 <span class="material-icons video-action-icon" onclick="history.back()" style="font-size: 28px;">arrow_forward</span>
                 <div class="video-header-title">
@@ -553,7 +560,7 @@
                 <span class="material-icons video-action-icon" style="font-size: 24px;" title="حفظ">bookmark_border</span>
             </div>
 
-            <!-- شاشة الفيديو بمساحة حرة تضمن ظهور شريط الأدوات بالكامل على كل الهواتف -->
+            <!-- شاشة الفيديو بمساحة حرة تضمن ظهور شريط الأدوات بالكامل -->
             <div class="video-screen-box">
                 <iframe id="videoIframePlayer" class="video-player-frame" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -562,7 +569,7 @@
             </div>
         </div>
 
-        <!-- قائمة المحاضرات تبدأ أسفل الفيديو مباشرة بدون أي ركوب أو حجب لأدوات الفيديو -->
+        <!-- شيت أسفل الفيديو مباشرة بدون أي تداخل يعرض قائمة باقي محاضرات المادة -->
         <div class="video-playlist-scroll">
             <div class="video-section-title">
                 <span>📚 باقي محاضرات المادة</span>
@@ -740,7 +747,9 @@
                 <button onclick="resetPomodoro()" style="background:#d32f2f;" data-ar="إعادة" data-en="Reset">إعادة</button>
             </div>
         </div>
-        <button class="pomo-fab" onclick="togglePomodoro()"><span class="material-icons">timer</span></button>
+        <button class="pomo-fab" onclick="togglePomodoro()">
+            <span class="material-icons" style="font-size: 26px;">timer</span>
+        </button>
     </div>
 
     <script>
