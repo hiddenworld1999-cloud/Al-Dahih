@@ -559,7 +559,7 @@
 </head>
 <body>
 
-    <!-- غلاف المادة الفخم بصورة ملء العرض -->
+    <!-- غلاف المادة السينمائي -->
     <div class="course-hero-cover" id="heroCover">
         <div class="hero-nav">
             <div class="hero-btn" onclick="window.location.href='index4.html'">
@@ -585,7 +585,7 @@
         </div>
     </div>
 
-    <!-- شيت المحتوى الأبيض المنحني المرتفع فوق الصورة -->
+    <!-- شيت المحتوى الأبيض المرتفع فوق الصورة -->
     <div class="content-sheet-card">
         <div class="tabs-header">
             <button class="tab-head-btn active" onclick="switchCourseSection('content', this)" data-ar="المحتوى" data-en="Content">المحتوى</button>
@@ -684,7 +684,7 @@
                 </div>
 
                 <div class="comment-input-box">
-                    <img src="logo.png" class="comment-avatar" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                    <img src="logo.png" id="commentBoxUserAvatar" class="comment-avatar" alt="الصورة الشخصية" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
                     <textarea id="commentTextInput" class="comment-input-field" rows="1" placeholder="اكتب سؤالك أو استفسارك هنا..."></textarea>
                     <button class="comment-send-btn" onclick="submitVideoComment()" title="إرسال التعليق">
                         <span class="material-icons" style="font-size:20px;">send</span>
@@ -1206,6 +1206,13 @@
             document.getElementById('vLecTitle').innerText = lectureName;
             document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lectureNum} من مقرر ${course ? course.titleAr : ''}`;
 
+            // تحديث صورة المستخدم في خانة كتابة التعليق إن وجدت
+            const myAvatar = localStorage.getItem('daheehUserAvatar');
+            const commentAvatarImg = document.getElementById('commentBoxUserAvatar');
+            if (myAvatar && commentAvatarImg) {
+                commentAvatarImg.src = myAvatar;
+            }
+
             renderVideoPlaylist(lectureNum);
             loadLectureComments(courseId, lectureNum);
 
@@ -1290,9 +1297,10 @@
             }
             let html = '';
             comments.forEach(c => {
+                const avatarUrl = c.avatar || 'logo.png';
                 html += `
                 <div class="comment-card">
-                    <img src="logo.png" class="comment-avatar" alt="طالب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
+                    <img src="${avatarUrl}" class="comment-avatar" alt="طالب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3048/3048122.png'">
                     <div class="comment-card-content">
                         <div class="comment-author-name">
                             <span>${c.studentName || 'طالب دحيح'}</span>
@@ -1346,18 +1354,20 @@
 
             const sCode = localStorage.getItem('studentCode') || '';
             const sName = localStorage.getItem('studentName') || 'طالب دحيح';
+            const sAvatar = localStorage.getItem('daheehUserAvatar') || '';
             const cacheKey = `daheeh_comments_${courseId}_${currentVideoLecNum}`;
             const container = document.getElementById('commentsStreamContainer');
             const badge = document.getElementById('commentsCountBadge');
 
             input.value = '';
 
-            // Optimistic UI: إظهار التعليق فوراً أمام الطالب بدون انتظار
+            // Optimistic UI: إظهار التعليق فوراً أمام الطالب مع صورته الحالية بدون انتظار
             let currentList = [];
             try { currentList = JSON.parse(localStorage.getItem(cacheKey)) || []; } catch(e) {}
             const newCommentObj = {
                 studentCode: sCode,
                 studentName: sName,
+                avatar: sAvatar,
                 comment: text,
                 timestamp: "الآن"
             };
@@ -1365,8 +1375,8 @@
             localStorage.setItem(cacheKey, JSON.stringify(currentList));
             renderCommentsHTML(currentList, container, badge);
 
-            // الإرسال السريع للخادم
-            const url = `${SCRIPT_URL}?action=addComment&code=${encodeURIComponent(sCode)}&studentCode=${encodeURIComponent(sCode)}&studentName=${encodeURIComponent(sName)}&courseId=${encodeURIComponent(courseId)}&lectureNum=${encodeURIComponent(currentVideoLecNum)}&comment=${encodeURIComponent(text)}`;
+            // الإرسال السريع للخادم متضمناً الصورة الشخصية المرفوعة
+            const url = `${SCRIPT_URL}?action=addComment&code=${encodeURIComponent(sCode)}&studentCode=${encodeURIComponent(sCode)}&studentName=${encodeURIComponent(sName)}&courseId=${encodeURIComponent(courseId)}&lectureNum=${encodeURIComponent(currentVideoLecNum)}&comment=${encodeURIComponent(text)}&avatar=${encodeURIComponent(sAvatar)}`;
 
             fetch(url)
                 .then(res => res.json())
