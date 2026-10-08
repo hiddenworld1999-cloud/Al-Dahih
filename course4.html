@@ -701,12 +701,21 @@
         </div>
     </div>
 
-    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe بملء الشاشة مع الدعم الكامل للأوفلاين -->
-    <div id="contentModal" class="modal modal-trackable">
+    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe مع شريط الأدوات الذكي (السبورة، الحاسبة، الموسيقى، والوضع الليلي) -->
+    <div id="contentModal" class="modal modal-trackable" style="z-index: 2000;">
         <div class="modal-head">
-            <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
-            <span style="font-weight:900; font-size:1.1rem;" id="contentTitle">المحتوى</span>
-            <span style="width: 28px;"></span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
+                <span style="font-weight:900; font-size:1.1rem; color:var(--primary);" id="contentTitle">المحتوى</span>
+            </div>
+
+            <!-- شريط الأدوات الذكي -->
+            <div class="header-icons" style="display: flex; align-items: center; gap: 14px;">
+                <span class="material-icons" onclick="openWhiteboard()" style="color: var(--text); cursor: pointer;" title="السبورة الذكية">palette</span>
+                <span class="material-icons" onclick="toggleFloatingCalc()" style="color: var(--text); cursor: pointer;" title="الآلة الحاسبة">calculate</span>
+                <span class="material-icons" id="musicToggleHtml" onclick="toggleMusic()" style="color: var(--text); cursor: pointer;" title="الموسيقى">music_off</span>
+                <span class="material-icons" id="darkModeToggleHtml" onclick="toggleDarkMode()" style="color: var(--text); cursor: pointer;" title="المظهر الليلي">light_mode</span>
+            </div>
         </div>
         <div class="modal-body" id="contentModalBody" style="padding: 0;">
             <div class="content-view" id="contentBody" style="padding: 0; background: transparent; border: none; box-shadow: none;"></div>
@@ -754,8 +763,8 @@
         <div class="modal-body" id="quizBody"></div>
     </div>
     
-    <!-- نافذة أوائل الامتحان -->
-    <div id="examLeaderboardModal" class="modal modal-trackable" style="z-index: 2500;">
+    <!-- نافذة أوائل الامتحان مع رفع الأولوية لتظهر فوق نتيجة الامتحان مباشرة بدون الرجوع -->
+    <div id="examLeaderboardModal" class="modal modal-trackable" style="z-index: 3800;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
             <span style="font-weight:900; font-size:1.15rem; color:#f59e0b; display:flex; align-items:center; gap:6px;">
@@ -1168,29 +1177,45 @@
             document.body.classList.toggle('dark-mode'); 
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('daheehDarkMode', isDark); 
-            document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = isDark ? 'dark_mode' : 'light_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = isDark ? 'dark_mode' : 'light_mode';
-            if(isDark) { document.body.classList.remove('vip-gold-mode'); localStorage.setItem('daheehVipMode_Y4', 'false'); }
+            const iconName = isDark ? 'dark_mode' : 'light_mode';
+
+            if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = iconName; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = iconName; 
+            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = iconName; 
+
+            if (isDark) { 
+                document.body.classList.remove('vip-gold-mode'); 
+                localStorage.setItem('daheehVipMode_Y4', 'false'); 
+            }
         }
         
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
             document.body.classList.add('dark-mode'); 
-            document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
+            if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
+            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'dark_mode'; 
         } else { 
-            document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
-            if(document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'light_mode'; 
         }
 
         const bgMusic = document.getElementById('bgMusic'); bgMusic.volume = 0.5;
         function toggleMusic() { 
-            const btn = document.getElementById('musicToggle').querySelector('.material-icons'); const btnPdf = document.getElementById('musicTogglePdf'); 
+            const btn = document.getElementById('musicToggle')?.querySelector('.material-icons'); 
+            const btnPdf = document.getElementById('musicTogglePdf'); 
+            const btnHtml = document.getElementById('musicToggleHtml'); 
+
             if (bgMusic.paused) { 
-                bgMusic.play(); btn.innerText = 'music_note'; btn.parentElement.classList.add('music-active'); 
-                if(btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); } 
+                bgMusic.play(); 
+                if (btn) { btn.innerText = 'music_note'; btn.parentElement.classList.add('music-active'); }
+                if (btnPdf) { btnPdf.innerText = 'music_note'; btnPdf.classList.add('music-active'); } 
+                if (btnHtml) { btnHtml.innerText = 'music_note'; btnHtml.classList.add('music-active'); } 
             } else { 
-                bgMusic.pause(); btn.innerText = 'music_off'; btn.parentElement.classList.remove('music-active'); 
-                if(btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); } 
+                bgMusic.pause(); 
+                if (btn) { btn.innerText = 'music_off'; btn.parentElement.classList.remove('music-active'); }
+                if (btnPdf) { btnPdf.innerText = 'music_off'; btnPdf.classList.remove('music-active'); } 
+                if (btnHtml) { btnHtml.innerText = 'music_off'; btnHtml.classList.remove('music-active'); } 
             } 
         }
 
@@ -1525,13 +1550,17 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات (HTML) مع دعم الأوفلاين التام ومنع 404 =================
+        // ================= فتح المحاضرات (HTML) مع دعم الأوفلاين التام وشريط الأدوات الذكي =================
         async function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
             if (modalBody) modalBody.style.padding = '0';
 
-            let cleanUrl = (htmlUrl || '').trim();
+            // تنظيف الرابط تماماً من أي حروف مخفية (Zero-width) أو مسافات
+            let cleanUrl = (htmlUrl || '')
+                .replace(/[\u200B-\u200D\uFEFF\u200E\u200F]/g, '')
+                .trim();
+
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 cleanUrl = './' + cleanUrl;
@@ -1549,7 +1578,12 @@
             openModalWithHistory('contentModal');
 
             const storageKey = 'offline_lecture_cache_' + cleanUrl;
-            const cachedHTML = localStorage.getItem(storageKey);
+            let cachedHTML = localStorage.getItem(storageKey);
+
+            if (cachedHTML && (cachedHTML.includes('404') || cachedHTML.includes('File not found'))) {
+                localStorage.removeItem(storageKey);
+                cachedHTML = null;
+            }
 
             contentBox.innerHTML = `
                 <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
@@ -1562,12 +1596,10 @@
 
             const iframeEl = document.getElementById('offlineLectureIframe');
 
-            // 1. إذا كان الملف محفوظاً مسبقاً، اعرضه فوراً حتى بدون نت
             if (cachedHTML) {
                 iframeEl.srcdoc = cachedHTML;
             }
 
-            // 2. إذا كان النت شغال، يتم تحديث الملف وحفظه للأوفلاين
             if (navigator.onLine) {
                 try {
                     const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
@@ -1575,16 +1607,12 @@
                     if (response.ok) {
                         const freshHTML = await response.text();
                         localStorage.setItem(storageKey, freshHTML);
-                        if (!cachedHTML) {
-                            iframeEl.srcdoc = freshHTML;
-                        }
+                        iframeEl.srcdoc = freshHTML;
                     } else if (!cachedHTML) {
                         iframeEl.src = cleanUrl;
                     }
                 } catch (e) {
-                    if (!cachedHTML) {
-                        iframeEl.src = cleanUrl;
-                    }
+                    if (!cachedHTML) iframeEl.src = cleanUrl;
                 }
             } else if (!cachedHTML) {
                 iframeEl.src = cleanUrl;
@@ -2150,7 +2178,11 @@
             
             const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
             let xpRewardText = ''; let xpColor = '#4caf50';
-            saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
+
+            // حفظ السكور في الشيت فقط لأول مرة
+            if (!isAlreadyCompleted) {
+                saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
+            }
 
             if(score > 0) {
                 if (!isAlreadyCompleted) { 
