@@ -561,12 +561,10 @@
     </header>
 
     <!-- شريط الإشعارات والتحديثات الأزرق المتحرك -->
-    <div class="news-ticker">
+    <div class="news-ticker" id="tickerWrapper">
         <span class="material-icons" id="tickerIcon">auto_awesome</span>
         <marquee direction="right" scrollamount="5" id="newsMarquee">
-            <span id="tickerText" data-default="true" data-ar="✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨" data-en="✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨">
-                ✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨
-            </span>
+            <span id="tickerContentText">✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨</span>
         </marquee>
     </div>
 
@@ -1390,6 +1388,9 @@
         let latestNewsTimestampGlobal = null;
         let tickerTimer = null;
 
+        const DEFAULT_DHIKR_AR = "✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨";
+        const DEFAULT_DHIKR_EN = "✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨";
+
         function checkLatestNews() {
             if (!studentCode) return;
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${studentCode}`)
@@ -1429,43 +1430,43 @@
             }).catch(() => {});
         }
 
-        // دمج الإشعار في الشريط الأزرق وإعادته بعد مرور دورتين (حوالي 25 ثانية)
+        // دمج الإشعار في الشريط الأزرق وإعادته بعد مرور دورتين كاملتين (30 ثانية)
         function playTickerWithNotification(alertMsg) {
             const marquee = document.getElementById('newsMarquee');
-            const defaultDhikr = currentLang === 'en' 
-                ? "✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨" 
-                : "✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨";
+            if (!marquee) return;
+            const dhikr = currentLang === 'en' ? DEFAULT_DHIKR_EN : DEFAULT_DHIKR_AR;
 
-            marquee.innerHTML = `<span>${alertMsg} &nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp; ${defaultDhikr}</span>`;
-            marquee.start();
+            // تحديث محتوى الـ marquee برمجياً مع الذكر الشريف
+            marquee.innerHTML = `<span id="tickerContentText">${alertMsg} &nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp; ${dhikr}</span>`;
+            if (typeof marquee.start === 'function') marquee.start();
 
             if (tickerTimer) clearTimeout(tickerTimer);
 
+            // يستمر 30 ثانية كاملة ليمر مرتين ثم يعود للصلاة على النبي
             tickerTimer = setTimeout(() => {
                 resetTickerToDefault();
-            }, 25000);
+            }, 30000);
         }
 
         function resetTickerToDefault() {
             const marquee = document.getElementById('newsMarquee');
             if (marquee) {
-                const defaultDhikr = currentLang === 'en' 
-                    ? "✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨" 
-                    : "✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨";
-                marquee.innerHTML = `<span id="tickerText" data-default="true">${defaultDhikr}</span>`;
-                marquee.start();
+                const dhikr = currentLang === 'en' ? DEFAULT_DHIKR_EN : DEFAULT_DHIKR_AR;
+                marquee.innerHTML = `<span id="tickerContentText">${dhikr}</span>`;
+                if (typeof marquee.start === 'function') marquee.start();
             }
         }
 
         function closeNewsPopup() { 
+            // 1. إغلاق النافذة المنبثقة فقط
             document.getElementById('newsPopup').style.display = 'none'; 
-            // تسجيل أن الطالب شاف الإشعار لتفادي ظهوره مرة أخرى
+            
+            // 2. تسجيل المشاهدة حتى لا تظهر نفس المحاضرة عند إعادة فتح التطبيق
             if (latestNewsTimestampGlobal) {
                 localStorage.setItem('daheehLastNewsTime_Y4', latestNewsTimestampGlobal);
             }
-            if (tickerTimer) clearTimeout(tickerTimer);
-            // إعادة الشريط الأزرق المتحرك لحالته الطبيعية (الصلاة على النبي)
-            resetTickerToDefault();
+            
+            // يُترك التايمر يعمل بوقته الطبيعي (30 ثانية) ليتمكن الطالب من قراءة الشريط أثناء التصفح
         }
 
         function openFeedbackModal() { document.getElementById('feedbackText').value = ''; document.getElementById('feedbackModal').style.display = 'flex'; }
