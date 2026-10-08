@@ -242,9 +242,10 @@
             display: flex;
             align-items: center;
             padding: 7px 16px;
+            overflow: hidden;
         }
-        .news-ticker .material-icons { color: #FBBF24; font-size: 18px; margin: 0 8px; }
-        .news-ticker marquee { font-weight: 700; font-size: 0.88rem; }
+        .news-ticker .material-icons { color: #FBBF24; font-size: 18px; margin: 0 8px; flex-shrink: 0; }
+        .news-ticker marquee { font-weight: 700; font-size: 0.88rem; width: 100%; }
 
         /* ================= شريط البحث ================= */
         .search-wrapper-box {
@@ -563,9 +564,11 @@
     <!-- شريط الإشعارات والتحديثات الأزرق المتحرك -->
     <div class="news-ticker" id="tickerWrapper">
         <span class="material-icons" id="tickerIcon">auto_awesome</span>
-        <marquee direction="right" scrollamount="5" id="newsMarquee">
-            <span id="tickerContentText">✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨</span>
-        </marquee>
+        <div id="marqueeContainer" style="width: 100%; overflow: hidden;">
+            <marquee direction="right" scrollamount="6" id="newsMarquee">
+                <span id="tickerContentText">✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨</span>
+            </marquee>
+        </div>
     </div>
 
     <!-- التبويب 1: الرئيسية -->
@@ -782,7 +785,7 @@
             <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
             <button class="calc-btn op" onclick="appendCalc('/')">/</button> <button class="calc-btn op" onclick="appendCalc('*')">×</button> <button class="calc-btn op" onclick="appendCalc('-')">-</button>
             <button class="calc-btn" onclick="appendCalc('7')">7</button> <button class="calc-btn" onclick="appendCalc('8')">8</button> <button class="calc-btn op" onclick="appendCalc('9')">9</button> <button class="calc-btn op" onclick="appendCalc('+')">+</button>
-            <button class="calc-btn" onclick="appendCalc('4')">4</button> <button class="calc-btn" onclick="appendCalc('5')">5</button> <button class="calc-btn" onclick="appendCalc('6')">6</button> <button class="calc-btn eq" onclick="calculateResult()">=</button>
+            <button class="calc-btn" onclick="appendCalc('4')">4</button> <button class="calc-btn" onclick="appendCalc('5')">5</button> <button class="calc-btn op" onclick="appendCalc('6')">6</button> <button class="calc-btn eq" onclick="calculateResult()">=</button>
             <button class="calc-btn" onclick="appendCalc('1')">1</button> <button class="calc-btn" onclick="appendCalc('2')">2</button> <button class="calc-btn" onclick="appendCalc('3')">3</button> <button class="calc-btn" onclick="appendCalc('0')">0</button>
         </div>
     </div>
@@ -1384,7 +1387,7 @@
             window.location.href = 'login.html'; 
         }
 
-        // ================= نظام فحص أحدث الإشعارات وتحديث الشريط الأزرق والنافذة =================
+        // ================= نظام فحص أحدث الإشعارات السلس بدون تأخير =================
         let latestNewsTimestampGlobal = null;
         let tickerTimer = null;
 
@@ -1414,59 +1417,70 @@
                         alertMsg = `✨ تم إضافة تحديث جديد: ${data.news}`;
                     }
 
-                    // لو الطالب لسه ماشافش الإشعار ده قبل كده
+                    // إذا كان الإشعار جديداً ولم يشاهده الطالب بعد
                     if(lastSeenTime != data.timestamp) { 
-                        // 1. تشغيل الإشعار في الشريط الأزرق جنباً إلى جنب مع الصلاة على النبي
+                        // 1. تشغيل الإشعار فوراً في الشريط الأزرق بدمجه مع الصلاة على النبي
                         playTickerWithNotification(alertMsg);
 
                         // 2. إظهار النافذة المنبثقة
                         document.getElementById('newsPopupText').innerText = alertMsg;
                         document.getElementById('newsPopup').style.display = 'flex';
                     } else {
-                        // لو شافه قبل كده: يرجع الشريط الأزرق يعرض الصلاة على النبي طبيعي
                         resetTickerToDefault();
                     }
                 }
             }).catch(() => {});
         }
 
-        // دمج الإشعار في الشريط الأزرق وإعادته بعد مرور دورتين كاملتين (30 ثانية)
+        // إطلاق الشريط فوراً مع ضبط الدورة كاملة دون أي فراغ زمني في البداية
         function playTickerWithNotification(alertMsg) {
-            const marquee = document.getElementById('newsMarquee');
-            if (!marquee) return;
+            const container = document.getElementById('marqueeContainer');
+            if (!container) return;
             const dhikr = currentLang === 'en' ? DEFAULT_DHIKR_EN : DEFAULT_DHIKR_AR;
+            const fullContent = `${alertMsg} &nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp; ${dhikr}`;
 
-            // تحديث محتوى الـ marquee برمجياً مع الذكر الشريف
-            marquee.innerHTML = `<span id="tickerContentText">${alertMsg} &nbsp;&nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp;&nbsp; ${dhikr}</span>`;
-            if (typeof marquee.start === 'function') marquee.start();
+            // إنشاء عنصر marquee مبرمج ليأخذ لفتين كاملتين ويختفي طبيعياً
+            container.innerHTML = `
+                <marquee direction="right" scrollamount="7" loop="2" id="newsMarquee" onfinish="resetTickerToDefault()">
+                    <span id="tickerContentText">${fullContent}</span>
+                </marquee>
+            `;
 
             if (tickerTimer) clearTimeout(tickerTimer);
 
-            // يستمر 30 ثانية كاملة ليمر مرتين ثم يعود للصلاة على النبي
+            // مؤقت احتياطي (35 ثانية) لضمان عودة الشريط حتى لو المتصفح لم يدعم حدث onfinish
             tickerTimer = setTimeout(() => {
                 resetTickerToDefault();
-            }, 30000);
+            }, 35000);
         }
 
         function resetTickerToDefault() {
-            const marquee = document.getElementById('newsMarquee');
-            if (marquee) {
+            if (tickerTimer) {
+                clearTimeout(tickerTimer);
+                tickerTimer = null;
+            }
+            const container = document.getElementById('marqueeContainer');
+            if (container) {
                 const dhikr = currentLang === 'en' ? DEFAULT_DHIKR_EN : DEFAULT_DHIKR_AR;
-                marquee.innerHTML = `<span id="tickerContentText">${dhikr}</span>`;
-                if (typeof marquee.start === 'function') marquee.start();
+                // إعادة الشريط الدائم للصلاة على النبي ﷺ بحركة مستمرة
+                container.innerHTML = `
+                    <marquee direction="right" scrollamount="5" id="newsMarquee">
+                        <span id="tickerContentText">${dhikr}</span>
+                    </marquee>
+                `;
             }
         }
 
         function closeNewsPopup() { 
-            // 1. إغلاق النافذة المنبثقة فقط
+            // إغلاق النافذة المنبثقة فقط
             document.getElementById('newsPopup').style.display = 'none'; 
             
-            // 2. تسجيل المشاهدة حتى لا تظهر نفس المحاضرة عند إعادة فتح التطبيق
+            // تسجيل التوقيت لعدم تكرار التنبيه في المرات القادمة
             if (latestNewsTimestampGlobal) {
                 localStorage.setItem('daheehLastNewsTime_Y4', latestNewsTimestampGlobal);
             }
-            
-            // يُترك التايمر يعمل بوقته الطبيعي (30 ثانية) ليتمكن الطالب من قراءة الشريط أثناء التصفح
+
+            // الشريط يستمر في إنهاء لفتيه الطبيعيتين ليتمكن الطالب من قراءته أثناء التصفح
         }
 
         function openFeedbackModal() { document.getElementById('feedbackText').value = ''; document.getElementById('feedbackModal').style.display = 'flex'; }
