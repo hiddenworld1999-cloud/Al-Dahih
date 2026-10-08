@@ -560,11 +560,11 @@
         </div>
     </header>
 
-    <!-- شريط الصلاة على النبي -->
+    <!-- شريط الإشعارات والتحديثات الأزرق المتحرك -->
     <div class="news-ticker">
-        <span class="material-icons">auto_awesome</span>
-        <marquee direction="right" scrollamount="5">
-            <span data-ar="✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨" data-en="✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨">
+        <span class="material-icons" id="tickerIcon">auto_awesome</span>
+        <marquee direction="right" scrollamount="5" id="newsMarquee">
+            <span id="tickerText" data-default="true" data-ar="✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨" data-en="✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨">
                 ✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨
             </span>
         </marquee>
@@ -783,7 +783,7 @@
         <div class="calc-grid">
             <button class="calc-btn" style="background: #ffebee; color: #d32f2f;" onclick="clearCalc()">C</button>
             <button class="calc-btn op" onclick="appendCalc('/')">/</button> <button class="calc-btn op" onclick="appendCalc('*')">×</button> <button class="calc-btn op" onclick="appendCalc('-')">-</button>
-            <button class="calc-btn" onclick="appendCalc('7')">7</button> <button class="calc-btn" onclick="appendCalc('8')">8</button> <button class="calc-btn" onclick="appendCalc('9')">9</button> <button class="calc-btn op" onclick="appendCalc('+')">+</button>
+            <button class="calc-btn" onclick="appendCalc('7')">7</button> <button class="calc-btn" onclick="appendCalc('8')">8</button> <button class="calc-btn op" onclick="appendCalc('9')">9</button> <button class="calc-btn op" onclick="appendCalc('+')">+</button>
             <button class="calc-btn" onclick="appendCalc('4')">4</button> <button class="calc-btn" onclick="appendCalc('5')">5</button> <button class="calc-btn" onclick="appendCalc('6')">6</button> <button class="calc-btn eq" onclick="calculateResult()">=</button>
             <button class="calc-btn" onclick="appendCalc('1')">1</button> <button class="calc-btn" onclick="appendCalc('2')">2</button> <button class="calc-btn" onclick="appendCalc('3')">3</button> <button class="calc-btn" onclick="appendCalc('0')">0</button>
         </div>
@@ -1386,22 +1386,73 @@
             window.location.href = 'login.html'; 
         }
 
+        // ================= نظام فحص أحدث الإشعارات وتحديث الشريط الأزرق والنافذة =================
+        let latestNewsTimestampGlobal = null;
+
         function checkLatestNews() {
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${studentCode}`)
             .then(res => res.json())
             .then(data => {
-                if(data.success && data.news) {
+                if(data.success && (data.lectureName || data.news)) {
+                    latestNewsTimestampGlobal = data.timestamp;
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime_Y4');
+
+                    // تحديد اسم المحاضرة واسم المادة النظيف
+                    let alertMsg = "";
+                    if (data.lectureName && data.courseId) {
+                        const targetCourse = coursesData.find(c => c.id.toString() === data.courseId.toString());
+                        const courseDisplayName = targetCourse 
+                            ? (currentLang === 'en' ? targetCourse.titleEn : targetCourse.titleAr)
+                            : "المقرر";
+
+                        alertMsg = currentLang === 'en'
+                            ? `✨ New Lecture Added: "${data.lectureName}" in ${courseDisplayName}`
+                            : `✨ تم إضافة محاضرة جديدة: "${data.lectureName}" في مادة ${courseDisplayName}`;
+                    } else {
+                        alertMsg = `✨ تم إضافة تحديث جديد: ${data.news}`;
+                    }
+
+                    // لو الطالب لسه ماشافش الإشعار ده قبل كده
                     if(lastSeenTime != data.timestamp) { 
-                        document.getElementById('newsPopupText').innerText = `✨ تم إضافة تحديث جديد: ${data.news}`;
+                        // 1. تحديث نص الشريط الأزرق المتحرك ليعرض اسم المحاضرة والمادة
+                        const tickerText = document.getElementById('tickerText');
+                        if (tickerText) {
+                            tickerText.innerText = alertMsg;
+                            tickerText.removeAttribute('data-default');
+                        }
+
+                        // 2. إظهار النافذة المنبثقة
+                        document.getElementById('newsPopupText').innerText = alertMsg;
                         document.getElementById('newsPopup').style.display = 'flex';
-                        localStorage.setItem('daheehLastNewsTime_Y4', data.timestamp); 
+                    } else {
+                        // لو شافه قبل كده: يرجع الشريط الأزرق يعرض الصلاة على النبي طبيعي
+                        resetTickerToDefault();
                     }
                 }
             }).catch(() => {});
         }
 
-        function closeNewsPopup() { document.getElementById('newsPopup').style.display = 'none'; }
+        function resetTickerToDefault() {
+            const tickerText = document.getElementById('tickerText');
+            if (tickerText) {
+                const defaultText = currentLang === 'en' 
+                    ? tickerText.getAttribute('data-en') 
+                    : tickerText.getAttribute('data-ar');
+                tickerText.innerText = defaultText;
+                tickerText.setAttribute('data-default', 'true');
+            }
+        }
+
+        function closeNewsPopup() { 
+            document.getElementById('newsPopup').style.display = 'none'; 
+            // تسجيل أن الطالب شاف الإشعار لتفادي ظهوره مرة أخرى
+            if (latestNewsTimestampGlobal) {
+                localStorage.setItem('daheehLastNewsTime_Y4', latestNewsTimestampGlobal);
+            }
+            // إعادة الشريط الأزرق المتحرك لحالته الطبيعية (الصلاة على النبي)
+            resetTickerToDefault();
+        }
+
         function openFeedbackModal() { document.getElementById('feedbackText').value = ''; document.getElementById('feedbackModal').style.display = 'flex'; }
         function closeFeedbackModal() { document.getElementById('feedbackModal').style.display = 'none'; }
 
