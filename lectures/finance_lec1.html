@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -251,8 +250,8 @@
 
   .q-container {
     border-bottom: 1px dashed #b2bec3;
-    padding-bottom: 7px;
-    margin-bottom: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .q-header {
@@ -262,72 +261,88 @@
     justify-content: space-between;
     align-items: center;
     color: #111;
+    margin-bottom: 6px;
+  }
+
+  .tf-btn-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-quiz {
+    background: #ffffff;
+    border: 1.5px solid #bdc3c7;
+    color: #1a5276;
+    padding: 3px 14px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-quiz:hover {
+    border-color: #1a5276;
+  }
+
+  .mcq-btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  .btn-choice {
+    background: #ffffff;
+    border: 1.5px solid #bdc3c7;
+    color: #2c3e50;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-choice:hover {
+    border-color: #1a5276;
+    color: #1a5276;
+  }
+
+  .btn-quiz.correct, .btn-choice.correct {
+    background: #27ae60 !important;
+    border-color: #27ae60 !important;
+    color: #ffffff !important;
+  }
+
+  .btn-quiz.wrong, .btn-choice.wrong {
+    background: #c0392b !important;
+    border-color: #c0392b !important;
+    color: #ffffff !important;
   }
 
   .q-correction {
+    display: none;
     font-size: 12px;
     color: #1a5276;
-    margin-top: 4px;
+    margin-top: 6px;
     background: #f8f9fa;
-    padding: 3px 8px;
+    padding: 4px 8px;
     border-radius: 5px;
     border-right: 3px solid #e74c3c;
     font-weight: 800;
+  }
+
+  .q-correction.show {
+    display: block;
   }
 
   .correction-label {
     color: #c0392b;
     font-weight: 900;
     margin-left: 4px;
-  }
-
-  .ans-badge-true {
-    background: #27ae60;
-    color: white;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 900;
-    min-width: 45px;
-    text-align: center;
-  }
-
-  .ans-badge-false {
-    background: #c0392b;
-    color: white;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 900;
-    min-width: 45px;
-    text-align: center;
-  }
-
-  .mcq-block {
-    background: #fdfefe;
-    border: 1.5px solid #d5dbdb;
-    padding: 10px 14px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 13px;
-    font-weight: 800;
-  }
-
-  .mcq-choices {
-    display: flex;
-    gap: 16px;
-    margin-top: 6px;
-    font-weight: 800;
-    color: #111;
-  }
-
-  .correct-choice {
-    background: #e8f8f5;
-    border: 1.5px solid #27ae60;
-    color: #1e8449;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 900;
   }
 
   .footer-bar {
@@ -554,160 +569,232 @@
   <!-- ==================== الصفحة الثالثة: التطبيقات والحل ==================== -->
   <div class="sheet">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div class="badge-top">📝 بنك الأسئلة والتطبيقات المحلولة</div>
-      <div style="font-size:12px; font-weight:800; color:#555;">إجابات نموذجية معتمدة من المحاضرة</div>
+      <div class="badge-top">📝 بنك الأسئلة والتطبيقات </div>
+      <div style="font-size:12px; font-weight:800; color:#555;">اختبر نفسك</div>
     </div>
 
     <div class="capsule-main">أولاً: ضع علامة (صح) أو (خطأ) - مع التصحيح</div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_1" data-correct="false" data-reason="ظهرت مع تزايد دور الدولة في النشاط الاقتصادي.">
       <div class="q-header">
         <div>١. ظهرت المالية العامة مع انخفاض دور الدولة في النشاط الاقتصادي.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> ظهرت مع <strong>تزايد</strong> دور الدولة في النشاط الاقتصادي.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_2" data-correct="false" data-reason="منذ ظهور أفكار الاقتصادي كينز عام 1936م.">
       <div class="q-header">
         <div>٢. منذ ظهور أفكار آدم سميث، أصبح علم المالية العامة من أهم أدوات مواجهة الأزمات.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> منذ ظهور أفكار الاقتصادي <strong>كينز عام 1936م</strong>.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_3" data-correct="false" data-reason="يتم إشباعها عن طريق النشاط الفردي، بينما الدولة تشبع الحاجات العامة.">
       <div class="q-header">
         <div>٣. يتم إشباع الحاجات الخاصة أو الفردية من خلال نشاط الدولة.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> يتم إشباعها عن طريق <strong>النشاط الفردي</strong>، بينما الدولة تشبع الحاجات العامة.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_4" data-correct="false" data-reason="هذا هو المفهوم التقليدي (الضيق) للمالية العامة.">
       <div class="q-header">
         <div>٤. المفهوم الحديث للمالية العامة: دراسة النفقات العامة والإيرادات اللازمة لتغطيتها.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> هذا هو <strong>المفهوم التقليدي (الضيق)</strong> للمالية العامة.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_5" data-correct="true" data-reason="إجابة صحيحة! الفكر التقليدي تقيد بمبدأ التساوي التام وضغط النفقات.">
       <div class="q-header">
         <div>٥. في الفكر التقليدي كان يجب التقيد بمبدأ تساوي النفقات مع الإيرادات وضغط النفقات لأقصى حد وعدم اللجوء لمصادر استثنائية كالقرارات والإصدار النقدي.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة وفقاً للفكر التقليدي.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_6" data-correct="false" data-reason="هذا تعريف الحاجات شبه العامة.">
       <div class="q-header">
         <div>٦. الحاجات العامة هي تلك الحاجات التي يتم توزيع إشباعها بين القطاع الخاص والحكومة كالتعليم والصحة.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> هذا تعريف <strong>الحاجات شبه العامة</strong>.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_7" data-correct="true" data-reason="إجابة صحيحة وفقاً لمعيار القائم بالإشباع.">
       <div class="q-header">
         <div>٧. تكون الحاجة فردية إذا قام الأفراد بمهمة إشباعها وجماعية إذا قامت الدولة بإشباعها.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_8" data-correct="true" data-reason="إجابة صحيحة! الحاجات العامة غير قابلة للتجزئة وتقدم مجاناً.">
       <div class="q-header">
         <div>٨. الحاجات العامة تتميز بعدم إمكان تجزئتها وبالتالي فهي ليست للبيع وتقدمها الدولة مجاناً لكافة الأفراد كالدفاع الخارجي.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_9" data-correct="true" data-reason="إجابة صحيحة! تحقيق الاستقرار الاقتصادي من أهم أهداف المالية العامة.">
       <div class="q-header">
         <div>٩. من الأهداف الرئيسية للمالية العامة هو تحقيق الاستقرار الاقتصادي.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_10" data-correct="false" data-reason="تعتبر المالية العامة هي الوسيلة الرئيسية.">
       <div class="q-header">
         <div>١٠. تعتبر المالية الخاصة الوسيلة الرئيسية لتمويل الخدمات العامة التي يحتاجها المجتمع.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> تعتبر <strong>المالية العامة</strong> هي الوسيلة الرئيسية.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_11" data-correct="true" data-reason="إجابة صحيحة وفقاً للمظهر التنظيمي للمالية العامة.">
       <div class="q-header">
         <div>١١. تتميز جميع تنظيمات المالية العامة بخضوعها لسلطة الدولة بصورة مباشرة أو غير مباشرة.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_12" data-correct="false" data-reason="هذا في المالية الخاصة، أما المالية العامة فتستهدف الصالح العام.">
       <div class="q-header">
         <div>١٢. في المالية العامة يسعى الأفراد أو المنشآت الخاصة بصفة أساسية لتحقيق المنفعة الشخصية المتمثلة في شكل أرباح.</div>
-        <div class="ans-badge-false">خطأ ✗</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
       </div>
       <div class="q-correction">
         <span class="correction-label">التصحيح:</span> هذا في <strong>المالية الخاصة</strong>، أما المالية العامة فتستهدف الصالح العام.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_13" data-correct="true" data-reason="إجابة صحيحة! تعتمد المالية العامة على سلطة الدولة في الجبر والسيادة.">
       <div class="q-header">
         <div>١٣. تتميز المالية العامة باعتمادها على ما للدولة من سلطة الإجبار في فرض الضرائب والرسوم.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
       </div>
     </div>
 
-    <div class="q-container">
+    <div class="q-container" data-qid="fin_tf_14" data-correct="true" data-reason="إجابة صحيحة! الدولة تقدر الإنفاق أولاً ثم تدبر الإيراد، والأفراد العكس.">
       <div class="q-header">
         <div>١٤. تبدأ الدولة بتقرير أوجه الإنفاق المختلفة ثم تدبير الإيرادات بينما الأفراد يبدؤون بتقدير الإيرادات ثم ضبط الإنفاق.</div>
-        <div class="ans-badge-true">صح ✓</div>
+        <div class="tf-btn-group">
+          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        </div>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
       </div>
     </div>
 
     <div class="capsule-purple" style="margin-top:12px;">ثانياً: اختر الإجابة الصحيحة</div>
 
-    <div class="mcq-block">
+    <div class="mcq-block" data-qid="fin_mcq_1" data-correct-idx="1">
       <strong>١. هي تلك الحاجات التي تقوم بإشباعها الدولة فقط لتحقيق منفعة جماعية مثل الأمن والدفاع والقضاء:</strong>
-      <div class="mcq-choices">
-        <div>أ) الحاجات الخاصة</div>
-        <div class="correct-choice">ب) الحاجات العامة (الإجابة الصحيحة)</div>
-        <div>ج) الحاجات شبه العامة</div>
-        <div>د) لا شيء مما سبق</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الحاجات الخاصة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الحاجات العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الحاجات شبه العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) لا شيء مما سبق</button>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">الإجابة الصحيحة:</span> ب) الحاجات العامة.
       </div>
     </div>
 
-    <div class="mcq-block">
+    <div class="mcq-block" data-qid="fin_mcq_2" data-correct-idx="2">
       <strong>٢. تستطيع الدولة أن تأخذ ثمنها كاملاً أو قد تأخذ أقل من ثمنها وقد لا تأخذ أي مقابل نظير هذه الخدمات:</strong>
-      <div class="mcq-choices">
-        <div>أ) الحاجات الخاصة</div>
-        <div>ب) الحاجات العامة</div>
-        <div class="correct-choice">ج) الحاجات شبه العامة (الإجابة الصحيحة)</div>
-        <div>د) لا شيء مما سبق</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الحاجات الخاصة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الحاجات العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الحاجات شبه العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) لا شيء مما سبق</button>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">الإجابة الصحيحة:</span> ج) الحاجات شبه العامة.
       </div>
     </div>
 
-    <div class="mcq-block">
+    <div class="mcq-block" data-qid="fin_mcq_3" data-correct-idx="3">
       <strong>٣. من عناصر المالية العامة:</strong>
-      <div class="mcq-choices">
-        <div>أ) الموازنة العامة</div>
-        <div>ب) النفقات العامة</div>
-        <div>ج) الإيرادات العامة</div>
-        <div class="correct-choice">د) كل ما سبق (الإجابة الصحيحة)</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الموازنة العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) النفقات العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الإيرادات العامة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) كل ما سبق</button>
+      </div>
+      <div class="q-correction">
+        <span class="correction-label">الإجابة الصحيحة:</span> د) كل ما سبق.
       </div>
     </div>
 
@@ -720,6 +807,116 @@
       <div style="width:60px;"></div>
     </div>
   </div>
+
+<script>
+  const STORAGE_KEY = 'finance_lec1_quiz_answers';
+
+  function getSavedAnswers() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  function saveAnswer(qid, answerVal) {
+    try {
+      const answers = getSavedAnswers();
+      answers[qid] = answerVal;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    } catch(e) {}
+  }
+
+  function checkTF(btn, userAns, autoLoad = false) {
+    const container = btn.closest('.q-container');
+    const qid = container.getAttribute('data-qid');
+    const correctAns = container.getAttribute('data-correct') === 'true';
+    const correctionBox = container.querySelector('.q-correction');
+    const buttons = container.querySelectorAll('.btn-quiz');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (userAns === correctAns) {
+      btn.classList.add('correct');
+    } else {
+      btn.classList.add('wrong');
+      buttons.forEach(b => {
+        if ((b.innerText.trim() === 'صح' && correctAns) || (b.innerText.trim() === 'خطأ' && !correctAns)) {
+          b.classList.add('correct');
+        }
+      });
+    }
+
+    if (correctionBox) {
+      correctionBox.classList.add('show');
+    }
+
+    if (!autoLoad && qid) {
+      saveAnswer(qid, userAns);
+    }
+  }
+
+  function checkMCQ(btn, selectedIdx, autoLoad = false) {
+    const container = btn.closest('.mcq-block');
+    const qid = container.getAttribute('data-qid');
+    const correctIdx = parseInt(container.getAttribute('data-correct-idx'), 10);
+    const correctionBox = container.querySelector('.q-correction');
+    const buttons = container.querySelectorAll('.btn-choice');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (selectedIdx === correctIdx) {
+      btn.classList.add('correct');
+    } else {
+      btn.classList.add('wrong');
+      if (buttons[correctIdx]) {
+        buttons[correctIdx].classList.add('correct');
+      }
+    }
+
+    if (correctionBox) {
+      correctionBox.classList.add('show');
+    }
+
+    if (!autoLoad && qid) {
+      saveAnswer(qid, selectedIdx);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = getSavedAnswers();
+    document.querySelectorAll('.q-container').forEach(container => {
+      const qid = container.getAttribute('data-qid');
+      if (saved.hasOwnProperty(qid)) {
+        const val = saved[qid];
+        const buttons = container.querySelectorAll('.btn-quiz');
+        buttons.forEach(b => {
+          if ((b.innerText.trim() === 'صح' && val === true) || (b.innerText.trim() === 'خطأ' && val === false)) {
+            checkTF(b, val, true);
+          }
+        });
+      }
+    });
+
+    document.querySelectorAll('.mcq-block').forEach(container => {
+      const qid = container.getAttribute('data-qid');
+      if (saved.hasOwnProperty(qid)) {
+        const val = saved[qid];
+        const buttons = container.querySelectorAll('.btn-choice');
+        if (buttons[val]) {
+          checkMCQ(buttons[val], val, true);
+        }
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
