@@ -298,7 +298,7 @@
 
         .content-view { line-height: 1.8; font-size: 1rem; color: var(--text); background: var(--card); border-radius: 24px; padding: 25px 20px; border: 1px solid var(--border-color); box-shadow: var(--card-shadow); }
 
-        /* ================= مشغل الفيديو المحسن بدون أي فراغات سوداء ================= */
+        /* ================= مشغل الفيديو المحسن بنسبة 16:9 ================= */
         #videoLectureModal { 
             background: #000000; 
             display: none; 
@@ -351,7 +351,7 @@
         }
         .video-action-icon:active { transform: scale(0.9); }
 
-        /* ضبط ابعاد الفيديو بنسبة 16:9 تماماً ليلتصق بالشيت دون فراغات سوداء */
+        /* ضبط نسبة العرض إلى الارتفاع بنسبة 16:9 تماماً */
         .video-screen-box {
             position: relative;
             width: 100%;
@@ -594,7 +594,7 @@
             <button class="tab-head-btn" onclick="switchCourseSection('info', this)" data-ar="عن المقرر" data-en="About">عن المقرر</button>
         </div>
 
-        <!-- تبويب المحتوى: قائمة المحاضرات أو أزرار المحاضرة المفتوحة في نفس المكان -->
+        <!-- تبويب المحتوى -->
         <div id="section-content">
             <!-- 1. قائمة المحاضرات -->
             <div id="lecturesListCard">
@@ -604,27 +604,33 @@
                 </div>
             </div>
 
-            <!-- 2. منطقة أزرار المحاضرة المفتوحة (تظهر في نفس المكان مع بقاء الغلاف فوقها) -->
+            <!-- 2. منطقة أزرار المحاضرة المفتوحة في نفس المكان -->
             <div id="lectureDetailInline" style="display: none;"></div>
         </div>
 
-        <!-- تبويب الامتحانات -->
+        <!-- تبويب الامتحانات: قائمة الامتحانات + منطقة التفاصيل المفتوحة في نفس الشيت -->
         <div id="section-exams" style="display: none;">
-            <button class="btn-card btn-midterm" onclick="openExam('midterm')">
-                <div>
-                    <div style="font-weight:900;" data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
-                    <div style="font-size:0.85rem; opacity:0.75; margin-top:2px;" data-ar="امتحانات نص السنة (بالحل وبدون حل)" data-en="Mid-year exams">امتحانات نص السنة (بالحل وبدون حل)</div>
-                </div>
-                <div class="btn-icon" style="color:#ff9800;"><span class="material-icons">history_edu</span></div>
-            </button>
+            <!-- 1. أزرار اختيار نوع الامتحان -->
+            <div id="examsListContainer">
+                <button class="btn-card btn-midterm" onclick="openExam('midterm')">
+                    <div>
+                        <div style="font-weight:900;" data-ar="أسئلة الميدترم" data-en="Midterm Exams">أسئلة الميدترم</div>
+                        <div style="font-size:0.85rem; opacity:0.75; margin-top:2px;" data-ar="امتحانات نص السنة (بالحل وبدون حل)" data-en="Mid-year exams">امتحانات نص السنة (بالحل وبدون حل)</div>
+                    </div>
+                    <div class="btn-icon" style="color:#ff9800;"><span class="material-icons">history_edu</span></div>
+                </button>
 
-            <button class="btn-card btn-final" onclick="openExam('final')">
-                <div>
-                    <div style="font-weight:900;" data-ar="أسئلة الفاينل" data-en="Final Exams">أسئلة الفاينل</div>
-                    <div style="font-size:0.85rem; opacity:0.75; margin-top:2px;" data-ar="امتحانات آخر السنة والنماذج الرسمية" data-en="End-of-year exams">امتحانات آخر السنة والنماذج الرسمية</div>
-                </div>
-                <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
-            </button>
+                <button class="btn-card btn-final" onclick="openExam('final')">
+                    <div>
+                        <div style="font-weight:900;" data-ar="أسئلة الفاينل" data-en="Final Exams">أسئلة الفاينل</div>
+                        <div style="font-size:0.85rem; opacity:0.75; margin-top:2px;" data-ar="امتحانات آخر السنة والنماذج الرسمية" data-en="End-of-year exams">امتحانات آخر السنة والنماذج الرسمية</div>
+                    </div>
+                    <div class="btn-icon" style="color:#f44336;"><span class="material-icons">school</span></div>
+                </button>
+            </div>
+
+            <!-- 2. منطقة تفاصيل الامتحان المفتوح في نفس المكان -->
+            <div id="examDetailInline" style="display: none;"></div>
         </div>
 
         <!-- تبويب معلومات المادة -->
@@ -641,7 +647,7 @@
         </div>
     </div>
 
-    <!-- ================= نافذة مشغل الفيديو المحسنة بدون فراغات سوداء وبدون قص للأدوات ================= -->
+    <!-- ================= نافذة مشغل الفيديو المحسنة بدون فراغات سوداء ================= -->
     <div id="videoLectureModal" class="modal modal-trackable" style="z-index: 2800;">
         <div class="video-player-wrapper">
             <div class="video-top-bar">
@@ -653,7 +659,6 @@
                 <span class="material-icons video-action-icon" style="font-size: 24px;" title="حفظ">bookmark_border</span>
             </div>
 
-            <!-- حاوية الفيديو بنسبة 16:9 تماماً ليلتصق بالشيت دون أي سواد زائد -->
             <div class="video-screen-box">
                 <iframe id="videoIframePlayer" class="video-player-frame" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -834,7 +839,6 @@
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
                 <button class="calc-btn" onclick="appendCalc('5')">5</button>
-                <button class="calc-btn" onclick="appendCalc('6')">6</button>
                 <button class="calc-btn op" onclick="appendCalc('-')">-</button>
                 
                 <button class="calc-btn" onclick="appendCalc('1')">1</button>
@@ -909,6 +913,8 @@
 
             if(sec === 'content') {
                 closeLectureInline();
+            } else if(sec === 'exams') {
+                closeExamInline();
             }
         }
 
@@ -986,6 +992,8 @@
                     history.back(); 
                 } else if(document.getElementById('lectureDetailInline').style.display === 'block') {
                     closeLectureInline();
+                } else if(document.getElementById('examDetailInline').style.display === 'block') {
+                    closeExamInline();
                 } else { 
                     window.location.href = 'index4.html'; 
                 }
@@ -1179,7 +1187,6 @@
         function formatEmbedVideoUrl(rawUrl) {
             if (!rawUrl) return "";
             let url = rawUrl.trim();
-            // رابط جوجل درايف
             if (url.includes('drive.google.com')) {
                 let idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 if (idMatch && idMatch[1]) {
@@ -1187,7 +1194,6 @@
                 }
                 return url.replace(/\/view(\?.*)?$/, '/preview');
             }
-            // رابط يوتيوب مع تفعيل كامل أدوات التحكم الأصلية والسرعة والشاشة الكاملة
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 let ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
                 if (ytMatch && ytMatch[1]) {
@@ -1207,7 +1213,6 @@
             document.getElementById('vLecTitle').innerText = lectureName;
             document.getElementById('vLecSubtitle').innerText = `المحاضرة ${lectureNum} من مقرر ${course ? course.titleAr : ''}`;
 
-            // تحديث صورة المستخدم في خانة كتابة التعليق إن وجدت
             const myAvatar = localStorage.getItem('daheehUserAvatar');
             const commentAvatarImg = document.getElementById('commentBoxUserAvatar');
             if (myAvatar && commentAvatarImg) {
@@ -1220,7 +1225,6 @@
             openModalWithHistory('videoLectureModal');
         }
 
-        // عرض باقي المحاضرات تحت مشغل الفيديو مباشرة للتنقل بينها
         function renderVideoPlaylist(currentLecNum) {
             const container = document.getElementById('videoPlaylistContainer');
             const countEl = document.getElementById('vPlaylistCount');
@@ -1321,7 +1325,6 @@
             const cacheKey = `daheeh_comments_${cId}_${lecNum}`;
             if(!container) return;
 
-            // عرض الكاش المحفوظ فوراً في 0 ثانية دون أي انتظار
             const cachedComments = localStorage.getItem(cacheKey);
             if (cachedComments) {
                 try {
@@ -1332,7 +1335,6 @@
                 container.innerHTML = `<div style="text-align:center; padding:12px; color:var(--grey);"><span class="material-icons" style="animation:pulse 1s infinite; font-size:22px;">autorenew</span><p style="margin-top:4px; font-weight:600; font-size:0.82rem;">جاري جلب التعليقات...</p></div>`;
             }
 
-            // جلب أحدث التعليقات وتحديث الكاش بالخلفية
             fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}&code=${encodeURIComponent(sCode)}`)
                 .then(res => res.json())
                 .then(data => {
@@ -1362,7 +1364,6 @@
 
             input.value = '';
 
-            // Optimistic UI: إظهار التعليق فوراً أمام الطالب مع صورته الحالية بدون انتظار
             let currentList = [];
             try { currentList = JSON.parse(localStorage.getItem(cacheKey)) || []; } catch(e) {}
             const newCommentObj = {
@@ -1376,7 +1377,6 @@
             localStorage.setItem(cacheKey, JSON.stringify(currentList));
             renderCommentsHTML(currentList, container, badge);
 
-            // الإرسال السريع للخادم متضمناً الصورة الشخصية المرفوعة
             const url = `${SCRIPT_URL}?action=addComment&code=${encodeURIComponent(sCode)}&studentCode=${encodeURIComponent(sCode)}&studentName=${encodeURIComponent(sName)}&courseId=${encodeURIComponent(courseId)}&lectureNum=${encodeURIComponent(currentVideoLecNum)}&comment=${encodeURIComponent(text)}&avatar=${encodeURIComponent(sAvatar)}`;
 
             fetch(url)
@@ -1432,7 +1432,6 @@
             document.getElementById('interactiveTitle').innerText = titleText;
             document.getElementById('interactiveHeaderTitle').innerText = titleText;
             
-            // 1. الأهداف
             var objHtml = '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06);">';
             objHtml += '<h3 style="color:#0A2647; margin-bottom:15px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#e6b000;">track_changes</span> <span>ماذا ستكتسب في نهاية هذه المحاضرة؟</span></h3>';
             if (jsonData.objectives && jsonData.objectives.length > 0) {
@@ -1444,7 +1443,6 @@
             objHtml += '</div>';
             document.getElementById('tab-objectives').innerHTML = objHtml;
 
-            // 2. الشرح
             var expHtml = '';
             if (jsonData.explanation && jsonData.explanation.length > 0) {
                 jsonData.explanation.forEach(function(sec) {
@@ -1455,7 +1453,6 @@
             }
             document.getElementById('tab-explanation').innerHTML = expHtml;
 
-            // 3. الأمثلة والتطبيق
             var exHtml = '';
             if (jsonData.realLifeExample) {
                 exHtml += '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06); border-right:5px solid #2196f3;">';
@@ -1469,7 +1466,6 @@
             }
             document.getElementById('tab-examples').innerHTML = exHtml;
 
-            // 4. الخلاصة
             var sumHtml = '<div style="background:#ffffff; border-radius:18px; padding:22px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:15px; border:1px solid rgba(0,0,0,0.06);">';
             sumHtml += '<h3 style="color:#0A2647; margin-bottom:15px; font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;"><span class="material-icons" style="color:#e6b000;">bolt</span> <span>الكبسولة الذهبية للمراجعة السريعة</span></h3>';
             if (jsonData.summary && jsonData.summary.length > 0) {
@@ -1494,7 +1490,6 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // دالة مخصصة لفتح ملفات الـ HTML داخل iframe مع ضبط الزوم والتجاوب بملء الشاشة
         function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
@@ -1522,14 +1517,13 @@
             openModalWithHistory('contentModal');
         }
 
-        // ================= تحميل المحاضرات السريع المخصص لكل مادة =================
+        // ================= تحميل المحاضرات =================
         function loadLectures() {
             const listCard = document.getElementById('lecturesListCard'); 
             const studentCode = localStorage.getItem('studentCode') || '';
             const currentCId = courseId.toString().trim();
             const cacheKey = `daheeh_lectures_cache_${currentCId}`; 
 
-            // فحص كاش المادة المحددة فقط وعرضه فوراً في 0 ثانية
             const cachedData = localStorage.getItem(cacheKey);
             if (cachedData) {
                 try {
@@ -1541,7 +1535,6 @@
             }
             applyLanguage();
             
-            // جلب المحاضرات الحقيقية للمادة من السيرفر وتحديث الكاش
             fetch(`${SCRIPT_URL}?action=getLectures&courseId=${currentCId}&code=${encodeURIComponent(studentCode)}`)
                 .then(response => response.json())
                 .then(data => {
@@ -1599,7 +1592,7 @@
             applyLanguage();
         }
 
-        // ================= فتح أزرار المحاضرة في نفس المكان مع الحفاظ التام على الغلاف =================
+        // ================= فتح أزرار المحاضرة في نفس المكان =================
         function showDynamicLecture(lectureName, fileName, num, cacheIndex, videoUrl) {
             const quizKey = `completed_quiz_${courseId}_${num}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
@@ -1708,35 +1701,59 @@
             if(listCard) listCard.style.display = 'block';
         }
 
+        // ================= فتح خيارات الامتحانات في نفس الشيت (Inline) =================
         function openExam(type) {
-            const body = document.getElementById('contentBody'); 
             const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
             const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; 
             const title = currentLang === 'en' ? titleEn : titleAr;
             
-            document.getElementById('contentTitle').innerText = title;
-            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;">جاري جلب الامتحان...</h3></div>`;
-            openModalWithHistory('contentModal'); 
-            applyLanguage();
+            const detailContainer = document.getElementById('examDetailInline');
+            const listContainer = document.getElementById('examsListContainer');
+
+            listContainer.style.display = 'none';
+            detailContainer.style.display = 'block';
+            
+            detailContainer.innerHTML = `
+                <div style="text-align:center; padding:40px; color:var(--primary);">
+                    <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">autorenew</span>
+                    <h3 style="margin-top:12px; font-weight:800;">جاري جلب تفاصيل الامتحان...</h3>
+                </div>`;
             
             const studentCode = localStorage.getItem('studentCode') || '';
             const cacheKey = `daheeh_exams_cache_${courseId}`; 
             
-            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${studentCode}`)
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${encodeURIComponent(studentCode)}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
-                    if(data.success) { localStorage.setItem(cacheKey, JSON.stringify(data)); renderExams(data, type, title); }
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if(data.success) { 
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderExamsInline(data, type, title); 
+                    }
                 })
                 .catch(err => { 
                     const cachedData = localStorage.getItem(cacheKey);
-                    if (cachedData) { renderExams(JSON.parse(cachedData), type, title); } 
-                    else { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3>تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3></div>`; applyLanguage(); }
+                    if (cachedData) { 
+                        renderExamsInline(JSON.parse(cachedData), type, title); 
+                    } else { 
+                        detailContainer.innerHTML = `
+                            <div style="text-align:center; padding:35px; color:#d32f2f;">
+                                <span class="material-icons" style="font-size:45px; margin-bottom:10px;">wifi_off</span>
+                                <h3>تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3>
+                                <button onclick="closeExamInline()" style="margin-top:15px; padding:8px 20px; border-radius:12px; border:none; background:var(--light-grey); font-weight:800; cursor:pointer;">رجوع</button>
+                            </div>`; 
+                        applyLanguage(); 
+                    }
                 });
         }
 
-        function renderExams(data, type, title) {
-            const body = document.getElementById('contentBody');
+        function renderExamsInline(data, type, title) {
+            const detailContainer = document.getElementById('examDetailInline');
             const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
             const unsolvedFileName = type === 'midterm' ? data.exams.unsolved_midterm : data.exams.unsolved_final; 
             
@@ -1744,11 +1761,13 @@
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
             let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
-            let btnIcon = 'quiz'; let btnStyle = 'background:#4caf50; color:white; border:none; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);'; 
+            let btnIcon = 'quiz'; 
+            let btnStyle = 'background:#10B981; color:white; border:none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);'; 
             
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
-                btnIcon = 'replay'; btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
+                btnIcon = 'replay'; 
+                btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
             }
             
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
@@ -1756,33 +1775,53 @@
             
             if(fileName) { 
                 pdfHtml += `
-                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:15px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 10px;">
+                <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
                     <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
                     <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
                 </button>`; 
-            } else { pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:10px; font-weight:bold;">ملف الحل غير متوفر حالياً</p>`; }
+            } else { 
+                pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
+            }
 
             let unsolvedAction = unsolvedFileName ? `openPdfViewerInsideApp('${unsolvedFileName}')` : `alert('سيتم إضافة ملف الأسئلة قريباً')`;
             pdfHtml += `
-            <button onclick="${unsolvedAction}" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:15px; border-radius:16px; font-size:1.1rem; width:100%; margin-bottom: 15px;">
+            <button onclick="${unsolvedAction}" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(156,39,176,0.25);">
                 <span class="material-icons" style="margin-inline-end:10px;">edit_document</span>
                 <span data-ar="أسئلة بدون إجابات (PDF للحل)" data-en="Unsolved Exam (PDF)">أسئلة بدون إجابات (PDF للحل)</span>
             </button>`;
             
-            body.innerHTML = `
-            <div class="content-view" style="text-align:center; padding:30px 10px;">
-                <span class="material-icons" style="font-size:70px; color:${type === 'midterm' ? '#ff9800' : '#f44336'}; margin-bottom:15px;">assignment</span>
-                <h3 style="color:var(--primary); margin-bottom:10px; font-weight:900;">${title}</h3>
-                <p style="color:var(--grey); margin-bottom:25px; line-height:1.6; font-size:0.95rem;">اختر طريقة المراجعة المناسبة لك:</p>
+            detailContainer.innerHTML = `
+            <div style="animation: fadeInTab 0.3s ease forwards;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="material-icons" style="color:${type === 'midterm' ? '#ff9800' : '#f44336'}; font-size:26px;">assignment</span>
+                        <h3 style="margin:0; font-size:1.15rem; font-weight:900; color:var(--text);">${title}</h3>
+                    </div>
+                    <button onclick="closeExamInline()" style="background:var(--light-grey); border:none; padding:6px 14px; border-radius:12px; font-weight:800; color:var(--grey); cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
+                        <span class="material-icons" style="font-size:16px;">arrow_forward</span> <span>رجوع</span>
+                    </button>
+                </div>
+
+                <p style="color:var(--grey); margin-bottom:18px; font-size:0.9rem; font-weight:600;">اختر مسار المراجعة المناسب لك:</p>
+
                 ${pdfHtml}
+
                 <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
                     <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
                 </button>
-                <button class="btn-lecture-quiz" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 15px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
+
+                <button class="btn-lecture-quiz" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 12px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
                     <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
                 </button>
             </div>`;
             applyLanguage();
+        }
+
+        function closeExamInline() {
+            const detailContainer = document.getElementById('examDetailInline');
+            const listContainer = document.getElementById('examsListContainer');
+            if(detailContainer) detailContainer.style.display = 'none';
+            if(listContainer) listContainer.style.display = 'block';
         }
 
         let isPdfDrawMode = false; let pdfBrushColor = '#0A2647'; let pdfBrushSize = 3; let isPdfDrawing = false; let activePdfCtx = null;
