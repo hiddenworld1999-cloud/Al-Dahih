@@ -1388,8 +1388,10 @@
 
         // ================= نظام فحص أحدث الإشعارات وتحديث الشريط الأزرق والنافذة =================
         let latestNewsTimestampGlobal = null;
+        let tickerTimer = null;
 
         function checkLatestNews() {
+            if (!studentCode) return;
             fetch(`${SCRIPT_URL}?action=getLatestNews&code=${studentCode}`)
             .then(res => res.json())
             .then(data => {
@@ -1397,7 +1399,6 @@
                     latestNewsTimestampGlobal = data.timestamp;
                     const lastSeenTime = localStorage.getItem('daheehLastNewsTime_Y4');
 
-                    // تحديد اسم المحاضرة واسم المادة النظيف
                     let alertMsg = "";
                     if (data.lectureName && data.courseId) {
                         const targetCourse = coursesData.find(c => c.id.toString() === data.courseId.toString());
@@ -1414,12 +1415,8 @@
 
                     // لو الطالب لسه ماشافش الإشعار ده قبل كده
                     if(lastSeenTime != data.timestamp) { 
-                        // 1. تحديث نص الشريط الأزرق المتحرك ليعرض اسم المحاضرة والمادة
-                        const tickerText = document.getElementById('tickerText');
-                        if (tickerText) {
-                            tickerText.innerText = alertMsg;
-                            tickerText.removeAttribute('data-default');
-                        }
+                        // 1. تشغيل الإشعار في الشريط الأزرق جنباً إلى جنب مع الصلاة على النبي
+                        playTickerWithNotification(alertMsg);
 
                         // 2. إظهار النافذة المنبثقة
                         document.getElementById('newsPopupText').innerText = alertMsg;
@@ -1432,14 +1429,31 @@
             }).catch(() => {});
         }
 
+        // دمج الإشعار في الشريط الأزرق وإعادته بعد مرور دورتين (حوالي 25 ثانية)
+        function playTickerWithNotification(alertMsg) {
+            const marquee = document.getElementById('newsMarquee');
+            const defaultDhikr = currentLang === 'en' 
+                ? "✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨" 
+                : "✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨";
+
+            marquee.innerHTML = `<span>${alertMsg} &nbsp;&nbsp;&nbsp; ✦ &nbsp;&nbsp;&nbsp; ${defaultDhikr}</span>`;
+            marquee.start();
+
+            if (tickerTimer) clearTimeout(tickerTimer);
+
+            tickerTimer = setTimeout(() => {
+                resetTickerToDefault();
+            }, 25000);
+        }
+
         function resetTickerToDefault() {
-            const tickerText = document.getElementById('tickerText');
-            if (tickerText) {
-                const defaultText = currentLang === 'en' 
-                    ? tickerText.getAttribute('data-en') 
-                    : tickerText.getAttribute('data-ar');
-                tickerText.innerText = defaultText;
-                tickerText.setAttribute('data-default', 'true');
+            const marquee = document.getElementById('newsMarquee');
+            if (marquee) {
+                const defaultDhikr = currentLang === 'en' 
+                    ? "✨ Peace and blessings be upon our Prophet Muhammad ﷺ ✨" 
+                    : "✨ اللَّهُمَّ صَلِّ وَسَلِّمْ وَبَارِكْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ ✨";
+                marquee.innerHTML = `<span id="tickerText" data-default="true">${defaultDhikr}</span>`;
+                marquee.start();
             }
         }
 
@@ -1449,6 +1463,7 @@
             if (latestNewsTimestampGlobal) {
                 localStorage.setItem('daheehLastNewsTime_Y4', latestNewsTimestampGlobal);
             }
+            if (tickerTimer) clearTimeout(tickerTimer);
             // إعادة الشريط الأزرق المتحرك لحالته الطبيعية (الصلاة على النبي)
             resetTickerToDefault();
         }
