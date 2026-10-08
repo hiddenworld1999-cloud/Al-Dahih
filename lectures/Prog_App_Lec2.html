@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<title>تطبيقات في برمجة الحاسب - المحاضرة الثانية</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&display=swap');
+
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Cairo', Tahoma, sans-serif;
+    background-color: #0b132b;
+    margin: 0;
+    padding: 10px 0;
+    direction: rtl;
+    color: #e0e6ed;
+    font-weight: 700;
+    overflow-x: hidden;
+  }
+
+  .sheet {
+    background: #1c2541;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    padding: 16px 14px 45px 14px;
+    box-sizing: border-box;
+    position: relative;
+    border: 2px solid #48cae4;
+    border-radius: 12px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    font-weight: 700;
+  }
+
+  .sheet::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sheet > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .badge-top {
+    display: inline-block;
+    background: linear-gradient(135deg, #00b4d8, #0077b6);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  .capsule-main {
+    background: linear-gradient(180deg, #0077b6, #023e8a);
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 900;
+    text-align: center;
+    padding: 8px 20px;
+    border-radius: 8px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 10px auto 14px auto;
+    box-shadow: 0 4px 12px rgba(0, 180, 216, 0.25);
+    border-bottom: 3px solid #48cae4;
+    line-height: 1.5;
+  }
+
+  .capsule-tech {
+    background: linear-gradient(180deg, #1f4068, #162447);
+    color: #48cae4;
+    border: 1px solid #48cae4;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-align: center;
+    padding: 7px 20px;
+    border-radius: 6px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 14px auto 12px auto;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .capsule-cyan {
+    background: linear-gradient(180deg, #0096c7, #03045e);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-align: center;
+    padding: 7px 20px;
+    border-radius: 6px;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 14px auto 12px auto;
+    box-shadow: 0 3px 8px rgba(0, 150, 199, 0.25);
+  }
+
+  .definition-box {
+    background-color: #0b132b;
+    border: 1.5px solid #3a506b;
+    border-right: 4px solid #48cae4;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: right;
+    font-weight: 800;
+    margin-bottom: 12px;
+    word-break: break-word;
+  }
+
+  .highlight-tech {
+    background-color: #1f4068;
+    color: #48cae4;
+    border: 1px solid #48cae4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 900;
+    display: inline-block;
+  }
+
+  .example-card {
+    background-color: #0d1b2a;
+    border: 1.5px solid #3a506b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+
+  .example-title {
+    color: #48cae4;
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .code-snip {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #000814;
+    color: #00f5d4;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #00b4d8;
+    font-size: 12.5px;
+    margin: 6px 0;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .output-box {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #050505;
+    color: #ffbe0b;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #ffbe0b;
+    font-size: 12px;
+    margin: 6px 0;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .output-label {
+    direction: rtl;
+    text-align: right;
+    font-size: 11px;
+    color: #ffd166;
+    font-weight: 800;
+    margin-top: 4px;
+  }
+
+  .text-red { color: #ff6b6b; font-weight: 900; }
+  .text-blue { color: #48cae4; font-weight: 900; }
+  .text-green { color: #51cf66; font-weight: 900; }
+  .text-yellow { color: #ffd166; font-weight: 900; }
+
+  .cards-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  @media (min-width: 600px) {
+    .cards-row {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .card-item {
+    background: #0b132b;
+    border: 1px solid #3a506b;
+    border-top: 3.5px solid #48cae4;
+    border-radius: 6px;
+    padding: 8px 6px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .card-item-title {
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #48cae4;
+    margin-bottom: 4px;
+  }
+
+  .card-item-desc {
+    font-size: 11px;
+    color: #cbd5e1;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  table.custom-table {
+    width: 100%;
+    min-width: 480px;
+    border-collapse: collapse;
+    font-size: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  table.custom-table th {
+    background: #0077b6;
+    color: #ffffff;
+    font-weight: 900;
+    padding: 8px;
+    border: 1px solid #023e8a;
+    text-align: center;
+  }
+
+  table.custom-table td {
+    padding: 7px 8px;
+    border: 1px solid #3a506b;
+    line-height: 1.5;
+    font-weight: 800;
+    background-color: #0b132b;
+  }
+
+  table.custom-table tr:nth-child(even) td {
+    background-color: #141f36;
+  }
+
+  .q-container {
+    border-bottom: 1px dashed #3a506b;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+
+  .q-header {
+    font-size: 13px;
+    font-weight: 800;
+    color: #f1f5f9;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .tf-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .btn-quiz {
+    background: #0b132b;
+    border: 1.5px solid #3a506b;
+    color: #48cae4;
+    padding: 5px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-quiz:hover {
+    border-color: #48cae4;
+  }
+
+  .mcq-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  @media (min-width: 600px) {
+    .mcq-btn-group {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+
+  .btn-choice {
+    background: #0b132b;
+    border: 1.5px solid #3a506b;
+    color: #cbd5e1;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: right;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-choice:hover {
+    border-color: #48cae4;
+    color: #48cae4;
+  }
+
+  .btn-choice.correct, .btn-quiz.correct {
+    background: #1b4332 !important;
+    border-color: #52b788 !important;
+    color: #d8f3dc !important;
+  }
+
+  .btn-choice.wrong, .btn-quiz.wrong {
+    background: #4a0e17 !important;
+    border-color: #e63946 !important;
+    color: #ffccd5 !important;
+  }
+
+  .feedback-box {
+    display: none;
+    font-size: 11.5px;
+    margin-top: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+
+  .feedback-box.show {
+    display: block;
+  }
+
+  .feedback-box.is-true {
+    background: #0d2818;
+    color: #52b788;
+    border-right: 3px solid #52b788;
+  }
+
+  .feedback-box.is-false {
+    background: #2b090e;
+    color: #ff6b6b;
+    border-right: 3px solid #ff6b6b;
+  }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 8px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px dashed #3a506b;
+    padding-top: 4px;
+    font-size: 10.5px;
+    color: #8da9c4;
+    font-weight: 800;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-logo {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid #48cae4;
+    object-fit: cover;
+  }
+
+  .footer-brand-name {
+    font-size: 12px;
+    font-weight: 900;
+    color: #48cae4;
+  }
+
+  .footer-center-text {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 800;
+    font-size: 10px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ==================== الصفحة الأولى: البرمجيات ولغات البرمجة ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
+    </div>
+
+    <div class="capsule-main">تطبيقات في برمجة الحاسب - المحاضرة الثانية (د. مريم سامي)</div>
+
+    <div class="capsule-tech">أولاً: تصنيف وأنواع البرمجيات (Types of Software)</div>
+    <div class="definition-box">
+      البرمجيات بتنقسم لقسمين أساسيين:<br>
+      • <div class="highlight-tech">1. برمجيات النظام (System Software):</div> تشمل أنظمة التشغيل (زي Linux و Windows) ومعالجات اللغات والمترجمات (Compiler و Interpreter) وبرامج تعريف الأجهزة.<br>
+      • <div class="highlight-tech">2. برمجيات التطبيقات (Application Software):</div> تشمل عامة الاستخدام (General Purpose) زي Word و Photoshop، ومخصصة لمجال محدد (Customised Software) زي نظام حجز تذاكر القطارات.
+    </div>
+
+    <div class="capsule-cyan">ثانياً: تصنيف لغات البرمجة ومستوياتها</div>
+    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+      <table class="custom-table">
+        <tr>
+          <th style="width:25%;">نوع التصنيف</th>
+          <th style="width:35%;">المفهوم والخصائص</th>
+          <th style="width:40%;">أمثلة من المحاضرة</th>
+        </tr>
+        <tr>
+          <td style="text-align:center;">لغات عالية المستوى</td>
+          <td>قريبة من لغة الإنسان وبسيطة النحو، وتستخدم مترجم Compiler أو مفسر Interpreter.</td>
+          <td>Python, Java, C, Ruby</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">لغات منخفضة المستوى</td>
+          <td>قريبة من المعالج واللغة الثنائية (0 و 1)، سريعة جداً لكنها صعبة ومعقدة.</td>
+          <td>Machine Language ولغة التجميع Assembly</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">الأسلوب الإجرائي (Procedural)</td>
+          <td>يقسم البرنامج لدوال وإجراءات تنفذ وراء بعضها خطوة بخطوة كوصفة الطهي.</td>
+          <td>لغة C ولغة Pascal</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">الموجه للكائنات (OOP)</td>
+          <td>تصميم الكود حول كائنات (Objects) وفئات (Classes) تضم خصائص وأفعال.</td>
+          <td>Python, Java, C++</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 1</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الثانية: هياكل البيانات ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
+    </div>
+
+    <div class="capsule-main">هياكل البيانات الخطية وغير الخطية (Data Structures)</div>
+
+    <div class="capsule-tech">مفهوم هياكل البيانات وأمثلة العالم الحقيقي</div>
+    <div class="definition-box">
+      طرق لتنظيم وتخزين البيانات في الحاسوب لتقليل تعقيد مساحة الذاكرة وزمن التنفيذ.<br>
+      • <strong>العلاقة الذهبية:</strong> <div class="text-blue" style="display:inline;">الخوارزمية</div> تركز على خطوات الحل، بينما <div class="text-cyan" style="display:inline;">هياكل البيانات</div> تركز على طريقة تخزين البيانات.<br>
+      • <strong>تطبيقات واقعية:</strong> تخزين حركات الشطرنج، علاقات الأصدقاء على Facebook، وزر الرجوع للخلف (Backward) في المتصفح.
+    </div>
+
+    <div class="capsule-cyan">أنواع هياكل البيانات بالتفصيل</div>
+    <div class="cards-row">
+      <div class="card-item">
+        <div class="card-item-title">١. المصفوفة Array</div>
+        <div class="card-item-desc">حجم ثابت، عناصر من نفس النوع، وتخزن في مواقع متتالية ويبدأ الفهرس بالصفر.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-title">٢. الطابور Queue</div>
+        <div class="card-item-desc">يعمل بآلية FIFO (الداخل أولاً يخرج أولاً) زي طابور التذاكر وجدولة المهام.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-title">٣. المكدس Stack</div>
+        <div class="card-item-desc">يعمل بآلية LIFO (الداخل آخراً يخرج أولاً) عبر Push و Pop، زي التراجع Undo في Word.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-item-title">٤. القائمة المرتبطة</div>
+        <div class="card-item-desc">عقد (Nodes) ومؤشرات (Pointers) تبدأ بـ Head وتنتهي بـ Null، ومرنة في الذاكرة.</div>
+      </div>
+    </div>
+
+    <div class="capsule-tech">الهيكل غير الخطي: الشجرة (Tree)</div>
+    <div class="definition-box">
+      بنية هرمية غير خطية تتكون من عقد، تبدأ من عقدة رئيسية تُسمى <div class="highlight-tech">الجذر (Root)</div> ويتفرع منها عقد فرعية (Children)، وهي البنية المثالية لتنظيم أنظمة الملفات والمجلدات.
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 2</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الثالثة: أمثلة الشروط و Match وحلقات While ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">أمثلة بايثون العملية مع النتائج بالتفصيل</div>
+    </div>
+
+    <div class="capsule-main">أمثلة الشروط و Match وحلقات While من المحاضرة</div>
+
+    <!-- مثال 1 -->
+    <div class="example-card">
+      <div class="example-title">١. جملة If والمسافة البادئة (مع مقارنة حالة الخطأ):</div>
+      <div class="code-snip">a = 33
+b = 200
+if b > a:
+    print("b is greater than a")</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">b is greater than a</div>
+      <div style="font-size:11.5px; color:#ff6b6b; margin-top:4px;">تنبيه المحاضرة: كتابة print بدون مسافة بادئة (Indentation) يسبب خطأ IndentationError مباشرة.</div>
+    </div>
+
+    <!-- مثال 2 -->
+    <div class="example-card">
+      <div class="example-title">٢. جملة Match-Case لاختيار اليوم:</div>
+      <div class="code-snip">day = 4
+match day:
+    case 1:
+        print("Monday")
+    case 2:
+        print("Tuesday")
+    case 3:
+        print("Wednesday")
+    case 4:
+        print("Thursday")
+    case 5:
+        print("Friday")
+    case 6:
+        print("Saturday")
+    case 7:
+        print("Sunday")</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">Thursday</div>
+    </div>
+
+    <!-- مثال 3 -->
+    <div class="example-card">
+      <div class="example-title">٣. حلقة While مع أمر الخروج Break:</div>
+      <div class="code-snip">i = 1
+while i &lt; 6:
+    print(i)
+    if (i == 3):
+        break
+    i += 1</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">1
+2
+3</div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 3</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الرابعة: بقية أمثلة While و حلقات For ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">أمثلة بايثون العملية مع النتائج بالتفصيل</div>
+    </div>
+
+    <div class="capsule-main">حلقات While المتقدمة وحلقات For على القوائم والنصوص</div>
+
+    <!-- مثال 4 -->
+    <div class="example-card">
+      <div class="example-title">٤. جملة Continue مع حلقة While (تخطي دورة واحدة):</div>
+      <div class="code-snip">i = 0
+while i &lt; 6:
+    i += 1
+    if i == 3:
+        continue
+    print(i)</div>
+      <div class="output-label">النتيجة بعد التشغيل (لاحظ اختفاء الرقم 3):</div>
+      <div class="output-box">1
+2
+4
+5
+6</div>
+    </div>
+
+    <!-- مثال 5 -->
+    <div class="example-card">
+      <div class="example-title">٥. حلقة While مع جملة Else:</div>
+      <div class="code-snip">i = 1
+while i &lt; 6:
+    print(i)
+    i += 1
+else:
+    print("i is no longer less than 6")</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">1
+2
+3
+4
+5
+i is no longer less than 6</div>
+    </div>
+
+    <!-- مثال 6 -->
+    <div class="example-card">
+      <div class="example-title">٦. حلقة For على قائمة عناصر (List):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple
+banana
+cherry</div>
+    </div>
+
+    <!-- مثال 7 -->
+    <div class="example-card">
+      <div class="example-title">٧. حلقة For للمرور على حروف النص (String):</div>
+      <div class="code-snip">for x in "banana":
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">b
+a
+n
+a
+n
+a</div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 4</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة الخامسة: حالات Break و Continue ودالة Range ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">💻 المحاضرة الثانية</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">أمثلة بايثون العملية مع النتائج بالتفصيل</div>
+    </div>
+
+    <div class="capsule-main">تريكات Break و Continue مع القوائم ودالة range() كاملة</div>
+
+    <!-- مثال 8 -->
+    <div class="example-card">
+      <div class="example-title">٨. الخروج بـ Break (الطباعة قبل Break):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    print(x)
+    if x == "banana":
+        break</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple
+banana</div>
+    </div>
+
+    <!-- مثال 9 -->
+    <div class="example-card">
+      <div class="example-title">٩. الخروج بـ Break (Break قبل أمر الطباعة):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    if x == "banana":
+        break
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple</div>
+    </div>
+
+    <!-- مثال 10 -->
+    <div class="example-card">
+      <div class="example-title">١٠. استبعاد عنصر باستخدام Continue (تخطي banana):</div>
+      <div class="code-snip">fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+    if x == "banana":
+        continue
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">apple
+cherry</div>
+    </div>
+
+    <!-- مثال 11 -->
+    <div class="example-card">
+      <div class="example-title">١١. استخدام دالة range(6) مع حلقة For:</div>
+      <div class="code-snip">for x in range(6):
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل (تبدأ من 0 وحتى 5):</div>
+      <div class="output-box">0
+1
+2
+3
+4
+5</div>
+    </div>
+
+    <!-- مثال 12 -->
+    <div class="example-card">
+      <div class="example-title">١٢. تحديد البداية والنهاية range(2, 6):</div>
+      <div class="code-snip">for x in range(2, 6):
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">2
+3
+4
+5</div>
+    </div>
+
+    <!-- مثال 13 -->
+    <div class="example-card">
+      <div class="example-title">١٣. تحديد معدل الزيادة والخطوة range(2, 30, 3):</div>
+      <div class="code-snip">for x in range(2, 30, 3):
+    print(x)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">2
+5
+8
+11
+14
+17
+20
+23
+26
+29</div>
+    </div>
+
+    <!-- مثال 14 -->
+    <div class="example-card">
+      <div class="example-title">١٤. مثال طباعة الأرقام مع جملة نصية من 1 إلى 10:</div>
+      <div class="code-snip">for i in range(1, 11):
+    print("The number is", i)</div>
+      <div class="output-label">النتيجة بعد التشغيل:</div>
+      <div class="output-box">The number is 1
+The number is 2
+...
+The number is 10</div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة السادسة: كويز تفاعلي (صح أو خطأ) ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">📝 كويز المحاضرة الثانية التفاعلي</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">اختبر معلوماتك وإجاباتك محفوظة تلقائياً</div>
+    </div>
+
+    <div class="capsule-main">أولاً: ضع علامة (صح) أو (خطأ) - 10 أسئلة تفاعلية</div>
+
+    <!-- س1 -->
+    <div class="q-container" data-qid="lec2_tf_1" data-correct="true" data-reason="أنظمة التشغيل ومترجمات اللغات تندرج تحت System Software.">
+      <div class="q-header">١. تُعتبر أنظمة التشغيل (Operating Systems) وبرامج تشغيل الأجهزة من برمجيات النظام (System Software).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س2 -->
+    <div class="q-container" data-qid="lec2_tf_2" data-correct="false" data-reason="لغة التجميع ولغة الآلة هي لغات منخفضة المستوى (Low-Level).">
+      <div class="q-header">٢. تُعد لغة التجميع (Assembly Language) من اللغات عالية المستوى سهلة القراءة للإنسان.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س3 -->
+    <div class="q-container" data-qid="lec2_tf_3" data-correct="true" data-reason="المصفوفة بنية خطية ذات حجم ثابت وعناصر من نوع واحد.">
+      <div class="q-header">٣. المصفوفة (Array) هي بنية بيانات خطية ذات حجم ثابت تخزن عناصر من نفس نوع البيانات.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س4 -->
+    <div class="q-container" data-qid="lec2_tf_4" data-correct="false" data-reason="الطابور يعمل بمبدأ FIFO بينما المكدس هو LIFO.">
+      <div class="q-header">٤. هيكل الطابور (Queue) يعمل بمبدأ الوارد أخيراً يخرج أولاً (LIFO).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س5 -->
+    <div class="q-container" data-qid="lec2_tf_5" data-correct="true" data-reason="وظيفة Undo في Word تعتمد على Stack حيث يتراجع عن آخر تعديل تم إدخاله.">
+      <div class="q-header">٥. يُستخدم هيكل المكدس (Stack) في إدارة وظيفة التراجع (Undo) داخل برامج تحرير النصوص.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س6 -->
+    <div class="q-container" data-qid="lec2_tf_6" data-correct="true" data-reason="القوائم المرتبطة تتكون من عقد ومؤشرات وتسمح بالتحجيم الديناميكي.">
+      <div class="q-header">٦. تسمح القوائم المرتبطة (Linked Lists) بتخصيص الذاكرة الديناميكي على عكس المصفوفات.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س7 -->
+    <div class="q-container" data-qid="lec2_tf_7" data-correct="false" data-reason="الأشجار (Trees) والرسومات (Graphs) هي هياكل بيانات غير خطية (Non-linear).">
+      <div class="q-header">٧. تُصنف الشجرة (Tree) ضمن هياكل البيانات الخطية (Linear Data Structures).</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س8 -->
+    <div class="q-container" data-qid="lec2_tf_8" data-correct="false" data-reason="عدم وضع مسافة بادئة داخل جملة if ينتج عنه خطأ ترجمة IndentationError.">
+      <div class="q-header">٨. في لغة بايثون، إهمال المسافات البادئة (Indentation) بعد جملة if لا يسبب أي خطأ برمجي.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س9 -->
+    <div class="q-container" data-qid="lec2_tf_9" data-correct="true" data-reason="أمر continue يتخطى الدورة الحالية فقط ويتابع ما بعدها.">
+      <div class="q-header">٩. يقوم أمر continue بتخطي الدورة الحالية للحلقة والانتقال مباشرة إلى التكرار التالي.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س10 -->
+    <div class="q-container" data-qid="lec2_tf_10" data-correct="false" data-reason="دالة range(6) تولد الأرقام من 0 إلى 5 (الرقم 6 غير مشمول).">
+      <div class="q-header">١٠. التعبير range(6) في بايثون يقوم بتوليد الأرقام من 1 إلى 6.</div>
+      <div class="tf-btn-group">
+        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
+        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 6</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== الصفحة السابعة: كويز تفاعلي (اختيار من متعدد) ==================== -->
+  <div class="sheet">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
+      <div class="badge-top">📝 كويز المحاضرة الثانية التفاعلي</div>
+      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">اختر الإجابة وشاهد التحليل والتفسير فوراً</div>
+    </div>
+
+    <div class="capsule-cyan">ثانياً: اختر الإجابة الصحيحة - 10 أسئلة تفاعلية</div>
+
+    <!-- س1 -->
+    <div class="q-container" data-qid="lec2_mcq_1" data-correct-idx="1" data-reason="الأسلوب الإجرائي يقسم البرنامج إلى دوال وإجراءات متتالية تنفذ كالوصفة خطوة بخطوة.">
+      <div class="q-header">١. النمط البرمجي الذي يقسم البرنامج إلى مجموعة إجراءات ودوال تنفذ خطوة بخطوة مثل C و Pascal هو:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الأسلوب الموجه للكائنات OOP</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الأسلوب الإجرائي Procedural</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) لغة الآلة Machine Language</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) البرمجة الخطية</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س2 -->
+    <div class="q-container" data-qid="lec2_mcq_2" data-correct-idx="2" data-reason="فهرس المصفوفات يبدأ من 0 وينتهي عند n-1.">
+      <div class="q-header">٢. يبدأ فهرس (Index) أول عنصر في المصفوفة الخطية (Array) عادةً بالقيمة:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 1</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) -1</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 0</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) n</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س3 -->
+    <div class="q-container" data-qid="lec2_mcq_3" data-correct-idx="0" data-reason="الطابور (Queue) يعمل وفق آلية FIFO: First In First Out.">
+      <div class="q-header">٣. هيكل البيانات الذي يعتمد آلية (First In First Out - FIFO) لإضافة وحذف العناصر هو:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الطابور (Queue)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) المكدس (Stack)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الشجرة (Tree)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) القائمة الدائرية</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س4 -->
+    <div class="q-container" data-qid="lec2_mcq_4" data-correct-idx="1" data-reason="العمليات الأساسية للمكدس هي Push للإضافة و Pop للحذف من أعلى الـ Stack.">
+      <div class="q-header">٤. العمليات الأساسية المتبعة لإضافة وإزالة العناصر من أعلى المكدس (Stack) تُعرف بـ:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) Enqueue و Dequeue</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) Push و Pop</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) Insert و Delete</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) Root و Child</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س5 -->
+    <div class="q-container" data-qid="lec2_mcq_5" data-correct-idx="3" data-reason="العقدة الأولى تسمى الرأس (Head) والعقدة الأخيرة تسمى الذيل (Tail).">
+      <div class="q-header">٥. يُعرف العنصر الأول في القائمة المرتبطة (Linked List) باسم:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الذيل (Tail)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) المؤشر (Pointer)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الجذر (Root)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) الرأس (Head)</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س6 -->
+    <div class="q-container" data-qid="lec2_mcq_6" data-correct-idx="2" data-reason="الخوارزمية هي خطوات الحل، بينما هيكل البيانات هو طريقة التخزين في الذاكرة.">
+      <div class="q-header">٦. العلاقة الأساسية بين الخوارزميات وهياكل البيانات تتمثل في أن:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) كلاهما يستخدم فقط في لغة الآلة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الخوارزمية تخزن البيانات وهياكل البيانات تنفذ الحل</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الخوارزمية خطوات الحل وهيكل البيانات طريقة تخزين البيانات</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) لا توجد أي علاقة تربطهما</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س7 -->
+    <div class="q-container" data-qid="lec2_mcq_7" data-correct-idx="0" data-reason="أمر break ينهي الحلقة فور تحقق الشرط، وهنا عندما تصل i إلى 3 يخرج ويطبع 1 و 2 و 3 فقط.">
+      <div class="q-header">٧. في حلقة While: عند وصول المتغير i للقيمة 3 تم تنفيذ break، المخرجات ستكون:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 1, 2, 3</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 1, 2, 4, 5, 6</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 1, 2 فقط</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) تكرار لانهائي</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س8 -->
+    <div class="q-container" data-qid="lec2_mcq_8" data-correct-idx="2" data-reason="أمر continue يتخطى الدورة الحالية فقط، لذا تم تخطي الرقم 3 وطباعة باقي الأرقام.">
+      <div class="q-header">٨. عند استخدام جملة continue عندما تكون i == 3 داخل حلقة تطبع من 1 لـ 6، الناتج يكون:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) طباعة 1, 2, 3 وتوقف الحلقة</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) طباعة الرقم 3 فقط</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) طباعة 1, 2, 4, 5, 6 مع استبعاد 3</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) حدوث خطأ برمجي</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س9 -->
+    <div class="q-container" data-qid="lec2_mcq_9" data-correct-idx="1" data-reason="range(2, 6) تبدأ من 2 وتقف قبل 6، فتنتج: 2, 3, 4, 5.">
+      <div class="q-header">٩. ناتج تنفيذ حلقة التكرار for x in range(2, 6) هو طباعة الأرقام:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 2, 3, 4, 5, 6</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 2, 3, 4, 5</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 0, 1, 2, 3, 4, 5</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) 2, 6 فقط</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <!-- س10 -->
+    <div class="q-container" data-qid="lec2_mcq_10" data-correct-idx="0" data-reason="المعامل الثالث هو معدل الزيادة، فتبدأ من 2 وتزيد 3 كل دورة: 2, 5, 8... حتى 29.">
+      <div class="q-header">١٠. في التعبير range(2, 30, 3) يمثل الرقم 3 في المعامل الأخير:</div>
+      <div class="mcq-btn-group">
+        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) معدل الزيادة والخطوة (Step)</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) قيمة البداية</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) قيمة النهاية</button>
+        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) عدد مرات تكرار الحلقة</button>
+      </div>
+      <div class="feedback-box"></div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-brand">
+        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+        <div class="footer-brand-name">الدحيح</div>
+      </div>
+      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 7</div>
+      <div style="width:20px;"></div>
+    </div>
+  </div>
+
+<script>
+  const STORAGE_KEY = 'prog_lec2_quiz_answers';
+
+  function getSavedAnswers() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  function saveAnswer(qid, answerVal) {
+    try {
+      const answers = getSavedAnswers();
+      answers[qid] = answerVal;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    } catch(e) {}
+  }
+
+  function checkTF(btn, userAns, autoLoad = false) {
+    const container = btn.closest('.q-container');
+    const qid = container.getAttribute('data-qid');
+    const correctAns = container.getAttribute('data-correct') === 'true';
+    const reason = container.getAttribute('data-reason');
+    const feedback = container.querySelector('.feedback-box');
+    const buttons = container.querySelectorAll('.btn-quiz');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (userAns === correctAns) {
+      btn.classList.add('correct');
+      feedback.className = 'feedback-box show is-true';
+      feedback.innerHTML = 'إجابة صحيحة ممتاز! ' + reason;
+    } else {
+      btn.classList.add('wrong');
+      buttons.forEach(b => {
+        if ((b.innerText.trim() === 'صح' && correctAns) || (b.innerText.trim() === 'خطأ' && !correctAns)) {
+          b.classList.add('correct');
+        }
+      });
+      feedback.className = 'feedback-box show is-false';
+      feedback.innerHTML = 'إجابة غير صحيحة. ' + reason;
+    }
+
+    if (!autoLoad && qid) {
+      saveAnswer(qid, userAns);
+    }
+  }
+
+  function checkMCQ(btn, selectedIdx, autoLoad = false) {
+    const container = btn.closest('.q-container');
+    const qid = container.getAttribute('data-qid');
+    const correctIdx = parseInt(container.getAttribute('data-correct-idx'), 10);
+    const reason = container.getAttribute('data-reason');
+    const feedback = container.querySelector('.feedback-box');
+    const buttons = container.querySelectorAll('.btn-choice');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (selectedIdx === correctIdx) {
+      btn.classList.add('correct');
+      feedback.className = 'feedback-box show is-true';
+      feedback.innerHTML = 'إجابة صحيحة ممتاز! ' + reason;
+    } else {
+      btn.classList.add('wrong');
+      if (buttons[correctIdx]) {
+        buttons[correctIdx].classList.add('correct');
+      }
+      feedback.className = 'feedback-box show is-false';
+      feedback.innerHTML = 'إجابة غير صحيحة. ' + reason;
+    }
+
+    if (!autoLoad && qid) {
+      saveAnswer(qid, selectedIdx);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = getSavedAnswers();
+    document.querySelectorAll('.q-container').forEach(container => {
+      const qid = container.getAttribute('data-qid');
+      if (saved.hasOwnProperty(qid)) {
+        const val = saved[qid];
+        if (typeof val === 'boolean') {
+          const buttons = container.querySelectorAll('.btn-quiz');
+          buttons.forEach(b => {
+            if ((b.innerText.trim() === 'صح' && val === true) || (b.innerText.trim() === 'خطأ' && val === false)) {
+              checkTF(b, val, true);
+            }
+          });
+        } else if (typeof val === 'number') {
+          const buttons = container.querySelectorAll('.btn-choice');
+          if (buttons[val]) {
+            checkMCQ(buttons[val], val, true);
+          }
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
+
