@@ -351,7 +351,6 @@
         }
         .video-action-icon:active { transform: scale(0.9); }
 
-        /* ضبط نسبة العرض إلى الارتفاع بنسبة 16:9 تماماً */
         .video-screen-box {
             position: relative;
             width: 100%;
@@ -839,6 +838,7 @@
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
                 <button class="calc-btn" onclick="appendCalc('5')">5</button>
+                <button class="calc-btn" onclick="appendCalc('6')">6</button>
                 <button class="calc-btn op" onclick="appendCalc('-')">-</button>
                 
                 <button class="calc-btn" onclick="appendCalc('1')">1</button>
@@ -1083,11 +1083,23 @@
         function fetchXPFromSheet() {
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
+
+            // مزامنة الـ XP المباشر المسجل في الشيت
+            fetch(`${SCRIPT_URL}?action=getStudentXP&code=${sCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.success && data.xp !== undefined) {
+                    localStorage.setItem('daheehXP_Y4', data.xp);
+                    updateXPDisplay();
+                }
+            }).catch(() => {});
+
+            // مزامنة قائمة المتصدرين والاختبارات المكتملة
             fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success && data.leaderboard) {
-                    const myRecord = data.leaderboard.find(s => s.name === localStorage.getItem('studentName'));
+                    const myRecord = data.leaderboard.find(s => s.code === sCode.toUpperCase().trim() || s.name === localStorage.getItem('studentName'));
                     if(myRecord && myRecord.xp !== undefined) {
                         localStorage.setItem('daheehXP_Y4', myRecord.xp);
                         updateXPDisplay();
@@ -2076,12 +2088,14 @@
 
             if(score > 0) {
                 if (!isAlreadyCompleted) { 
-                    addXP(score * 10); localStorage.setItem(quizKey, 'true'); 
+                    // نقطة واحدة لكل سؤال صحيح بدلاً من الضرب في 10
+                    addXP(score); 
+                    localStorage.setItem(quizKey, 'true'); 
                     let savedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || '';
                     if(!savedQuizzes.includes(quizKey)) { savedQuizzes += quizKey + ','; localStorage.setItem('daheehAllCompleted_Y4', savedQuizzes); }
                     syncXPToCloud(); 
                     
-                    xpRewardText = currentLang === 'en' ? `+${score * 10} XP Earned!` : `+${score * 10} نقطة ذكاء!`; 
+                    xpRewardText = currentLang === 'en' ? `+${score} Point Earned!` : `+${score} نقطة مكتسبة!`; 
                     let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); 
                     if(btnTxtEl) { btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; btnTxtEl.parentElement.style.color = 'var(--text-grey)'; btnTxtEl.parentElement.style.boxShadow = 'none'; btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; btnTxtEl.previousElementSibling.innerText = 'replay'; } 
                 } else { xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; xpColor = 'var(--text-grey)'; }
