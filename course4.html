@@ -562,7 +562,7 @@
     <!-- غلاف المادة السينمائي -->
     <div class="course-hero-cover" id="heroCover">
         <div class="hero-nav">
-            <div class="hero-btn" onclick="window.location.href='index4.html'">
+            <div class="hero-btn" onclick="handleNavigationBack()">
                 <span class="material-icons back-arrow">arrow_forward</span>
             </div>
             <div style="display: flex; gap: 10px;">
@@ -701,7 +701,7 @@
         </div>
     </div>
 
-    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe بملء الشاشة -->
+    <!-- نافذة المحتوى العادية / عرض ملف الـ HTML داخل iframe بملء الشاشة مع الدعم الكامل للأوفلاين -->
     <div id="contentModal" class="modal modal-trackable">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
@@ -838,7 +838,6 @@
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
                 <button class="calc-btn" onclick="appendCalc('5')">5</button>
-                <button class="calc-btn" onclick="appendCalc('6')">6</button>
                 <button class="calc-btn op" onclick="appendCalc('-')">-</button>
                 
                 <button class="calc-btn" onclick="appendCalc('1')">1</button>
@@ -883,20 +882,53 @@
             document.body.classList.add('vip-gold-mode');
         }
 
+        // ================= نظام إدارة السجل لمنع الخروج لصفحة index4.html =================
         function openModalWithHistory(elementId) {
             document.getElementById(elementId).style.display = 'flex';
             history.pushState({ modalOpen: elementId }, '', ''); 
         }
 
+        function handleNavigationBack() {
+            const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable')).some(el => el.style.display === 'flex' || el.style.display === 'block');
+            if (isAnyModalOpen) {
+                history.back();
+                return;
+            }
+            if (document.getElementById('lectureDetailInline').style.display === 'block') {
+                history.back();
+                return;
+            }
+            if (document.getElementById('examDetailInline').style.display === 'block') {
+                history.back();
+                return;
+            }
+            window.location.href = 'index4.html';
+        }
+
         window.addEventListener('popstate', function(event) {
+            // 1. إغلاق جميع النوافذ المنبثقة
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
             const vPlayer = document.getElementById('videoIframePlayer');
             if (vPlayer) vPlayer.src = '';
 
-            if(typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
-            if (event.state && event.state.modalOpen) {
+            if (typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
+
+            // 2. معالجة حالة السجل
+            if (event.state && event.state.view === 'lecture_detail') {
+                document.getElementById('lecturesListCard').style.display = 'none';
+                document.getElementById('lectureDetailInline').style.display = 'block';
+            } else if (event.state && event.state.view === 'exam_detail') {
+                document.getElementById('examsListContainer').style.display = 'none';
+                document.getElementById('examDetailInline').style.display = 'block';
+            } else if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
+            } else {
+                // العودة للقوائم الرئيسية في شيت المادة
+                document.getElementById('lectureDetailInline').style.display = 'none';
+                document.getElementById('lecturesListCard').style.display = 'block';
+                document.getElementById('examDetailInline').style.display = 'none';
+                document.getElementById('examsListContainer').style.display = 'block';
             }
         });
 
@@ -981,22 +1013,14 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
+        // حركة السحب للرجوع بدون طرد للرئيسية
         let touchStartX = 0; let touchStartY = 0;
         document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
         document.addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX; let touchEndY = e.changedTouches[0].screenY;
             let diffX = touchStartX - touchEndX; let diffY = Math.abs(touchStartY - touchEndY); 
             if (touchStartX > window.innerWidth - 80 && diffX > 60 && diffY < 50) {
-                const isAnyModalOpen = Array.from(document.querySelectorAll('.modal-trackable')).some(el => el.style.display === 'flex' || el.style.display === 'block');
-                if (isAnyModalOpen) { 
-                    history.back(); 
-                } else if(document.getElementById('lectureDetailInline').style.display === 'block') {
-                    closeLectureInline();
-                } else if(document.getElementById('examDetailInline').style.display === 'block') {
-                    closeExamInline();
-                } else { 
-                    window.location.href = 'index4.html'; 
-                }
+                handleNavigationBack();
             }
         }, {passive: true});
 
@@ -1080,11 +1104,11 @@
             fetch(requestUrl).then(res => res.json()).catch(err => console.log('Error Syncing'));
         }
 
+        // مزامنة الـ XP المباشر من الشيت وتطبيقه فوراً
         function fetchXPFromSheet() {
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
 
-            // مزامنة الـ XP المباشر المسجل في الشيت
             fetch(`${SCRIPT_URL}?action=getStudentXP&code=${sCode}`)
             .then(res => res.json())
             .then(data => {
@@ -1094,7 +1118,6 @@
                 }
             }).catch(() => {});
 
-            // مزامنة قائمة المتصدرين والاختبارات المكتملة
             fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
             .then(res => res.json())
             .then(data => {
@@ -1195,7 +1218,7 @@
         }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
-        // === دالة تحويل رابط الفيديو لـ Embed نظيف ومحترف مع كامل الصلاحيات لليوتيوب ودرايف ===
+        // === دالة تحويل رابط الفيديو لـ Embed نظيف ومحترف ===
         function formatEmbedVideoUrl(rawUrl) {
             if (!rawUrl) return "";
             let url = rawUrl.trim();
@@ -1215,7 +1238,7 @@
             return url;
         }
 
-        // === فتح واجهة مشغل الفيديو مع التحكم الكامل وقائمة المحاضرات وقسم التعليقات ===
+        // === فتح واجهة مشغل الفيديو ===
         function openVideoLectureModal(videoUrl, lectureName, lectureNum, cacheIndex) {
             currentVideoLecNum = lectureNum;
             const embedUrl = formatEmbedVideoUrl(videoUrl);
@@ -1293,7 +1316,7 @@
             }
         }
 
-        // ================= دوال نظام التعليقات السحابية فائقة السرعة =================
+        // ================= نظام التعليقات =================
         function scrollToCommentsSection() {
             const scrollArea = document.getElementById('videoPlaylistScrollArea');
             const target = document.getElementById('commentsWrapperTarget');
@@ -1403,7 +1426,7 @@
                 });
         }
 
-        // === تبويبات المحاضرة التفاعلية الحديثة والمنسقة ===
+        // === تبويبات المحاضرة التفاعلية الحديثة ===
         function switchInteractiveTab(tabId, el) {
             document.querySelectorAll('#interactiveLectureModal .tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -1502,19 +1525,15 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // دالة مخصصة لفتح ملفات الـ HTML داخل iframe مع تصحيح المسار وإزالة المسافات
-        function openHtmlLectureInsideApp(htmlUrl, title) {
+        // ================= فتح المحاضرات (HTML) مع دعم الأوفلاين التام ومنع 404 =================
+        async function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
-            if (modalBody) {
-                modalBody.style.padding = '0';
-            }
-            
+            if (modalBody) modalBody.style.padding = '0';
+
             let cleanUrl = (htmlUrl || '').trim();
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-                if (cleanUrl.startsWith('/')) {
-                    cleanUrl = cleanUrl.substring(1);
-                }
+                if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 cleanUrl = './' + cleanUrl;
             }
 
@@ -1526,16 +1545,50 @@
             contentBox.style.margin = '0';
             contentBox.style.width = '100%';
             contentBox.style.height = '100%';
-            
+
+            openModalWithHistory('contentModal');
+
+            const storageKey = 'offline_lecture_cache_' + cleanUrl;
+            const cachedHTML = localStorage.getItem(storageKey);
+
             contentBox.innerHTML = `
                 <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
-                    <iframe src="${cleanUrl}" 
+                    <iframe id="offlineLectureIframe" 
                             style="width: 100%; height: 100%; border: none; display: block;" 
                             loading="lazy">
                     </iframe>
                 </div>
             `;
-            openModalWithHistory('contentModal');
+
+            const iframeEl = document.getElementById('offlineLectureIframe');
+
+            // 1. إذا كان الملف محفوظاً مسبقاً، اعرضه فوراً حتى بدون نت
+            if (cachedHTML) {
+                iframeEl.srcdoc = cachedHTML;
+            }
+
+            // 2. إذا كان النت شغال، يتم تحديث الملف وحفظه للأوفلاين
+            if (navigator.onLine) {
+                try {
+                    const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                    const response = await fetch(fetchUrl);
+                    if (response.ok) {
+                        const freshHTML = await response.text();
+                        localStorage.setItem(storageKey, freshHTML);
+                        if (!cachedHTML) {
+                            iframeEl.srcdoc = freshHTML;
+                        }
+                    } else if (!cachedHTML) {
+                        iframeEl.src = cleanUrl;
+                    }
+                } catch (e) {
+                    if (!cachedHTML) {
+                        iframeEl.src = cleanUrl;
+                    }
+                }
+            } else if (!cachedHTML) {
+                iframeEl.src = cleanUrl;
+            }
         }
 
         // ================= تحميل المحاضرات =================
@@ -1613,7 +1666,7 @@
             applyLanguage();
         }
 
-        // ================= فتح أزرار المحاضرة في نفس المكان =================
+        // ================= فتح أزرار المحاضرة مع تسجيل السجل =================
         function showDynamicLecture(lectureName, fileName, num, cacheIndex, videoUrl) {
             const quizKey = `completed_quiz_${courseId}_${num}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
@@ -1712,6 +1765,9 @@
 
             listCard.style.display = 'none';
             detailContainer.style.display = 'block';
+
+            // تسجيل الدخول في السجل لحماية زر الرجوع من الطرد
+            history.pushState({ view: 'lecture_detail' }, '', '');
             applyLanguage();
         }
 
@@ -1722,7 +1778,7 @@
             if(listCard) listCard.style.display = 'block';
         }
 
-        // ================= فتح خيارات الامتحانات في نفس الشيت (Inline) =================
+        // ================= فتح خيارات الامتحانات مع تسجيل السجل =================
         function openExam(type) {
             const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
             const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; 
@@ -1733,6 +1789,7 @@
 
             listContainer.style.display = 'none';
             detailContainer.style.display = 'block';
+            history.pushState({ view: 'exam_detail' }, '', '');
             
             detailContainer.innerHTML = `
                 <div style="text-align:center; padding:40px; color:var(--primary);">
