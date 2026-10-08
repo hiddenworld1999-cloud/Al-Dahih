@@ -1502,6 +1502,7 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
+        // دالة مخصصة لفتح ملفات الـ HTML داخل iframe مع تصحيح المسار وإزالة المسافات
         function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
@@ -1509,6 +1510,14 @@
                 modalBody.style.padding = '0';
             }
             
+            let cleanUrl = (htmlUrl || '').trim();
+            if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+                if (cleanUrl.startsWith('/')) {
+                    cleanUrl = cleanUrl.substring(1);
+                }
+                cleanUrl = './' + cleanUrl;
+            }
+
             const contentBox = document.getElementById('contentBody');
             contentBox.style.padding = '0';
             contentBox.style.background = 'transparent';
@@ -1520,7 +1529,7 @@
             
             contentBox.innerHTML = `
                 <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
-                    <iframe src="${htmlUrl}" 
+                    <iframe src="${cleanUrl}" 
                             style="width: 100%; height: 100%; border: none; display: block;" 
                             loading="lazy">
                     </iframe>
