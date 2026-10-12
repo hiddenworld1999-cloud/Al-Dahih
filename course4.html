@@ -800,14 +800,20 @@
         <div class="modal-body" id="examLeaderboardBody" style="background:var(--bg);"></div>
     </div>
 
-    <!-- نافذة الميتينج والبث المباشر (Jitsi Meet) -->
+    <!-- نافذة الميتينج والبث المباشر (Jitsi Meet) مع زر فتح خارجي لحل مشاكل WebRTC في تطبيقات الكمبيوتر وتجاوز شاشات الموبايل -->
     <div id="liveMeetingModal" class="modal modal-trackable" style="z-index: 4000; background: #000000; display: none;">
-        <div class="modal-head" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff;">
-            <span class="material-icons close-arrow" onclick="history.back()" style="color: #fff; cursor: pointer;">arrow_forward</span>
-            <span style="font-weight: 900; font-size: 1.05rem; color: #ef4444; display: flex; align-items: center; gap: 6px;">
-                <span class="material-icons" style="font-size: 18px; animation: pulse 1s infinite;">fiber_manual_record</span> بث مباشر / ميتينج المادة
-            </span>
-            <span style="width: 28px;"></span>
+        <div class="modal-head" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-icons close-arrow" onclick="history.back()" style="color: #fff; cursor: pointer;">arrow_forward</span>
+                <span style="font-weight: 900; font-size: 1rem; color: #ef4444; display: flex; align-items: center; gap: 6px;">
+                    <span class="material-icons" style="font-size: 18px; animation: pulse 1s infinite;">fiber_manual_record</span> بث مباشر / ميتينج المادة
+                </span>
+            </div>
+            
+            <!-- زر الفتح في متصفح خارجي -->
+            <button onclick="openMeetingInExternalBrowser()" style="background: rgba(37, 99, 235, 0.2); border: 1px solid #2563EB; color: #60a5fa; padding: 6px 14px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: inherit;">
+                <span class="material-icons" style="font-size: 16px;">open_in_new</span> فتح في المتصفح
+            </button>
         </div>
         <div class="modal-body" style="padding: 0; overflow: hidden; background: #000;">
             <div id="liveMeetingFrameBox" style="width: 100%; height: calc(100vh - 75px);"></div>
@@ -881,7 +887,7 @@
                 
                 <button class="calc-btn" onclick="appendCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendCalc('8')">8</button>
-                <button class="calc-btn" onclick="appendCalc('9')">9</button>
+                <button class="calc-btn op" onclick="appendCalc('9')">9</button>
                 <button class="calc-btn op" onclick="appendCalc('*')">×</button>
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
@@ -1395,6 +1401,22 @@
                 .catch(() => {});
         }
 
+        // دالة الفتح في متصفح خارجي لحل مشاكل WebRTC على الكمبيوتر
+        function openMeetingInExternalBrowser() {
+            if (!activeMeetingUrl) return;
+            const sName = localStorage.getItem('studentName') || 'طالب دحيح';
+            let externalUrl = activeMeetingUrl;
+            if (externalUrl.includes('meet.jit.si')) {
+                const configParams = 'config.prejoinPageEnabled=false&config.disableDeepLinking=true';
+                if (!externalUrl.includes('#')) {
+                    externalUrl += `#${configParams}&userInfo.displayName="${encodeURIComponent(sName)}"`;
+                } else {
+                    externalUrl += `&${configParams}&userInfo.displayName="${encodeURIComponent(sName)}"`;
+                }
+            }
+            window.open(externalUrl, '_blank');
+        }
+
         function openLiveMeetingFromSheet() {
             if (!isMeetingActive || !activeMeetingUrl) {
                 alert('الميتينج مغلق حالياً 🔴\n\nلم يبدأ البث المباشر لهذه المحاضرة بعد. سيتم فتحه فور دخول المحاضر!');
@@ -1405,10 +1427,16 @@
             const frameBox = document.getElementById('liveMeetingFrameBox');
 
             if (activeMeetingUrl.includes('meet.jit.si')) {
+                // تجاوز شاشة تحميل التطبيق على الموبايل وإخفاء شاشة الانتظار
                 let fullJitsiUrl = activeMeetingUrl;
+                const configParams = 'config.prejoinPageEnabled=false&config.disableDeepLinking=true';
+
                 if (!fullJitsiUrl.includes('#')) {
-                    fullJitsiUrl += `#userInfo.displayName="${encodeURIComponent(sName)}"&config.prejoinPageEnabled=false`;
+                    fullJitsiUrl += `#${configParams}&userInfo.displayName="${encodeURIComponent(sName)}"`;
+                } else {
+                    fullJitsiUrl += `&${configParams}&userInfo.displayName="${encodeURIComponent(sName)}"`;
                 }
+
                 frameBox.innerHTML = `
                     <iframe src="${fullJitsiUrl}" 
                             allow="camera; microphone; fullscreen; display-capture; autoplay" 
