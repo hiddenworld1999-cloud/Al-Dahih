@@ -788,7 +788,7 @@
         <div class="modal-body" id="quizBody"></div>
     </div>
     
-    <!-- نافذة أوائل الامتحان مع رفع الأولوية لتظهر فوق نتيجة الامتحان مباشرة بدون الرجوع -->
+    <!-- نافذة أوائل الامتحان -->
     <div id="examLeaderboardModal" class="modal modal-trackable" style="z-index: 3800;">
         <div class="modal-head">
             <span class="material-icons close-arrow" onclick="history.back()">arrow_forward</span>
@@ -800,7 +800,7 @@
         <div class="modal-body" id="examLeaderboardBody" style="background:var(--bg);"></div>
     </div>
 
-    <!-- نافذة الميتينج والبث المباشر (Jitsi Meet) مع دعم المتصفح الخارجي والمايك التام -->
+    <!-- نافذة الميتينج والبث المباشر (Jitsi Meet) -->
     <div id="liveMeetingModal" class="modal modal-trackable" style="z-index: 4000; background: #000000; display: none;">
         <div class="modal-head" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -887,7 +887,7 @@
                 
                 <button class="calc-btn" onclick="appendCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendCalc('8')">8</button>
-                <button class="calc-btn" onclick="appendCalc('9')">9</button>
+                <button class="calc-btn op" onclick="appendCalc('9')">9</button>
                 <button class="calc-btn op" onclick="appendCalc('*')">×</button>
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
@@ -1210,7 +1210,7 @@
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
 
-            fetch(`${SCRIPT_URL}?action=getStudentXP&code=${sCode}`)
+            fetch(`${SCRIPT_URL}?action=getStudentXP&code=${sCode}&_t=${Date.now()}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success && data.xp !== undefined) {
@@ -1219,7 +1219,7 @@
                 }
             }).catch(() => {});
 
-            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}`)
+            fetch(`${SCRIPT_URL}?action=getLeaderboard&code=${sCode}&_t=${Date.now()}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success && data.leaderboard) {
@@ -1361,7 +1361,6 @@
                         activeMeetingUrl = data.meetingUrl;
                         currentMeetingStatusText = data.status || "مفتوح";
 
-                        // مظهر أيقونة الهيدر
                         if (heroBtn) {
                             heroBtn.style.background = 'rgba(239, 68, 68, 0.45)';
                             heroBtn.style.borderColor = '#ef4444';
@@ -1372,7 +1371,6 @@
                             heroIcon.style.color = '#ef4444';
                         }
 
-                        // مظهر كرت البنر
                         if (banner) {
                             banner.style.border = '2px solid #ef4444';
                             banner.style.background = 'rgba(239, 68, 68, 0.05)';
@@ -1402,7 +1400,6 @@
                         activeMeetingUrl = "";
                         currentMeetingStatusText = (data && data.status) ? data.status : "مغلق";
 
-                        // مظهر أيقونة الهيدر عند الإغلاق
                         if (heroBtn) {
                             heroBtn.style.background = 'rgba(255, 255, 255, 0.2)';
                             heroBtn.style.borderColor = 'rgba(255, 255, 255, 0.25)';
@@ -1413,7 +1410,6 @@
                             heroIcon.style.color = '#ffffff';
                         }
 
-                        // مظهر كرت البنر عند الإغلاق
                         if (banner) {
                             banner.style.border = '2px dashed var(--border-color)';
                             banner.style.background = 'var(--card)';
@@ -1469,7 +1465,6 @@
             const frameBox = document.getElementById('liveMeetingFrameBox');
 
             if (activeMeetingUrl.includes('meet.jit.si')) {
-                // تجاوز شاشة تحميل التطبيق على الموبايل وإخفاء شاشة الانتظار
                 let fullJitsiUrl = activeMeetingUrl;
                 const configParams = 'config.prejoinPageEnabled=false&config.disableDeepLinking=true';
 
@@ -1799,20 +1794,25 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات (HTML) مع دعم الأوفلاين التام وشريط الأدوات الذكي =================
-        async function openHtmlLectureInsideApp(htmlUrl, title) {
+        // ================= فتح المحاضرات (HTML) مع تنظيف الحروف المخفية وضمان المسارات =================
+        function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
             if (modalBody) modalBody.style.padding = '0';
 
-            // تنظيف الرابط تماماً من أي حروف مخفية (Zero-width) أو مسافات
-            let cleanUrl = (htmlUrl || '')
-                .replace(/[\u200B-\u200D\uFEFF\u200E\u200F]/g, '')
-                .trim();
+            // 1. فك تشفير الرابط وتنظيفه تماماً من أي حروف مخفية (Zero-width) أو مسافات غير مرئية
+            let cleanUrl = (htmlUrl || '').trim();
+            try {
+                cleanUrl = decodeURIComponent(cleanUrl);
+            } catch (e) {}
 
+            // مسح جميع الحروف غير المرئية والرموز المخفية الشائعة
+            cleanUrl = cleanUrl.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
+
+            // ضبط المسار ليكون مساراً نسبياً سليماً داخل موقع GitHub Pages والـ WebView
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
-                cleanUrl = './' + cleanUrl;
+                if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
             }
 
             const contentBox = document.getElementById('contentBody');
@@ -1829,14 +1829,18 @@
             const storageKey = 'offline_lecture_cache_' + cleanUrl;
             let cachedHTML = localStorage.getItem(storageKey);
 
-            if (cachedHTML && (cachedHTML.includes('404') || cachedHTML.includes('File not found'))) {
+            // لو كان الكاش مخزن صفحة خطأ 404 سابقة، نقوم بحذفها فوراً
+            if (cachedHTML && (cachedHTML.includes('File not found') || cachedHTML.includes('404: Not Found'))) {
                 localStorage.removeItem(storageKey);
                 cachedHTML = null;
             }
 
+            // تشغيل الـ iframe بالمسار النظيف مباشرة لتعمل ملفات التنسيق والملفات التابعة
             contentBox.innerHTML = `
                 <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
                     <iframe id="offlineLectureIframe" 
+                            src="${cleanUrl}"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             style="width: 100%; height: 100%; border: none; display: block;" 
                             loading="lazy">
                     </iframe>
@@ -1845,26 +1849,24 @@
 
             const iframeEl = document.getElementById('offlineLectureIframe');
 
-            if (cachedHTML) {
+            // في وضع عدم الاتصال (Offline)، لو وجدنا نسخة مخزنة مسبقاً نعرضها فوراً
+            if (!navigator.onLine && cachedHTML) {
                 iframeEl.srcdoc = cachedHTML;
             }
 
+            // تحديث الكاش في الخلفية للاستخدام عند انقطاع الإنترنت مستقبلاً
             if (navigator.onLine) {
-                try {
-                    const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-                    const response = await fetch(fetchUrl);
-                    if (response.ok) {
-                        const freshHTML = await response.text();
-                        localStorage.setItem(storageKey, freshHTML);
-                        iframeEl.srcdoc = freshHTML;
-                    } else if (!cachedHTML) {
-                        iframeEl.src = cleanUrl;
-                    }
-                } catch (e) {
-                    if (!cachedHTML) iframeEl.src = cleanUrl;
-                }
-            } else if (!cachedHTML) {
-                iframeEl.src = cleanUrl;
+                fetch(cleanUrl)
+                    .then(res => {
+                        if (res.ok) return res.text();
+                        throw new Error('Network response not ok');
+                    })
+                    .then(html => {
+                        if (html && !html.includes('File not found') && !html.includes('404')) {
+                            localStorage.setItem(storageKey, html);
+                        }
+                    })
+                    .catch(() => {});
             }
         }
 
@@ -1973,7 +1975,7 @@
                 if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
                     isAiHtml = true;
                     aiButtonHtml = `
-                    <button onclick="openHtmlLectureInsideApp('${trimmedData}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
+                    <button onclick="openHtmlLectureInsideApp('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
                         <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
                         <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
                     </button>`;
@@ -2000,7 +2002,7 @@
                 const lowerFileName = fileName.toLowerCase().trim();
                 if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
                     fileButtonHtml = `
-                    <button onclick="openHtmlLectureInsideApp('${fileName}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
+                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
                         <span class="material-icons" style="margin-inline-end:10px;">web</span> 
                         <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
                     </button>`;
@@ -2340,7 +2342,7 @@
 
         function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
-            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 12px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align- items: center; z-index: 10;">
+            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 12px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
                 <div style="font-weight:800; color:var(--primary); display:flex; align-items:center; gap:6px;"><span class="material-icons" style="color:var(--primary);">timer</span> <span>الوقت المتبقي:</span></div>
                 <div id="quizTimerDisplay" style="font-size:1.4rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div></div>`;
             
