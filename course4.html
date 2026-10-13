@@ -800,7 +800,7 @@
         <div class="modal-body" id="examLeaderboardBody" style="background:var(--bg);"></div>
     </div>
 
-    <!-- نافذة الميتينج والبث المباشر (Jitsi Meet) مع زر فتح خارجي لحل مشاكل WebRTC في تطبيقات الكمبيوتر وتجاوز شاشات الموبايل -->
+    <!-- نافذة الميتينج والبث المباشر (Jitsi Meet) مع دعم المتصفح الخارجي والمايك التام -->
     <div id="liveMeetingModal" class="modal modal-trackable" style="z-index: 4000; background: #000000; display: none;">
         <div class="modal-head" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -887,7 +887,7 @@
                 
                 <button class="calc-btn" onclick="appendCalc('7')">7</button>
                 <button class="calc-btn" onclick="appendCalc('8')">8</button>
-                <button class="calc-btn op" onclick="appendCalc('9')">9</button>
+                <button class="calc-btn" onclick="appendCalc('9')">9</button>
                 <button class="calc-btn op" onclick="appendCalc('*')">×</button>
                 
                 <button class="calc-btn" onclick="appendCalc('4')">4</button>
@@ -1131,8 +1131,50 @@
             405: { titleAr: "مبادئ المالية العامة", titleEn: "Principles of Public Finance", profAr: "د. فاطمة إبراهيم", profEn: "Dr. Fatima Ibrahim", cover: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80" }
         };
 
-        const params = new URLSearchParams(window.location.search);
-        const courseId = params.get('id') || '401'; 
+        // ================= استخراج كود المادة بشكل مضمون 100% =================
+        function getResolvedCourseId() {
+            // 1. فحص الباراميتر من الرابط ?id=404
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const pId = params.get('id') || params.get('courseId');
+                if (pId && allCourses[pId]) {
+                    localStorage.setItem('daheeh_last_opened_course', pId);
+                    localStorage.setItem('selectedCourseId', pId);
+                    return pId;
+                }
+            } catch (e) {}
+
+            // 2. فحص الرابط كاملاً بالـ Regex (يدعم الـ WebView وروابط file:///)
+            try {
+                const match = window.location.href.match(/[?&#](?:id|courseId)=([0-9]{3})/);
+                if (match && match[1] && allCourses[match[1]]) {
+                    localStorage.setItem('daheeh_last_opened_course', match[1]);
+                    localStorage.setItem('selectedCourseId', match[1]);
+                    return match[1];
+                }
+            } catch (e) {}
+
+            // 3. فحص الذاكرة المحلية (لو تم فتح الصفحة من كرت المادة في index4.html)
+            const fallbackKeys = [
+                'daheeh_last_opened_course',
+                'selectedCourseId',
+                'selectedCourse',
+                'currentCourseId',
+                'currentCourse',
+                'courseId',
+                'daheehCourseId'
+            ];
+            for (let k of fallbackKeys) {
+                const val = localStorage.getItem(k);
+                if (val && allCourses[val]) {
+                    return val.toString().trim();
+                }
+            }
+
+            return '401';
+        }
+
+        const courseId = getResolvedCourseId();
         const course = allCourses[courseId];
         
         if (!course) window.location.href = 'index4.html';
@@ -1302,7 +1344,7 @@
             const studentCode = localStorage.getItem('studentCode') || '';
             const currentCId = courseId.toString().trim();
 
-            fetch(`${SCRIPT_URL}?action=getMeeting&courseId=${currentCId}&code=${encodeURIComponent(studentCode)}`)
+            fetch(`${SCRIPT_URL}?action=getMeeting&courseId=${currentCId}&code=${encodeURIComponent(studentCode)}&_t=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
                     const heroBtn = document.getElementById('liveMeetingHeroBtn');
@@ -1439,7 +1481,8 @@
 
                 frameBox.innerHTML = `
                     <iframe src="${fullJitsiUrl}" 
-                            allow="camera; microphone; fullscreen; display-capture; autoplay" 
+                            allow="camera *; microphone *; fullscreen; display-capture *; autoplay" 
+                            allowusermedia="true"
                             style="width: 100%; height: 100%; border: none; display: block;">
                     </iframe>
                 `;
@@ -1601,7 +1644,7 @@
                 container.innerHTML = `<div style="text-align:center; padding:12px; color:var(--grey);"><span class="material-icons" style="animation:pulse 1s infinite; font-size:22px;">autorenew</span><p style="margin-top:4px; font-weight:600; font-size:0.82rem;">جاري جلب التعليقات...</p></div>`;
             }
 
-            fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}&code=${encodeURIComponent(sCode)}`)
+            fetch(`${SCRIPT_URL}?action=getComments&courseId=${cId}&lectureNum=${lecNum}&code=${encodeURIComponent(sCode)}&_t=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.comments) {
@@ -1843,7 +1886,8 @@
             }
             applyLanguage();
             
-            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${currentCId}&code=${encodeURIComponent(studentCode)}`)
+            // إضافة &_t لمنع الكاش تماماً
+            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${currentCId}&code=${encodeURIComponent(studentCode)}&_t=${Date.now()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { 
@@ -1922,10 +1966,12 @@
             
             const rawAiData = window.lecturesDataCache[cacheIndex];
             let aiButtonHtml = '';
+            let isAiHtml = false;
             
             if (rawAiData) {
                 const trimmedData = typeof rawAiData === 'string' ? rawAiData.trim() : '';
                 if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
+                    isAiHtml = true;
                     aiButtonHtml = `
                     <button onclick="openHtmlLectureInsideApp('${trimmedData}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
                         <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
@@ -1950,7 +1996,7 @@
             }
 
             let fileButtonHtml = '';
-            if (fileName && fileName.trim() !== '' && fileName !== 'undefined' && !resolvedVideoUrl) {
+            if (fileName && fileName.trim() !== '' && fileName !== 'undefined' && !resolvedVideoUrl && !isAiHtml) {
                 const lowerFileName = fileName.toLowerCase().trim();
                 if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
                     fileButtonHtml = `
@@ -2034,7 +2080,7 @@
             const studentCode = localStorage.getItem('studentCode') || '';
             const cacheKey = `daheeh_exams_cache_${courseId}`; 
             
-            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${encodeURIComponent(studentCode)}`)
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${encodeURIComponent(studentCode)}&_t=${Date.now()}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { 
@@ -2248,7 +2294,7 @@
             
             const studentCode = localStorage.getItem('studentCode') || ''; const cacheKey = `daheeh_quiz_cache_${courseId}_${currentLectureNum}`; 
             
-            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}`)
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}&_t=${Date.now()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
@@ -2294,7 +2340,7 @@
 
         function showAllQuestions() {
             const body = document.getElementById('quizBody'); 
-            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 12px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 12px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align- items: center; z-index: 10;">
                 <div style="font-weight:800; color:var(--primary); display:flex; align-items:center; gap:6px;"><span class="material-icons" style="color:var(--primary);">timer</span> <span>الوقت المتبقي:</span></div>
                 <div id="quizTimerDisplay" style="font-size:1.4rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div></div>`;
             
@@ -2335,7 +2381,7 @@
             modalBody.innerHTML = `<div style="text-align:center; padding:40px;"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite; color:#f59e0b;">emoji_events</span><h3 style="margin-top:15px;">جاري جلب لوحة الشرف...</h3></div>`;
             openModalWithHistory('examLeaderboardModal');
             const sCode = localStorage.getItem('studentCode') || ''; 
-            fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}&code=${sCode}`).then(res => res.json()).then(data => {
+            fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}&code=${sCode}&_t=${Date.now()}`).then(res => res.json()).then(data => {
                 if (data.error === 'unauthorized') { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">gpp_bad</span><h3 style="margin-top:15px;">غير مصرح لك بعرض البيانات</h3></div>`; return; }
                 if(data.success && data.leaderboard && data.leaderboard.length > 0) {
                     let html = '';
