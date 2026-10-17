@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل (A4) - المحاضرة الرابعة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #020202;
+            --bg-page: #0A0A0F;
+            --bg-card: rgba(20, 20, 25, 0.6);
+            --text-main: #E2E8F0;
+            --text-muted: #94A3B8;
+            
+            --neon-cyan: #00F0FF;
+            --neon-purple: #B026FF;
+            --neon-green: #00FF41;
+            --neon-red: #FF003C;
+            --neon-yellow: #FFD700;
+
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.05), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 30%);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 780px; 
+            min-height: 1040px;
+            padding: 30px 30px 55px 30px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
+            opacity: 0.8;
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px; height: 320px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 20px; margin-bottom: 15px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-header p { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
+
+        /* ستايل العناوين الرئيسية الجديد اللي ضفناه */
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(176, 38, 255, 0.2), rgba(0, 240, 255, 0.2));
+            border: 1px solid var(--neon-purple);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--neon-yellow);
+            margin: 0 0 20px 0;
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass); border-radius: 12px;
+            padding: 15px 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 1.3rem; color: var(--neon-cyan); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 10px; font-weight: 700;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 5px;
+        }
+        h2 span.icon { font-size: 1.1rem; background: rgba(0, 240, 255, 0.1); padding: 5px 8px; border-radius: 8px; }
+
+        h3 {
+            font-size: 1.1rem; color: var(--neon-purple); margin: 15px 0 8px;
+            font-weight: 600; display: inline-block;
+        }
+
+        p, li { font-size: 0.95rem; margin-bottom: 8px; }
+        ul, ol { margin-right: 20px; margin-bottom: 10px; }
+        ul li::marker { color: var(--neon-cyan); }
+        ol li::marker { color: var(--neon-purple); font-weight: bold; }
+        strong { color: var(--neon-yellow); font-weight: 700; }
+        
+        code { 
+            font-family: 'Fira Code', monospace; background: rgba(255,255,255,0.1); 
+            padding: 2px 6px; border-radius: 4px; color: #A5D6FF; font-size: 0.85rem;
+        }
+
+        .alert-box { background: rgba(255, 0, 60, 0.05); border: 1px solid rgba(255, 0, 60, 0.3); border-right: 4px solid var(--neon-red); padding: 12px 15px; border-radius: 8px; margin: 12px 0; }
+        .alert-box h3 { color: var(--neon-red); margin-top: 0; }
+        .tip-box { background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.3); border-right: 4px solid var(--neon-green); padding: 12px 15px; border-radius: 8px; margin: 12px 0; }
+        .tip-box h3 { color: var(--neon-green); margin-top: 0; }
+
+        .table-wrapper { overflow-x: auto; margin: 10px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.85rem; }
+        th, td { padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); font-weight: 700; }
+
+        .footer-bar {
+            position: absolute; bottom: 12px; left: 20px; right: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 6px; }
+        .footer-logo { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 15px 55px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--neon-purple); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 15px; }
+            ul, ol { margin-right: 10px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.7rem; }
+            .main-title-banner { font-size: 1.1rem; padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: مقدمة ومراحل SDLC -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>LECTURE 4 // SUMMARY</h1>
+                <p>تطبيقات في البرمجة - د. مريم سامي</p>
+            </header>
+
+            <!-- العنوان الرئيسي الجديد -->
+            <div class="main-title-banner">أولاً: دورة حياة تطوير البرمجيات (SDLC)</div>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔄</span> يعني إيه SDLC؟</h2>
+                <p><strong>SDLC (Software Development Life Cycle)</strong> أو "دورة حياة تطوير البرمجيات" هي <strong>المنهجية أو الخريطة</strong> اللي بنمشي عليها عشان نعمل برنامج. هي زي "كتالوج" أو "وصفة" بنقسم بيها الشغل لمراحل منظمة عشان نطلع برنامج جودته عالية ومطابق للي المستخدم عايزه.</p>
+                
+                <div class="alert-box">
+                    <h3>⚠️ مثال من المحاضرة (ليه بنحتاج SDLC؟)</h3>
+                    <p>شركة قررت تعمل موقع "متجر إلكتروني" وقالت للمبرمجين "ابدأوا فوراً من غير أي منهجية". النتيجة؟</p>
+                    <ul>
+                        <li>نسيوا ميزة "المرتجعات وتتبع الشحنات".</li>
+                        <li>المدير طلب تعديلات عشوائية وسط الشغل، فحصلت أخطاء في الأسعار.</li>
+                        <li>مفيش اختبارات، فالعملاء ماقدروش يدفعوا (Checkout باظ).</li>
+                        <li>المشروع خد 8 شهور بدل 4، والتكلفة اتضاعفت!</li>
+                    </ul>
+                    <p><strong>الحل:</strong> بعد الفشل ده، الشركة استعانت بفريق جديد استخدم منهجية <strong>Agile</strong> وقسموا الشغل لمراحل (Sprints) عشان يصلحوا الدنيا.</p>
+                </div>
+
+                <h3>المراحل الـ 7 الأساسية لـ SDLC:</h3>
+                <ol>
+                    <li><strong>التخطيط (Planning):</strong> تحديد الأهداف والموارد والجدول الزمني.</li>
+                    <li><strong>التحليل (Analysis):</strong> فهم متطلبات المستخدمين وتوثيقها.</li>
+                    <li><strong>التصميم (Design):</strong> وضع مواصفات النظام والشكل اللي هيظهر بيه.</li>
+                    <li><strong>التطوير (Development):</strong> كتابة الكود.</li>
+                    <li><strong>الاختبار (Testing):</strong> التأكد إن البرنامج شغال صح وخالي من الأخطاء.</li>
+                    <li><strong>النشر (Deployment):</strong> توفير البرنامج للمستخدمين عشان يستخدموه.</li>
+                    <li><strong>الصيانة (Maintenance):</strong> تقديم الدعم والتحديثات بعد النشر.</li>
+                </ol>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">💡</span> أهمية SDLC</h2>
+                <ul>
+                    <li><strong>تحسين الجودة:</strong> تضمن إن البرنامج بيلبي طلبات المستخدم.</li>
+                    <li><strong>تقليل المخاطر:</strong> التخطيط المسبق بيمنع الأخطاء اللي بتحصل في الآخر.</li>
+                    <li><strong>تحسين الموارد:</strong> استخدام الوقت والفلوس والمجهود بكفاءة.</li>
+                    <li><strong>زيادة الإنتاجية:</strong> تنظيم الفريق وزيادة كفاءته.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: تفاصيل المراحل -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <!-- العنوان الرئيسي الجديد -->
+            <div class="main-title-banner">المراحل الرئيسية لدورة حياة تطوير البرمجيات</div>
+            
+            <section class="glass-card">
+                <h2><span class="icon">📝</span> مراحل SDLC بالتفصيل</h2>
+                
+                <h3>1. التخطيط (Planning)</h3>
+                <p>بنحدد أهداف المشروع، الموارد، والجدول الزمني. بنستخدم أدوات زي <strong>Jira</strong> أو <strong>Microsoft Project</strong>، وبنعمل تحليل <strong>SWOT</strong> (نقاط القوة والضعف) عشان نضع خطة شاملة.</p>
+
+                <h3>2. التحليل (Analysis)</h3>
+                <p>بنفهم المستخدم عايز إيه بالظبط. بنكتب وثيقة اسمها <strong>SRS (Software Requirements Specification)</strong>. المتطلبات بتتقسم لـ:</p>
+                <ul>
+                    <li><strong>متطلبات وظيفية (Functional):</strong> البرنامج بيعمل إيه؟ (مثلاً: تسجيل طالب، استخراج درجات).</li>
+                    <li><strong>متطلبات غير وظيفية (Non-Functional):</strong> البرنامج شغال إزاي؟ (مثلاً: الأمان باستخدام التشفير، السرعة، سهولة الاستخدام).</li>
+                    <li><strong>القيود (Constraints):</strong> حدود مفروضة (مثلاً: لازم نستخدم لغة Python، ولازم نخلص في 3 شهور).</li>
+                </ul>
+
+                <h3>3. التصميم (Design)</h3>
+                <p>بنحدد شكل النظام وهيكله الفني. بنرسم مخططات (Architecture Diagrams) ونعمل نماذج أولية (Prototypes). بنستخدم أدوات زي <strong>Figma</strong> للواجهات، و<strong>UML</strong> للهياكل. التصميم بيشمل شكل قواعد البيانات، والواجهات، وتفاعل المكونات.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">💻</span> 4. التطوير (Development)</h2>
+                <p>مرحلة كتابة الكود الفعلي بناءً على التصميم. بنستخدم برامج زي <strong>VS Code</strong> أو <strong>PyCharm</strong>. في النظم الحديثة، بنستخدم منهجيات زي <strong>Agile</strong> عشان نقسم الشغل لـ "Sprints" (دورات قصيرة).</p>
+
+                <h2><span class="icon">🧪</span> 5. الاختبار (Testing)</h2>
+                <p>بنختبر البرنامج للتأكد إنه شغال صح. بنستخدم اختبارات:</p>
+                <ul>
+                    <li><strong>Unit Testing:</strong> اختبار كل دالة أو جزء صغير لوحده.</li>
+                    <li><strong>Integration Testing:</strong> التأكد إن المكونات بتشتغل مع بعض.</li>
+                    <li><strong>System Testing:</strong> اختبار النظام ككل.</li>
+                </ul>
+
+                <h2><span class="icon">🚀</span> 6. النشر (Deployment)</h2>
+                <p>بننشر البرنامج في البيئة الحقيقية (خوادم Cloud زي AWS، أو متاجر التطبيقات). ممكن يكون نشر <strong>تدريجي (Phased)</strong> لعدد محدود عشان نختبر، أو <strong>فوري (Big Bang)</strong> للكل مرة واحدة.</p>
+
+                <h2><span class="icon">🔧</span> 7. الصيانة (Maintenance)</h2>
+                <p>بعد النشر، بنصلح أي أخطاء وبضيف ميزات جديدة. أنواع الصيانة:</p>
+                <ul>
+                    <li><strong>تصحيحية (Corrective):</strong> إصلاح الأعطال.</li>
+                    <li><strong>وقائية (Preventive):</strong> تحسين الأداء عشان مايحصلش مشاكل.</li>
+                    <li><strong>تكيفية (Adaptive):</strong> تلبية متطلبات جديدة (زي دعم لغات تانية).</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: Waterfall & Iterative -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <!-- العنوان الرئيسي الجديد -->
+            <div class="main-title-banner">ثانياً: منهجيات تطوير البرمجيات (SDLC Models)</div>
+
+            <section class="glass-card">
+                <h2><span class="icon">🌊</span> نموذج الشلال (Waterfall Model)</h2>
+                <p><strong>الفكرة:</strong> هو أقدم وأبسط نموذج. بيعتمد على نهج خطي (Linear) ومتسلسل من فوق لتحت كأنه شلال مياه. كل مرحلة لازم تخلص 100% قبل ما نبدأ اللي بعدها، ومفيش رجوع لورا.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 إمتى نستخدمه؟</h3>
+                    <p>مناسب للمشاريع ذات <strong>المتطلبات الثابتة والواضحة</strong> (زي أنظمة المحاسبة، قواعد البيانات البسيطة، تطبيقات الويب البسيطة). <br><strong>مش مناسب</strong> للتطبيقات اللي بتتغير (زي الموبايل).</p>
+                </div>
+
+                <p><strong>المميزات:</strong> وضوح التقدم، توثيق ممتاز، سهل الإدارة.<br>
+                <strong>العيوب:</strong> غير مرن، اكتشاف الأخطاء متأخر، تكلفة الإصلاح عالية.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔁</span> النموذج التكراري (Iterative Model)</h2>
+                <p><strong>الفكرة:</strong> اتعمل عشان يحل مشكلة الشلال. بيعتمد على تقسيم النظام لأجزاء صغيرة (Iterations). كل جزء بنعمله دورة كاملة (تصميم، تطوير، اختبار) وبنطلع نسخة قابلة للاستخدام، وبناخد رأي العميل، ونحسن في اللي بعده.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 إمتى نستخدمه؟</h3>
+                    <p>مناسب للمشاريع الكبيرة والمعقدة اللي <strong>متطلباتها غير واضحة أو متغيرة</strong> (زي الشركات الناشئة). <br><strong>مش مناسب</strong> للمشاريع اللي متطلباتها ثابتة تماماً.</p>
+                </div>
+
+                <p><strong>المميزات:</strong> مرونة عالية، اكتشاف الأخطاء مبكراً، تغذية راجعة مستمرة.<br>
+                <strong>العيوب:</strong> صعوبة التنبؤ بالتكلفة والوقت الإجمالي، ممكن يحصل توسع غير منضبط (Scope Creep).</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: RAD & Spiral -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <!-- العنوان الرئيسي الجديد -->
+            <div class="main-title-banner">منهجيات التطوير (تابع)</div>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚡</span> نموذج التطوير السريع (RAD)</h2>
+                <p><strong>الفكرة:</strong> RAD يعني (Rapid Application Development). بيركز على <strong>السرعة والنماذج الأولية (Prototypes)</strong>. بيقلل الاعتماد على الوثائق الطويلة، وبيركز على مشاركة العميل المستمرة عشان نطلع الشغل بسرعة.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 إمتى نستخدمه؟</h3>
+                    <p>مناسب لـ <strong>تطبيقات الويب والموبايل</strong>، والمشاريع ذات المتطلبات المتغيرة، والشركات الناشئة. <br><strong>مش مناسب</strong> للأنظمة الحرجة (زي الطيران) أو المشاريع الحكومية الكبيرة جداً.</p>
+                </div>
+
+                <p><strong>المميزات:</strong> سرعة تسليم رهيبة (3-6 شهور بدل سنين)، مرونة عالية، رضا العميل.<br>
+                <strong>العيوب:</strong> يحتاج فريق قوي ومتمرس، الأدوات بتاعته مكلفة، ممكن يطلع كود غير منظم لو ماتظبطش.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🌀</span> النموذج الحلزوني (Spiral Model)</h2>
+                <p><strong>الفكرة:</strong> هو نموذج تكراري وقائم على <strong>إدارة المخاطر</strong>. بيتخيل الشغل كأنه "حلزون" (Spiral) بيلف حلقات. كل حلقة بتبدأ بتحديد الأهداف، تحليل المخاطر، تطوير النموذج الأولي، ثم التخطيط للحلقة الجاية.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 إمتى نستخدمه؟</h3>
+                    <p>مناسب جداً <strong>للمشاريع الكبيرة جداً وعالية المخاطر</strong> والأنظمة المعقدة (زي أنظمة الدفاع والطيران، والطائرات بدون طيار Drone). <br><strong>مش مناسب</strong> للمشاريع الصغيرة البسيطة.</p>
+                </div>
+
+                <p><strong>المميزات:</strong> تقليل المخاطر بنسبة كبيرة، مرونة في المتطلبات، نتائج ملموسة في كل حلقة.<br>
+                <strong>العيوب:</strong> مكلف جداً، معقد في الإدارة، يحتاج فريق خبير، الوقت طويل.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: V-Model & Agile -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <!-- العنوان الرئيسي الجديد -->
+            <div class="main-title-banner">منهجيات التطوير (تابع)</div>
+
+            <section class="glass-card">
+                <h2><span class="icon">✔️</span> نموذج V (V-Model)</h2>
+                <p><strong>الفكرة:</strong> هو نسخة محسنة من الشلال. بيشبه حرف V. كل مرحلة تطوير في النص الشمال، بيقابلها مرحلة اختبار في النص اليمين. يعني بنخطط للاختبار بدري جداً.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 إمتى نستخدمه؟</h3>
+                    <p>مناسب <strong>للأنظمة الحرجة جداً (Safety-Critical)</strong> اللي غلطة واحدة فيها بتموت ناس أو تكلف ملايين (زي الأجهزة الطبية، أنظمة السيارات ABS، ومشاريع الفضاء والدفاع). <br><strong>مش مناسب</strong> لتطبيقات الويب البسيطة.</p>
+                </div>
+
+                <p><strong>المميزات:</strong> جودة عالية جداً، اكتشاف الأخطاء مبكراً، تتبع كامل.<br>
+                <strong>العيوب:</strong> غير مرن (مابيدعمش التغيير)، وقت طويل، مكلف، عبء إداري كبير.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🏃‍♂️</span> نموذج أجایل (Agile Model)</h2>
+                <p><strong>الفكرة:</strong> هو منهجية مرنة جداً بتعتمد على <strong>التفاعل المستمر مع العميل</strong> والتسليم التدريجي. بيقسم الشغل لدورات قصيرة جداً اسمها <strong>Sprints</strong> (من أسبوعين لشهر). بعد كل Sprint بنسلم نسخة شغالة من البرنامج.</p>
+                
+                <p><strong>البيان الرشيق (Agile Manifesto):</strong></p>
+                <ul>
+                    <li>الأفراد والتفاعل <strong>أهم من</strong> العمليات والأدوات.</li>
+                    <li>البرمجيات العاملة <strong>أهم من</strong> التوثيق الشامل.</li>
+                    <li>التعاون مع العميل <strong>أهم من</strong> التفاوض على العقود.</li>
+                    <li>الاستجابة للتغيير <strong>أهم من</strong> الالتزام بالخطة.</li>
+                </ul>
+
+                <div class="tip-box">
+                    <h3>💡 إمتى نستخدمه؟</h3>
+                    <p>مناسب لـ <strong>تطبيقات الويب والموبايل، والشركات الناشئة</strong> اللي متطلباتها بتتغير بسرعة. <br><strong>مش مناسب</strong> للأنظمة الحرجة (الطيران) أو المشاريع ذات المتطلبات الثابتة.</p>
+                </div>
+
+                <p><strong>المميزات:</strong> مرونة عالية، تواصل مستمر، تحسين مستمر، تقليل المخاطر.<br>
+                <strong>العيوب:</strong> صعب في المشاريع الكبيرة جداً، بيحتاج عميل متعاون، وبيحتاج فريق منضبط.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السادسة: جدول المقارنة الشامل -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>ملخص المقارنات (Cheat Sheet)</h1>
+                <p>جدول مقارنة شامل بين نماذج SDLC</p>
+            </header>
+
+            <!-- العنوان الرئيسي الجديد -->
+            <div class="main-title-banner">المقارنة النهائية بين النماذج</div>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> مقارنة بين النماذج الستة</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المعيار</th>
+                            <th>الشلال (Waterfall)</th>
+                            <th>التكراري (Iterative)</th>
+                            <th>السريع (RAD)</th>
+                            <th>الحلزوني (Spiral)</th>
+                            <th>V-Model</th>
+                            <th>أجایل (Agile)</th>
+                        </tr>
+                        <tr>
+                            <td><strong>السرعة</strong></td>
+                            <td>بطيئة</td>
+                            <td>متوسطة</td>
+                            <td>سريعة جداً</td>
+                            <td>متوسطة</td>
+                            <td>بطيئة</td>
+                            <td>سريعة</td>
+                        </tr>
+                        <tr>
+                            <td><strong>المرونة</strong></td>
+                            <td>منخفضة (صعب)</td>
+                            <td>عالية</td>
+                            <td>عالية جداً</td>
+                            <td>عالية</td>
+                            <td>منخفضة</td>
+                            <td>عالية جداً</td>
+                        </tr>
+                        <tr>
+                            <td><strong>إدارة المخاطر</strong></td>
+                            <td>منخفضة</td>
+                            <td>متوسطة</td>
+                            <td>متوسطة</td>
+                            <td>عالية جداً</td>
+                            <td>عالية</td>
+                            <td>عالية</td>
+                        </tr>
+                        <tr>
+                            <td><strong>التكلفة</strong></td>
+                            <td>عالية (لو في تعديل)</td>
+                            <td>متوسطة</td>
+                            <td>مرتفعة (أدوات)</td>
+                            <td>مرتفعة جداً</td>
+                            <td>عالية</td>
+                            <td>متوسطة</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الاختبار</strong></td>
+                            <td>في النهاية</td>
+                            <td>في كل تكرار</td>
+                            <td>في كل مرحلة</td>
+                            <td>في كل حلقة</td>
+                            <td>مخطط له من البداية</td>
+                            <td>مستمر (Sprints)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>العميل</strong></td>
+                            <td>مشارك في البداية فقط</td>
+                            <td>مشارك في كل تكرار</td>
+                            <td>مشارك بقوة</td>
+                            <td>مشارك في التقييم</td>
+                            <td>مشارك في الاختبارات</td>
+                            <td>شريك أساسي مستمر</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الأنسب لـ</strong></td>
+                            <td>مشاريع بسيطة ومتطلبات ثابتة</td>
+                            <td>مشاريع كبيرة ومتطلبات متغيرة</td>
+                            <td>تطبيقات ويب وموبايل بسرعة</td>
+                            <td>أنظمة دفاع وطيران معقدة</td>
+                            <td>أجهزة طبية وسيارات حرجة</td>
+                            <td>شركات ناشئة ومشاريع متغيرة</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 6</div>
+        </div>
+    </div>
+
+</body>
+</html>
