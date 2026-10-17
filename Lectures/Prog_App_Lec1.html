@@ -1,966 +1,542 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta charset="UTF-8">
-<title>تطبيقات في برمجة الحاسب - المحاضرة الأولى</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل (A4) - المحاضرة الأولى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #020202;
+            --bg-page: #0A0A0F;
+            --bg-card: rgba(20, 20, 25, 0.6);
+            --text-main: #E2E8F0;
+            --text-muted: #94A3B8;
+            
+            --neon-cyan: #00F0FF;
+            --neon-purple: #B026FF;
+            --neon-green: #00FF41;
+            --neon-red: #FF003C;
+            --neon-yellow: #FFD700;
 
-  @page {
-    size: A4;
-    margin: 8mm;
-  }
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
 
-  * {
-    box-sizing: border-box;
-  }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: 'Cairo', Tahoma, sans-serif;
-    background-color: #0b132b;
-    margin: 0;
-    padding: 10px 0;
-    direction: rtl;
-    color: #e0e6ed;
-    font-weight: 700;
-    overflow-x: hidden;
-  }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.05), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 30%);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 10px;
+            min-height: 100vh;
+            
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px; 
+            overflow-x: hidden;
+        }
 
-  .sheet {
-    background: #1c2541;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto 20px auto;
-    padding: 16px 14px 45px 14px;
-    box-sizing: border-box;
-    position: relative;
-    border: 2px solid #48cae4;
-    border-radius: 12px;
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
-    overflow: hidden;
-    font-weight: 700;
-  }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
 
-  .sheet::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 280px;
-    height: 280px;
-    background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.05;
-    pointer-events: none;
-    z-index: 0;
-  }
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 720px; 
+            min-height: 1020px;
+            padding: 30px 30px 55px 30px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-  .sheet > * {
-    position: relative;
-    z-index: 2;
-  }
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
+            opacity: 0.8;
+            z-index: 10;
+        }
 
-  .badge-top {
-    display: inline-block;
-    background: linear-gradient(135deg, #00b4d8, #0077b6);
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 6px;
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-  }
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px; height: 320px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-  .capsule-main {
-    background: linear-gradient(180deg, #0077b6, #023e8a);
-    color: #ffffff;
-    font-size: 14.5px;
-    font-weight: 900;
-    text-align: center;
-    padding: 8px 20px;
-    border-radius: 8px;
-    display: block;
-    width: fit-content;
-    max-width: 100%;
-    margin: 10px auto 14px auto;
-    box-shadow: 0 4px 12px rgba(0, 180, 216, 0.25);
-    border-bottom: 3px solid #48cae4;
-    line-height: 1.5;
-  }
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
 
-  .capsule-tech {
-    background: linear-gradient(180deg, #1f4068, #162447);
-    color: #48cae4;
-    border: 1px solid #48cae4;
-    font-size: 13.5px;
-    font-weight: 800;
-    text-align: center;
-    padding: 7px 20px;
-    border-radius: 6px;
-    display: block;
-    width: fit-content;
-    max-width: 100%;
-    margin: 14px auto 12px auto;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-  }
+        .hero-header { text-align: center; padding: 10px 0 25px; margin-bottom: 15px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-header p { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
 
-  .capsule-cyan {
-    background: linear-gradient(180deg, #0096c7, #03045e);
-    color: #ffffff;
-    font-size: 13.5px;
-    font-weight: 800;
-    text-align: center;
-    padding: 7px 20px;
-    border-radius: 6px;
-    display: block;
-    width: fit-content;
-    max-width: 100%;
-    margin: 14px auto 12px auto;
-    box-shadow: 0 3px 8px rgba(0, 150, 199, 0.25);
-  }
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass); border-radius: 12px;
+            padding: 15px 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
+        }
 
-  .definition-box {
-    background-color: #0b132b;
-    border: 1.5px solid #3a506b;
-    border-right: 4px solid #48cae4;
-    border-radius: 6px;
-    padding: 10px 12px;
-    font-size: 13px;
-    line-height: 1.8;
-    text-align: right;
-    font-weight: 800;
-    margin-bottom: 12px;
-    word-break: break-word;
-  }
+        h2 {
+            font-size: 1.3rem; color: var(--neon-cyan); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 10px; font-weight: 700;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 5px;
+        }
+        h2 span.icon { font-size: 1.1rem; background: rgba(0, 240, 255, 0.1); padding: 5px 8px; border-radius: 8px; }
 
-  .highlight-tech {
-    background-color: #1f4068;
-    color: #48cae4;
-    border: 1px solid #48cae4;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 900;
-    display: inline-block;
-  }
+        h3 {
+            font-size: 1.1rem; color: var(--neon-purple); margin: 15px 0 8px;
+            font-weight: 600; display: inline-block;
+        }
 
-  .text-red { color: #ff6b6b; font-weight: 900; }
-  .text-blue { color: #48cae4; font-weight: 900; }
-  .text-green { color: #51cf66; font-weight: 900; }
-  .text-yellow { color: #ffd166; font-weight: 900; }
+        p, li { font-size: 0.95rem; margin-bottom: 8px; }
+        ul, ol { margin-right: 20px; margin-bottom: 10px; }
+        ul li::marker { color: var(--neon-cyan); }
+        ol li::marker { color: var(--neon-purple); font-weight: bold; }
+        strong { color: var(--neon-yellow); font-weight: 700; }
+        
+        code { 
+            font-family: 'Fira Code', monospace; background: rgba(255,255,255,0.1); 
+            padding: 2px 6px; border-radius: 4px; color: #A5D6FF; font-size: 0.85rem;
+        }
 
-  .term-row {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    gap: 6px;
-  }
+        .alert-box { background: rgba(255, 0, 60, 0.05); border: 1px solid rgba(255, 0, 60, 0.3); border-right: 4px solid var(--neon-red); padding: 12px 15px; border-radius: 8px; margin: 12px 0; }
+        .alert-box h3 { color: var(--neon-red); margin-top: 0; }
+        .tip-box { background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.3); border-right: 4px solid var(--neon-green); padding: 12px 15px; border-radius: 8px; margin: 12px 0; }
+        .tip-box h3 { color: var(--neon-green); margin-top: 0; }
 
-  @media (min-width: 480px) {
-    .term-row {
-      flex-direction: row;
-      align-items: center;
-      gap: 12px;
-    }
-  }
+        .code-window { background: #000000; border-radius: 8px; margin: 10px 0; border: 1px solid #333; overflow: hidden; }
+        .code-header { background: #111; padding: 6px 10px; display: flex; gap: 5px; border-bottom: 1px solid #333; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot.red { background: #FF5F56; } .dot.yellow { background: #FFBD2E; } .dot.green { background: #27C93F; }
+        .code-content { padding: 12px 15px; font-family: 'Fira Code', monospace; color: var(--neon-green); direction: ltr; text-align: left; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; }
+        .code-content .keyword { color: #FF7B72; } .code-content .string { color: #A5D6FF; } .code-content .comment { color: #8B949E; font-style: italic; }
 
-  .term-badge-navy {
-    background: linear-gradient(135deg, #0077b6, #023e8a);
-    color: white;
-    font-weight: 800;
-    font-size: 12.5px;
-    padding: 5px 14px;
-    border-radius: 6px;
-    min-width: 130px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-  }
+        .table-wrapper { overflow-x: auto; margin: 10px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.85rem; }
+        th, td { padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); font-weight: 700; }
 
-  .term-badge-teal {
-    background: linear-gradient(135deg, #00b4d8, #0077b6);
-    color: white;
-    font-weight: 800;
-    font-size: 12.5px;
-    padding: 5px 14px;
-    border-radius: 6px;
-    min-width: 130px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-  }
+        .footer-bar {
+            position: absolute;
+            bottom: 12px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-top: 8px;
+            z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 6px; }
+        .footer-logo { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
 
-  .term-badge-blue {
-    background: linear-gradient(135deg, #1f4068, #162447);
-    border: 1px solid #48cae4;
-    color: #48cae4;
-    font-weight: 800;
-    font-size: 12.5px;
-    padding: 5px 14px;
-    border-radius: 6px;
-    min-width: 130px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-  }
-
-  .term-desc {
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: #e0e6ed;
-    font-weight: 800;
-    flex-grow: 1;
-  }
-
-  .cards-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin: 12px 0;
-  }
-
-  @media (min-width: 600px) {
-    .cards-row {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .card-item {
-    background: #0b132b;
-    border: 1px solid #3a506b;
-    border-top: 3.5px solid #48cae4;
-    border-radius: 6px;
-    padding: 8px 6px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  }
-
-  .card-item-title {
-    font-size: 11.5px;
-    font-weight: 900;
-    color: #48cae4;
-    margin-bottom: 4px;
-  }
-
-  .card-item-desc {
-    font-size: 11px;
-    color: #cbd5e1;
-    line-height: 1.4;
-    font-weight: 700;
-  }
-
-  .q-container {
-    border-bottom: 1px dashed #3a506b;
-    padding-bottom: 10px;
-    margin-bottom: 12px;
-  }
-
-  .q-header {
-    font-size: 13px;
-    font-weight: 800;
-    color: #f1f5f9;
-    line-height: 1.5;
-    margin-bottom: 8px;
-  }
-
-  .tf-btn-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-
-  .btn-quiz {
-    background: #0b132b;
-    border: 1.5px solid #3a506b;
-    color: #48cae4;
-    padding: 5px 16px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  .btn-quiz:hover {
-    border-color: #48cae4;
-  }
-
-  .mcq-btn-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 6px;
-  }
-
-  @media (min-width: 600px) {
-    .mcq-btn-group {
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-  }
-
-  .btn-choice {
-    background: #0b132b;
-    border: 1.5px solid #3a506b;
-    color: #cbd5e1;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 800;
-    text-align: right;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  .btn-choice:hover {
-    border-color: #48cae4;
-    color: #48cae4;
-  }
-
-  .btn-choice.correct, .btn-quiz.correct {
-    background: #1b4332 !important;
-    border-color: #52b788 !important;
-    color: #d8f3dc !important;
-  }
-
-  .btn-choice.wrong, .btn-quiz.wrong {
-    background: #4a0e17 !important;
-    border-color: #e63946 !important;
-    color: #ffccd5 !important;
-  }
-
-  .feedback-box {
-    display: none;
-    font-size: 11.5px;
-    margin-top: 6px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: 800;
-    line-height: 1.5;
-  }
-
-  .feedback-box.show {
-    display: block;
-  }
-
-  .feedback-box.is-true {
-    background: #0d2818;
-    color: #52b788;
-    border-right: 3px solid #52b788;
-  }
-
-  .feedback-box.is-false {
-    background: #2b090e;
-    color: #ff6b6b;
-    border-right: 3px solid #ff6b6b;
-  }
-
-  .footer-bar {
-    position: absolute;
-    bottom: 8px;
-    left: 12px;
-    right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px dashed #3a506b;
-    padding-top: 4px;
-    font-size: 10.5px;
-    color: #8da9c4;
-    font-weight: 800;
-  }
-
-  .footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .footer-logo {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1.5px solid #48cae4;
-    object-fit: cover;
-  }
-
-  .footer-brand-name {
-    font-size: 12px;
-    font-weight: 900;
-    color: #48cae4;
-  }
-
-  .footer-center-text {
-    flex-grow: 1;
-    text-align: center;
-    font-weight: 800;
-    font-size: 10px;
-  }
-</style>
+        @media (max-width: 780px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 15px 55px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--neon-purple); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 15px; }
+            ul, ol { margin-right: 10px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ==================== الصفحة الأولى: المفاهيم وحل المشكلات ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">💻 المحاضرة الأولى</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
+    <!-- الصفحة الأولى -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>LECTURE 1 // SUMMARY</h1>
+                <p>تطبيقات في البرمجة - د. مريم سامي</p>
+            </header>
+
+            <section class="glass-card">
+                <h2><span class="icon">🧠</span> مفاهيم البرمجة وحل المشكلات</h2>
+                <p><strong>البرمجة:</strong> أخذ <strong>مدخلات (Input)</strong>، وإجراء عمليات عليها داخل "الصندوق الأسود" (الكود)، لإنتاج <strong>مخرجات (Output)</strong>.</p>
+                <p><strong>حل المشكلات:</strong> الطريقة المنهجية لتحديد المشكلة وإنشاء حلول. تبدأ بفهم المتطلبات وتنتهي بإنشاء برنامج.</p>
+                
+                <h3>مراحل حل المشكلات:</h3>
+                <ol>
+                    <li><strong>فهم المشكلة (Problem Understanding):</strong> تحديد طبيعتها وجمع المعلومات (مثال: برنامج لحساب رصيد البنك).</li>
+                    <li><strong>تخطيط الحل (Planning):</strong> تصميم خطة أو خوارزمية (Pseudocode أو Flowchart). (مثال: تقسيم المشكلة لإدخال، معالجة، وإظهار النتيجة).</li>
+                    <li><strong>تنفيذ الحل (Implementing):</strong> كتابة الكود (Python/Java). (مثال: حساب صافي السعر بعد الخصم).</li>
+                    <li><strong>فحص النتيجة (Testing & Debugging):</strong> اختبار البرنامج وتصحيح الأخطاء (مثال: التحقق من الحساب لعدة حالات).</li>
+                </ol>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚙️</span> الخوارزميات (Algorithms)</h2>
+                <p><strong>التعريف:</strong> تسلسل من التعليمات يصف طريقة حل مشكلة. يجب أن تُكتب بلغة بسيطة، دقيقة، غير غامضة، لا تتكرر بلا نهاية، وتنتهي بعدد محدود من الخطوات لإعطاء النتائج.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 مثال دليل الهاتف (Big-O Notation):</h3>
+                    <p>للبحث عن اسم، قد نقرأ صفحة وراء صفحة (بطيء)، أو نذهب لمنتصف الدليل ونسأل "هل الاسم يمين أم يسار؟" ونقسم المشكلة لنصفين (الأسرع). سرعة الخوارزميات تُعرف بـ Big-O.</p>
+                </div>
+
+                <h3>صفات الخوارزمية الجيدة:</h3>
+                <ul>
+                    <li><strong>الوقت (Time):</strong> وقت تنفيذ أقل = خوارزمية أفضل.</li>
+                    <li><strong>الذاكرة (Memory):</strong> استهلاك ذاكرة أقل = خوارزمية أفضل.</li>
+                    <li><strong>الدقة (Accuracy):</strong> إعطاء نتائج صحيحة.</li>
+                </ul>
+
+                <h3>مكونات الخوارزمية:</h3>
+                <ul>
+                    <li><strong>العبارات (Statements):</strong> إدخال/إخراج، تخصيص (<code>c=a+b</code>)، تعليقات.</li>
+                    <li><strong>الحالات (States):</strong> المتغيرات وحالة البرنامج.</li>
+                    <li><strong>تدفق التحكم (Control Flow):</strong> تسلسلي، شرطي، تكرار.</li>
+                    <li><strong>الدوال (Functions):</strong> كتلة كود تُستخدم لأداء إجراء مترابط.</li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 1</div>
+            <div style="width:20px;"></div>
+        </div>
     </div>
 
-    <div class="capsule-main">تطبيقات في برمجة الحاسب - المحاضرة الأولى (د. مريم سامي)</div>
+    <!-- الصفحة الثانية -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">📝</span> الخوارزمية الزائفة (Pseudocode)</h2>
+                <p>نسخة قابلة للقراءة من الكود، تُكتب بلغة إنجليزية بسيطة للتركيز على المنطق وتسهيل التواصل وتحويلها لأي لغة برمجة.</p>
+                
+                <h3>القواعد الأساسية:</h3>
+                <ul>
+                    <li>كل أمر في سطر (Only one statement per line).</li>
+                    <li>الكلمات المفتاحية بحروف كبيرة: <code>READ, WRITE, IF, ELSE, ENDIF, WHILE, REPEAT, UNTIL</code>.</li>
+                    <li>استخدام المسافات البادئة (Indentation) وكتابة نهاية الهياكل (ENDIF).</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <h3>المميزات والعيوب:</h3>
+                    <p><strong>المميزات:</strong> سهلة الكتابة والتعديل والقراءة، تطبق المفاهيم المنظمة، وتحويلها للكود أسهل من الـ Flowchart.</p>
+                    <p><strong>العيوب:</strong> ليست مرئية (زي الـ Flowchart)، ولا يوجد لها أسلوب أو تنسيق موحد.</p>
+                </div>
 
-    <div class="capsule-tech">أولاً: يعني إيه برمجة وحل مشكلات (Problem Solving)؟</div>
-    <div class="definition-box">
-      • <strong>فكرة البرمجة:</strong> بتستلم مدخلات (Input) وتطلع مخرجات (Output)، والعمليات اللي بتحصل في النص بنسميها <div class="highlight-tech">الصندوق الأسود (Black Box)</div>.<br>
-      • <strong>حل المشكلات (Problem Solving):</strong> طريقة منظمة لتحديد المشكلة وتصميم حلول ليها، بتبدأ بفهم المطلوب وتنتهي بكود شغال بيحقق الهدف.<br>
-      • <strong>طرق التعبير عن الحل:</strong> بنعبر عن الحل بـ 4 أشكال: (خوارزميات Algorithms، مخططات تدفق Flowcharts، كود زائف Pseudocode، أو برامج مكتوبة بلغة برمجة).
+                <h3>أمثلة (Pseudocode):</h3>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="comment">// 1. Grade Example</span><br>
+<span class="keyword">READ</span> Grade<br>
+<span class="keyword">IF</span> Grade >= 50 <span class="keyword">THEN</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> <span class="string">"ناجح"</span><br>
+<span class="keyword">ELSE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PRINT</span> <span class="string">"راسب"</span><br>
+<span class="keyword">ENDIF</span><br><br>
+<span class="comment">// 2. Average Example</span><br>
+1. <span class="keyword">READ</span> name, department, mark1, mark2, mark3<br>
+2. Total = mark1 + mark2 + mark3<br>
+3. Average = Total / 3<br>
+4. <span class="keyword">PRINT</span> name, department, mark1, mark2, mark3
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔀</span> تدفق التحكم (Control Flow) والـ Flowchart</h2>
+                <p><strong>أنواع تدفق التحكم:</strong></p>
+                <ol>
+                    <li><strong>تسلسلي (Sequential):</strong> تنفيذ من الأعلى للأسفل.</li>
+                    <li><strong>شرطي (Selection):</strong> قرار بناءً على شرط. (هيكله: IF CONDITION is TRUE then perform action ELSE IF FALSE then perform action).</li>
+                    <li><strong>تكرار (Looping):</strong> تكرار حتى يتحقق الشرط.</li>
+                </ol>
+                <h3>أشكال الـ Flowchart الأساسية:</h3>
+                <ul>
+                    <li><strong>البيضاوي (Oval):</strong> للبداية (Start) والنهاية (Stop).</li>
+                    <li><strong>متوازي الأضلاع (Parallelogram):</strong> للإدخال والإخراج (Input / Print).</li>
+                    <li><strong>المعين (Diamond):</strong> لاتخاذ القرار أو الشرط (Decision).</li>
+                    <li><strong>المستطيل (Rectangle):</strong> للعمليات الحسابية أو التخصيص (Process).</li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 2</div>
+            <div style="width:20px;"></div>
+        </div>
     </div>
 
-    <div class="capsule-cyan">ثانياً: خطوات حل أي مشكلة برمجية بالترتيب</div>
-    <div class="cards-row">
-      <div class="card-item">
-        <div class="card-item-title">١. فهم المشكلة</div>
-        <div class="card-item-desc">تحديد المطلوب وجمع البيانات زي حساب رصيد بنكي.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٢. تخطيط الحل</div>
-        <div class="card-item-desc">كتابة خطوات الخوارزمية باستخدام Pseudocode أو Flowchart.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٣. تنفيذ الخطة</div>
-        <div class="card-item-desc">كتابة الكود الفعلي بلغة زي Python أو Java.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٤. الاختبار والتصحيح</div>
-        <div class="card-item-desc">عمل Testing وتصليح الأخطاء عبر الـ Debugging.</div>
-      </div>
+    <!-- الصفحة الثالثة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🧩</span> الدوال (Functions)</h2>
+                <p>كتلة كود منظمة وقابلة لإعادة الاستخدام (Sub-routines/Methods). عناصرها: الاسم (Name)، الجسم (Body)، المعاملات (Formal Parameter)، نوع النتيجة (Optional Result Type).</p>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="comment">// Main function</span><br>
+Step 1: Start<br>
+Step 2: Call the function add()<br>
+Step 3: Stop<br><br>
+<span class="comment">// Sub function add()</span><br>
+Step 1: Function start<br>
+Step 2: Get a, b Values<br>
+Step 3: add c = a + b<br>
+Step 4: Print c<br>
+Step 5: Return
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">📦</span> المتغيرات (Variables) وأنواع البيانات</h2>
+                <p><strong>المتغير:</strong> مكان في الذاكرة لتخزين قيم من نوع بيانات محدد، وله اسم ونوع.</p>
+                
+                <h3>قواعد التسمية:</h3>
+                <ul>
+                    <li>يبدأ بحرف (a-z, A-Z) أو شرطة سفلية (_). <em>(صحيح: x, _value | خطأ: 1var, #name)</em>.</li>
+                    <li>يحتوي على أحرف وأرقام وشرطة سفلية. <em>(صحيح: user1 | خطأ: user-name, my var)</em>.</li>
+                    <li>حساس لحالة الأحرف (Case-Sensitive): <code>myVar</code> ≠ <code>myvar</code>.</li>
+                    <li>لا يمكن استخدام كلمات محجوزة: <code>if, for, while, def</code>.</li>
+                    <li>يفضل أن يكون وصفياً (Descriptive) مثل <code>student_name</code>، واستخدام <strong>Snake Case</strong>.</li>
+                </ul>
+
+                <h3>تتبع المتغيرات في الذاكرة:</h3>
+                <p><code>int calls = 4;</code> (تخزين 4) -> <code>calls = 5;</code> (تحديث لـ 5) -> <code>calls = calls + 1;</code> (القيمة القديمة 4 + 1 = 5).</p>
+
+                <h3>أنواع البيانات في بايثون:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>النوع</th><th>المثال</th><th>النوع</th><th>المثال</th></tr>
+                        <tr><td>str (نص)</td><td><code>x = "Hello World"</code></td><td>int (عدد صحيح)</td><td><code>x = 20</code></td></tr>
+                        <tr><td>float (عشري)</td><td><code>x = 20.5</code></td><td>complex (مركب)</td><td><code>x = 1j</code></td></tr>
+                        <tr><td>list (قائمة)</td><td><code>x = ["apple", "banana"]</code></td><td>tuple (صف)</td><td><code>x = ("apple", "banana")</code></td></tr>
+                        <tr><td>range (نطاق)</td><td><code>x = range(6)</code></td><td>dict (قاموس)</td><td><code>x = {"name" : "John", "age" : 36}</code></td></tr>
+                        <tr><td>set (مجموعة)</td><td><code>x = {"apple", "banana"}</code></td><td>frozenset (ثابتة)</td><td><code>x = frozenset({"apple"})</code></td></tr>
+                        <tr><td>bool (منطقي)</td><td colspan="3"><code>x = True</code></td></tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 3</div>
+            <div style="width:20px;"></div>
+        </div>
     </div>
 
-    <div class="capsule-tech">ثالثاً: الخوارزميات (Algorithms) وشروطها</div>
-    <div class="definition-box">
-      هي تسلسل من الخطوات الدقيقة غير الغامضة خطوة بخطوة لحل المشكلة.<br>
-      📌 <strong>شروط الخوارزمية الصحيحة:</strong><br>
-      ١. تتكتب بلغة إنجليزية بسيطة.<br>
-      ٢. التعليمات دقيقة وغير غامضة.<br>
-      ٣. <div class="text-red" style="display:inline;">ممنوع التكرار اللانهائي</div> ولازم تنتهي بعد عدد محدد من الخطوات.<br>
-      ٤. النتائج بتظهر فقط بعد انتهاء الخوارزمية بالكامل.
+    <!-- الصفحة الرابعة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🧮</span> العمليات الحسابية وأولوياتها</h2>
+                <ul>
+                    <li><code>+</code> جمع (3+5=8)، <code>-</code> طرح (10-4=6)، <code>*</code> ضرب (2*6=12)، <code>/</code> قسمة (15/3=5.0).</li>
+                    <li><code>//</code> قسمة صحيحة (17//5 = 3)، <code>%</code> باقي القسمة (17%5 = 2)، <code>**</code> الأس (2**3 = 8).</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <h3>أمثلة أولويات تنفيذ العمليات (من المحاضرة):</h3>
+                    <p><strong>1. بدون أقواس:</strong> <code>2 + 3 * 4</code> -> الضرب أولاً (12) ثم الجمع -> 14.</p>
+                    <p><strong>2. مع الأس:</strong> <code>2 * 3 ** 2 + 1</code> -> الأس أولاً (9)، ثم الضرب (18)، ثم الجمع -> 19.</p>
+                    <p><strong>3. متساوية الأولوية:</strong> <code>10 / 2 * 3</code> -> من اليسار لليمين -> قسمة (5.0) ثم ضرب -> 15.0.</p>
+                    <p><strong>4. استخدام الأقواس:</strong> <code>(2 + 3) * 4</code> -> الأقواس أولاً (5) ثم الضرب -> 20.</p>
+                    <p><strong>5. تعقيد:</strong> <code>4 + 2 / 6 - 3 * 1</code> -> القسمة (0.33) والضرب (3.0) أولاً، ثم الجمع والطرح من اليسار لليمين -> النتيجة النهائية.</p>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> العمليات المنطقية والفرق بين (=) و (==)</h2>
+                
+                <div class="alert-box">
+                    <h3>⚠️ نقطة الامتحان الأهم!</h3>
+                    <ul>
+                        <li><strong>علامة (=):</strong> <code>Assignment operator</code>، لتخزين قيمة. (مثال: <code>a = 4</code>).</li>
+                        <li><strong>علامة (==):</strong> <code>Logical operator</code>، للمقارنة (True/False). (مثال: <code>a == b</code>).</li>
+                    </ul>
+                    <p><strong>خطأ شائع:</strong> <code>IF (a=b)</code> يسبب Error، الصحيح <code>IF (a==b)</code>.</p>
+                </div>
+
+                <h3>علامات المقارنة ومقارنة النصوص:</h3>
+                <p>يمكن مقارنة النصوص أبجدياً: <code>"apple" == "apple"</code> (True)، <code>"cat" < "dog"</code> (True).</p>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>الرمز</th><th>المعنى</th><th>المثال</th><th>النتيجة</th></tr>
+                        <tr><td><code>==</code></td><td>تساوي</td><td><code>5 == 5</code></td><td>True</td></tr>
+                        <tr><td><code>!=</code></td><td>عدم تساوي</td><td><code>5 != 3</code></td><td>True</td></tr>
+                        <tr><td><code>&gt;</code></td><td>أكبر من</td><td><code>10 &gt; 5</code></td><td>True</td></tr>
+                        <tr><td><code>&lt;</code></td><td>أقل من</td><td><code>3 &lt; 7</code></td><td>True</td></tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 4</div>
+            <div style="width:20px;"></div>
+        </div>
     </div>
 
-    <div class="capsule-cyan">رابعاً: سرعة الخوارزمية ومثال دليل الهاتف (Big-O Notation)</div>
-    <div class="definition-box">
-      لو بتدور على اسم في دليل تليفون، عندك 3 طرق تفكير (خوارزميات):<br>
-      • <strong>الطريقة 1:</strong> تقلب صفحة صفحة بالترتيب (Linear Search).<br>
-      • <strong>الطريقة 2:</strong> تقلب صفحتين صفحتين في المرة.<br>
-      • <strong>الطريقة 3 (الأذكى والأسرع):</strong> تفتح نص الدليل وتسأل: الاسم يمين ولا شمال؟ وتقسم الباقي نصين وتكرر (Binary Search).<br>
-      💡 بنقيس سرعة وكفاءة الطرق دي بمفهوم اسمه <div class="highlight-tech">Big-O Notation</div>.
+    <!-- الصفحة الخامسة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🐍</span> التطبيق العملي في بايثون (أمثلة السلايدات)</h2>
+                
+                <h3>1. طباعة النصوص (Strings):</h3>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="comment"># يمكن استخدام علامات تنصيص مفردة أو مزدوجة</span><br>
+<span class="keyword">print</span>(<span class="string">"It's alright"</span>)<br>
+<span class="keyword">print</span>(<span class="string">"He is called 'Johnny'"</span>)<br>
+<span class="keyword">print</span>(<span class="string">'He is called "Johnny"'</span>)
+                    </div>
+                </div>
+                <p><strong>الشرح:</strong> دالة <code>print()</code> بتطبع أي نص بين الأقواس. لو عايز تطبع علامة تنصيص جوه النص، استخدم نوع مختلف عن النوع اللي فاتح بيه الكود.</p>
+
+                <h3>2. إدخال البيانات وحساب المجموع:</h3>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+num1 = <span class="keyword">float</span>(<span class="keyword">input</span>(<span class="string">"العدد الأول: "</span>))<br>
+num2 = <span class="keyword">float</span>(<span class="keyword">input</span>(<span class="string">"العدد الثاني: "</span>))<br>
+sum = num1 + num2<br>
+<span class="keyword">print</span>(<span class="string">"المجموع هو"</span>, sum)
+                    </div>
+                </div>
+                <p><strong>الشرح:</strong> <code>input()</code> بتستقبل نص من المستخدم. بنلفها بـ <code>float()</code> عشان نحول النص لرقم عشري ونقدر نجمع.</p>
+                
+                <h3>3. طباعة القيم المنطقية (Boolean):</h3>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+a = 5<br>
+b = 7<br>
+<span class="keyword">print</span>(a > b) <span class="comment"># Output: False</span><br>
+<span class="keyword">print</span>(a < b) <span class="comment"># Output: True</span>
+                    </div>
+                </div>
+                <p><strong>الشرح:</strong> أي شرط بنكتبه نتيجته لازم تكون إما <code>True</code> أو <code>False</code>. هنا طبعنا حاصل المقارنة مباشرة.</p>
+            </section>
+        </div>
+
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5</div>
+            <div style="width:20px;"></div>
+        </div>
     </div>
 
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 1</div>
-      <div style="width:20px;"></div>
+    <!-- الصفحة السادسة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🔀</span> 4. الأمر الشرطي (IF-ELSE)</h2>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+a = 5<br>
+b = 7<br>
+<span class="keyword">if</span> a > b:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"a is greater"</span>)<br>
+<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"b is greater"</span>)
+                    </div>
+                </div>
+                <p><strong>الشرح:</strong> في بايثون بنكتب <code>if</code> و <code>else</code> بحروف صغيرة، وبنحط <strong>نقطتين (:)</strong> في آخر السطر. الكود اللي جوه الشرط لازم يكون متزحزح لليمين بمسافة (Indentation).</p>
+
+                <h2><span class="icon">🔁</span> 5. حلقة التكرار (FOR Loop)</h2>
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="comment"># طباعة الأرقام من 1 إلى 10</span><br>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="keyword">range</span>(1, 11):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"The number is"</span>, i)
+                    </div>
+                </div>
+                <p><strong>الشرح:</strong> <code>range(1, 11)</code> معناها ابدأ من 1 واقف قبل الـ 11 (يعني هيطبع لحد 10). لاحظ النقطتين <code>:</code> والمسافة البادئة قبل <code>print</code>.</p>
+
+                <h2><span class="icon">📊</span> شرح الخطوات (Flowchart) للـ Loop</h2>
+                <ul>
+                    <li><strong>التهيئة (Initialization):</strong> <code>i = 0</code></li>
+                    <li><strong>الشرط (Condition):</strong> <code>i <= 10</code> (لو صح ننفذ، لو غلط نخرج من اللوب).</li>
+                    <li><strong>تنفيذ الكود (Code Inside Loop).</strong></li>
+                    <li><strong>تحديث العداد (Update):</strong> <code>i = i + 1</code></li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 6</div>
+            <div style="width:20px;"></div>
+        </div>
     </div>
-  </div>
-
-  <!-- ==================== الصفحة الثانية: الكود الزائف وتدفق التحكم ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">💻 المحاضرة الأولى</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
-    </div>
-
-    <div class="capsule-main">الكود الزائف (Pseudocode) وبناء الخوارزميات</div>
-
-    <div class="capsule-tech">يعني إيه Pseudocode؟ وقواعد كتابته الأساسية</div>
-    <div class="definition-box">
-      هو كود غير مقيد بلغة معينة، بيتكتب بلغة يفهمها الإنسان للتركيز على المنطق قبل كتابة الكود الفعلي.<br>
-      • <strong>القواعد:</strong> أمر واحد فقط في السطر - الكلمات المفتاحية تبدأ بحرف Capital زي (READ, IF, ELSE, WHILE) - استخدام المسافات البادئة (Indentation) - إنهاء الهياكل زي ENDIF.
-    </div>
-
-    <div class="capsule-cyan">عناصر بناء الخوارزمية (مهمة للامتحان)</div>
-    <div class="cards-row">
-      <div class="card-item">
-        <div class="card-item-title">١. العبارات Statements</div>
-        <div class="card-item-desc">جمل بسيطة زي الإدخال، الإخراج، والتعيين.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٢. الحالات States</div>
-        <div class="card-item-desc">قيم المتغيرات وحالة البرنامج في لحظة معينة.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٣. تدفق التحكم</div>
-        <div class="card-item-desc">مسار تنفيذ الأوامر (تسلسلي، شرطي، أو تكراري).</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٤. الدوال Functions</div>
-        <div class="card-item-desc">كتلة كود لإجراء محدد وقابلة لإعادة الاستخدام.</div>
-      </div>
-    </div>
-
-    <div class="capsule-tech">أنواع تدفق التحكم (Control Flow)</div>
-    <div class="term-row">
-      <div class="term-badge-navy">1. تسلسلي Sequential</div>
-      <div class="term-desc">الكود بيتنفذ خطوة خطوة من فوق لتحت ورا بعض بدون تفويت.</div>
-    </div>
-    <div class="term-row">
-      <div class="term-badge-teal">2. شرطي Selection</div>
-      <div class="term-desc">اتخاذ قرار بين طريقين بناءً على شرط (IF / ELSE).</div>
-    </div>
-    <div class="term-row">
-      <div class="term-badge-blue">3. تكراري Looping</div>
-      <div class="term-desc">تكرار أوامر معينة عدد من المرات لحد ما شرط يتحقق (FOR / WHILE).</div>
-    </div>
-
-    <div class="capsule-cyan">صفات الخوارزمية الجيدة (تقييم الكفاءة)</div>
-    <div style="display:flex; flex-direction:column; gap:8px; margin: 10px 0;">
-      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #48cae4; font-weight:800;">
-        <strong class="text-blue">١. الوقت (Time):</strong> كل ما البرنامج يستهلك وقت تنفيذ أقل، كانت الخوارزمية أفضل.
-      </div>
-      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #00b4d8; font-weight:800;">
-        <strong class="text-green">٢. الذاكرة (Memory / Space):</strong> كل ما الخوارزمية تحتاج مساحة تخزين وذاكرة أقل، كانت أحسن.
-      </div>
-      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #ffd166; font-weight:800;">
-        <strong class="text-yellow">٣. الدقة (Accuracy):</strong> الخوارزمية الممتازة بتطلع نتائج صحيحة وأدق حل للمشكلة.
-      </div>
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 2</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-  <!-- ==================== الصفحة الثالثة: المتغيرات والعمليات ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">💻 المحاضرة الأولى</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">المستوى الرابع - نظم معلومات (MCI)</div>
-    </div>
-
-    <div class="capsule-main">المتغيرات (Variables) والعمليات وأسبقية التنفيذ</div>
-
-    <div class="capsule-tech">شروط تسمية المتغيرات في بايثون (تريكة الامتحان)</div>
-    <div class="definition-box">
-      • <strong>مسموح:</strong> تبدأ بحرف (A-Z, a-z) أو شرطة سفلية (_) زي: <div class="highlight-tech">total_amount</div> أو <div class="highlight-tech">_value</div>.<br>
-      • <div class="text-red" style="display:inline;">ممنوع:</div> تبدأ برقم (زي 1st_name غلط) أو تحتوي على مسافات أو رموز خاصة زي (- أو @).<br>
-      • <div class="text-red" style="display:inline;">ممنوع:</div> استخدام الكلمات المحجوزة في اللغة (زي if, for, while, def).<br>
-      • اللغة <div class="text-yellow" style="display:inline;">حساسة لحالة الأحرف (Case-Sensitive)</div> يعني myvar يختلف تماماً عن myVar.<br>
-      • <strong>أسلوب التسمية المفضل في بايثون:</strong> هو الـ <strong>Snake Case</strong> (باستخدام الشرطة السفلية زي user_age).
-    </div>
-
-    <div class="capsule-cyan">الفرق القاتل بين علامة (=) وعلامة (==)</div>
-    <div style="display:flex; gap:10px; margin:10px 0; flex-direction:column;">
-      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #48cae4;">
-        <strong class="text-blue">علامة التعيين (=) Assignment:</strong> بتخزن القيمة اللي على اليمين جوه المتغير اللي على الشمال (زي: a = 5).
-      </div>
-      <div style="background:#0b132b; border-radius:6px; padding:8px 12px; font-size:12px; border-right:4px solid #51cf66;">
-        <strong class="text-green">علامة المقارنة (==) Logical / Comparison:</strong> بتسأل هل القيمتين متساويين؟ والنتيجة دايماً بتكون قيمة منطقية (True أو False).
-      </div>
-    </div>
-
-    <div class="capsule-tech">ترتيب أسبقية العمليات الحسابية (بتيجي مسألة في الامتحان)</div>
-    <div class="definition-box">
-      الكمبيوتر بينفذ بالترتيب ده من الشمال لليمين:<br>
-      ١. <strong>الأقواس ( )</strong><br>
-      ٢. <strong>الأسس (**)</strong><br>
-      ٣. <strong>الضرب (*) والقسمة بأنواعها (/ و // وباقي القسمة %)</strong><br>
-      ٤. <strong>الجمع (+) والطرح (-)</strong><br>
-      💡 <strong>تريكة العمليات الخاصة في بايثون:</strong><br>
-      • <div class="text-cyan" style="display:inline;">17 // 5</div> = <strong>3</strong> (قسمة صحيحة بتاخد الرقم الصحيح بس).<br>
-      • <div class="text-yellow" style="display:inline;">17 % 5</div> = <strong>2</strong> (باقي القسمة Modulus).<br>
-      • <div class="text-green" style="display:inline;">2 ** 3</div> = <strong>8</strong> (يعني 2 أس 3).
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 3</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-  <!-- ==================== الصفحة الرابعة: كويز تفاعلي (صح أو خطأ) ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">📝 كويز المحاضرة الأولى التفاعلي</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">اختبر نفسك وإجابتك محفوظة حتى لو قفلت الصفحة</div>
-    </div>
-
-    <div class="capsule-main">أولاً: ضع علامة (صح) أو (خطأ) - 10 أسئلة تفاعلية</div>
-
-    <!-- س1 -->
-    <div class="q-container" data-qid="tf_1" data-correct="false" data-reason="الخوارزمية يجب أن تنتهي بعد عدد محدود من الخطوات ولا تتكرر لما لا نهاية.">
-      <div class="q-header">١. يمكن أن تستمر الخوارزمية في تكرار خطواتها إلى ما لا نهاية دون توقف.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س2 -->
-    <div class="q-container" data-qid="tf_2" data-correct="true" data-reason="إجابة صحيحة! Snake Case هو الأسلوب الموصى به للمتغيرات في بايثون.">
-      <div class="q-header">٢. يُفضل في لغة بايثون تسمية المتغيرات بأسلوب Snake Case مثل (user_name).</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س3 -->
-    <div class="q-container" data-qid="tf_3" data-correct="false" data-reason="الكلمات المحجوزة مثل for و if لا يمكن استخدامها كأسماء متغيرات نهائياً.">
-      <div class="q-header">٣. يمكن استخدام الكلمات المحجوزة مثل (for, while, if) كأسماء لمتغيرات في البرنامج.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س4 -->
-    <div class="q-container" data-qid="tf_4" data-correct="false" data-reason="علامة (=) للتعيين وتخزين القيمة، وعلامة (==) للمقارنة المنطقية.">
-      <div class="q-header">٤. علامة (=) تستخدم للمقارنة المنطقية بين قيمتين بينما (==) تستخدم للتعيين.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س5 -->
-    <div class="q-container" data-qid="tf_5" data-correct="true" data-reason="إجابة صحيحة! علامة // تعطي ناتج القسمة الصحيح فقط بدون كسور.">
-      <div class="q-header">٥. في بايثون، نتيجة التعبير الحسابي 17 // 5 تساوي 3.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س6 -->
-    <div class="q-container" data-qid="tf_6" data-correct="false" data-reason="بايثون لغة حساسة لحالة الأحرف (Case-Sensitive) ويعتبران متغيرين مختلفين.">
-      <div class="q-header">٦. لغة بايثون غير حساسة لحالة الأحرف بحيث يعتبر myvar و myVar نفس المتغير.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س7 -->
-    <div class="q-container" data-qid="tf_7" data-correct="true" data-reason="إجابة صحيحة! الـ Pseudocode يُكتب باللغة الطبيعية دون قيود صارمة على الأقواس والفواصل.">
-      <div class="q-header">٧. يُكتب الكود الزائف (Pseudocode) بهدف التركيز على المنطق دون التقيد بقواعد لغة برمجة معينة.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س8 -->
-    <div class="q-container" data-qid="tf_8" data-correct="false" data-reason="في تدفق التحكم التسلسلي (Sequential) تنفذ الأوامر خطوة تلو الأخرى من الأعلى للأسفل.">
-      <div class="q-header">٨. في تدفق التحكم التسلسلي يتم تخطي الأوامر بناءً على اختبار شروط معينة.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س9 -->
-    <div class="q-container" data-qid="tf_9" data-correct="true" data-reason="إجابة صحيحة! الدالة (Function) كتلة قابلة لإعادة الاستخدام لأداء إجراء محدد.">
-      <div class="q-header">٩. الدالة (Function) هي كتلة من الكود المنظم والقابل لإعادة الاستخدام لتنفيذ إجراء مترابط.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س10 -->
-    <div class="q-container" data-qid="tf_10" data-correct="true" data-reason="إجابة صحيحة! 2 أس 3 = 8 في لغة بايثون باستخدام علامة **.">
-      <div class="q-header">١٠. العامل الحسابي (**) في لغة بايثون يُستخدم لحساب الأسس فمثلاً 2 ** 3 ينتج 8.</div>
-      <div class="tf-btn-group">
-        <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-        <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 4</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-  <!-- ==================== الصفحة الخامسة: كويز تفاعلي (اختيار من متعدد) ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">📝 كويز المحاضرة الأولى التفاعلي</div>
-      <div style="font-size:11.5px; font-weight:800; color:#8da9c4;">اختر الإجابة وشاهد التقييم والتفسير فوراً</div>
-    </div>
-
-    <div class="capsule-cyan">ثانياً: اختر الإجابة الصحيحة - 10 أسئلة تفاعلية</div>
-
-    <!-- س1 -->
-    <div class="q-container" data-qid="mcq_1" data-correct-idx="1" data-reason="الأقواس أولاً: 3 + 2 = 5 ثم الضرب: 4 * 5 = 20.">
-      <div class="q-header">١. ناتج تنفيذ التعبير التالي في بايثون: 4 * (3 + 2) هو:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 14</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 20</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 24</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) 10</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س2 -->
-    <div class="q-container" data-qid="mcq_2" data-correct-idx="2" data-reason="قواعد بايثون تمنع بدء اسم المتغير برقم.">
-      <div class="q-header">٢. أي من أسماء المتغيرات التالية يعتبر اسماً غير صحيح في لغة بايثون؟</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) user_name</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) _value</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 1st_name</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) total_amount</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س3 -->
-    <div class="q-container" data-qid="mcq_3" data-correct-idx="1" data-reason="Big-O Notation يُستخدم لقياس كفاءة الخوارزميات وسرعة تنفيذها.">
-      <div class="q-header">٣. المعيار الذي يقيس كفاءة وسرعة الخوارزميات ومقارنة أدائها البرمجي يُعرف بـ:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) Flowchart</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) Big-O Notation</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) Snake Case</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) Boolean Expression</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س4 -->
-    <div class="q-container" data-qid="mcq_4" data-correct-idx="2" data-reason="17 مقسومة على 5 فيها 3 والباقي 2.">
-      <div class="q-header">٤. ناتج العملية الحسابية 17 % 5 في لغة بايثون هو:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 3</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 3.4</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 2</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) 0</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س5 -->
-    <div class="q-container" data-qid="mcq_5" data-correct-idx="0" data-reason="أول خطوة منهجية في حل المشكلات هي فهم وتحديد طبيعة المشكلة وجمع متطلباتها.">
-      <div class="q-header">٥. أول مرحلة في منهجية حل المشكلات البرمجية (Problem Solving) هي:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) فهم المشكلة وتحليل المتطلبات</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) كتابة الكود الفعلي</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) تصحيح الأخطاء Debugging</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) اختبار البرنامج Testing</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س6 -->
-    <div class="q-container" data-qid="mcq_6" data-correct-idx="2" data-reason="الأس أولاً: 2 ** 3 = 8 ثم الضرب: 8 * 2 = 16 ثم الجمع: 1 + 16 = 17.">
-      <div class="q-header">٦. ما ناتج التعبير الحسابي التالي: 1 + 2 ** 3 * 2؟</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) 18</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) 25</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) 17</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) 33</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س7 -->
-    <div class="q-container" data-qid="mcq_7" data-correct-idx="1" data-reason="التدفق الشرطي (Selection) يستخدم جمل IF لاتخاذ القرار واختيار مسار التنفيذ.">
-      <div class="q-header">٧. نوع تدفق التحكم الذي يتيح للبرنامج الاختيار بين مسارين بديلين بناءً على شرط هو:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) التدفق التسلسلي Sequential</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) التدفق الشرطي Selection</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) التدفق التكراري Looping</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) الإعلان عن الدوال Functions</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س8 -->
-    <div class="q-container" data-qid="mcq_8" data-correct-idx="0" data-reason="علامة != تعني Not Equal وتختبر عدم التساوي بين قيمتين.">
-      <div class="q-header">٨. المعامل المنطقي المستخدم لاختبار عدم التساوي في بايثون هو:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) !=</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) ==</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) =</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) &lt;&gt;</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س9 -->
-    <div class="q-container" data-qid="mcq_9" data-correct-idx="2" data-reason="من قواعد الكود الزائف كتابة أمر واحد فقط في السطر والبدء بحرف كبير للكلمات المحجوزة.">
-      <div class="q-header">٩. أي مما يلي يمثل قاعدة أساسية في كتابة الـ Pseudocode؟</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) كتابة كل الأوامر على سطر واحد</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الالتزام بالفواصل المنقوطة للغة C++</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) كتابة أمر واحد فقط في كل سطر</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) استخدام حروف صغيرة فقط</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <!-- س10 -->
-    <div class="q-container" data-qid="mcq_10" data-correct-idx="3" data-reason="تقيم جودة الخوارزميات بناءً على سرعة الوقت واستهلاك الذاكرة ودقة النتائج.">
-      <div class="q-header">١٠. من صفات ومعايير تقييم كفاءة الخوارزمية الجيدة:</div>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الوقت المستغرق للتنفيذ</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) حجم الذاكرة المستهلكة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) دقة النتائج وصحتها</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) كل ما سبق صحيح</button>
-      </div>
-      <div class="feedback-box"></div>
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">تطبيقات في برمجة الحاسب - د. مريم سامي | صفحة 5</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-<script>
-  const STORAGE_KEY = 'prog_lec1_quiz_answers';
-
-  function getSavedAnswers() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : {};
-    } catch(e) {
-      return {};
-    }
-  }
-
-  function saveAnswer(qid, answerVal) {
-    try {
-      const answers = getSavedAnswers();
-      answers[qid] = answerVal;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-    } catch(e) {}
-  }
-
-  function checkTF(btn, userAns, autoLoad = false) {
-    const container = btn.closest('.q-container');
-    const qid = container.getAttribute('data-qid');
-    const correctAns = container.getAttribute('data-correct') === 'true';
-    const reason = container.getAttribute('data-reason');
-    const feedback = container.querySelector('.feedback-box');
-    const buttons = container.querySelectorAll('.btn-quiz');
-
-    buttons.forEach(b => {
-      b.disabled = true;
-      b.classList.remove('correct', 'wrong');
-    });
-
-    if (userAns === correctAns) {
-      btn.classList.add('correct');
-      feedback.className = 'feedback-box show is-true';
-      feedback.innerHTML = 'إجابة صحيحة ممتاز! ' + reason;
-    } else {
-      btn.classList.add('wrong');
-      buttons.forEach(b => {
-        if ((b.innerText.trim() === 'صح' && correctAns) || (b.innerText.trim() === 'خطأ' && !correctAns)) {
-          b.classList.add('correct');
-        }
-      });
-      feedback.className = 'feedback-box show is-false';
-      feedback.innerHTML = 'إجابة غير صحيحة. ' + reason;
-    }
-
-    if (!autoLoad && qid) {
-      saveAnswer(qid, userAns);
-    }
-  }
-
-  function checkMCQ(btn, selectedIdx, autoLoad = false) {
-    const container = btn.closest('.q-container');
-    const qid = container.getAttribute('data-qid');
-    const correctIdx = parseInt(container.getAttribute('data-correct-idx'), 10);
-    const reason = container.getAttribute('data-reason');
-    const feedback = container.querySelector('.feedback-box');
-    const buttons = container.querySelectorAll('.btn-choice');
-
-    buttons.forEach(b => {
-      b.disabled = true;
-      b.classList.remove('correct', 'wrong');
-    });
-
-    if (selectedIdx === correctIdx) {
-      btn.classList.add('correct');
-      feedback.className = 'feedback-box show is-true';
-      feedback.innerHTML = 'إجابة صحيحة ممتاز! ' + reason;
-    } else {
-      btn.classList.add('wrong');
-      if (buttons[correctIdx]) {
-        buttons[correctIdx].classList.add('correct');
-      }
-      feedback.className = 'feedback-box show is-false';
-      feedback.innerHTML = 'إجابة غير صحيحة. ' + reason;
-    }
-
-    if (!autoLoad && qid) {
-      saveAnswer(qid, selectedIdx);
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const saved = getSavedAnswers();
-    document.querySelectorAll('.q-container').forEach(container => {
-      const qid = container.getAttribute('data-qid');
-      if (saved.hasOwnProperty(qid)) {
-        const val = saved[qid];
-        if (typeof val === 'boolean') {
-          const buttons = container.querySelectorAll('.btn-quiz');
-          buttons.forEach(b => {
-            if ((b.innerText.trim() === 'صح' && val === true) || (b.innerText.trim() === 'خطأ' && val === false)) {
-              checkTF(b, val, true);
-            }
-          });
-        } else if (typeof val === 'number') {
-          const buttons = container.querySelectorAll('.btn-choice');
-          if (buttons[val]) {
-            checkMCQ(buttons[val], val, true);
-          }
-        }
-      }
-    });
-  });
-</script>
 
 </body>
 </html>
