@@ -1794,22 +1794,19 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات (HTML) مع تنظيف الحروف المخفية وضمان المسارات =================
-        function openHtmlLectureInsideApp(htmlUrl, title) {
+        // ================= فتح المحاضرات (HTML) بحماية تامة ومنع كشف الرابط عند انقطاع النت =================
+        async function openHtmlLectureInsideApp(htmlUrl, title) {
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
             if (modalBody) modalBody.style.padding = '0';
 
-            // 1. فك تشفير الرابط وتنظيفه تماماً من أي حروف مخفية (Zero-width) أو مسافات غير مرئية
+            // 1. فك تشفير الرابط وتنظيفه تماماً من أي حروف مخفية (Zero-width)
             let cleanUrl = (htmlUrl || '').trim();
             try {
                 cleanUrl = decodeURIComponent(cleanUrl);
             } catch (e) {}
-
-            // مسح جميع الحروف غير المرئية والرموز المخفية الشائعة
             cleanUrl = cleanUrl.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
 
-            // ضبط المسار ليكون مساراً نسبياً سليماً داخل موقع GitHub Pages والـ WebView
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
@@ -1829,44 +1826,85 @@
             const storageKey = 'offline_lecture_cache_' + cleanUrl;
             let cachedHTML = localStorage.getItem(storageKey);
 
-            // لو كان الكاش مخزن صفحة خطأ 404 سابقة، نقوم بحذفها فوراً
-            if (cachedHTML && (cachedHTML.includes('File not found') || cachedHTML.includes('404: Not Found'))) {
+            if (cachedHTML && (cachedHTML.includes('File not found') || cachedHTML.includes('404: Not Found') || cachedHTML.includes('404 Not Found'))) {
                 localStorage.removeItem(storageKey);
                 cachedHTML = null;
             }
 
-            // تشغيل الـ iframe بالمسار النظيف مباشرة لتعمل ملفات التنسيق والملفات التابعة
-            contentBox.innerHTML = `
-                <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
-                    <iframe id="offlineLectureIframe" 
-                            src="${cleanUrl}"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            style="width: 100%; height: 100%; border: none; display: block;" 
-                            loading="lazy">
-                    </iframe>
-                </div>
-            `;
+            // دالة عرض المحتوى داخل الـ iframe مع توجيه المسارات لدعم الصور والتنسيقات
+            function displayHtmlContent(htmlStr) {
+                let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                let finalHtml = htmlStr;
+                if (!finalHtml.includes('<base ') && basePath) {
+                    finalHtml = finalHtml.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+                }
 
-            const iframeEl = document.getElementById('offlineLectureIframe');
-
-            // في وضع عدم الاتصال (Offline)، لو وجدنا نسخة مخزنة مسبقاً نعرضها فوراً
-            if (!navigator.onLine && cachedHTML) {
-                iframeEl.srcdoc = cachedHTML;
+                contentBox.innerHTML = `
+                    <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
+                        <iframe id="offlineLectureIframe" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                style="width: 100%; height: 100%; border: none; display: block;">
+                        </iframe>
+                    </div>
+                `;
+                const iframeEl = document.getElementById('offlineLectureIframe');
+                iframeEl.srcdoc = finalHtml;
             }
 
-            // تحديث الكاش في الخلفية للاستخدام عند انقطاع الإنترنت مستقبلاً
+            // دالة عرض واجهة الخطأ الخاصة بالتطبيق بدون إظهار أي روابط خارجية
+            function displayInAppOfflineError() {
+                contentBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--text);">
+                        <div style="width:70px; height:70px; border-radius:50%; background:rgba(239, 68, 68, 0.1); display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                            <span class="material-icons" style="font-size:36px; color:#ef4444;">wifi_off</span>
+                        </div>
+                        <h3 style="margin:0 0 8px 0; font-weight:900; font-size:1.2rem; color:var(--text);">لا يوجد اتصال بالإنترنت</h3>
+                        <p style="color:var(--grey); max-width:320px; font-size:0.92rem; line-height:1.6; margin:0 0 20px 0; font-weight:600;">
+                            تحتاج للاتصال بالإنترنت لتحميل هذه المحاضرة لأول مرة، وسيتم حفظها تلقائياً على جهازك للمذاكرة بدون نت لاحقاً.
+                        </p>
+                        <button onclick="history.back()" style="background:var(--primary); color:#ffffff; border:none; padding:12px 28px; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:inherit; box-shadow:0 4px 15px rgba(37,99,235,0.3);">
+                            العودة للمقرر
+                        </button>
+                    </div>
+                `;
+            }
+
+            // 1. إذا كانت المحاضرة محفوظة مسبقاً، تفتح فوراً
+            if (cachedHTML) {
+                displayHtmlContent(cachedHTML);
+            } else {
+                // شاشة انتظار داخلية هادئة بدل شاشات المتصفح الافتراضية
+                contentBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--primary);">
+                        <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">lock_open</span>
+                        <p style="font-weight:bold; margin-top:12px; font-size:1rem;">جاري فتح وتأمين المحاضرة...</p>
+                    </div>
+                `;
+            }
+
+            // 2. الجلب الآمن للمحتوى بدون توجيه الـ iframe للرابط مباشرة
             if (navigator.onLine) {
-                fetch(cleanUrl)
-                    .then(res => {
-                        if (res.ok) return res.text();
-                        throw new Error('Network response not ok');
-                    })
-                    .then(html => {
-                        if (html && !html.includes('File not found') && !html.includes('404')) {
-                            localStorage.setItem(storageKey, html);
+                try {
+                    const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                    const response = await fetch(fetchUrl);
+                    if (response.ok) {
+                        const freshHTML = await response.text();
+                        if (freshHTML && !freshHTML.includes('File not found') && !freshHTML.includes('404')) {
+                            localStorage.setItem(storageKey, freshHTML);
+                            displayHtmlContent(freshHTML);
+                        } else if (!cachedHTML) {
+                            displayInAppOfflineError();
                         }
-                    })
-                    .catch(() => {});
+                    } else if (!cachedHTML) {
+                        displayInAppOfflineError();
+                    }
+                } catch (e) {
+                    if (!cachedHTML) {
+                        displayInAppOfflineError();
+                    }
+                }
+            } else if (!cachedHTML) {
+                displayInAppOfflineError();
             }
         }
 
