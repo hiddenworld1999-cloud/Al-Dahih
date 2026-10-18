@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل - أنظمة معلومات المؤسسات EIS (المحاضرة 4)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0B1120;
+            --bg-page: #111827;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            
+            --electric-blue: #3B82F6;
+            --cyan: #06B6D4;
+            --neon-green: #10B981;
+            --neon-red: #EF4444;
+            --yellow: #F59E0B;
+
+            --border-glass: rgba(59, 130, 246, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
+
+        /* تصميم ورقة A4 */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 800px; 
+            min-height: 1050px;
+            padding: 35px 40px 65px 40px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 25px; margin-bottom: 20px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-right: 4px solid var(--cyan);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 1.1rem; color: var(--electric-blue); margin: 15px 0 8px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '■'; color: var(--cyan); font-size: 0.8rem; }
+
+        p, li { font-size: 0.95rem; margin-bottom: 10px; color: #D1D5DB; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--cyan); }
+        ol li::marker { color: var(--electric-blue); font-weight: bold; }
+        
+        strong { color: #FFFFFF; font-weight: 800; }
+        .highlight-text { color: var(--yellow); font-weight: bold; }
+        
+        code { 
+            font-family: 'Fira Code', monospace; background: rgba(59, 130, 246, 0.15); 
+            padding: 2px 8px; border-radius: 4px; color: var(--cyan); font-size: 0.85rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .alert-box { background: rgba(239, 68, 68, 0.08); border-right: 4px solid var(--neon-red); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--neon-red); margin-top: 0; }
+        
+        .tip-box { background: rgba(16, 185, 129, 0.08); border-right: 4px solid var(--neon-green); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--neon-green); margin-top: 0; }
+
+        .example-box { background: rgba(245, 158, 11, 0.08); border: 1px dashed var(--yellow); padding: 15px; border-radius: 8px; margin: 15px 0; color: #FDE68A; font-size: 0.95rem; }
+
+        /* الجداول */
+        .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.9rem; }
+        th, td { padding: 10px 15px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(59, 130, 246, 0.15); color: var(--cyan); font-weight: 800; text-align: center; }
+        td { color: #D1D5DB; }
+
+        /* هرم الإدارة/الطبقات */
+        .pyramid-container {
+            display: flex; flex-direction: column; align-items: center; margin: 20px 0;
+        }
+        .pyramid-level {
+            padding: 15px; text-align: center; border: 1px solid var(--cyan);
+            background: rgba(6, 182, 212, 0.1); font-weight: bold; font-size: 1rem;
+            margin-bottom: 2px; color: #E2E8F0;
+        }
+        .p-top { width: 40%; background: rgba(239, 68, 68, 0.2); border-color: var(--neon-red); }
+        .p-mid { width: 65%; background: rgba(245, 158, 11, 0.2); border-color: var(--yellow); }
+        .p-bot { width: 90%; background: rgba(16, 185, 129, 0.2); border-color: var(--neon-green); }
+
+        /* تنسيقات صفحة الخلاصة (Cheat Sheet) */
+        .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .cheat-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-right: 3px solid var(--cyan); }
+        .cheat-title { color: var(--yellow); font-weight: 800; font-size: 1rem; margin-bottom: 5px; display: block;}
+        .cheat-desc { font-size: 0.85rem; color: #D1D5DB; line-height: 1.6;}
+        .cheat-full { grid-column: 1 / -1; }
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 850px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 20px 15px 65px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--electric-blue); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.75rem; }
+            .cheat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: ERP, CRM, SCM -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>أنظمة معلومات المؤسسات (EIS)</h1>
+                <p>المحاضرة الرابعة - د. مريم سامي</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">المستوى الرابع | الفصل الدراسي الأول</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>⚙️</span> أولاً: الأنظمة الثلاثة الأساسية (ERP, CRM, SCM)
+            </div>
+
+            <section class="glass-card">
+                <h3>1. نظام تخطيط موارد المؤسسات (ERP System)</h3>
+                <p><strong>الهدف:</strong> دمج كل أقسام ووظائف المؤسسة في نظام واحد متكامل لتبادل البيانات بشكل فوري.</p>
+                <ul>
+                    <li><strong>إدارة الموارد البشرية (HR):</strong> تسجيل الموظفين، الرواتب، الإجازات. (مثال: SAP HR).</li>
+                    <li><strong>الإدارة المالية (Finance):</strong> إعداد القوائم المالية، حساب التكاليف، تتبع الإيرادات.</li>
+                    <li><strong>المشتريات والموردين (Procurement):</strong> إنشاء أوامر الشراء، استلام الفواتير.</li>
+                    <li><strong>إدارة المخزون (Inventory):</strong> تتبع المواد، مراقبة الكميات، إعادة الطلب.</li>
+                    <li><strong>إدارة الإنتاج (Production):</strong> تخطيط مراحل الإنتاج، ضبط الجودة.</li>
+                    <li><strong>إدارة المشاريع (Projects):</strong> تتبع التكاليف والموارد البشرية.</li>
+                </ul>
+                <div class="example-box">
+                    <strong>مثال تطبيقي:</strong> عند تسجيل طلب شراء في ERP، يتم خصم المبلغ من الميزانية تلقائياً، تحديث المخزون، وإبلاغ المورد. كله في خطوة واحدة!
+                </div>
+
+                <h3>2. نظام إدارة علاقات العملاء (CRM System)</h3>
+                <p><strong>الهدف:</strong> تحسين العلاقة مع العملاء من خلال جمع وتحليل بياناتهم لدعم التسويق والمبيعات وخدمة ما بعد البيع.</p>
+                <ul>
+                    <li><strong>إدارة بيانات العملاء (Customer Data):</strong> حفظ التفاصيل وتاريخ التعاملات.</li>
+                    <li><strong>إدارة المبيعات (Sales):</strong> تتبع مراحل البيع من أول اتصال حتى إتمام الصفقة.</li>
+                    <li><strong>أتمتة التسويق (Marketing):</strong> تتبع العملاء المحتملين (Leads) وتنفيذ حملات.</li>
+                    <li><strong>خدمة العملاء (Customer Service):</strong> الرد على الاستفسارات والشكاوى.</li>
+                    <li><strong>تحليل العملاء (Analytics):</strong> تحليل السلوك للتنبؤ بالاحتياجات المستقبلية.</li>
+                </ul>
+                <div class="example-box">
+                    <strong>مثال تطبيقي:</strong> نظام Salesforce CRM بيجمع بيانات العملاء ويحللها عشان يقدم عروض مخصصة تحسن تجربة العميل.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: SCM والتكامل -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🚚</span> 3. إدارة سلسلة التوريد (SCM) والتكامل بين الأنظمة
+            </div>
+
+            <section class="glass-card">
+                <h3>3. نظام إدارة سلسلة التوريد (SCM System)</h3>
+                <p><strong>الهدف:</strong> تنظيم تدفق السلع والخدمات والمعلومات من المورد إلى المستهلك بأعلى كفاءة وأقل تكلفة.</p>
+                <ul>
+                    <li><strong>التخطيط اللوجستي (Logistics):</strong> تحديد كيفية نقل وتخزين البضائع.</li>
+                    <li><strong>إدارة الطلب (Demand):</strong> التنبؤ بحجم الطلب وتخطيط الإنتاج.</li>
+                    <li><strong>المشتريات والتوريد (Procurement):</strong> اختيار الموردين وجدولة الشراء.</li>
+                    <li><strong>إدارة المخزون والتوزيع (Inventory):</strong> تتبع حركة البضائع بين الموردين والمخازن.</li>
+                    <li><strong>إدارة النقل (Transportation):</strong> تنظيم الشحن واختيار وسيلة النقل المثلى.</li>
+                </ul>
+                <div class="example-box">
+                    <strong>مثال تطبيقي:</strong> نظام SCM في شركة <strong>Amazon</strong> بيتابع الطلب من لحظة استلامه لحد تسليمه للعميل، مع تتبع دقيق للمخزون في الوقت الفعلي.
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h3>مثال للتكامل بين الأنظمة الثلاثة:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>النظام</th>
+                            <th>النطاق</th>
+                            <th>الوظيفة الأساسية</th>
+                            <th>مثال للتكامل</th>
+                        </tr>
+                        <tr>
+                            <td><strong>ERP</strong></td>
+                            <td>داخل المؤسسة (مالية، بشرية، إنتاج)</td>
+                            <td>إدارة الموارد الداخلية</td>
+                            <td>يرسل بيانات المبيعات لـ CRM لتحديث الإيرادات.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SCM</strong></td>
+                            <td>خارج وداخل المؤسسة</td>
+                            <td>إدارة تدفق السلع والموردين</td>
+                            <td>يستقبل خطط الإنتاج من ERP لتحديد احتياجات المواد.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CRM</strong></td>
+                            <td>واجهة مع العملاء</td>
+                            <td>إدارة علاقات العملاء والمبيعات</td>
+                            <td>يرسل الطلبات لـ ERP للفوترة.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: أمثلة ERP (SAP و NetSuite) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🏢</span> ثانياً: أمثلة على أنظمة ERP
+            </div>
+
+            <section class="glass-card">
+                <h3>1. نظام SAP ERP</h3>
+                <p>هو أحد أشهر أنظمة ERP في العالم، بيستخدم في المؤسسات الكبيرة والمتوسطة لإدارة عملياتها التجارية في نظام واحد متكامل.</p>
+                <h3>الوحدات الرئيسية في SAP:</h3>
+                <ul>
+                    <li><strong>FI (المحاسبة المالية):</strong> إدارة الحسابات، الأصول، الدائنين والمدينين.</li>
+                    <li><strong>CO (التحكم):</strong> تحليل التكاليف والربحية ودعم اتخاذ القرار.</li>
+                    <li><strong>MM (إدارة المواد):</strong> إدارة المشتريات والمخزون.</li>
+                    <li><strong>SD (المبيعات والتوزيع):</strong> المبيعات، الفواتير، الشحن، وإدارة الطلبات.</li>
+                    <li><strong>PP (تخطيط الإنتاج):</strong> تخطيط ومتابعة الإنتاج.</li>
+                    <li><strong>HCM (إدارة رأس المال البشري):</strong> إدارة الموارد البشرية والرواتب.</li>
+                    <li><strong>PM (صيانة المصنع):</strong> الصيانة الوقائية وإدارة المعدات.</li>
+                </ul>
+                <p><strong>المميزات:</strong> تكامل كامل، تقليل الأخطاء، تحسين الكفاءة، دعم اللغات والعملات المتعددة، تقارير تحليلية قوية (SAP BI).</p>
+                <p><strong>الإصدارات:</strong> <code>SAP ECC</code> (الكلاسيكي قبل 2015) و <code>SAP S/4HANA</code> (الحديث المبني على قاعدة بيانات HANA السريعة).</p>
+                <div class="example-box">
+                    <strong>أمثلة للاستخدام:</strong> شركة تصنيع (متابعة سلسلة التوريد)، مؤسسة مالية (إدارة الحسابات)، جامعة (إدارة الموارد البشرية وجدولة الدورات).
+                </div>
+
+                <h3>2. نظام Oracle NetSuite</h3>
+                <p>هو نظام ERP يعتمد على <strong>الحوسبة السحابية (Cloud-Based)</strong>، ويُعد من أكثر الأنظمة انتشاراً بين الشركات الصغيرة والمتوسطة. تم تأسيسه عام 1998 واستحوذت عليه Oracle عام 2016.</p>
+                <p><strong>المميزات:</strong> نظام سحابي بالكامل (مش محتاج خوادم)، تحليلات لحظية (Real-time)، قابل للتخصيص، بيقلل التكاليف التشغيلية، بيدعم التوسع الدولي.</p>
+                <div class="example-box">
+                    <strong>أمثلة للاستخدام:</strong> شركات التجارة الإلكترونية (إدارة الطلبات والمخزون)، مؤسسات الخدمات المحاسبية، شركات البرمجيات.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: Odoo و CRM -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>📦</span> نظام Odoo وأنظمة CRM
+            </div>
+
+            <section class="glass-card">
+                <h3>3. نظام Odoo (مفتوح المصدر)</h3>
+                <p>هو نظام ERP متكامل <strong>مفتوح المصدر (Open Source)</strong>، تم تطويره في بلجيكا عام 2005 (كان اسمه OpenERP). بيربط كل أقسام المؤسسة في نظام واحد، بتدخل البيانات مرة واحدة وبتتشارك فورياً (Real-time).</p>
+                <p><strong>وحداته:</strong> المبيعات، المشتريات، المخزون، المحاسبة، CRM، الموارد البشرية، التصنيع، الموقع الإلكتروني، والمشاريع.</p>
+                
+                <h3>مثال عملية Order-to-Cash داخل Odoo:</h3>
+                <ol>
+                    <li>العميل بيطلب من الموقع (وحدة Sales).</li>
+                    <li>النظام بيتحقق من المخزون (وحدة Inventory).</li>
+                    <li>بتصدر الفاتورة تلقائياً (وحدة Accounting).</li>
+                    <li>عند الدفع، بتتحدث الإيرادات آلياً، والإدارة بتشوف التقارير في الوقت الفعلي.</li>
+                </ol>
+
+                <h3>جدول مقارنة بين أنظمة ERP:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>العنصر</th><th>SAP ERP / S/4HANA</th><th>Oracle NetSuite</th><th>Odoo</th></tr>
+                        <tr><td><strong>نوع النظام</strong></td><td>محلي أو سحابي</td><td>سحابي بالكامل</td><td>مفتوح المصدر (محلي أو سحابي)</td></tr>
+                        <tr><td><strong>الفئة المستهدفة</strong></td><td>المؤسسات الكبيرة</td><td>الشركات الصغيرة والمتوسطة</td><td>الشركات الصغيرة والمتوسطة</td></tr>
+                        <tr><td><strong>سهولة الاستخدام</strong></td><td>أكثر تعقيداً</td><td>واجهة أبسط وسريعة</td><td>واجهة حديثة وسهلة</td></tr>
+                        <tr><td><strong>التكلفة</strong></td><td>أعلى تكلفة</td><td>أقل تكلفة نسبياً</td><td>منخفضة (مفتوح المصدر)</td></tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: أنظمة CRM -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🤝</span> ثالثاً: أمثلة على أنظمة CRM
+            </div>
+
+            <section class="glass-card">
+                <p>نظام CRM بيساعد المؤسسات على إدارة علاقاتها مع العملاء الحاليين والمحتملين من خلال تتبع التفاعل في مراحل (التسويق – المبيعات – خدمة ما بعد البيع).</p>
+
+                <h3>1. Salesforce CRM</h3>
+                <ul>
+                    <li><strong>النوع:</strong> سحابي (Cloud-Based).</li>
+                    <li><strong>المستخدمون:</strong> الأكثر استخداماً عالمياً (تويوتا، كوكاكولا).</li>
+                    <li><strong>المميزات:</strong> إدارة كاملة لدورة حياة العميل، ذكاء اصطناعي (Einstein AI) لتحليل السلوك، تكامل مع البريد ووسائل التواصل.</li>
+                </ul>
+
+                <h3>2. HubSpot CRM</h3>
+                <ul>
+                    <li><strong>النوع:</strong> سحابي، مجاني في نسخته الأساسية (Freemium).</li>
+                    <li><strong>المستهدف:</strong> الشركات الصغيرة والمتوسطة.</li>
+                    <li><strong>المميزات:</strong> إدارة المبيعات وجهات الاتصال، أدوات تسويق بالبريد الإلكتروني، لوحات تقارير تفاعلية.</li>
+                </ul>
+
+                <h3>3. Zoho CRM</h3>
+                <ul>
+                    <li><strong>النوع:</strong> سحابي.</li>
+                    <li><strong>المستهدف:</strong> الشركات الصغيرة والمتوسطة.</li>
+                    <li><strong>المميزات:</strong> أتمتة عمليات المبيعات، دعم الذكاء الاصطناعي للتنبؤ بالعملاء، تكامل مع تطبيقات Zoho الأخرى.</li>
+                </ul>
+
+                <h3>4. Odoo CRM</h3>
+                <p>هو وحدة من نظام Odoo ERP لإدارة دورة حياة العميل بالكامل من أول اتصال لحد إتمام الصفقة.</p>
+                <p><strong>مراحل Odoo CRM:</strong></p>
+                <ol>
+                    <li><strong>Lead (عميل محتمل):</strong> إضافة بيانات العميل من الموقع.</li>
+                    <li><strong>Opportunity (فرصة):</strong> تحويله لفرصة بيع حقيقية (عرض Kanban).</li>
+                    <li><strong>Communication (تواصل):</strong> متابعة عبر البريد والمكالمات.</li>
+                    <li><strong>Quotation (عرض سعر):</strong> إرسال عرض من وحدة المبيعات.</li>
+                    <li><strong>Sales Order (طلب بيع):</strong> تحويل العرض لطلب رسمي.</li>
+                    <li><strong>Invoice (فاتورة):</strong> إصدار الفاتورة تلقائياً (وحدة المحاسبة).</li>
+                </ol>
+                <div class="example-box">
+                    <strong>مثال (Vision Optics):</strong> شركة بتستخدم Odoo CRM، عميل بيسأل على الموقع ⬅️ يدخل في Leads ⬅️ يتعين لمندوب ⬅️ يتواصل ويحوله لـ Opportunity ⬅️ يبعت عرض سعر ⬅️ الفاتورة بتصدر من المحاسبة. كله في نظام واحد بدون تكرار بيانات.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السادسة: Enterprise Architecture -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🏗️</span> رابعاً: الهيكلية أو العمارة المؤسسية (EA)
+            </div>
+
+            <section class="glass-card">
+                <p><strong>Enterprise Architecture (EA):</strong> هي الإطار أو الهيكلية التي تحدد كيفية تصميم وتنظيم وتكامل مكونات أنظمة معلومات المؤسسات (EIS) لدعم العمليات التجارية وتحقيق الأهداف الاستراتيجية.</p>
+                <p><strong>الهدف منها:</strong> مواءمة استراتيجية الأعمال مع أنظمة تقنية المعلومات، لتوضيح الوضع الحالي، وتحديد الوضع المستقبلي، ووضع خطة للتحول.</p>
+
+                <h3>أهداف EA:</h3>
+                <ul>
+                    <li><strong>التكامل (Integration):</strong> ضمان تدفق سلس للبيانات بين الأقسام.</li>
+                    <li><strong>المرونة (Flexibility):</strong> السماح بالتكيف مع التغيرات التجارية والتكنولوجية.</li>
+                    <li><strong>الكفاءة (Efficiency):</strong> تحسين الأداء التشغيلي وتقليل التكاليف.</li>
+                    <li><strong>الأمان (Security):</strong> حماية البيانات والامتثال للمعايير القانونية.</li>
+                </ul>
+
+                <h3>مبادئ الحوكمة (Governance):</h3>
+                <ul>
+                    <li><strong>الشفافية:</strong> إتاحة المعلومات المالية والإدارية للمعنيين في الوقت المناسب.</li>
+                    <li><strong>المساءلة:</strong> تحديد المسؤوليات ومحاسبة الأفراد على أدائهم.</li>
+                    <li><strong>العدالة:</strong> ضمان المعاملة المنصفة لجميع الأطراف (مساهمين، موظفين، عملاء).</li>
+                    <li><strong>المسؤولية:</strong> التزام مجلس الإدارة بالمعايير الأخلاقية والقانونية.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 6</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السابعة: طبقات EA + Cheat Sheet -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>📚</span> طبقات عمارة EIS (Enterprise Architecture Layers)
+            </div>
+
+            <section class="glass-card">
+                <p>عمارة EIS بتتكون من 4 طبقات أساسية، ومحاطة بـ (الحوكمة Governance والمعايير Standards):</p>
+                
+                <div class="pyramid-container">
+                    <div class="pyramid-level p-top">
+                        <strong>1. طبقة الأعمال (Business Layer)</strong><br>
+                        <span style="font-size: 0.8rem;">بتركز على استراتيجية العمل، الحوكمة، والعمليات التجارية الرئيسية.</span>
+                    </div>
+                    <div class="pyramid-level p-mid">
+                        <strong>2. طبقة البيانات (Data Layer)</strong><br>
+                        <span style="font-size: 0.8rem;">هيكل البيانات (قواعد بيانات مثل Oracle DB)، حوكمة البيانات، وجودتها.</span>
+                    </div>
+                    <div class="pyramid-level p-mid" style="width: 75%;">
+                        <strong>3. طبقة التطبيقات (Application Layer)</strong><br>
+                        <span style="font-size: 0.8rem;">التطبيقات (ERP, CRM, SCM) وكيفية تفاعلها وتوفيرها واجهات للمستخدمين.</span>
+                    </div>
+                    <div class="pyramid-level p-bot">
+                        <strong>4. طبقة البنية التحتية (Infrastructure Layer)</strong><br>
+                        <span style="font-size: 0.8rem;">الأجهزة، الشبكات، والحلول السحابية (AWS, Azure) اللي بتشغل الأنظمة.</span>
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <h3>💡 ملحوظة:</h3>
+                    <p>طبقة الأمان والحوكمة (Security and Governance) بتلف حول كل الطبقات دي عشان تضمن حماية البيانات وإدارة المخاطر.</p>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h3>إزاي EA بتدعم الأهداف الاستراتيجية؟</h3>
+                <ul>
+                    <li><strong>المواءمة:</strong> تصميم بنية تدعم تكامل CRM مع ERP عشان تحسن تجربة العميل.</li>
+                    <li><strong>تحسين الكفاءة:</strong> تحليل العمليات البينية (O2C, P2P) وتقليل التكرار والأخطاء.</li>
+                    <li><strong>الابتكار:</strong> استخدام تقنيات زي Cloud Computing و microservices لتبني الـ BI و Big Data بسرعة.</li>
+                    <li><strong>إدارة المخاطر والأمن:</strong> دمج cybersecurity measures في IT architecture لحماية البيانات (زي بيانات CRM).</li>
+                </ul>
+            </section>
+
+            <div class="main-title-banner" style="margin-top: 20px;">
+                <span>💊</span> كبسولة المحاضرة (Cheat Sheet)
+            </div>
+            <div class="cheat-grid">
+                <div class="cheat-item">
+                    <span class="cheat-title">1. ERP (تخطيط الموارد):</span>
+                    <span class="cheat-desc">بيربط كل الأقسام جوه الشركة (HR، مالية، مخزون) في نظام واحد. مثال: SAP, NetSuite, Odoo.</span>
+                </div>
+                <div class="cheat-item">
+                    <span class="cheat-title">2. CRM (علاقات العملاء):</span>
+                    <span class="cheat-desc">بيهتم ببيانات العميل والمبيعات. مثال: Salesforce, HubSpot, Zoho.</span>
+                </div>
+                <div class="cheat-item">
+                    <span class="cheat-title">3. SCM (سلسلة التوريد):</span>
+                    <span class="cheat-desc">بيدير تدفق البضائع من المورد للعميل (لوجستيات، نقل). مثال: Amazon.</span>
+                </div>
+                <div class="cheat-item">
+                    <span class="cheat-title">4. SAP ERP:</span>
+                    <span class="cheat-desc">وحداته: FI (مالية)، CO (تحكم)، MM (مواد)، SD (مبيعات)، PP (إنتاج)، HCM (موارد بشرية). إصداره الحديث S/4HANA.</span>
+                </div>
+                <div class="cheat-item">
+                    <span class="cheat-title">5. Odoo:</span>
+                    <span class="cheat-desc">ERP مفتوح المصدر. بيربط كل حاجة (Sales, Inventory, Accounting).</span>
+                </div>
+                <div class="cheat-item">
+                    <span class="cheat-title">6. Odoo CRM:</span>
+                    <span class="cheat-desc">مراحل العميل: Lead ⬅️ Opportunity ⬅️ Quotation ⬅️ Sales Order ⬅️ Invoice.</span>
+                </div>
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">7. Enterprise Architecture (EA):</span>
+                    <span class="cheat-desc">
+                        هي "الهيكل" اللي بيربط الـ IT باستراتيجية البيزنس. طبقاتها (من فوق لتحت): <br>
+                        Business ⬅️ Data ⬅️ Application ⬅️ Infrastructure. <br>
+                        ومحاطة بـ (Governance, Security, Standards).
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 7</div>
+        </div>
+    </div>
+
+</body>
+</html>
