@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل - أنظمة معلومات المؤسسات EIS (المحاضرة 2)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0B1120;
+            --bg-page: #111827;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            
+            --electric-blue: #3B82F6;
+            --cyan: #06B6D4;
+            --neon-green: #10B981;
+            --neon-red: #EF4444;
+            --yellow: #F59E0B;
+
+            --border-glass: rgba(59, 130, 246, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
+
+        /* تصميم ورقة A4 */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 800px; 
+            min-height: 1050px;
+            padding: 35px 40px 65px 40px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 25px; margin-bottom: 20px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-right: 4px solid var(--cyan);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 1.1rem; color: var(--electric-blue); margin: 15px 0 8px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '■'; color: var(--cyan); font-size: 0.8rem; }
+
+        p, li { font-size: 0.95rem; margin-bottom: 10px; color: #D1D5DB; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--cyan); }
+        ol li::marker { color: var(--electric-blue); font-weight: bold; }
+        
+        strong { color: #FFFFFF; font-weight: 800; }
+        .highlight-text { color: var(--yellow); font-weight: bold; }
+        
+        code { 
+            font-family: 'Fira Code', monospace; background: rgba(59, 130, 246, 0.15); 
+            padding: 2px 8px; border-radius: 4px; color: var(--cyan); font-size: 0.85rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .alert-box { background: rgba(239, 68, 68, 0.08); border-right: 4px solid var(--neon-red); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--neon-red); margin-top: 0; }
+        
+        .tip-box { background: rgba(16, 185, 129, 0.08); border-right: 4px solid var(--neon-green); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--neon-green); margin-top: 0; }
+
+        .example-box { background: rgba(245, 158, 11, 0.08); border: 1px dashed var(--yellow); padding: 15px; border-radius: 8px; margin: 15px 0; color: #FDE68A; font-size: 0.95rem; }
+
+        /* الجداول */
+        .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.9rem; }
+        th, td { padding: 10px 15px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(59, 130, 246, 0.15); color: var(--cyan); font-weight: 800; text-align: center; }
+        td { color: #D1D5DB; }
+
+        /* هرم الإدارة */
+        .pyramid-container {
+            display: flex; flex-direction: column; align-items: center; margin: 20px 0;
+        }
+        .pyramid-level {
+            padding: 10px; text-align: center; border: 1px solid var(--cyan);
+            background: rgba(6, 182, 212, 0.1); font-weight: bold; font-size: 0.9rem;
+            margin-bottom: 2px; color: #E2E8F0;
+        }
+        .p-top { width: 40%; background: rgba(239, 68, 68, 0.2); border-color: var(--neon-red); }
+        .p-mid { width: 65%; background: rgba(245, 158, 11, 0.2); border-color: var(--yellow); }
+        .p-bot { width: 90%; background: rgba(16, 185, 129, 0.2); border-color: var(--neon-green); }
+
+        /* تنسيقات صفحة الخلاصة (Cheat Sheet) */
+        .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .cheat-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-right: 3px solid var(--cyan); }
+        .cheat-title { color: var(--yellow); font-weight: 800; font-size: 1rem; margin-bottom: 5px; display: block;}
+        .cheat-desc { font-size: 0.85rem; color: #D1D5DB; line-height: 1.6;}
+        .cheat-full { grid-column: 1 / -1; }
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 850px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 20px 15px 65px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--electric-blue); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.75rem; }
+            .cheat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: تطور الأنظمة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>أنظمة معلومات المؤسسات (EIS)</h1>
+                <p>المحاضرة الثانية - د. مريم سامي</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">المستوى الرابع | الفصل الدراسي الأول</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>🕰️</span> أولاً: تاريخ تطور النظم (من التقليدي للرقمي)
+            </div>
+
+            <section class="glass-card">
+                <p>عشان نفهم الـ EIS، لازم نعرف إزاي الأنظمة تطورت على مدى 70 سنة. الحكاية بتتلخص في 5 مراحل:</p>
+
+                <h3>المرحلة 1: الأنظمة التقليدية (الخمسينيات – السبعينيات)</h3>
+                <p>ظهرت مع الحواسيب الرئيسية الضخمة (<strong>Mainframe Computers</strong>). كانت بتُعرف باسم "أنظمة معالجة البيانات" وبتعمل شغل روتيني زي كشوف المرتبات والمخزون.</p>
+                <ul>
+                    <li><strong>الخصائص:</strong> غير متكاملة (كل قسم شغال لوحده)، بتستخدم بطاقات مثقبة وأشرطة مغناطيسية، وبتحتاج أجهزة باهظة الثمن وخبراء.</li>
+                </ul>
+
+                <h3>المرحلة 2: ظهور الأنظمة الإدارية (الثمانينيات)</h3>
+                <p>مع ظهور الحواسيب الشخصية (PCs) وقواعد البيانات العلائقية، بدأت الشركات تستخدم أنظمة معلومات الإدارة <strong>(MIS)</strong> اللي بتدعم القرار من خلال تقارير شاملة، وظهرت أنظمة لدعم القرار <strong>(DSS)</strong>.</p>
+                <ul>
+                    <li><strong>الحدود:</strong> رغم التطور، لسه الأنظمة معزولة عن بعضها (Siloed Systems)، وده كان بيعمل مشاكل في التكامل.</li>
+                </ul>
+
+                <h3>المرحلة 3: تخطيط موارد المؤسسات (التسعينيات)</h3>
+                <p>دي كانت الثورة الحقيقية. ظهرت أنظمة <strong>(ERP)</strong> اللي ركزت على "التكامل" بين كل الأقسام (مالية، إنتاج، HR) في منصة واحدة. زي أنظمة <strong>SAP R/3</strong> و <strong>Oracle Applications</strong>.</p>
+                <ul>
+                    <li><strong>الحدود:</strong> التكلفة العالية جداً، والحاجة لتخصيص كتير، ومقاومة الموظفين للتغيير.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: تطور الأنظمة (تابع) + التحديات -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🚀</span> تطور النظم (تابع)
+            </div>
+
+            <section class="glass-card">
+                <h3>المرحلة 4: الأنظمة القائمة على الإنترنت والسحابة (2000–2010)</h3>
+                <p>مع انتشار الإنترنت والحوسبة السحابية (Cloud Computing)، تحول الـ EIS لأنظمة ويب تدعم التجارة الإلكترونية. ظهرت أنظمة <strong>CRM</strong> (إدارة علاقات العملاء) و <strong>SCM</strong> (إدارة سلسلة التوريد).</p>
+                <ul>
+                    <li><strong>الخصائص:</strong> اعتماد هندسة الخدمات المتجهة <strong>(SOA)</strong> لتحسين التكامل، وظهور حلول سحابية زي <strong>Salesforce</strong> و <strong>Microsoft Dynamics</strong>.</li>
+                    <li><strong>الحدود:</strong> تحديات الأمان السيبراني والامتثال لقوانين حماية البيانات زي GDPR.</li>
+                </ul>
+
+                <h3>المرحلة 5: الأنظمة الرقمية المتكاملة (2010 – الآن)</h3>
+                <p>الـ EIS دلوقتي بقت أنظمة ذكية بتدمج تقنيات العصر:</p>
+                <ul>
+                    <li><strong>الذكاء الاصطناعي (AI)</strong> و <strong>التعلم الآلي (Machine Learning)</strong> للتحليل التنبؤي.</li>
+                    <li><strong>إنترنت الأشياء (IoT)</strong> و <strong>البيانات الضخمة (Big Data).</strong></li>
+                    <li><strong>البلوكشين (Blockchain)</strong> لضمان الأمان والشفافية.</li>
+                    <li>التركيز على <strong>تجربة العميل (Customer Experience)</strong> والاستدامة <strong>(Green IT)</strong>.</li>
+                    <li><strong>أمثلة:</strong> SAP S/4HANA، Microsoft Power Platform، Oracle Cloud.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: تحديات EIS (1) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>⚠️</span> تحديات أنظمة معلومات المؤسسات (EIS)
+            </div>
+
+            <section class="glass-card">
+                <h3>1. التكلفة العالية (High Cost)</h3>
+                <p>تنفيذ وصيانة EIS بيتطلب استثمارات ضخمة (برمجيات، أجهزة، تدريب، دعم فني). أنظمة ERP زي SAP و Oracle بتحتاج تراخيص غالية وتكاليف تخصيص مستمرة.</p>
+                <div class="alert-box">
+                    <h3>الحلول المحتملة:</h3>
+                    <p>استخدام حلول مفتوحة المصدر زي <strong>Odoo</strong>، أو الاعتماد على الحوسبة السحابية (Cloud-Based) لتقليل التكاليف الأولية. (مثال: شركة صغيرة في مصر ممكن تحتاج ملايين الجنيهات لنظام ERP، فلازم تحسب الـ ROI كويس).</p>
+                </div>
+
+                <h3>2. التكامل مع الأنظمة القديمة (Legacy Systems)</h3>
+                <p>غالباً الـ EIS بيكون غير متوافق مع الأنظمة القديمة (Legacy) أو التطبيقات المستقلة التانية، وده بيعيق تبادل البيانات. الشركات اللي بتستخدم أنظمة غير متجانسة (Heterogeneous) بتواجه تعقيدات كبيرة في التكامل.</p>
+                <div class="alert-box">
+                    <h3>الحلول المحتملة:</h3>
+                    <p>اعتماد الهندسة الموجهة نحو الخدمات <strong>(SOA)</strong> أو استخدام واجهات برمجة التطبيقات <strong>(APIs)</strong> لتسهيل التواصل بين الأنظمة القديمة والجديدة.</p>
+                </div>
+
+                <h3>3. الأمان والخصوصية (Security & Privacy)</h3>
+                <p>الأنظمة دي بتتعامل مع كميات هائلة من البيانات الحساسة (بيانات عملاء ومالية)، وده بيخليها عرضة للاختراقات وتسريب البيانات. القوانين زي GDPR في أوروبا وقانون حماية البيانات المصري (2020) بتفرض متطلبات صارمة.</p>
+                <div class="alert-box">
+                    <h3>الحلول المحتملة:</h3>
+                    <p>تطبيق تقنيات التشفير (Encryption)، جدران الحماية (Firewalls)، إدارة الوصول (Access Management)، والتدريب المستمر على الأمن السيبراني.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: تحديات EIS (2) + الهرم -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🔧</span> تحديات EIS (تابع) وهرم الإدارة
+            </div>
+
+            <section class="glass-card">
+                <h3>4. التغيير التنظيمي (Organizational Change)</h3>
+                <p>تنفيذ EIS بيغير العمليات وسير العمل، وده بيواجه بمقاومة من الموظفين (خوف من التغيير أو نقص مهارات). التدريب المطلوب لأنظمة زي SAP قد يكون طويل ومكلف.</p>
+                <div class="alert-box">
+                    <h3>الحلول المحتملة:</h3>
+                    <p>برامج تدريب شاملة، إشراك الموظفين في التنفيذ، واستخدام منهجيات إدارة التغيير (Change Management).</p>
+                </div>
+
+                <h3>5. التخصيص والصيانة (Customization & Maintenance)</h3>
+                <p>أنظمة الـ ERP بتحتاج تخصيص لتناسب المنظمة، وده بيزود التعقيد والتكلفة. الصيانة المستمرة صعبة لو مفيش خبراء محليين.</p>
+                <div class="alert-box">
+                    <h3>الحلول المحتملة:</h3>
+                    <p>استخدام حلول قياسية (Out-of-the-Box) قدر الإمكان، والتعاقد مع مزودي خدمات دعم فني موثوقين.</p>
+                </div>
+
+                <h3>6. إدارة البيانات الكبيرة (Big Data Management)</h3>
+                <p>مع زيادة حجم البيانات، الـ EIS بيواجه تحدي في التخزين والمعالجة بكفاءة، محتاج بنية تحتية قوية وأدوات تحليل متقدمة.</p>
+                <div class="alert-box">
+                    <h3>الحلول المحتملة:</h3>
+                    <p>استخدام تقنيات زي <strong>Hadoop</strong> أو <strong>Spark</strong>، والحلول السحابية زي <strong>Azure</strong>.</p>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h3>هرم الإدارة (Management Pyramid) ومتطلبات المعلومات</h3>
+                <p>كل مستوى إداري في المنظمة بيلعب دور مختلف وبيحتاج نوع مختلف من المعلومات:</p>
+                
+                <div class="pyramid-container">
+                    <div class="pyramid-level p-top">
+                        <strong>Strategic Planning (الإدارة العليا)</strong><br>
+                        <span style="font-size: 0.8rem;">معلومات قليلة، ولكن عالية الجودة، تحليلية، ومستقبلية.</span>
+                    </div>
+                    <div class="pyramid-level p-mid">
+                        <strong>Management Control (الإدارة الوسطى)</strong><br>
+                        <span style="font-size: 0.8rem;">تقارير دورية، مجمعة، ومقارنة.</span>
+                    </div>
+                    <div class="pyramid-level p-bot">
+                        <strong>Operational Control (الإدارة التشغيلية)</strong><br>
+                        <span style="font-size: 0.8rem;">بيانات تفصيلية، دقيقة، ومتكررة (يومي).</span>
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <h3>💡 ملاحظة هامة:</h3>
+                    <p>بسبب اختلاف الاحتياجات دي، <strong>مستحيل نظام معلومات واحد يلبي كل احتياجات الأعمال</strong>. كل مستوى محتاج نظام أو تقرير مخصص ليه.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: وظائف الأعمال والعمليات البينية -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🏢</span> وظائف الأعمال (Business Functions) والعمليات البينية
+            </div>
+
+            <section class="glass-card">
+                <h3>وظائف الأعمال الأساسية:</h3>
+                <p>هي الأنشطة اللي بتتعمل جوه الشركة عشان تحقق أهدافها، زي:</p>
+                <ul>
+                    <li><strong>التسويق (Marketing):</strong> تحديد احتياجات العملاء وتطوير المنتجات.</li>
+                    <li><strong>المبيعات (Sales):</strong> تحويل اهتمام العميل لعملية شراء.</li>
+                    <li><strong>الموارد البشرية (HR):</strong> إدارة الموظفين، التوظيف، التدريب.</li>
+                    <li><strong>التمويل والمحاسبة (Finance):</strong> إدارة الموارد المالية والميزانيات.</li>
+                    <li><strong>العمليات (Operations):</strong> الإنتاج، إدارة الجودة.</li>
+                    <li><strong>سلسلة التوريد (Supply Chain):</strong> إدارة تدفق المواد من الموردين للعملاء.</li>
+                    <li><strong>تكنولوجيا المعلومات (IT):</strong> توفير الأنظمة والتكنولوجيا اللازمة.</li>
+                </ul>
+
+                <h3>المشكلة: عزل الأقسام (Silo Mentality)</h3>
+                <p>في الشركات التقليدية، كل قسم بيشتغل لوحده كأنه جزيرة منعزلة. ده بيؤدي لمشاكل:</p>
+                <ul>
+                    <li>نقص التواصل والتنسيق (مثلاً قسم التسويق يروج لمنتج مش موجود في المخزون).</li>
+                    <li>تعارض الأهداف (المالية عايزة تقلل التكاليف، والتسويق عايز يزود الإنفاق على الحملات).</li>
+                    <li>الأنظمة القديمة (Legacy) بتعيق تبادل البيانات بين الأقسام.</li>
+                </ul>
+                <p><strong>الحل:</strong> لازم نتحول للعمليات البينية (Cross-Functional).</p>
+            </section>
+
+            <section class="glass-card">
+                <h3>العمليات البينية (Cross-Functional Processes):</h3>
+                <p>هي إجراءات أو سلسلة أنشطة بتحتاج تعاون وتنسيق بين أكتر من قسم عشان تخلص. بتمكنها قاعدة بيانات مركزية وأدوات تكامل زي <strong>Oracle Cloud</strong> أو <strong>SAP Integration Suite</strong>.</p>
+                
+                <div class="example-box">
+                    <strong>1. من الطلب إلى الدفع (Order-to-Cash - O2C):</strong><br>
+                    قسم المبيعات بيستلم الطلب (CRM زي Salesforce) ⬅️ قسم الإنتاج بيتأكد من المخزون (ERP زي SAP S/4HANA) ⬅️ قسم المالية بيصدر الفاتورة.<br>
+                    <strong>مثال:</strong> شركة STC السعودية قللت وقت العملية دي من 5 أيام ليوم واحد.
+                </div>
+
+                <div class="example-box">
+                    <strong>2. من الشراء إلى الدفع (Procure-to-Pay - P2P):</strong><br>
+                    الشراء بيشتري (SCM زي Oracle Cloud) ⬅️ الإنتاج بيتحقق من الجودة ⬅️ المالية بتسجل الدفع.<br>
+                    <strong>مثال:</strong> شركة الدلتا للصناعات قللت التكاليف بنسبة 10% باستخدام التكامل ده.
+                </div>
+
+                <div class="example-box">
+                    <strong>3. إدارة سلسلة التوريد (Supply Chain Execution):</strong><br>
+                    تنسيق بين اللوجستيات، الموردين، والمبيعات عشان تتبع الشحنات.<br>
+                    <strong>مثال:</strong> شركة نستله استخدمت SAP IBP وقللت وقت التسليم من 7 لـ 3 أيام.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السادسة: الكبسولة (Cheat Sheet) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>كبسولة المحاضرة (Cheat Sheet)</h1>
+                <p>لو اتسألت عن أي حاجة، الإجابة هنا!</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>💊</span> خلاصة كل حرف في المحاضرة الثانية
+            </div>
+
+            <div class="cheat-grid">
+                <!-- 1 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">1. مراحل التطور (5 مراحل):</span>
+                    <span class="cheat-desc">
+                        <strong>الخمسينيات:</strong> أنظمة تقليدية (Mainframe).<br>
+                        <strong>الثمانينيات:</strong> أنظمة إدارية (MIS/DSS).<br>
+                        <strong>التسعينيات:</strong> تخطيط موارد (ERP - SAP R/3).<br>
+                        <strong>2000-2010:</strong> سحابة وإنترنت (SOA - Salesforce).<br>
+                        <strong>2010-الآن:</strong> ذكاء اصطناعي وبيانات ضخمة (AI/IoT/Blockchain).
+                    </span>
+                </div>
+                
+                <!-- 2 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">2. تحدي التكلفة:</span>
+                    <span class="cheat-desc">تكاليف عالية جداً للتراخيص والتخصيص. <strong>الحل:</strong> Open Source (Odoo) أو Cloud-Based.</span>
+                </div>
+
+                <!-- 3 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">3. تحدي الأنظمة القديمة (Legacy):</span>
+                    <span class="cheat-desc">عدم توافق الأنظمة الجديدة مع القديمة. <strong>الحل:</strong> SOA أو APIs.</span>
+                </div>
+
+                <!-- 4 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">4. تحدي الأمان (Security):</span>
+                    <span class="cheat-desc">حماية البيانات الحساسة (قوانين GDPR). <strong>الحل:</strong> تشفير، جدران حماية، إدارة وصول.</span>
+                </div>
+
+                <!-- 5 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">5. تحدي التغيير التنظيمي:</span>
+                    <span class="cheat-desc">مقاومة الموظفين. <strong>الحل:</strong> تدريب، إشراك الموظفين، إدارة التغيير.</span>
+                </div>
+
+                <!-- 6 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">6. تحدي البيانات الضخمة:</span>
+                    <span class="cheat-desc">صعوبة تخزين ومعالجة البيانات الكبيرة. <strong>الحل:</strong> Hadoop, Spark, Azure.</span>
+                </div>
+
+                <!-- 7 -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">7. هرم الإدارة (مهم جداً):</span>
+                    <span class="cheat-desc">
+                        <strong>الإدارة العليا (Strategic):</strong> معلومات قليلة وعالية الجودة (تحليلية).<br>
+                        <strong>الإدارة الوسطى (Management):</strong> تقارير دورية ومجمعة.<br>
+                        <strong>الإدارة التشغيلية (Operational):</strong> بيانات تفصيلية ودقيقة يومية.
+                    </span>
+                </div>
+
+                <!-- 8 -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">8. وظائف الأعمال (Business Functions):</span>
+                    <span class="cheat-desc">
+                        التسويق، المبيعات، الموارد البشرية (HR)، التمويل والمحاسبة، العمليات (الإنتاج)، سلسلة التوريد، تكنولوجيا المعلومات (IT)، خدمة العملاء.
+                    </span>
+                </div>
+
+                <!-- 9 -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">9. المشكلة: عزل الأقسام (Silo Mentality):</span>
+                    <span class="cheat-desc">
+                        كل قسم بيشتغل لوحده (جزيرة منعزلة)، وده بيؤدي لنقص التنسيق وتعارض الأهداف (المالية عايزة تقلل التكاليف والتسويق عايز يزود الإنفاق).
+                    </span>
+                </div>
+
+                <!-- 10 -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">10. الحل: العمليات البينية (Cross-Functional Processes):</span>
+                    <span class="cheat-desc">
+                        عمليات بتمشي بين أكتر من قسم عشان تخلص. أمثلة بتيجي في الامتحان:<br>
+                        - <strong>Order-to-Cash (O2C):</strong> من الطلب للفاتورة (شركة STC قللت الوقت من 5 أيام ليوم).<br>
+                        - <strong>Procure-to-Pay (P2P):</strong> من الشراء للدفع (شركة الدلتا قللت التكاليف 10%).<br>
+                        - <strong>Supply Chain Execution:</strong> إدارة سلسلة التوريد (نستله قللت وقت التسليم من 7 لـ 3 أيام).
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 6</div>
+        </div>
+    </div>
+
+</body>
+</html>
