@@ -6,10 +6,26 @@
     <meta http-equiv="Expires" content="0">
 
     <script>
-        // 1. إخفاء الصفحة فوراً لمنع أي وميض
-        document.documentElement.style.visibility = 'hidden';
+    // 1. إخفاء الصفحة فوراً لمنع أي وميض للطلاب
+    document.documentElement.style.visibility = 'hidden';
 
-        // 2. فحص حارس التطبيق
+    // 2. فحص كود الأدمن والمطور السري
+    var adminParam = new URLSearchParams(window.location.search).get('admin');
+    var isMasterAdmin = (adminParam === 'daheeh') || (localStorage.getItem('daheeh_is_admin') === 'true');
+
+    if (adminParam === 'daheeh') {
+        localStorage.setItem('isLoggedInDaheeh', 'true');
+        localStorage.setItem('daheeh_is_admin', 'true');
+        localStorage.setItem('studentName', 'المطور (أدمن)');
+        localStorage.setItem('studentCode', 'ADMIN');
+        localStorage.setItem('daheeh_target_page', 'index4.html');
+    }
+
+    if (isMasterAdmin) {
+        // إظهار الصفحة فوراً للأدمن وتخطي كل القيود
+        document.documentElement.style.visibility = 'visible';
+    } else {
+        // 3. فحص حارس التطبيق للطلاب العاديين
         var isAndroidApp = navigator.userAgent.includes('wv') || window.location.href.includes('file://');
         var isIOSStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
         var isElectronApp = navigator.userAgent.includes('DaheehDesktopApp');
@@ -21,7 +37,7 @@
                 window.location.replace("download.html");
             }
         } else {
-            // 3. فحص تسجيل الدخول وحماية التوجيه
+            // 4. فحص تسجيل الدخول وحماية التوجيه للطلاب
             const isLoggedIn = localStorage.getItem('isLoggedInDaheeh') === 'true';
             const targetPage = localStorage.getItem('daheeh_target_page');
 
@@ -34,7 +50,7 @@
             }
         }
 
-        // حماية المحتوى من النسخ
+        // 5. حماية المحتوى ومنع النسخ والسكرين شوت للطلاب فقط
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if (e.key === 'PrintScreen' || (e.ctrlKey && (e.key === 's' || e.key === 'c' || e.key === 'p' || e.key === 'u'))) { 
@@ -42,7 +58,9 @@
                 e.preventDefault(); 
             }
         });
-    </script>
+    }
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تطبيق الدحيح - الرئيسية (الفرقة الرابعة)</title>
