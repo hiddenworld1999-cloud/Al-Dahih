@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل - أنظمة معلومات المؤسسات EIS (المحاضرة 3)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0B1120;
+            --bg-page: #111827;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            
+            --electric-blue: #3B82F6;
+            --cyan: #06B6D4;
+            --neon-green: #10B981;
+            --neon-red: #EF4444;
+            --yellow: #F59E0B;
+
+            --border-glass: rgba(59, 130, 246, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
+
+        /* تصميم ورقة A4 */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 800px; 
+            min-height: 1050px;
+            padding: 35px 40px 65px 40px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 25px; margin-bottom: 20px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-right: 4px solid var(--cyan);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 1.1rem; color: var(--electric-blue); margin: 15px 0 8px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '■'; color: var(--cyan); font-size: 0.8rem; }
+
+        p, li { font-size: 0.95rem; margin-bottom: 10px; color: #D1D5DB; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--cyan); }
+        ol li::marker { color: var(--electric-blue); font-weight: bold; }
+        
+        strong { color: #FFFFFF; font-weight: 800; }
+        .highlight-text { color: var(--yellow); font-weight: bold; }
+        
+        code { 
+            font-family: 'Fira Code', monospace; background: rgba(59, 130, 246, 0.15); 
+            padding: 2px 8px; border-radius: 4px; color: var(--cyan); font-size: 0.85rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .alert-box { background: rgba(239, 68, 68, 0.08); border-right: 4px solid var(--neon-red); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--neon-red); margin-top: 0; }
+        
+        .tip-box { background: rgba(16, 185, 129, 0.08); border-right: 4px solid var(--neon-green); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--neon-green); margin-top: 0; }
+
+        .example-box { background: rgba(245, 158, 11, 0.08); border: 1px dashed var(--yellow); padding: 15px; border-radius: 8px; margin: 15px 0; color: #FDE68A; font-size: 0.95rem; }
+
+        /* الجداول */
+        .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.9rem; }
+        th, td { padding: 10px 15px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(59, 130, 246, 0.15); color: var(--cyan); font-weight: 800; text-align: center; }
+        td { color: #D1D5DB; }
+
+        /* تنسيقات صفحة الخلاصة (Cheat Sheet) */
+        .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .cheat-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-right: 3px solid var(--cyan); }
+        .cheat-title { color: var(--yellow); font-weight: 800; font-size: 1rem; margin-bottom: 5px; display: block;}
+        .cheat-desc { font-size: 0.85rem; color: #D1D5DB; line-height: 1.6;}
+        .cheat-full { grid-column: 1 / -1; }
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 850px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 20px 15px 65px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--electric-blue); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.75rem; }
+            .cheat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: العمليات التجارية -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>أنظمة معلومات المؤسسات (EIS)</h1>
+                <p>المحاضرة الثالثة - د. مريم سامي</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">المستوى الرابع | الفصل الدراسي الأول</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>⚙️</span> أولاً: يعني إيه عملية تجارية (Business Process)؟
+            </div>
+
+            <section class="glass-card">
+                <p><strong>العملية التجارية (Business Process):</strong> هي عبارة عن سلسلة من الأنشطة المنسقة اللي بتحول <strong>المدخلات (Inputs)</strong> لـ <strong>مخرجات (Outputs)</strong> بتقدم قيمة للعميل.</p>
+                <p>المبدأ الأساسي لأي عملية تجارية لازم يكون متوافق مع <strong>الرؤية والرسالة</strong> اللي حددتها الإدارة العليا. الرؤية دي بتتحقق من خلال تنفيذ الخدمات التشغيلية والداعمة والإدارية.</p>
+                
+                <div class="tip-box">
+                    <h3>💡 ملاحظة هامة:</h3>
+                    <p>المديرين دلوقتي بقوا يركزوا على "العمليات" (Processes) أكتر من "الوظائف" (Functions). يعني مش المهم بس قسم المبيعات شغال، المهم إن "عملية البيع" ككل شغالة صح من أولها لآخرها.</p>
+                </div>
+
+                <h3>العمليات البينية (Cross-Functional Processes):</h3>
+                <p>دي العمليات اللي بتعدي على أكتر من قسم عشان تخلص. مش قسم واحد اللي بيعملها، لازم التعاون بين الإدارات.</p>
+                <ul>
+                    <li>مثلاً: عملية البيع الواحدة بتحتاج (المبيعات - المخزون - المالية - الشحن).</li>
+                    <li>العمليات دي مستحيل تتدار بكفاءة غير من خلال نظام متكامل زي <strong>ERP</strong>.</li>
+                </ul>
+
+                <div class="example-box">
+                    <strong>مثال (Order-to-Cash - O2C):</strong> من تسجيل الطلب لحد جمع الدفعات.<br>
+                    <strong>مثال (Procure-to-Pay - P2P):</strong> من طلب المواد لحد الدفع للمورد.
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h3>الفرق بين وظائف الأعمال (Functions) والعمليات (Processes):</h3>
+                <ul>
+                    <li><strong>وظائف الأعمال:</strong> زي التسويق، المالية، الموارد البشرية. دي بتعتبر "جزر" أو أقسام منفصلة (Silos).</li>
+                    <li><strong>العمليات التجارية:</strong> هي اللي بتربط الأقسام دي ببعض عشان تخلص شغل معين. (بتعكس منظور إدارة الأعمال بالكامل).</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: مراحل إدارة العمليات -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🔄</span> ثانياً: إدارة العمليات التجارية (BPM)
+            </div>
+
+            <section class="glass-card">
+                <h3>أهداف إدارة العمليات التجارية:</h3>
+                <ol>
+                    <li>تعزيز رضا العملاء.</li>
+                    <li>خفض تكاليف التشغيل (الكفاءة التكلفية).</li>
+                    <li>تطوير منتجات أو خدمات جديدة بتكاليف منخفضة (توليد القيمة).</li>
+                </ol>
+
+                <h3>عناصر إدارة العمليات (3 عناصر أساسية):</h3>
+                <div class="diagram-container" style="display: flex; justify-content: space-around; text-align: center; margin: 15px 0;">
+                    <div style="background: rgba(245, 158, 11, 0.2); padding: 15px; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--yellow);">
+                        <strong>People<br>(الناس)</strong>
+                    </div>
+                    <div style="background: rgba(59, 130, 246, 0.2); padding: 15px; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--electric-blue);">
+                        <strong>Process<br>(العملية)</strong>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.2); padding: 15px; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--neon-green);">
+                        <strong>Data & Tools<br>(بيانات وأدوات)</strong>
+                    </div>
+                </div>
+                <p style="text-align: center; font-size: 0.85rem;">* الناس بتدير العملية، والعملية بتستهلك البيانات والأدوات عشان تطلع النتيجة.</p>
+            </section>
+
+            <section class="glass-card">
+                <h3>المراحل الرئيسية لإدارة وتطوير العمليات:</h3>
+                
+                <h3>1. تحديد العملية (Process Identification)</h3>
+                <p>بنعرف إيه العمليات اللي محتاجة تحسين، بنجمع معلومات عنها، ونحدد بدايتها ونهايتها وأهدافها.</p>
+                <ul>
+                    <li>بنعمل مقابلات مع الـ Stakeholders.</li>
+                    <li>بنرسم خريطة للعملية الحالية (As-Is Process Map).</li>
+                    <li>بنحدد المشاكل (تأخير، أخطاء).</li>
+                </ul>
+                <div class="example-box">
+                    <strong>مثال:</strong> في متجر قهوة، بنحدد عملية (O2C) اللي بتشمل استقبال الطلب، التحضير، والدفع.
+                </div>
+
+                <h3>2. تصميم العملية (Process Design)</h3>
+                <p>بناءً على التحليل، بنصمم الطريقة المثالية (To-Be Process) عشان نلغي الخطوات الزايدة وندمج المهام ونستخدم التكنولوجيا (الأتمتة).</p>
+                <ul>
+                    <li>بنستخدم أدوات زي <strong>BPMN</strong> (Business Process Model and Notation).</li>
+                    <li>بنحدد أهداف واضحة (مثلاً: تقليل وقت الطلب لـ 5 دقايق).</li>
+                    <li>بنختبر التصميم قبل التنفيذ.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: مراحل الإدارة (تابع) + أتمتة العمليات BPA -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>⚙️</span> مراحل إدارة العمليات (تابع) + أتمتة العمليات
+            </div>
+
+            <section class="glass-card">
+                <h3>3. تنفيذ العملية (Process Implementation)</h3>
+                <p>بنطبق التصميم الجديد باستخدام التكنولوجيا (زي ERP أو CRM) وبتدريب الموظفين. لازم يكون فيه تنسيق بين الأقسام.</p>
+                <ul>
+                    <li>تثبيت الأنظمة الداعمة زي SAP أو Oracle.</li>
+                    <li>إطلاق العملية بشكل تدريجي (Phased Rollout).</li>
+                </ul>
+                <div class="example-box">
+                    <strong>مثال:</strong> تدريب موظفي القهوة على نظام الـ POS (Point of Sale) الجديد لتسجيل الطلبات.
+                </div>
+
+                <h3>4. مراقبة وتحسين العملية (Process Monitoring and Improvement)</h3>
+                <p>بعد التنفيذ، بنراقب الأداء باستخدام <strong>مؤشرات الأداء الرئيسية (KPIs)</strong> زي وقت الدورة (Cycle Time) أو معدل رضا العملاء.</p>
+                <ul>
+                    <li>جمع البيانات من لوحات المعلومات (Dashboards).</li>
+                    <li>تحليل الأداء وتحديد الفجوات، وتطبيق تعديلات.</li>
+                </ul>
+                <div class="example-box">
+                    <strong>مثال:</strong> مراقبة أوقات الذروة في متجر القهوة وإضافة موظف إضافي لو لزم الأمر.
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2 style="color: var(--cyan); font-size: 1.3rem; margin-bottom: 10px;">ثالثاً: أتمتة العمليات التجارية (BPA)</h2>
+                <p><strong>يعني إيه BPA؟</strong> هي استخدام التكنولوجيا لأتمتة المهام والعمليات المتكررة أو اللي بتاخد وقت ومجهود كبير، عشان نزود الكفاءة والاتساق.</p>
+                <p>الـ BPA بتلعب دور حاسم في تكامل العمليات البينية (زي O2C و P2P)، وبتحل مشكلة الأنظمة المعزولة (Silos).</p>
+                <div class="tip-box">
+                    <h3>💡 ملاحظة:</h3>
+                    <p>مش كل العمليات تصلح للأتمتة. الشركات بتدي الأولوية للعمليات اللي بتستهلك وقت وموارد كبيرة، أو اللي معرضة للأخطاء البشرية.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: فوائد BPA وخطوات تنفيذها -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🌟</span> فوائد وخطوات تنفيذ الأتمتة (BPA)
+            </div>
+
+            <section class="glass-card">
+                <h3>فوائد أتمتة العمليات (BPA):</h3>
+                <ul>
+                    <li><strong>ضمان الجودة:</strong> تنفيذ العمليات بجودة عالية وموثوقية.</li>
+                    <li><strong>الاتساق:</strong> مستوى خدمة موحد لكل العملاء.</li>
+                    <li><strong>الحوكمة والاعتمادية:</strong> العمليات المتسقة بتحافظ على الميزة التنافسية.</li>
+                    <li><strong>تعزيز الكفاءة التشغيلية:</strong> إزالة الخطوات الزايدة.</li>
+                    <li><strong>تسريع زمن التنفيذ:</strong> تقليل وقت تدفق المعلومات بين الأقسام.</li>
+                    <li><strong>كفاءة الوقت:</strong> إنجاز المهام في وقت أقل.</li>
+                    <li><strong>رؤية عملية:</strong> تحكم دقيق في العمليات الآلية ومراقبتها.</li>
+                    <li><strong>خفض التكاليف:</strong> تقليل تكاليف المهام اليدوية المكلفة.</li>
+                </ul>
+            </section>
+
+            <section class="glass-card">
+                <h3>خطوات تنفيذ أتمتة العمليات التجارية (BPA):</h3>
+                
+                <h3>1. تحديد الهدف (لماذا نؤتمت؟)</h3>
+                <p>لازم يكون فيه مبرر واضح (تحسين الكفاءة أو تقليل الأخطاء).</p>
+                <div class="example-box">
+                    <strong>مثال:</strong> شركة "فوري" طبقت BPA عشان تقلل الأخطاء في معاملات الدفع الإلكتروني.
+                </div>
+
+                <h3>2. فهم متطلبات الإلتزام (Compliance)</h3>
+                <p>التأكد من إن حل BPA يلتزم بالقوانين واللوائح (زي حماية البيانات GDPR في أوروبا، أو الامتثال الضريبي).</p>
+
+                <h3>3. توثيق العملية المستهدفة</h3>
+                <p>توثيق دقيق وشامل لكل خطوة ومدخلاتها ومخرجاتها. بنسأل: إيه المستندات المطلوبة؟ شكلها إيه (ورقي/إلكتروني)؟ مين بيتعامل معاها؟ هل فيه طريقة أفضل؟</p>
+
+                <h3>4. وضع أهداف واضحة (SMART)</h3>
+                <p>أهداف محددة وقابلة للقياس. (SMART: محددة، قابلة للقياس، يمكن تحقيقها، ذات صلة، ومحددة زمنياً).</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: خطوات BPA (تابع) + ROI -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>💰</span> خطوات BPA (تابع) والعائد على الاستثمار
+            </div>
+
+            <section class="glass-card">
+                <h3>5. توظيف استشاري عمليات تجارية</h3>
+                <p>التعاقد مع خبير لتصميم وتنفيذ حلول BPA مصممة للمنظمة. القرار ده بيعتمد على:</p>
+                <ul>
+                    <li>موضوعية الاستشاري (قدرته على التقييم بموضوعية).</li>
+                    <li>خبرته في عمليات المنظمة التجارية.</li>
+                    <li>خبرته في حل المشكلات التجارية الحرجة.</li>
+                    <li>قدرته على التوصية والتنفيذ.</li>
+                </ul>
+
+                <h3>6. تقييم العائد على الاستثمار (ROI)</h3>
+                <p>حساب العائد لتبرير التكلفة للإدارة العليا. أسباب الموافقة على الـ BPA بتبقى:</p>
+                <ul>
+                    <li><strong>خفض التكاليف:</strong> توفير محسوب.</li>
+                    <li><strong>تقليل احتياجات القوى العاملة:</strong> إعادة توزيع الموظفين.</li>
+                    <li><strong>توفير الرواتب:</strong> تقليل التوظيف بسبب ضغط العمل.</li>
+                    <li><strong>توفير تكاليف المساحة:</strong> تقليل الاعتماد على الورق (Green IT).</li>
+                    <li><strong>إلغاء الغرامات:</strong> تنفيذ العمليات في وقتها لتجنب العقوبات.</li>
+                    <li><strong>تقليل تكاليف التدقيق والقضايا القانونية.</strong></li>
+                    <li><strong>خصومات الدفع المبكر:</strong> تقليل الدفعات المكررة.</li>
+                    <li><strong>توثيق شامل:</strong> سجلات كاملة للحسابات.</li>
+                    <li><strong>فرص إيرادات جديدة:</strong> رسوم على الوصول الفوري للسجلات.</li>
+                    <li><strong>تحسين التدفق النقدي:</strong> تسريع تحصيل المستحقات.</li>
+                    <li><strong>نمو الأعمال:</strong> تعزيز خدمة العملاء.</li>
+                </ul>
+
+                <h3>7. تطوير ونشر BPA</h3>
+                <p>شراء أو تطوير الحل المناسب. (مثال: شركة ألبان تستخدم SAP لأتمتة توزيع الألبان).</p>
+
+                <h3>8. إختبار حل BPA</h3>
+                <p>اختبار الحل بدقة قبل التشغيل الكامل للتأكد من خلوه من الأخطاء وتحقيقه للأهداف. (مثال: شركة سيارات تختبر حلول BPA في خطوط الإنتاج).</p>
+                <div class="tip-box">
+                    <h3>💡 فوائد الاختبار:</h3>
+                    <p>بيحسن العملية قبل الإطلاق الرسمي، بيعزز قبول المستخدمين ويقلل مقاومتهم للنظام الجديد، وتوثيق العملية النهائية بيساعد في تدريب الموظفين الجدد.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السادسة: الكبسولة (Cheat Sheet) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>كبسولة المحاضرة (Cheat Sheet)</h1>
+                <p>لو اتسألت عن أي حاجة، الإجابة هنا!</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>💊</span> خلاصة كل حرف في المحاضرة الثالثة
+            </div>
+
+            <div class="cheat-grid">
+                <!-- 1 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">1. تعريف العملية التجارية:</span>
+                    <span class="cheat-desc">سلسلة أنشطة منسقة بتحول المدخلات لمخرجات بتقدم قيمة للعميل. مرتبطة برؤية ورسالة الإدارة العليا.</span>
+                </div>
+                
+                <!-- 2 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">2. العمليات البينية (Cross-Functional):</span>
+                    <span class="cheat-desc">بتعدي على أكتر من قسم (زي O2C و P2P). لازم نظام متكامل زي ERP عشان تدار بكفاءة.</span>
+                </div>
+
+                <!-- 3 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">3. الفرق بين Functions و Processes:</span>
+                    <span class="cheat-desc"><strong>Functions:</strong> أقسام منفصلة (تسويق، مالية).<br><strong>Processes:</strong> بتربط الأقسام دي ببعض عشان تخلص شغل.</span>
+                </div>
+
+                <!-- 4 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">4. عناصر BPM (3 عناصر):</span>
+                    <span class="cheat-desc">الناس (People)، العملية (Process)، البيانات والأدوات (Data & Tools).</span>
+                </div>
+
+                <!-- 5 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">5. مراحل إدارة العمليات (4 مراحل):</span>
+                    <span class="cheat-desc">
+                        1. التحديد (رسم خريطة As-Is).<br>
+                        2. التصميم (نموذج To-Be - أداة BPMN).<br>
+                        3. التنفيذ (ERP - تدريب).<br>
+                        4. المراقبة والتحسين (KPIs).
+                    </span>
+                </div>
+
+                <!-- 6 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">6. يعني إيه BPA؟</span>
+                    <span class="cheat-desc">استخدام التكنولوجيا لأتمتة المهام المتكررة. بتدي أولوية للعمليات اللي بتاخد وقت أو معرضة للأخطاء البشرية.</span>
+                </div>
+
+                <!-- 7 -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">7. فوائد BPA:</span>
+                    <span class="cheat-desc">
+                        ضمان الجودة، الاتساق، الحوكمة والاعتمادية، تعزيز الكفاءة، تسريع التنفيذ، كفاءة الوقت، رؤية عملية، خفض التكاليف.
+                    </span>
+                </div>
+
+                <!-- 8 -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">8. خطوات تنفيذ BPA (8 خطوات):</span>
+                    <span class="cheat-desc">
+                        1. تحديد الهدف (فوري لتقليل الأخطاء).<br>
+                        2. فهم متطلبات الإلتزام (GDPR).<br>
+                        3. توثيق العملية.<br>
+                        4. أهداف SMART.<br>
+                        5. استشاري عمليات (موضوعية، خبرة).<br>
+                        6. حساب ROI (خفض تكاليف، توفير مساحات، إلغاء غرامات).<br>
+                        7. التطوير والنشر.<br>
+                        8. الإختبار (شركة سيارات في خطوط الإنتاج).
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 6</div>
+        </div>
+    </div>
+
+</body>
+</html>
