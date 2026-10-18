@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+   <script>
+    // 1. منع فتح المحاضرة خارج تطبيق الدحيح (Iframe Lock)
+    if (window.top === window.self) {
+        window.location.replace('../login.html');
+    }
+    // 2. منع فتح المحاضرة بدون تسجيل دخول رسمي
+    if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
+        window.location.replace('../login.html');
+    }
+   </script>
+ 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملخص الشامل (A4) - المحاضرة الأولى</title>
