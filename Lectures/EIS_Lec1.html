@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل - أنظمة معلومات المؤسسات EIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0B1120;
+            --bg-page: #111827;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            
+            --electric-blue: #3B82F6;
+            --cyan: #06B6D4;
+            --neon-green: #10B981;
+            --neon-red: #EF4444;
+            --yellow: #F59E0B;
+
+            --border-glass: rgba(59, 130, 246, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 800px; 
+            min-height: 1050px;
+            padding: 35px 40px 65px 40px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 25px; margin-bottom: 20px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-right: 4px solid var(--cyan);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 1.1rem; color: var(--electric-blue); margin: 15px 0 8px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '■'; color: var(--cyan); font-size: 0.8rem; }
+
+        p, li { font-size: 0.95rem; margin-bottom: 10px; color: #D1D5DB; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--cyan); }
+        ol li::marker { color: var(--electric-blue); font-weight: bold; }
+        
+        strong { color: #FFFFFF; font-weight: 800; }
+        .highlight-text { color: var(--yellow); font-weight: bold; }
+        
+        code { 
+            font-family: 'Fira Code', monospace; background: rgba(59, 130, 246, 0.15); 
+            padding: 2px 8px; border-radius: 4px; color: var(--cyan); font-size: 0.85rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .alert-box { background: rgba(239, 68, 68, 0.08); border-right: 4px solid var(--neon-red); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--neon-red); margin-top: 0; }
+        
+        .tip-box { background: rgba(16, 185, 129, 0.08); border-right: 4px solid var(--neon-green); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--neon-green); margin-top: 0; }
+
+        .example-box { background: rgba(245, 158, 11, 0.08); border: 1px dashed var(--yellow); padding: 15px; border-radius: 8px; margin: 15px 0; color: #FDE68A; font-size: 0.95rem; }
+
+        .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.9rem; }
+        th, td { padding: 10px 15px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(59, 130, 246, 0.15); color: var(--cyan); font-weight: 800; text-align: center; }
+        td { color: #D1D5DB; }
+
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--border-glass); }
+        .flow-chart { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--electric-blue); color: white; padding: 8px 15px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .flow-box-light { background: rgba(6, 182, 212, 0.2); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 15px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; }
+
+        /* تنسيقات صفحة الخلاصة (Cheat Sheet) */
+        .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .cheat-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-right: 3px solid var(--cyan); }
+        .cheat-title { color: var(--yellow); font-weight: 800; font-size: 1rem; margin-bottom: 5px; display: block;}
+        .cheat-desc { font-size: 0.85rem; color: #D1D5DB; line-height: 1.6;}
+        .cheat-full { grid-column: 1 / -1; }
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 850px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 20px 15px 65px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--electric-blue); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.75rem; }
+            .cheat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: المقدمة والمفاهيم الأساسية -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>أنظمة معلومات المؤسسات (EIS)</h1>
+                <p>المحاضرة الأولى - د. مريم سامي</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">المستوى الرابع | الفصل الدراسي الأول</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>📊</span> أولاً: يعني إيه نظام معلومات (IS)؟
+            </div>
+
+            <section class="glass-card">
+                <p><strong>نظام المعلومات (Information System - IS)</strong> هو ببساطة "إطار مترابط" بنستخدمه عشان نجمع، نخزن، نعالج، ونوزع البيانات. الهدف الأساسي منه هو <span class="highlight-text">دعم اتخاذ القرار وتحسين الأداء</span> في أي بيئة.</p>
+                
+                <h3>المكونات الخمسة لأي نظام معلومات (زي مكونات أي مطعم):</h3>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">Hardware (أجهزة)</div>
+                        <div class="flow-box">Software (برمجيات)</div>
+                        <div class="flow-box">Data (بيانات)</div>
+                        <div class="flow-box-light">Procedures (إجراءات)</div>
+                        <div class="flow-box-light">People (أفراد)</div>
+                    </div>
+                </div>
+                <ul>
+                    <li><strong>Hardware (الأجهزة):</strong> الكمبيوترات والسيرفرات.</li>
+                    <li><strong>Software (البرمجيات):</strong> البرامج اللي بتشغل الأجهزة.</li>
+                    <li><strong>Data (البيانات):</strong> المادة الخام (أرقام، أسماء).</li>
+                    <li><strong>Procedures (الإجراءات):</strong> القواعد اللي بنمشي عليها (زي خطوات الدفع).</li>
+                    <li><strong>People (الأفراد):</strong> الناس اللي بتستخدم النظام وتديره.</li>
+                </ul>
+
+                <div class="tip-box">
+                    <h3>💡 فكرة مهمة:</h3>
+                    <p>نظام المعلومات بيعتمد على التكنولوجيا عشان يحول <strong>البيانات الخام (Raw Data)</strong> لـ <strong>معلومات مفيدة (Useful Info)</strong>. بيستخدم في كل حاجة: التعليم، الصحة، والأعمال. وهدفه الدقة، السرعة، وسهولة الوصول للمعلومة.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: EIS و SOA -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🏢</span> ثانياً: يعني إيه نظام معلومات مؤسسات (EIS)؟
+            </div>
+
+            <section class="glass-card">
+                <p><strong>EIS (Enterprise Information System)</strong> هو نظام معلومات ضخم مخصص للمنظمات والمؤسسات الكبيرة. الفرق بينه وبين النظام العادي إنه بيمتد عشان يشمل <strong>تكامل جميع العمليات الرئيسية</strong> في المؤسسة (زي المالية، الموارد البشرية، والإنتاج) باستخدام تكنولوجيا متقدمة.</p>
+                
+                <h3>الهدف من الـ EIS:</h3>
+                <ul>
+                    <li>دعم التواصل بين الأقسام المختلفة.</li>
+                    <li>تحسين الكفاءة.</li>
+                    <li>تحقيق الأهداف الإستراتيجية للمؤسسة.</li>
+                    <li>الاعتماد على بنية قوية لبناء حلول مخصصة.</li>
+                </ul>
+
+                <h3>مفهوم هندسة الخدمات المتجهة (SOA):</h3>
+                <p>عشان المؤسسات الكبيرة بتتعامل مع "بيانات ضخمة" (Big Data)، ظهرت حاجة اسمها <code>SOA (Service-Oriented Architecture)</code>.</p>
+                <p><strong>يعني إيه SOA؟</strong> هي "طريقة تصميم" بتعتمد على تقسيم التطبيقات لخدمات مستقلة ومتفاعلة (زي مكعبات الليجو). كل خدمة بتعمل شغل معين وبتقدر تتواصل مع الباقي عبر الشبكة باستخدام بروتوكولات زي HTTP أو SOAP. ده بيخلي النظام مرن جداً وسهل إعادة استخدامه.</p>
+
+                <div class="tip-box">
+                    <h3>💡 الخلاصة:</h3>
+                    <p>الـ EIS هو نظام تكنولوجي متكامل بيدير وينسق المعلومات في المؤسسات الكبيرة عشان يدعم العمليات، اتخاذ القرارات، ويحقق الأهداف الإستراتيجية. وبيخدم كل مستويات الإدارة (من التشغيلية للإستراتيجية).</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: تطبيقات وخصائص EIS -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>⚙️</span> تطبيقات وخصائص EIS
+            </div>
+
+            <section class="glass-card">
+                <h3>أهم تطبيقات الـ EIS:</h3>
+                <ul>
+                    <li><strong>تخطيط موارد المؤسسات (ERP):</strong> بيدير كل حاجة جوه الشركة (فلوس، مخازن، موظفين).</li>
+                    <li><strong>إدارة علاقات العملاء (CRM):</strong> بيهتم بالعميل وبياناته وتعامله مع الشركة.</li>
+                    <li><strong>إدارة سلسلة التوريد (SCM):</strong> بيدير رحلة المنتج من المورد لحد العميل.</li>
+                </ul>
+            </section>
+
+            <section class="glass-card">
+                <h3>الخصائص الرئيسية لنظام EIS:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>الخاصية</th>
+                            <th>الشرح بالعامية</th>
+                        </tr>
+                        <tr>
+                            <td><strong>التكامل (Integration)</strong></td>
+                            <td>بيربط الأقسام ببعضها (مالية، موارد بشرية، إنتاج) عشان يضمن تدفق سلس للمعلومات.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>المرونة (Scalability)</strong></td>
+                            <td>بيقدر يتكيف مع نمو المنظمة وتغيرات السوق من غير ما يقع.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>التعامل مع البيانات الضخمة</strong></td>
+                            <td>عنده القدرة على معالجة وتخزين ملايين العمليات اليومية بكفاءة.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>دعم اتخاذ القرار</strong></td>
+                            <td>بيوفر تقارير تحليلية للإدارة العليا، وبيانات تفصيلية للإدارة التشغيلية.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الأمان والخصوصية</strong></td>
+                            <td>بيحمي البيانات عن طريق التشفير، وبيلتزم بقوانين زي GDPR الأوروبي أو قانون حماية البيانات المصري.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: فوائد EIS (1) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🚀</span> فوائد الـ EIS (الجزء الأول)
+            </div>
+
+            <section class="glass-card">
+                <h3>1. تكامل العمليات (Integration)</h3>
+                <p>بينتج منصة مركزية بتخلي كل الأقسام (مالية، HR، تسويق) شايفين نفس البيانات. ده بيقلل التكرار في الشغل، بيوفر وقت، وبيحسن تدفق المعلومات.</p>
+
+                <h3>2. زيادة الكفاءة التنظيمية</h3>
+                <p>بيحسن سير العمل، بيقلل الأخطاء البشرية، وبيسرع العمليات. مثلاً نظام <strong>SAP</strong> بيأتمت إدارة المخزون، فبيقلل التكاليف التشغيلية. وكمان بيحسن الكفاءة عشان يلبي معايير السوق التنافسية (زي تقليل وقت التسليم في سلاسل التوريد).</p>
+                <div class="example-box">
+                    <strong>🇪🇬 مثال من مصر:</strong> في مصر، شركات بتستخدم أنظمة EIS عشان تدمج خدمات الدفع الإلكتروني وتحسن الكفاءة.
+                </div>
+
+                <h3>3. تحسين اتخاذ القرار (Decision Making)</h3>
+                <p>النظام بيوفر بيانات دقيقة وفي <strong>الوقت الفعلي (Real-Time)</strong> عشان تدعم القرارات في كل المستويات. الإدارة العليا بتحتاج تقارير موجزة، والإدارة التشغيلية بتحتاج بيانات مفصلة.</p>
+                <p>الأنظمة دي بتعتمد على <strong>أنظمة دعم القرار (DSS)</strong> وأدوات <strong>الذكاء الأعمالي (BI)</strong> عشان تحلل البيانات الكبيرة وتقدم رؤى استراتيجية.</p>
+                <div class="example-box">
+                    <strong>🌍 أمثلة:</strong> أداة <strong>Power BI</strong> بتحلل أداء المبيعات في مناطق مختلفة. البنوك بتستخدم DSS عشان تحلل بيانات العملاء وتحسن التسويق. وفي مصر، شركات التجارة الإلكترونية زي <strong>"سوق.كوم"</strong> بتستخدم EIS عشان تتبع سلوك العملاء.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: فوائد EIS (2) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🌟</span> فوائد الـ EIS (الجزء الثاني)
+            </div>
+
+            <section class="glass-card">
+                <h3>4. التكيف مع التحول الرقمي (Digital Transformation)</h3>
+                <p>الـ EIS بيدعم التقنيات الناشئة زي <strong>الحوسبة السحابية (Cloud)</strong>، <strong>الذكاء الاصطناعي (AI)</strong>، و<strong>إنترنت الأشياء (IoT)</strong>. ده بيخلي المنظمات قادرة على التكيف مع متطلبات السوق الرقمي وتحليل البيانات الكبيرة.</p>
+                <div class="example-box">
+                    <strong>🌍 أمثلة:</strong> نظام CRM سحابي زي <strong>Salesforce</strong> بيحسن إدارة علاقات العملاء عبر الإنترنت. في مصر، منصة "مصر الرقمية" بتدعم التحول الرقمي. في السعودية، رؤية 2030 وتطبيقات "نيوم" بتعتمد على أنظمة ذكية. في أوروبا، الشركات بتستخدم EIS لدمج AI في الصناعات الذكية.
+                </div>
+
+                <h3>5. التوافق مع الأخلاقيات والاستدامة</h3>
+                <p>الـ EIS بيساعد في الامتثال للقوانين والمعايير الأخلاقية (زي قوانين حماية البيانات GDPR في أوروبا، وقانون حماية البيانات الشخصية في مصر). كمان بيدعم الممارسات المستدامة زي <strong>Green IT</strong> (التكنولوجيا الخضراء).</p>
+                <p>ده بيضمن إدارة البيانات بشكل أخلاقي، بيعزز الثقة بين العملاء والمنظمة، وبيساهم في تقليل التأثير البيئي.</p>
+
+                <h3>6. تعزيز القدرة التنافسية</h3>
+                <p>بيساعد المنظمات إنها تقدم خدمات أفضل، تقلل التكاليف، وتزود رضا العملاء. ده بيديها ميزة تنافسية في الأسواق المحلية والعالمية.</p>
+                <div class="example-box">
+                    <strong>🌍 مثال:</strong> نظام SCM بيحسن إدارة سلسلة التوريد فيقلل وقت التسليم. شركات زي <strong>BMW</strong> بتستخدمه عشان تحسن عمليات التصنيع الذكي.
+                </div>
+
+                <h3>7. دعم التوسع والنمو (Scalability)</h3>
+                <p>النظام بيتوسع بسهولة مع نمو المنظمة، سواء في حجم العمليات أو التوسع الجغرافي. الأنظمة السحابية زي <strong>Oracle Cloud</strong> بتتكيف مع الاحتياجات المتغيرة، وبتسمح بفتح فروع جديدة من غير تعطيل للعمليات (مهم جداً للشركات متعددة الجنسيات).</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السادسة: الكبسولة (Cheat Sheet) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>كبسولة المحاضرة (Cheat Sheet)</h1>
+                <p>لو اتسألت عن أي حاجة، الإجابة هنا!</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>💊</span> خلاصة كل حرف في المحاضرة
+            </div>
+
+            <div class="cheat-grid">
+                <!-- 1 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">1. مكونات نظام المعلومات (IS):</span>
+                    <span class="cheat-desc">5 مكونات: <strong>Hardware</strong> (أجهزة)، <strong>Software</strong> (برمجيات)، <strong>Data</strong> (بيانات)، <strong>Procedures</strong> (إجراءات)، <strong>People</strong> (أفراد).</span>
+                </div>
+                
+                <!-- 2 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">2. الهدف من IS:</span>
+                    <span class="cheat-desc">تحويل البيانات الخام لمعلومات مفيدة لدعم اتخاذ القرار وتحسين الأداء (الدقة والسرعة).</span>
+                </div>
+
+                <!-- 3 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">3. يعني إيه EIS؟</span>
+                    <span class="cheat-desc">نظام معلومات ضخم بيمتد ليشمل تكامل جميع العمليات الرئيسية (مالية، HR، إنتاج) في المؤسسة.</span>
+                </div>
+
+                <!-- 4 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">4. يعني إيه SOA؟</span>
+                    <span class="cheat-desc">هندسة الخدمات المتجهة. تقسيم التطبيقات لخدمات مستقلة (زي مكعبات الليجو) تتواصل عبر HTTP/SOAP لمرونة عالية.</span>
+                </div>
+
+                <!-- 5 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">5. تطبيقات EIS (الـ 3 الكبار):</span>
+                    <span class="cheat-desc"><strong>ERP</strong> (موارد المؤسسات - زي SAP)، <strong>CRM</strong> (علاقات العملاء - زي Salesforce)، <strong>SCM</strong> (سلسلة التوريد - زي BMW).</span>
+                </div>
+
+                <!-- 6 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">6. خصائص EIS:</span>
+                    <span class="cheat-desc">التكامل (Integration)، المرونة (Scalability)، التعامل مع البيانات الضخمة، دعم اتخاذ القرار (DSS/BI)، الأمان (GDPR).</span>
+                </div>
+
+                <!-- 7 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">7. فوائد التكامل:</span>
+                    <span class="cheat-desc">منصة مركزية تقلل التكرار، توفر وقت، وتحسن تدفق المعلومات.</span>
+                </div>
+
+                <!-- 8 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">8. الكفاءة التنظيمية:</span>
+                    <span class="cheat-desc">أتمتة العمليات (زي إدارة المخزون في SAP) لتقليل التكاليف والأخطاء.</span>
+                </div>
+
+                <!-- 9 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">9. دعم اتخاذ القرار:</span>
+                    <span class="cheat-desc">بيانات فورية (Real-Time) عبر أدوات BI مثل Power BI، لتحليل سلوك العملاء (زي سوق.كوم).</span>
+                </div>
+
+                <!-- 10 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">10. التحول الرقمي:</span>
+                    <span class="cheat-desc">دعم السحابة (Cloud)، الذكاء الاصطناعي (AI)، وإنترنت الأشياء (IoT) - مثل مصر الرقمية ونيوم.</span>
+                </div>
+
+                <!-- 11 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">11. الأخلاقيات والاستدامة:</span>
+                    <span class="cheat-desc">الالتزام بقوانين حماية البيانات (GDPR) ودعم التكنولوجيا الخضراء (Green IT).</span>
+                </div>
+
+                <!-- 12 -->
+                <div class="cheat-item">
+                    <span class="cheat-title">12. القدرة التنافسية والنمو:</span>
+                    <span class="cheat-desc">تقديم خدمات أفضل وتقليل التكاليف. الأنظمة السحابية (Oracle Cloud) تتيح التوسع الجغرافي وفتح فروع جديدة بسهولة.</span>
+                </div>
+
+                <!-- 13 (Full Width) -->
+                <div class="cheat-item cheat-full">
+                    <span class="cheat-title">13. أمثلة لازم تكون محفوظة (للامتحان):</span>
+                    <span class="cheat-desc">
+                        <strong>SAP:</strong> نظام ERP بيأتمت المخزون. <br>
+                        <strong>Salesforce:</strong> نظام CRM سحابي لإدارة العملاء. <br>
+                        <strong>Power BI:</strong> أداة لتحليل البيانات والمبيعات. <br>
+                        <strong>سوق.كوم:</strong> بيستخدم EIS لتتبع سلوك العملاء في مصر. <br>
+                        <strong>BMW:</strong> بتستخدم SCM لتحسين التصنيع الذكي.
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">أنظمة معلومات المؤسسات - د. مريم سامي | صفحة 6</div>
+        </div>
+    </div>
+
+</body>
+</html>
