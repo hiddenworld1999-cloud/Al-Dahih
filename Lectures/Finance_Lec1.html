@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+     <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
     <style>
         /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
         * {
@@ -32,7 +37,7 @@
             text-align: center;
         }
 
-        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب */
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
         #watermarkGrid {
             position: fixed;
             inset: 0;
@@ -43,7 +48,7 @@
             flex-wrap: wrap;
             justify-content: space-around;
             align-content: space-around;
-            opacity: 0.08; /* درجة شفافية مريحة للعين لا تضايق القراءة */
+            opacity: 0.12; /* درجة متوازنة تضمن الظهور بوضوح دون إزعاج القارئ */
         }
 
         .watermark-item {
@@ -55,6 +60,9 @@
             padding: 35px;
             font-family: monospace;
             user-select: none;
+            /* التكيف مع الخلفيات الفاتحة والبيضاء */
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
         }
     </style>
 
@@ -148,6 +156,7 @@
         });
     </script>
     <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
