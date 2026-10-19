@@ -149,968 +149,765 @@
     </script>
     <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta charset="UTF-8">
-<title>مذكرة مبادئ المالية العامة - المحاضرة الأولى كاملة مع الحل المنظم</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادئ المالية العامة - المحاضرة الأولى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7; /* لون عاجي */
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
+            
+            --heading-main: #4C1D95; /* بنفسجي غامق للعناوين الرئيسية */
+            --heading-sub: #9333EA;  /* موف فاتح للعناوين الفرعية */
+            
+            --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
 
-  @page {
-    size: A4;
-    margin: 8mm;
-  }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  * {
-    box-sizing: border-box;
-  }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
 
-  body {
-    font-family: 'Cairo', Tahoma, sans-serif;
-    background-color: #eef2f5;
-    margin: 0;
-    padding: 10px 0;
-    direction: rtl;
-    color: #111;
-    font-weight: 700;
-    overflow-x: hidden;
-  }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
 
-  .sheet {
-    background: #ffffff;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto 20px auto;
-    padding: 16px 14px 45px 14px;
-    box-sizing: border-box;
-    position: relative;
-    border: 3px dashed #1a5276;
-    border-radius: 12px;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.08);
-    overflow: hidden;
-    font-weight: 700;
-  }
+        /* تصميم ورقة A4 */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 780px; 
+            min-height: 1060px;
+            padding: 40px 45px 65px 45px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-  .sheet::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 280px;
-    height: 280px;
-    background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.08;
-    pointer-events: none;
-    z-index: 0;
-  }
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            z-index: 10;
+        }
 
-  .sheet > * {
-    position: relative;
-    z-index: 2;
-  }
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
 
-  .badge-top {
-    display: inline-block;
-    background: linear-gradient(135deg, #e67e22, #d35400);
-    color: white;
-    font-weight: 900;
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
 
-  .capsule-main {
-    background: linear-gradient(180deg, #1b4f72, #154360);
-    color: #ffffff;
-    font-size: 14.5px;
-    font-weight: 900;
-    text-align: center;
-    padding: 8px 18px;
-    border-radius: 35px;
-    display: block;
-    width: fit-content;
-    max-width: 100%;
-    margin: 10px auto 14px auto;
-    box-shadow: 0 4px 8px rgba(21, 67, 96, 0.35);
-    border: 2px solid #2980b9;
-    line-height: 1.5;
-  }
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 20px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--heading-main);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--navy-blue); font-weight: 700; }
 
-  .capsule-purple {
-    background: linear-gradient(180deg, #8e44ad, #6c3483);
-    color: #fff;
-    font-size: 13.5px;
-    font-weight: 800;
-    text-align: center;
-    padding: 7px 20px;
-    border-radius: 30px;
-    display: block;
-    width: fit-content;
-    max-width: 100%;
-    margin: 14px auto 12px auto;
-    box-shadow: 0 3px 6px rgba(108, 52, 131, 0.25);
-  }
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 25px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 4px;
+            background-color: var(--gold-primary);
+            border-radius: 0 8px 8px 0;
+        }
 
-  .capsule-orange {
-    background: linear-gradient(180deg, #d35400, #b94600);
-    color: #fff;
-    font-size: 13.5px;
-    font-weight: 800;
-    text-align: center;
-    padding: 7px 20px;
-    border-radius: 30px;
-    display: block;
-    width: fit-content;
-    max-width: 100%;
-    margin: 14px auto 12px auto;
-    box-shadow: 0 3px 6px rgba(211, 84, 0, 0.25);
-  }
+        h2 {
+            font-size: 1.4rem; color: var(--heading-main); margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); padding-bottom: 5px; width: fit-content;
+        }
+        h2 span.icon { font-size: 1.2rem; background: rgba(76, 29, 149, 0.1); padding: 4px 10px; border-radius: 6px; }
 
-  .definition-box {
-    background-color: #fdfefe;
-    border: 1.5px solid #d5dbdb;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 13px;
-    line-height: 1.8;
-    text-align: right;
-    font-weight: 800;
-    margin-bottom: 12px;
-    word-break: break-word;
-  }
+        h3 {
+            font-size: 1.15rem; color: var(--heading-main); margin: 18px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '❖'; color: var(--gold-primary); font-size: 0.9rem; }
 
-  .highlight-yellow {
-    background-color: #fff176;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 900;
-    display: inline-block;
-  }
+        p, li { font-size: 1rem; margin-bottom: 10px; color: var(--text-main); }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--gold-primary); }
+        ol li::marker { color: var(--heading-main); font-weight: bold; }
+        
+        /* ستايل البوكس للعناوين الفرعية */
+        .boxed-heading {
+            color: var(--heading-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 1.5px solid var(--heading-main);
+            border-radius: 8px;
+            padding: 2px 10px;
+            background-color: rgba(76, 29, 149, 0.05);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
 
-  .text-red { color: #c0392b; font-weight: 900; }
-  .text-blue { color: #1b4f72; font-weight: 900; }
-  .text-green { color: #27ae60; font-weight: 900; }
+        /* ألوان الكلمات المهمة */
+        .text-red { color: var(--red-alert); font-weight: 800; }
+        .text-blue { color: var(--navy-blue); font-weight: 800; }
 
-  .term-row {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    gap: 6px;
-  }
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: rgba(253, 224, 71, 0.4); padding: 2px 4px; border-radius: 4px; font-weight: 700; }
 
-  @media (min-width: 480px) {
-    .term-row {
-      flex-direction: row;
-      align-items: center;
-      gap: 12px;
-    }
-  }
+        /* صندوق الملخص السريع */
+        .summary-box {
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #78350F;
+            font-weight: 700;
+        }
 
-  .term-badge-purple {
-    background: linear-gradient(135deg, #a569bd, #8e44ad);
-    color: white;
-    font-weight: 800;
-    font-size: 12.5px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    min-width: 130px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-    flex-shrink: 0;
-  }
+        /* صناديق التنبيهات */
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; }
+        .alert-box h3::before { content: '⚠️'; }
 
-  .term-badge-green {
-    background: linear-gradient(135deg, #27ae60, #1e8449);
-    color: white;
-    font-weight: 800;
-    font-size: 12.5px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    min-width: 130px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-    flex-shrink: 0;
-  }
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; }
+        .tip-box h3::before { content: '💡'; }
 
-  .term-badge-orange {
-    background: linear-gradient(135deg, #e67e22, #d35400);
-    color: white;
-    font-weight: 800;
-    font-size: 12.5px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    min-width: 130px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-    flex-shrink: 0;
-  }
+        /* تصميم الجدول */
+        .table-wrapper { 
+            overflow-x: hidden; 
+            margin: 15px 0; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: right; 
+            font-size: 0.95rem; 
+        }
+        th, td { padding: 12px 15px; border: 1px solid var(--border-color); }
+        th { background: rgba(6, 78, 59, 0.05); color: var(--heading-main); font-weight: 800; text-align: center; }
+        tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
 
-  .term-desc {
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: #2c3e50;
-    font-weight: 800;
-    flex-grow: 1;
-  }
+        /* الرسم البياني (Diagram) */
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 20px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); }
+        .flow-chart { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; }
+        .flow-op { font-size: 2rem; color: var(--gold-primary); font-weight: bold; }
 
-  .cards-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin: 12px 0;
-  }
+        /* الكويزات */
+        .quiz-card { background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .quiz-q { font-size: 1.05rem; font-weight: 700; color: var(--heading-sub); margin-bottom: 10px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .quiz-opt { background: #F9FAFB; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.95rem; }
+        .answer-box { background: rgba(16, 185, 129, 0.1); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 4px; font-weight: 700; color: var(--emerald-dark); font-size: 0.95rem; display: none; }
+        
+        /* الفوتر */
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
 
-  @media (min-width: 600px) {
-    .cards-row {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .card-item {
-    background: #ffffff;
-    border: 1.5px solid #d5dbdb;
-    border-top: 4px solid #e74c3c;
-    border-radius: 8px;
-    padding: 8px 6px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-
-  .card-item-title {
-    font-size: 11.5px;
-    font-weight: 900;
-    color: #1a5276;
-    margin-bottom: 4px;
-  }
-
-  .card-item-desc {
-    font-size: 11px;
-    color: #222;
-    line-height: 1.4;
-    font-weight: 700;
-  }
-
-  table.custom-table {
-    width: 100%;
-    min-width: 480px;
-    border-collapse: collapse;
-    font-size: 12px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  table.custom-table th {
-    background: #2980b9;
-    color: white;
-    font-weight: 900;
-    padding: 8px;
-    border: 1px solid #1f618d;
-    text-align: center;
-  }
-
-  table.custom-table td {
-    padding: 7px 8px;
-    border: 1px solid #d4e6f1;
-    line-height: 1.5;
-    font-weight: 800;
-  }
-
-  table.custom-table tr:nth-child(even) {
-    background-color: #ebf5fb;
-  }
-
-  .q-container {
-    border-bottom: 1px dashed #b2bec3;
-    padding-bottom: 8px;
-    margin-bottom: 10px;
-  }
-
-  .q-header {
-    font-size: 12.5px;
-    font-weight: 800;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-    color: #111;
-    line-height: 1.5;
-    margin-bottom: 6px;
-  }
-
-  .tf-btn-group {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .btn-quiz {
-    background: #ffffff;
-    border: 1.5px solid #bdc3c7;
-    color: #1a5276;
-    padding: 3px 12px;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 11.5px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  .btn-quiz:hover {
-    border-color: #1a5276;
-  }
-
-  .mcq-btn-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 6px;
-  }
-
-  @media (min-width: 600px) {
-    .mcq-btn-group {
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-  }
-
-  .btn-choice {
-    background: #ffffff;
-    border: 1.5px solid #bdc3c7;
-    color: #2c3e50;
-    padding: 5px 12px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 800;
-    text-align: right;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  .btn-choice:hover {
-    border-color: #1a5276;
-    color: #1a5276;
-  }
-
-  .btn-quiz.correct, .btn-choice.correct {
-    background: #27ae60 !important;
-    border-color: #27ae60 !important;
-    color: #ffffff !important;
-  }
-
-  .btn-quiz.wrong, .btn-choice.wrong {
-    background: #c0392b !important;
-    border-color: #c0392b !important;
-    color: #ffffff !important;
-  }
-
-  .q-correction {
-    display: none;
-    font-size: 11.5px;
-    color: #1a5276;
-    margin-top: 6px;
-    background: #f8f9fa;
-    padding: 4px 8px;
-    border-radius: 5px;
-    border-right: 3px solid #e74c3c;
-    font-weight: 800;
-    line-height: 1.5;
-  }
-
-  .q-correction.show {
-    display: block;
-  }
-
-  .correction-label {
-    color: #c0392b;
-    font-weight: 900;
-    margin-left: 4px;
-  }
-
-  .footer-bar {
-    position: absolute;
-    bottom: 8px;
-    left: 12px;
-    right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px dashed #bdc3c7;
-    padding-top: 4px;
-    font-size: 10.5px;
-    color: #555;
-    font-weight: 800;
-  }
-
-  .footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .footer-logo {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1.5px solid #2980b9;
-    object-fit: cover;
-  }
-
-  .footer-brand-name {
-    font-size: 12px;
-    font-weight: 900;
-    color: #1a5276;
-  }
-
-  .footer-center-text {
-    flex-grow: 1;
-    text-align: center;
-    font-weight: 800;
-    font-size: 10px;
-  }
-</style>
+        /* التعديلات الخاصة بالموبايل */
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 10px 65px 10px; border-radius: 0; border: none; border-bottom: 2px solid var(--gold-primary); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 10px; }
+            ul, ol { margin-right: 15px; }
+            p, li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            
+            .table-wrapper { overflow-x: hidden; }
+            table { font-size: 0.75rem; }
+            th, td { padding: 6px 4px; }
+            th { white-space: normal; }
+            .boxed-heading { font-size: 0.95rem; padding: 2px 6px; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ==================== الصفحة الأولى ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">⭐ المحاضرة الأولى</div>
-      <div style="font-size:11.5px; font-weight:800; color:#555;">المستوى الرابع (محاسبة - نظم معلومات)</div>
-    </div>
+    <!-- الصفحة الأولى -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>مبادئ المالية العامة المعاصرة</h1>
+                <p>المحاضرة الأولى - الفصل الأول: مفاهيم أساسية</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">شعبة (نظم الأعمال – المحاسبة) | المستوى الرابع | د. فاطمة إبراهيم</p>
+            </header>
 
-    <div class="capsule-main">مبادئ المالية العامة - المحاضرة الأولى (د. فاطمة إبراهيم)</div>
+            <section class="glass-card">
+                <h2><span class="icon">🗺️</span> محتوى المقرر</h2>
+                <p>المقرر مبني على 3 أعمدة أساسية، وكلهم بيصبوا في النهاية في شيء واحد:</p>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">النفقات العامة</div>
+                        <div class="flow-op">+</div>
+                        <div class="flow-box-light">الإيرادات العامة</div>
+                        <div class="flow-op">=</div>
+                        <div class="flow-box">الموازنة العامة</div>
+                    </div>
+                    <div style="margin-top: 15px; color: var(--gold-primary); font-weight: bold; font-size: 1.1rem; text-align: center;">
+                        ⬇️<br>
+                        تنعكس في شكل: <strong>السياسة المالية للدولة</strong>
+                    </div>
+                </div>
+            </section>
 
-    <div style="background:#f4f6f7; border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:12px; border-right:4px solid #1a5276; font-weight:800; line-height:1.6;">
-      <strong>📌 محتوى المقرر:</strong> مفاهيم أساسية للمالية العامة • النفقات العامة • الإيرادات العامة • السياسة المالية • الموازنة العامة.
-      <br>
-      <strong>🎯 أهداف المقرر:</strong> التعرف على مفهوم المالية العامة والفرق بينها وبين الخاصة • مفهوم النفقات العامة وأنواعها • التفرقة بين إيرادات الدولة • مفهوم الموازنة العامة وطرق إعدادها • السياسة المالية وأهدافها.
-    </div>
+            <section class="glass-card">
+                <h2><span class="icon">🎯</span> الأهداف العامة للمقرر</h2>
+                <p>بعد دراسة المقرر، هتكون قادر تعرف:</p>
+                <ol>
+                    <li>مفهوم <strong>المالية العامة</strong> والفرق بينها وبين <strong>المالية الخاصة</strong>.</li>
+                    <li>مفهوم <strong>النفقات العامة</strong> وأنواعها وآثارها.</li>
+                    <li>الأنواع المختلفة لـ <strong>الإيرادات العامة</strong>.</li>
+                    <li>مفهوم <strong>الموازنة العامة</strong> وطرق اعتمادها ومبادئ إعدادها.</li>
+                    <li>مفهوم <strong>السياسة المالية</strong> وأنواعها وأهدافها.</li>
+                </ol>
+            </section>
 
-    <div class="capsule-purple">أولاً: نشأة وتطور علم المالية العامة</div>
-    <div class="definition-box">
-      • ظهرت المالية العامة مع <div class="highlight-yellow">تزايد دور الدولة</div> في النشاط الاقتصادي.<br>
-      • تبلورت بوضوح مع أفكار الاقتصادي <div class="text-red" style="display:inline;">كينز عام 1936م</div> في كتابه <em>"النظرية العامة للتوظف والفائدة والنقود"</em>.<br>
-      • تهتم الدولة بإشباع الحاجات العامة كسلطة منظمة، بينما تشبع الحاجات الخاصة عن طريق النشاط الفردي.
-    </div>
-
-    <div class="capsule-purple">ثانياً: مفهوم علم المالية العامة (مقارنة الفكرين)</div>
-
-    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-      <table class="custom-table">
-        <tr>
-          <th style="width:20%;">وجه المقارنة</th>
-          <th style="width:40%;">الفكر التقليدي (المفهوم الضيق)</th>
-          <th style="width:40%;">الفكر المعاصر (المفهوم الحديث)</th>
-        </tr>
-        <tr>
-          <td style="text-align:center;">التعريف</td>
-          <td>دراسة النفقات العامة والإيرادات العامة التي تلزم لتغطية هذه النفقات فقط.</td>
-          <td>القواعد المنظمة للنشاط المالي للهيئات العامة لتحقيق أغراض الدولة الاقتصادية والاجتماعية والسياسية.</td>
-        </tr>
-        <tr>
-          <td style="text-align:center;">توازن الموازنة</td>
-          <td><div class="text-red" style="display:inline;">التقيد بمبدأ التساوي</div> التام بين النفقات والإيرادات وضغط النفقات لأقصى حد.</td>
-          <td><div class="text-blue" style="display:inline;">لا يُشترط التساوي</div>؛ وفي الكساد تفتعل الدولة عجزاً (زيادة النفقات) لتنشيط السوق.</td>
-        </tr>
-        <tr>
-          <td style="text-align:center;">مصادر التمويل</td>
-          <td>رفض اللجوء لمصادر استثنائية كالقروض أو الإصدار النقدي الجديد.</td>
-          <td>تمويل العجز عبر <div class="highlight-yellow">القروض والإصدار النقدي الجديد</div>.</td>
-        </tr>
-        <tr>
-          <td style="text-align:center;">دور الدولة</td>
-          <td>الدولة الحارسة (أمن، قضاء، دفاع) وعدم التدخل في النشاط الاقتصادي.</td>
-          <td>دولة متدخلة تسعى لتنفيذ <div class="text-red" style="display:inline;">السياسة المالية</div> الشاملة.</td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="capsule-purple">ثالثاً: أنواع الحاجات (السلع)</div>
-
-    <div class="term-row">
-      <div class="term-badge-purple">الحاجات العامة</div>
-      <div class="term-desc">تشبعها الدولة فقط لمنفعة جماعية، <div class="text-red" style="display:inline;">غير قابلة للتجزئة</div> وتُقدم مجاناً (الأمن، الدفاع، القضاء).</div>
-    </div>
-    <div class="term-row">
-      <div class="term-badge-green">الحاجات شبه العامة</div>
-      <div class="term-desc"><div class="text-blue" style="display:inline;">قابلة للتجزئة</div> ويشترك فيها القطاعان، وتأخذ ثمناً كاملاً أو مدعوماً أو مجاناً (التعليم، الصحة، المواصلات).</div>
-    </div>
-    <div class="term-row">
-      <div class="term-badge-orange">الحاجات الخاصة</div>
-      <div class="term-desc">يقوم بإشباعها <div class="highlight-yellow">الأفراد أو الهيئات الخاصة</div> سعياً لتحقيق المنفعة والربح الشخصي.</div>
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">مبادئ المالية العامة - الفرقة الرابعة | صفحة 1</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-  <!-- ==================== الصفحة الثانية ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">⭐ مذكرة المراجعة والتلخيص</div>
-      <div style="font-size:11.5px; font-weight:800; color:#555;">المستوى الرابع (محاسبة - نظم معلومات)</div>
-    </div>
-
-    <div class="capsule-main">معايير تحديد الحاجة العامة وعناصر المالية</div>
-
-    <div class="cards-row">
-      <div class="card-item">
-        <div class="card-item-title">١. القائم بالإشباع</div>
-        <div class="card-item-desc">فردية إن أشبعها الأفراد، وجماعية إن أشبعتها الدولة.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٢. مصدر الإحساس</div>
-        <div class="card-item-desc">خاصة إن شعر بها الفرد، وعامة إن كان الإحساس جماعياً.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٣. أقصى منفعة بأقل نفقة</div>
-        <div class="card-item-desc">الدولة تشبع دون نظر للتكلفة، والفرد يحكمه الربح والتكلفة.</div>
-      </div>
-      <div class="card-item">
-        <div class="card-item-title">٤. الدور التقليدي</div>
-        <div class="card-item-desc">وظائف الدولة الأساسية (أمن، دفاع، قضاء) وما عداها فردي.</div>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin:10px 0;">
-      <div class="highlight-yellow" style="font-size:13px;">عناصر المالية العامة الثلاثة:</div>
-      <div class="text-blue" style="font-weight:900; font-size:13px; margin-right:8px; display:inline;">[ النفقات العامة + الإيرادات العامة + الموازنة العامة ]</div>
-    </div>
-
-    <div class="capsule-orange">رابعاً: أهداف المالية العامة</div>
-
-    <div class="cards-row">
-      <div class="card-item" style="border-top-color:#27ae60;">
-        <div class="card-item-title">الاستقرار الاقتصادي</div>
-        <div class="card-item-desc">مكافحة التضخم، ودعم النمو عبر استثمارات البنية التحتية.</div>
-      </div>
-      <div class="card-item" style="border-top-color:#2980b9;">
-        <div class="card-item-title">توفير الخدمات العامة</div>
-        <div class="card-item-desc">تمويل التعليم (المدارس والجامعات) والصحة (المستشفيات).</div>
-      </div>
-      <div class="card-item" style="border-top-color:#8e44ad;">
-        <div class="card-item-title">العدالة الاجتماعية</div>
-        <div class="card-item-desc">توفير فرص متساوية وحماية الفئات الضعيفة ببرامج الدعم.</div>
-      </div>
-      <div class="card-item" style="border-top-color:#d35400;">
-        <div class="card-item-title">مواجهة الأزمات</div>
-        <div class="card-item-desc">تحفيز الركود بزيادة الإنفاق ودعم القطاعات المتضررة.</div>
-      </div>
-    </div>
-
-    <div class="capsule-purple">خامساً: مظاهر المالية العامة</div>
-
-    <div style="display:flex; flex-direction:column; gap:8px; margin: 10px 0;">
-      <div style="background:#eaf2f8; border-radius:8px; padding:8px 12px; font-size:12px; border-right:4px solid #2980b9; font-weight:800;">
-        <strong class="text-blue">المظهر التنظيمي:</strong> خضوع جميع تنظيمات المالية العامة لسلطة الدولة المباشرة أو غير المباشرة.
-      </div>
-      <div style="background:#fbeee6; border-radius:8px; padding:8px 12px; font-size:12px; border-right:4px solid #e67e22; font-weight:800;">
-        <strong class="text-red">المظهر القانوني:</strong> المرافق العامة جزء من الإدارة العامة وتسري عليها أحكام القانون العام.
-      </div>
-    </div>
-
-    <div class="capsule-purple">سادساً: مقارنة بين المالية العامة والمالية الخاصة</div>
-
-    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-      <table class="custom-table">
-        <tr>
-          <th style="width:24%;">وجه المقارنة</th>
-          <th style="width:38%;">المالية العامة</th>
-          <th style="width:38%;">المالية الخاصة</th>
-        </tr>
-        <tr>
-          <td style="text-align:center;">من حيث الإنفاق (الهدف)</td>
-          <td>تستهدف <div class="highlight-yellow">تحقيق الصالح العام</div> حتى لو لم يسفر نشاطها عن تحقيق ربح.</td>
-          <td>يسعى الأفراد والمنشآت الخاصة لتحقيق <div class="text-red" style="display:inline;">المنفعة الشخصية والأرباح</div>.</td>
-        </tr>
-        <tr>
-          <td style="text-align:center;">من حيث الإيرادات</td>
-          <td>تعتمد على ما للدولة من <div class="text-blue" style="display:inline;">سلطة الإجبار والسيادة</div> في فرض الضرائب والرسوم.</td>
-          <td>يعتمد المشروع الخاص على <div class="text-green" style="display:inline;">التخصيص الاختياري والتعاقد</div> والتراضي.</td>
-        </tr>
-        <tr>
-          <td style="text-align:center;">من حيث الموازنة (الترتيب)</td>
-          <td>تبدأ الدولة بتقدير <div class="text-red" style="display:inline;">أوجه الإنفاق أولاً</div> ثم تدبير الإيرادات اللازمة لتغطيتها.</td>
-          <td>يبدأ الأفراد بتقدير <div class="text-blue" style="display:inline;">إيراداتهم أولاً</div> ثم ضبط أوجه الإنفاق في حدودها.</td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">مبادئ المالية العامة - الفرقة الرابعة | صفحة 2</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-  <!-- ==================== الصفحة الثالثة: التطبيقات والحل ==================== -->
-  <div class="sheet">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px;">
-      <div class="badge-top">📝 بنك الأسئلة والتطبيقات </div>
-      <div style="font-size:11.5px; font-weight:800; color:#555;">اختبر نفسك</div>
-    </div>
-
-    <div class="capsule-main">أولاً: ضع علامة (صح) أو (خطأ) - مع التصحيح</div>
-
-    <div class="q-container" data-qid="fin_tf_1" data-correct="false" data-reason="ظهرت مع تزايد دور الدولة في النشاط الاقتصادي.">
-      <div class="q-header">
-        <div>١. ظهرت المالية العامة مع انخفاض دور الدولة في النشاط الاقتصادي.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+            <section class="glass-card">
+                <h2><span class="icon">📖</span> عناصر الفصل الأول</h2>
+                <ul>
+                    <li>أولاً: نشأة وتطور المالية العامة.</li>
+                    <li>ثانياً: مفهوم علم المالية العامة.</li>
+                    <li>ثالثاً: الحاجات العامة والحاجات الخاصة.</li>
+                    <li>رابعاً: عناصر المالية العامة وأهدافها.</li>
+                    <li>خامساً: مظاهر المالية العامة.</li>
+                </ul>
+            </section>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> ظهرت مع <strong>تزايد</strong> دور الدولة في النشاط الاقتصادي.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_2" data-correct="false" data-reason="منذ ظهور أفكار الاقتصادي كينز عام 1936م.">
-      <div class="q-header">
-        <div>٢. منذ ظهور أفكار آدم سميث، أصبح علم المالية العامة من أهم أدوات مواجهة الأزمات.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 1</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> منذ ظهور أفكار الاقتصادي <strong>كينز عام 1936م</strong>.
-      </div>
     </div>
 
-    <div class="q-container" data-qid="fin_tf_3" data-correct="false" data-reason="يتم إشباعها عن طريق النشاط الفردي، بينما الدولة تشبع الحاجات العامة.">
-      <div class="q-header">
-        <div>٣. يتم إشباع الحاجات الخاصة أو الفردية من خلال نشاط الدولة.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+    <!-- الصفحة الثانية -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🌱</span> أولاً: نشأة وتطور المالية العامة</h2>
+                <p>المالية العامة مظهرتش من فراغ، هي ظهرت وتطورت بسبب حاجتين أساسيتين:</p>
+                <ul>
+                    <li><strong>تزايد دور الدولة:</strong> كل ما الدولة بدأت تتدخل في النشاط الاقتصادي وتقدم خدمات أكتر، ظهرت الحاجة للمالية العامة.</li>
+                    <li><strong>أفكار الاقتصادي "كينز":</strong> في سنة 1936م، نشر كتابه الشهير <span class="highlight">"النظرية العامة للتوظف والفائدة والنقود"</span>، واللي غيرت الفكر الاقتصادي العالمي وخلت الدولة تتدخل بشكل أكبر عشان تحل مشاكل البطالة والكساد.</li>
+                </ul>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🧠</span> ثانياً: مفهوم علم المالية العامة</h2>
+                <p>في فرق كبير بين الفكر القديم (التقليدي) والفكر الحديث (المعاصر) للمالية العامة:</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th>الفكر التقليدي (المفهوم الضيق)</th>
+                            <th>الفكر المعاصر (الحديث)</th>
+                        </tr>
+                        <tr>
+                            <td><strong>التعريف</strong></td>
+                            <td>دراسة النفقات العامة والإيرادات العامة اللي تلزم لتغطية هذه النفقات.</td>
+                            <td>القواعد المنظمة للنشاط المالي للهيئات العامة، للحصول على الموارد وإنفاقها بهدف إشباع الحاجات العامة وتحقيق أغراض <span class="text-blue">اقتصادية واجتماعية وسياسية</span>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الهدف</strong></td>
+                            <td>توفير الأموال بس لتغطية نفقات الدولة <span class="text-red">(الأمن، العدالة، الدفاع)</span>.</td>
+                            <td>تنفيذ <span class="text-blue">السياسة المالية للدولة</span> (تدخل في الاقتصاد والمجتمع).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الموازنة</strong></td>
+                            <td><span class="text-red">لازم</span> الإيرادات تساوي النفقات (توازن).</td>
+                            <td><span class="text-blue">مسموح</span> نعمل عجز مقصود (نزود النفقات عن الإيرادات) في حالة الكساد لتحريك الاقتصاد.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>مصادر التمويل</strong></td>
+                            <td><span class="text-red">ممنوع</span> اللجوء للقروض أو الإصدار النقدي الجديد.</td>
+                            <td><span class="text-blue">مسموح</span>، وبنمول العجز من خلال القروض أو الإصدار النقدي الجديد.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>دور الدولة</strong></td>
+                            <td>دور <span class="text-red">محدود</span> (أمن ودفاع وعدالة فقط).</td>
+                            <td>دور <span class="text-blue">تدخلي كبير</span> في النشاط الاقتصادي.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> يتم إشباعها عن طريق <strong>النشاط الفردي</strong>، بينما الدولة تشبع الحاجات العامة.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_4" data-correct="false" data-reason="هذا هو المفهوم التقليدي (الضيق) للمالية العامة.">
-      <div class="q-header">
-        <div>٤. المفهوم الحديث للمالية العامة: دراسة النفقات العامة والإيرادات اللازمة لتغطيتها.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 2</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> هذا هو <strong>المفهوم التقليدي (الضيق)</strong> للمالية العامة.
-      </div>
     </div>
 
-    <div class="q-container" data-qid="fin_tf_5" data-correct="true" data-reason="إجابة صحيحة! الفكر التقليدي تقيد بمبدأ التساوي التام وضغط النفقات.">
-      <div class="q-header">
-        <div>٥. في الفكر التقليدي كان يجب التقيد بمبدأ تساوي النفقات مع الإيرادات وضغط النفقات لأقصى حد وعدم اللجوء لمصادر استثنائية كالقرارات والإصدار النقدي.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+    <!-- الصفحة الثالثة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> ثالثاً: الحاجات العامة والحاجات الخاصة</h2>
+                <p>الحاجات بتتقسم لـ 3 أنواع (زي ما هو واضح في الشريحة):</p>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box" style="background: var(--navy-blue);">الحاجات العامة</div>
+                        <div class="flow-box-light" style="background: var(--gold-primary); color: #000;">الحاجات شبه العامة</div>
+                        <div class="flow-box" style="background: #6B7280;">الحاجات الخاصة</div>
+                    </div>
+                </div>
+                
+                <ul style="list-style-type: none; padding: 0;">
+                    <li style="margin-bottom: 15px;">
+                        <span class="boxed-heading">الحاجات العامة (الجماعية):</span><br>
+                        هي اللي الدولة فقط اللي بتقوم بإشباعها لتحقيق منفعة جماعية <span class="text-red">(زي الأمن، الدفاع، القضاء)</span>.
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <span class="boxed-heading">الحاجات شبه العامة:</span><br>
+                        هي اللي بيتم توزيع إشباعها بين القطاع الخاص والحكومة <span class="text-red">(زي التعليم، الصحة، الإسكان، المواصلات)</span>.
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <span class="boxed-heading">الحاجات الخاصة:</span><br>
+                        هي اللي <span class="text-blue">الأفراد أو الهيئات الخاصة</span> بتقوم بإشباعها بنفسها.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔍</span> معايير تحديد الحاجة العامة</h2>
+                <p>إزاي نعرف الحاجة دي عامة ولا خاصة؟ في 3 معايير:</p>
+                <ol>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">معيار طبيعة من يقوم بالإشباع:</span> لو <span class="text-red">الأفراد</span> هم اللي بيشبعوها = فردية. لو <span class="text-blue">الدولة</span> هي اللي بتشبعها = جماعية (عامة).
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">معيار مصدر الإحساس بالحاجة:</span> لو المصدر <span class="text-red">فردي</span> = خاصة. لو المصدر <span class="text-blue">جماعي</span> = عامة.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">معيار الدور التقليدي للدولة:</span> لو الحاجة داخل في الوظيفة التقليدية للدولة <span class="text-red">(الأمن، العدالة، الدفاع)</span> = عامة. أي حاجة تانية = فردية.
+                    </li>
+                </ol>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🆚</span> الفرق بين الحاجات العامة وشبه العامة</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>وجه المقارنة</th><th>الحاجات العامة</th><th>الحاجات شبه العامة</th></tr>
+                        <tr>
+                            <td><strong>التجزئة</strong></td>
+                            <td><span class="text-red">غير قابلة للتجزئة:</span> يعني مينفعش فرد واحد يحصل عليها دون باقي أفراد المجتمع <span class="text-red">(زي الدفاع الخارجي)</span>.</td>
+                            <td><span class="text-blue">قابلة للتجزئة:</span> ممكن بعض الأفراد يحصلوا عليها دون الباقي <span class="text-red">(زي التعليم والصحة)</span>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الثمن / المقابل</strong></td>
+                            <td>بتقدمها الدولة <span class="text-blue">مجاناً</span> لكافة الأفراد، وهي مش للبيع.</td>
+                            <td>ممكن الدولة تأخذ <span class="text-red">ثمنها كامل، أو أقل، أو لا تأخذ مقابل</span> خالص.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة وفقاً للفكر التقليدي.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_6" data-correct="false" data-reason="هذا تعريف الحاجات شبه العامة.">
-      <div class="q-header">
-        <div>٦. الحاجات العامة هي تلك الحاجات التي يتم توزيع إشباعها بين القطاع الخاص والحكومة كالتعليم والصحة.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 3</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> هذا تعريف <strong>الحاجات شبه العامة</strong>.
-      </div>
     </div>
 
-    <div class="q-container" data-qid="fin_tf_7" data-correct="true" data-reason="إجابة صحيحة وفقاً لمعيار القائم بالإشباع.">
-      <div class="q-header">
-        <div>٧. تكون الحاجة فردية إذا قام الأفراد بمهمة إشباعها وجماعية إذا قامت الدولة بإشباعها.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+    <!-- الصفحة الرابعة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🏗️</span> رابعاً: عناصر المالية العامة</h2>
+                <p>عناصر المالية العامة هي ببساطة المعادلة دي:</p>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">النفقات العامة</div>
+                        <div class="flow-op">+</div>
+                        <div class="flow-box-light">الإيرادات العامة</div>
+                        <div class="flow-op">=</div>
+                        <div class="flow-box" style="background: var(--gold-primary); color: #000;">الموازنة العامة</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🎯</span> أهداف المالية العامة (1)</h2>
+                <div class="summary-box">
+                    💡 <strong>ملخص سريع:</strong> الدولة بتدخل عشان تستقر الاقتصاد (تقلل التضخم وتزود النمو) وتوفر الخدمات الأساسية (تعليم وصحة).
+                </div>
+                <ol>
+                    <li style="margin-bottom: 15px;">
+                        <span class="boxed-heading">تحقيق الاستقرار الاقتصادي:</span>
+                        <ul>
+                            <li><strong class="sub-goal-title">مكافحة التضخم:</strong> الدولة بتعدل الضرائب والإنفاق الحكومي عشان تتحكم في معدلات التضخم.</li>
+                            <li><strong class="sub-goal-title">دعم النمو الاقتصادي:</strong> من خلال الاستثمارات العامة في البنية التحتية والخدمات الاجتماعية.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="boxed-heading">توفير الخدمات العامة:</span> المالية العامة هي الوسيلة الرئيسية لتمويل الخدمات اللي المجتمع محتاجها، زي:
+                        <ul>
+                            <li><strong class="sub-goal-title">التعليم:</strong> تمويل المدارس والجامعات لضمان حصول الجميع على تعليم جيد.</li>
+                            <li><strong class="sub-goal-title">الصحة:</strong> توفير الرعاية الصحية من خلال المستشفيات والعيادات العامة.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🎯</span> أهداف المالية العامة (2)</h2>
+                <div class="summary-box">
+                    💡 <strong>ملخص سريع:</strong> لازم كل الناس تاخد فرص متساوية، والفئات الضعيفة تلاقي دعم من الدولة.
+                </div>
+                <ol start="3">
+                    <li>
+                        <span class="boxed-heading">تحقيق العدالة الاجتماعية:</span> من الأهداف الأساسية، وتهدف إلى:
+                        <ul>
+                            <li><strong class="sub-goal-title">توفير فرص متساوية:</strong> ضمان أن جميع الأفراد لديهم فرص متساوية في التعليم والعمل.</li>
+                            <li><strong class="sub-goal-title">حماية الفئات الضعيفة:</strong> تأمين الحماية للفئات الضعيفة في المجتمع من خلال برامج الدعم.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_8" data-correct="true" data-reason="إجابة صحيحة! الحاجات العامة غير قابلة للتجزئة وتقدم مجاناً.">
-      <div class="q-header">
-        <div>٨. الحاجات العامة تتميز بعدم إمكان تجزئتها وبالتالي فهي ليست للبيع وتقدمها الدولة مجاناً لكافة الأفراد كالدفاع الخارجي.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 4</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
-      </div>
     </div>
 
-    <div class="q-container" data-qid="fin_tf_9" data-correct="true" data-reason="إجابة صحيحة! تحقيق الاستقرار الاقتصادي من أهم أهداف المالية العامة.">
-      <div class="q-header">
-        <div>٩. من الأهداف الرئيسية للمالية العامة هو تحقيق الاستقرار الاقتصادي.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+    <!-- الصفحة الخامسة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🏛️</span> خامساً: مظاهر المالية العامة</h2>
+                <ul>
+                    <li><strong>المظهر التنظيمي:</strong> كل تنظيمات المالية العامة بتتميز بخضوعها <span class="text-blue">لسلطة الدولة</span> بشكل مباشر أو غير مباشر.</li>
+                    <li><strong>المظهر القانوني:</strong> الضوابط اللي بتخضع لها المالية العامة بتتوقف على طبيعة الشكل القانوني اللي بيحكمها. لما يكون الأمر متعلق بالمرافق العامة وهي بتقدم خدمات عامة، بتعتبر جزء لا يتجزأ من الإدارة العامة، وبتسري عليها أحكام <strong>القانون العام</strong>.</li>
+                </ul>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔎</span> سادساً: المالية العامة والمالية الخاصة</h2>
+                <p>في 3 فروق جوهرية بينهم:</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th>المالية العامة</th>
+                            <th>المالية الخاصة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>من حيث الإنفاق</strong></td>
+                            <td>الدولة بتستهدف تحقيق <span class="text-blue">الصالح العام</span>، حتى لو نشاطها المالي مش بيحقق ربح.</td>
+                            <td>الأفراد أو المنشآت الخاصة بتسعى لتحقيق <span class="text-red">المنفعة الشخصية</span> المتمثلة في شكل أرباح.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>من حيث الإيرادات</strong></td>
+                            <td>بتتميز باستخدام الدولة سلطة <span class="text-blue">الإجبار</span> في فرض الضرائب والرسوم.</td>
+                            <td>المشروع الخاص بيعتمد على <span class="text-red">التخصيص الاختياري</span> في الحصول على إيراداته (يعني باختياره).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>من حيث الموازنة</strong></td>
+                            <td>الدولة <span class="text-blue">بتبدأ بتقرير أوجه الإنفاق</span> المختلفة، وبعدين تدبر الإيرادات اللازمة لتغطية النفقات.</td>
+                            <td>الفرد <span class="text-red">بيبدأ بتقدير إيراداته</span>، وبعدين يقدر أوجه الإنفاق على أساسها بحيث ميتجاوزهاش.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_10" data-correct="false" data-reason="تعتبر المالية العامة هي الوسيلة الرئيسية.">
-      <div class="q-header">
-        <div>١٠. تعتبر المالية الخاصة الوسيلة الرئيسية لتمويل الخدمات العامة التي يحتاجها المجتمع.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 5</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> تعتبر <strong>المالية العامة</strong> هي الوسيلة الرئيسية.
-      </div>
     </div>
 
-    <div class="q-container" data-qid="fin_tf_11" data-correct="true" data-reason="إجابة صحيحة وفقاً للمظهر التنظيمي للمالية العامة.">
-      <div class="q-header">
-        <div>١١. تتميز جميع تنظيمات المالية العامة بخضوعها لسلطة الدولة بصورة مباشرة أو غير مباشرة.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+    <!-- الصفحة السادسة -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem;">الفصل الثاني: النفقات العامة</h1>
+            </header>
+
+            <section class="glass-card">
+                <h2><span class="icon">💸</span> أولاً: تعريف النفقات العامة</h2>
+                <p><strong>النفقة العامة:</strong> هي مبلغ من المال تنفقه الدولة أو إحدى المؤسسات العامة التي تتبعها بقصد <span class="text-blue">إشباع حاجة عامة</span>.</p>
+                
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">النفقة العامة</div>
+                        <div class="flow-op">=</div>
+                        <div class="flow-box-light" style="background: var(--navy-blue);">الدولة أو المؤسسات العامة</div>
+                        <div class="flow-op">&larr;</div>
+                        <div class="flow-box" style="background: var(--gold-primary); color: #000;">إشباع حاجة عامة</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🧩</span> عناصر النفقة العامة</h2>
+                <p>عشان العملية تسمى "نفقة عامة" لازم يتحقق فيها 3 عناصر:</p>
+                <ol>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">النفقة العامة مبلغ من النقود:</span> النفقة بتأخذ <span class="text-blue">طابع نقدي</span>، بيتمثل في المال اللي بتدفعه الدولة للحصول على الموارد الإنتاجية (سلع وخدمات) عشان تقوم بنشاطها.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">صدور النفقة من الدولة أو إحدى هيئاتها:</span> لازم النفقة تصدر من <span class="text-blue">الدولة أو هيئاتها</span>. وبهذا المفهوم بتشمل: نفقات الهيئات المحلية، الهيئات العامة القومية، المؤسسات العامة، ونفقات المشروعات العامة.
+                    </li>
+                    <li>
+                        <span class="boxed-heading">النفقة تحقق نفع عام:</span> لازم النفقة تهدف أساساً لإشباع الحاجات العامة وتحقيق النفع العام. وبهذا المعنى، <span class="text-red">مش بتعتبر نفقة عامة</span> أي نفقة مابتشبعش حاجة عامة ومبتحققش نفع عام للأفراد.
+                    </li>
+                </ol>
+            </section>
+
+            <div class="tip-box">
+                <h3>💡 نصيحة للامتحان:</h3>
+                <p>لو جالك سؤال بيقولك "هل شراء سيارة لمدير شركة حكومية تعتبر نفقة عامة؟" الإجابة <span class="text-red">لا</span>، لأنها بتحقق نفع شخصي مش نفع عام (وهنا بيختل العنصر الثالث).</p>
+            </div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_12" data-correct="false" data-reason="هذا في المالية الخاصة، أما المالية العامة فتستهدف الصالح العام.">
-      <div class="q-header">
-        <div>١٢. في المالية العامة يسعى الأفراد أو المنشآت الخاصة بصفة أساسية لتحقيق المنفعة الشخصية المتمثلة في شكل أرباح.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 6</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">التصحيح:</span> هذا في <strong>المالية الخاصة</strong>، أما المالية العامة فتستهدف الصالح العام.
-      </div>
     </div>
 
-    <div class="q-container" data-qid="fin_tf_13" data-correct="true" data-reason="إجابة صحيحة! تعتمد المالية العامة على سلطة الدولة في الجبر والسيادة.">
-      <div class="q-header">
-        <div>١٣. تتميز المالية العامة باعتمادها على ما للدولة من سلطة الإجبار في فرض الضرائب والرسوم.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+    <!-- الصفحة السابعة (أسئلة صح وخطأ) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem; color: var(--red-alert);">أسئلة (صح) أو (خطأ)</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. ظهرت المالية العامة مع انخفاض دور الدولة في النشاط الاقتصادي. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. ظهرت مع <span class="text-blue">تزايد</span> دور الدولة.</div>
+            </div>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">2. منذ ظهور أفكار آدم سميث، أصبح علم المالية العامة من أهم الأدوات التي تستخدم في مواجهة الأزمات الاقتصادية والاجتماعية. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. اللي ظهرت أفكاره هي "كينز"، مش آدم سميث.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. يتم إشباع الحاجات الخاصة أو الفردية من خلال نشاط الدولة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. الحاجات الخاصة بيشبعها <span class="text-blue">الأفراد</span>، والدولة بتشبع الحاجات العامة.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">4. المفهوم الحديث للمالية العامة "دراسة النفقات العامة والإيرادات العامة التي تلزم لتغطية هذه النفقات". ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. ده المفهوم <strong>التقليدي</strong>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">5. في الفكر التقليدي للمالية العامة كان يجب التقيد بمبدأ تساوي النفقات العامة مع الإيرادات العامة وضغط النفقات العامة إلى أقصى حد وعدم اللجوء إلى مصادر استثنائية في الحصول على الإيرادات مثل القروض أو الإصدار النقدي الجديد. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">6. الحاجات العامة هي تلك الحاجات التي يتم توزيع إشباعها بين القطاع الخاص والحكومة ومن أمثلة هذه السلع التعليم والصحة والإسكان والمواصلات. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. دي تعريف <strong>الحاجات شبه العامة</strong>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">7. تكون الحاجة فردية اذ قام الأفراد بمهمة إشباعها وجماعية اذا قامت الدولة بتلك المهمة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
-      </div>
-    </div>
-
-    <div class="q-container" data-qid="fin_tf_14" data-correct="true" data-reason="إجابة صحيحة! الدولة تقدر الإنفاق أولاً ثم تدبر الإيراد، والأفراد العكس.">
-      <div class="q-header">
-        <div>١٤. تبدأ الدولة بتقرير أوجه الإنفاق المختلفة ثم تدبير الإيرادات بينما الأفراد يبدؤون بتقدير الإيرادات ثم ضبط الإنفاق.</div>
-        <div class="tf-btn-group">
-          <button class="btn-quiz" onclick="checkTF(this, true)">صح</button>
-          <button class="btn-quiz" onclick="checkTF(this, false)">خطأ</button>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 7</div>
         </div>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">ملاحظة:</span> إجابة صحيحة تماماً.
-      </div>
     </div>
 
-    <div class="capsule-purple" style="margin-top:12px;">ثانياً: اختر الإجابة الصحيحة</div>
+    <!-- الصفحة الثامنة (تكملة أسئلة صح وخطأ) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="quiz-card">
+                <div class="quiz-q">8. الحاجات العامة يتميز بعدم امكان تجزئتها وبالتالي فهي ليس للبيع وتقدمها الدولة مجاناً لكافة الأفراد مثل خدمات الدفاع الخارجي. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
 
-    <div class="mcq-block" data-qid="fin_mcq_1" data-correct-idx="1">
-      <strong>١. هي تلك الحاجات التي تقوم بإشباعها الدولة فقط لتحقيق منفعة جماعية مثل الأمن والدفاع والقضاء:</strong>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الحاجات الخاصة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الحاجات العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الحاجات شبه العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) لا شيء مما سبق</button>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">الإجابة الصحيحة:</span> ب) الحاجات العامة.
-      </div>
+            <div class="quiz-card">
+                <div class="quiz-q">9. من الأهداف الرئيسية للمالية العامة هو تحقيق الاستقرار الاقتصادي. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">10. تعتبر المالية الخاصة الوسيلة الرئيسية لتمويل الخدمات العامة التي يحتاجها المجتمع. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. <strong>المالية العامة</strong> هي الوسيلة الرئيسية.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">11. تتميز جميع تنظيمات المالية العامة بخضوعها لسلطة الدولة بصورة مباشرة او غير مباشرة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">12. في المالية العامة يسعى الأفراد او المنشآت الخاصة بصفة اساسية لتحقيق المنفعة الشخصية المتمثلة في شكل ارباح. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. ده في <strong>المالية الخاصة</strong>. المالية العامة بتسعى للصالح العام.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">13. تتميز المالية العامة باعتمادها على ما للدولة من سلطة الاجبار في فرض الضرائب و الرسوم. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">14. تبدأ الدولة بتقرير أوجه الانفاق المختلفة ثم يتبع ذلك تدبير الايرادات اللازمة لتغطية هذه النفقات بينما يبدأ الأفراد بتقدير ايراداتهم ثم يقدرون اوجه الانفاق على وجه لايؤدى لتجاوزها للايرادات بقدر الامكان. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 8</div>
+        </div>
     </div>
 
-    <div class="mcq-block" data-qid="fin_mcq_2" data-correct-idx="2">
-      <strong>٢. تستطيع الدولة أن تأخذ ثمنها كاملاً أو قد تأخذ أقل من ثمنها وقد لا تأخذ أي مقابل نظير هذه الخدمات:</strong>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الحاجات الخاصة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) الحاجات العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الحاجات شبه العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) لا شيء مما سبق</button>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">الإجابة الصحيحة:</span> ج) الحاجات شبه العامة.
-      </div>
+    <!-- الصفحة التاسعة (اختيار من متعدد) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem; color: var(--heading-main);">أسئلة اختيار من متعدد</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. هي تلك الحاجات التي تقوم بإشباعها الدولة فقط لتحقيق منفعة جماعية مثل الأمن والدفاع والقضاء.</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ) الحاجات الخاصة</div>
+                    <div class="quiz-opt">ب) الحاجات العامة</div>
+                    <div class="quiz-opt">ج) الحاجات شبه العامة</div>
+                    <div class="quiz-opt">د) لا شيء مما سبق</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>ب) الحاجات العامة</strong></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">2. تستطيع الدولة ان تأخذ ثمنها كاملاً او قد تأخذ اقل من ثمنها وقد لا تأخذ اي مقابل نظير هذه الخدمات.</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ) الحاجات الخاصة</div>
+                    <div class="quiz-opt">ب) الحاجات العامة</div>
+                    <div class="quiz-opt">ج) الحاجات شبه العامة</div>
+                    <div class="quiz-opt">د) لا شيء مما سبق</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>ج) الحاجات شبه العامة</strong></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. من عناصر المالية العامة:</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ) الموازنة العامة</div>
+                    <div class="quiz-opt">ب) النفقات العامة</div>
+                    <div class="quiz-opt">ج) الإيرادات العامة</div>
+                    <div class="quiz-opt">د) كل ما سبق</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>د) كل ما سبق</strong> (لأن الموازنة = نفقات + إيرادات).</div>
+            </div>
+
+            <div class="hero-header" style="margin-top: 40px; padding-bottom: 0;">
+                <h1 style="font-size: 2rem; color: var(--gold-primary);">شكراً جزيلاً ⭐</h1>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 9</div>
+        </div>
     </div>
-
-    <div class="mcq-block" data-qid="fin_mcq_3" data-correct-idx="3">
-      <strong>٣. من عناصر المالية العامة:</strong>
-      <div class="mcq-btn-group">
-        <button class="btn-choice" onclick="checkMCQ(this, 0)">أ) الموازنة العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 1)">ب) النفقات العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 2)">ج) الإيرادات العامة</button>
-        <button class="btn-choice" onclick="checkMCQ(this, 3)">د) كل ما سبق</button>
-      </div>
-      <div class="q-correction">
-        <span class="correction-label">الإجابة الصحيحة:</span> د) كل ما سبق.
-      </div>
-    </div>
-
-    <div class="footer-bar">
-      <div class="footer-brand">
-        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-        <div class="footer-brand-name">الدحيح</div>
-      </div>
-      <div class="footer-center-text">مبادئ المالية العامة - الفرقة الرابعة | صفحة 3</div>
-      <div style="width:20px;"></div>
-    </div>
-  </div>
-
-<script>
-  const STORAGE_KEY = 'finance_lec1_quiz_answers';
-
-  function getSavedAnswers() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : {};
-    } catch(e) {
-      return {};
-    }
-  }
-
-  function saveAnswer(qid, answerVal) {
-    try {
-      const answers = getSavedAnswers();
-      answers[qid] = answerVal;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-    } catch(e) {}
-  }
-
-  function checkTF(btn, userAns, autoLoad = false) {
-    const container = btn.closest('.q-container');
-    const qid = container.getAttribute('data-qid');
-    const correctAns = container.getAttribute('data-correct') === 'true';
-    const correctionBox = container.querySelector('.q-correction');
-    const buttons = container.querySelectorAll('.btn-quiz');
-
-    buttons.forEach(b => {
-      b.disabled = true;
-      b.classList.remove('correct', 'wrong');
-    });
-
-    if (userAns === correctAns) {
-      btn.classList.add('correct');
-    } else {
-      btn.classList.add('wrong');
-      buttons.forEach(b => {
-        if ((b.innerText.trim() === 'صح' && correctAns) || (b.innerText.trim() === 'خطأ' && !correctAns)) {
-          b.classList.add('correct');
-        }
-      });
-    }
-
-    if (correctionBox) {
-      correctionBox.classList.add('show');
-    }
-
-    if (!autoLoad && qid) {
-      saveAnswer(qid, userAns);
-    }
-  }
-
-  function checkMCQ(btn, selectedIdx, autoLoad = false) {
-    const container = btn.closest('.mcq-block');
-    const qid = container.getAttribute('data-qid');
-    const correctIdx = parseInt(container.getAttribute('data-correct-idx'), 10);
-    const correctionBox = container.querySelector('.q-correction');
-    const buttons = container.querySelectorAll('.btn-choice');
-
-    buttons.forEach(b => {
-      b.disabled = true;
-      b.classList.remove('correct', 'wrong');
-    });
-
-    if (selectedIdx === correctIdx) {
-      btn.classList.add('correct');
-    } else {
-      btn.classList.add('wrong');
-      if (buttons[correctIdx]) {
-        buttons[correctIdx].classList.add('correct');
-      }
-    }
-
-    if (correctionBox) {
-      correctionBox.classList.add('show');
-    }
-
-    if (!autoLoad && qid) {
-      saveAnswer(qid, selectedIdx);
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const saved = getSavedAnswers();
-    document.querySelectorAll('.q-container').forEach(container => {
-      const qid = container.getAttribute('data-qid');
-      if (saved.hasOwnProperty(qid)) {
-        const val = saved[qid];
-        const buttons = container.querySelectorAll('.btn-quiz');
-        buttons.forEach(b => {
-          if ((b.innerText.trim() === 'صح' && val === true) || (b.innerText.trim() === 'خطأ' && val === false)) {
-            checkTF(b, val, true);
-          }
-        });
-      }
-    });
-
-    document.querySelectorAll('.mcq-block').forEach(container => {
-      const qid = container.getAttribute('data-qid');
-      if (saved.hasOwnProperty(qid)) {
-        const val = saved[qid];
-        const buttons = container.querySelectorAll('.btn-choice');
-        if (buttons[val]) {
-          checkMCQ(buttons[val], val, true);
-        }
-      }
-    });
-  });
-</script>
 
 </body>
 </html>
