@@ -1,17 +1,154 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-   <script>
-    // 1. منع فتح المحاضرة خارج تطبيق الدحيح (Iframe Lock)
-    if (window.top === window.self) {
-        window.location.replace('../login.html');
-    }
-    // 2. منع فتح المحاضرة بدون تسجيل دخول رسمي
-    if (localStorage.getItem('isLoggedInDaheeh') !== 'true') {
-        window.location.replace('../login.html');
-    }
-   </script>
- 
+       <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.08; /* درجة شفافية مريحة للعين لا تضايق القراءة */
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن / المطور لتجاوز كل القيود والتصوير بحرية
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true' ||
+                      (window.parent && window.parent.localStorage && window.parent.localStorage.getItem('daheeh_is_admin') === 'true');
+
+        if (!isDev) {
+            // أ. منع فتح المحاضرة خارج التطبيق (Iframe Lock)
+            try {
+                if (window.top === window.self || !window.top.location.href.includes('course4.html')) {
+                    window.location.replace('../login.html');
+                }
+            } catch (e) {
+                window.location.replace('../login.html');
+            }
+
+            // ب. منع الدخول بدون تسجيل دخول رسمي
+            let checkLogin = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            if (!checkLogin && window.parent && window.parent.localStorage) {
+                checkLogin = window.parent.localStorage.getItem('isLoggedInDaheeh') === 'true';
+            }
+            if (!checkLogin) {
+                window.location.replace('../login.html');
+            }
+
+            // ج. منع كليك يمين واختصارات لوحة المفاتيح والمطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم عند فتح الصفحة
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return; // الأدمن معفى لتتمكن من التصوير بحرية
+
+            // إنشاء شاشة التعتيم
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `
+                <h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2>
+                <p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>
+            `;
+            document.body.appendChild(shield);
+
+            // جلب كود واسم الطالب حتى من داخل الـ Iframe على الآيفون والكمبيوتر
+            let sName = "طالب الدحيح";
+            let sCode = "";
+
+            try {
+                sName = localStorage.getItem('studentName') || (window.parent && window.parent.localStorage ? window.parent.localStorage.getItem('studentName') : null);
+                sCode = localStorage.getItem('studentCode') || (window.parent && window.parent.localStorage ? window.parent.localStorage.getItem('studentCode') : null);
+            } catch (e) {}
+
+            sName = sName || "طالب الدحيح";
+            sCode = sCode || "0000";
+
+            // رسم شبكة العلامة المائية باسم وكود الطالب
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            // التعتيم عند فقدان التركيز (محاولة تشغيل أداة القص أو لقطة الشاشة على الكمبيوتر)
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            // تفريغ الحافظة فوراً عند الضغط على PrintScreen لمنع اللصق
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملخص الشامل (A4) - المحاضرة الأولى</title>
