@@ -77,9 +77,9 @@
                       (window.parent && window.parent.localStorage && window.parent.localStorage.getItem('daheeh_is_admin') === 'true');
 
         if (!isDev) {
-            // أ. منع فتح المحاضرة خارج التطبيق (Iframe Lock) - تم تعديل الاسم ليناسب المادة
+            // أ. منع فتح المحاضرة خارج التطبيق (Iframe Lock)
             try {
-                if (window.top === window.self || !window.top.location.href.includes('accounting_lec1.html')) {
+                if (window.top === window.self || !window.top.location.href.includes('course4.html')) {
                     window.location.replace('../login.html');
                 }
             } catch (e) {
@@ -445,7 +445,6 @@
             <section class="glass-card">
                 <p>أي نظام في الدنيا بيتكون من 5 مكونات أساسية، رسمتهملك في الشكل ده:</p>
                 
-                <!-- الرسمة -->
                 <div class="diagram-container">
                     <div class="diag-control">الرقابة (Control)</div>
                     <div class="diag-box">المدخلات<br>(Inputs)</div>
