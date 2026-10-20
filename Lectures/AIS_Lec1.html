@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحاضرة الأولى - نظم المعلومات المحاسبية</title>
+    
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.12; /* درجة متوازنة تضمن الظهور بوضوح دون إزعاج القارئ */
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+            /* التكيف مع الخلفيات الفاتحة والبيضاء */
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن / المطور لتجاوز كل القيود والتصوير بحرية
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true' ||
+                      (window.parent && window.parent.localStorage && window.parent.localStorage.getItem('daheeh_is_admin') === 'true');
+
+        if (!isDev) {
+            // أ. منع فتح المحاضرة خارج التطبيق (Iframe Lock)
+            try {
+                if (window.top === window.self || !window.top.location.href.includes('course4.html')) {
+                    window.location.replace('../login.html');
+                }
+            } catch (e) {
+                window.location.replace('../login.html');
+            }
+
+            // ب. منع الدخول بدون تسجيل دخول رسمي
+            let checkLogin = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            if (!checkLogin && window.parent && window.parent.localStorage) {
+                checkLogin = window.parent.localStorage.getItem('isLoggedInDaheeh') === 'true';
+            }
+            if (!checkLogin) {
+                window.location.replace('../login.html');
+            }
+
+            // ج. منع كليك يمين واختصارات لوحة المفاتيح والمطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم عند فتح الصفحة
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return; // الأدمن معفى لتتمكن من التصوير بحرية
+
+            // إنشاء شاشة التعتيم
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `
+                <h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2>
+                <p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>
+            `;
+            document.body.appendChild(shield);
+
+            // جلب كود واسم الطالب حتى من داخل الـ Iframe على الآيفون والكمبيوتر
+            let sName = "طالب الدحيح";
+            let sCode = "";
+
+            try {
+                sName = localStorage.getItem('studentName') || (window.parent && window.parent.localStorage ? window.parent.localStorage.getItem('studentName') : null);
+                sCode = localStorage.getItem('studentCode') || (window.parent && window.parent.localStorage ? window.parent.localStorage.getItem('studentCode') : null);
+            } catch (e) {}
+
+            sName = sName || "طالب الدحيح";
+            sCode = sCode || "0000";
+
+            // رسم شبكة العلامة المائية باسم وكود الطالب
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            // التعتيم عند فقدان التركيز (محاولة تشغيل أداة القص أو لقطة الشاشة على الكمبيوتر)
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            // تفريغ الحافظة فوراً عند الضغط على PrintScreen لمنع اللصق
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+    <!-- تصميم المادة (Financial Tech Vibe) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0F172A; /* كحلي غامق جداً */
+            --bg-page: #1E293B;
+            --bg-card: rgba(30, 41, 59, 0.8);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            --emerald: #10B981;
+            --emerald-dark: #047857;
+            --gold: #F59E0B;
+            --gold-light: #FDE047;
+            --blue: #3B82F6;
+            --red: #EF4444;
+
+            --border-glass: rgba(16, 185, 129, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.05), transparent 40%);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 800px; 
+            min-height: 1050px;
+            padding: 35px 40px 65px 40px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(16, 185, 129, 0.03);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent);
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 25px; margin-bottom: 20px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 800;
+            color: var(--emerald);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+            border-right: 4px solid var(--emerald);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--emerald);
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 1.15rem; color: var(--gold); margin: 15px 0 8px;
+            font-weight: 800; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '◆'; color: var(--emerald); font-size: 0.9rem; }
+
+        p, li { font-size: 1rem; margin-bottom: 10px; color: #CBD5E1; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--emerald); }
+        ol li::marker { color: var(--gold); font-weight: bold; }
+        
+        strong { color: #FFFFFF; font-weight: 800; }
+        .highlight { background-color: rgba(245, 158, 11, 0.2); padding: 2px 6px; border-radius: 4px; color: var(--gold-light); font-weight: bold; }
+
+        .example-box { background: rgba(59, 130, 246, 0.08); border: 1px dashed var(--blue); padding: 15px; border-radius: 8px; margin: 15px 0; color: #BFDBFE; font-size: 0.95rem; }
+
+        /* تصميم النموذج العام (Diagram) */
+        .diagram-container { display: flex; justify-content: space-around; align-items: center; margin: 25px 0; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border-glass); position: relative; flex-wrap: wrap; gap: 10px;}
+        .diag-box { background: var(--emerald-dark); color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1rem; text-align: center; min-width: 120px; border: 2px solid var(--emerald); z-index: 2;}
+        .diag-arrow { color: var(--gold); font-size: 1.5rem; font-weight: bold; z-index: 2;}
+        .diag-feedback { position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); color: var(--blue); font-size: 0.9rem; font-weight: bold; background: var(--bg-page); padding: 0 10px; border-radius: 4px;}
+        .diag-control { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); color: var(--red); font-size: 0.9rem; font-weight: bold; background: var(--bg-page); padding: 0 10px; border-radius: 4px;}
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--emerald); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--emerald); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 850px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 20px 15px 65px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--emerald); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.95rem; }
+            .watermark { width: 200px; height: 200px; }
+            .diag-box { padding: 10px; font-size: 0.85rem; min-width: 80px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: المفاهيم الأساسية وخصائص النظام -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>نظم المعلومات المحاسبية</h1>
+                <p>المحاضرة الأولى - د. سمر محمد سليمان</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 5px;">الفرقة الرابعة | شعبة نظم المعلومات</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>🏢</span> أولاً: يعني إيه نظام؟ والمنشأة كنظام؟
+            </div>
+
+            <section class="glass-card">
+                <p><strong>يعني إيه نظام؟</strong> النظام هو مجموعة أجزاء (نظم فرعية) بتشتغل مع بعض عشان تحقق هدف واحد كبير.</p>
+                <p><strong>مثال المنشأة:</strong> المنشأة زي جسم الإنسان، بتتكون من أقسام (نظم فرعية) زي (المالية، الإنتاج، الموارد البشرية). كل قسم ليه هدف صغير، وكلهم بيتجمعوا عشان يحققوا الهدف الكبير للمنشأة (زي تحقيق الربح والاستمرارية).</p>
+                
+                <div class="example-box">
+                    <strong>نظام المعلومات المحاسبي:</strong> هو أحد النظم الفرعية دي، وبيعتبر "نظام تشغيل البيانات". وظيفته إنه يستقبل بيانات من جوه المنشأة (زي فاتورة شراء) ومن بره (زي أسعار السوق)، يخزنها، يعالجها، ويطلعها في شكل <strong>تقارير مفيدة</strong> للمستخدمين.
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h3>ثانياً: خصائص وعناصر النظام (مهم جداً في الامتحانات)</h3>
+                <p>عشان الحاجة تتسمى "نظام"، لازم يكون فيها الخصائص الستة دول:</p>
+                
+                <h3>1. الموارد (Resources):</h3>
+                <ul>
+                    <li><strong>موارد مالية:</strong> فلوس المنشأة (رأس المال، الأرباح، القروض).</li>
+                    <li><strong>موارد مادية:</strong> المستندات، الدفاتر، الأجهزة (الكمبيوتر، الطابعات).</li>
+                    <li><strong>موارد بشرية:</strong> الناس اللي بتشغل النظام (المحاسبين، مبرمجين، مشغلي الحاسب).</li>
+                </ul>
+
+                <h3>2. الأهداف المترابطة:</h3>
+                <p>كل نظام لازم يكون ليه هدف محدد، والهدف ده هو اللي بيحدد طريقة عمل النظام وإزاي يدير موارده.</p>
+
+                <h3>3. التكامل (البيئة والحدود):</h3>
+                <p>كل نظام ليه <strong>بيئة</strong> (اللي حواليه) و<strong>حدود</strong> (اللي بتفصله عن البيئة). والحدود دي مش دايماً خط مستقيم، فيه تداخل كتير.</p>
+
+                <h3>4. المراحل والعناصر:</h3>
+                <p>أي شغل في النظام بيمشي في مراحل منظمة، وكل مرحلة ليها أدوات (عناصر) عشان تخلص.</p>
+
+                <h3>5. القيود (Constraints):</h3>
+                <p>عوامل بتحد من قدرة النظام، ممكن تكون <strong>داخلية</strong> (زي قلة الموارد) أو <strong>خارجية</strong> (زي قلة الطلب في السوق).</p>
+
+                <h3>6. الترتيب الهرمي (Hierarchy):</h3>
+                <p>النظام بيتقسم لنظم فرعية، والفرعية دي بتتقسم لأصغر منها. <em>مثال:</em> المعهد (MCI) كنظام، فيه عميد ووكلاء وأقسام (محاسبة، نظم معلومات)، وكل قسم فيه طلاب وموظفين.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">نظم المعلومات المحاسبية - د. سمر سليمان | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: أنواع النظم -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>📊</span> ثالثاً: أنواع (تصنيف) النظم
+            </div>
+
+            <section class="glass-card">
+                <p>بنصنف النظم حسب معايير مختلفة، ودي أهم التصنيفات اللي بتيجي في الامتحان:</p>
+
+                <h3>1. من حيث نشأة النظام:</h3>
+                <ul>
+                    <li><strong>نظم طبيعية:</strong> مش الإنسان اللي عملها (زي الكون، الكواكب، جسم الإنسان).</li>
+                    <li><strong>نظم تشغيلية (مصنوعة):</strong> الإنسان هو اللي عملها (زي نظام التعليم، نظام النقل، النظام المحاسبي).</li>
+                </ul>
+
+                <h3>2. من حيث ظروف إعداد النظام:</h3>
+                <ul>
+                    <li><strong>نظم محددة (Deterministic):</strong> بنقدر نتنبأ بنتايجها بدقة (زي الحاسب الآلي، لو دخلت 1+1 هيطلع 2).</li>
+                    <li><strong>نظم محتملة:</strong> مبنقدرش نتنبأ بنتايجها بدقة، بس بنعمل احتمالات (زي قرارات الاستثمار في ظل المخاطر).</li>
+                    <li><strong>نظم مستقرة:</strong> لو حصل اضطراب فيها، بترجع لطبيعتها بسرعة.</li>
+                </ul>
+
+                <h3>3. من حيث العلاقات المتبادلة مع البيئة:</h3>
+                <ul>
+                    <li><strong>نظم مفتوحة:</strong> بتتفاعل مع البيئة (بتأثر وبتتأثر). <em>مثال:</em> المنشآت الصناعية بتاخد مواد خام من البيئة، وبتطلع منتجات للبيئة.</li>
+                    <li><strong>نظم مغلقة:</strong> مبتتفاعلش مع البيئة (زي الساعة اللي بتحدد الوقت، أو التجارب الكيميائية المعملية).</li>
+                </ul>
+
+                <h3>4. تصنيفات أخرى (مهمة):</h3>
+                <ul>
+                    <li><strong>من حيث طبيعة النشاط:</strong> زراعية، صناعية، تجارية، خدمية، إلخ.</li>
+                    <li><strong>من حيث مجال النظام:</strong> كيميائية، فيزيائية، طبية، قانونية.</li>
+                    <li><strong>من حيث التعديل للتكيف:</strong> <strong>نظم معدلة</strong> (بتعدل نفسها مع التغيرات البيئية زي البنك لما يحول من اليدوي للحاسبات) و<strong>نظم غير معدلة</strong>.</li>
+                    <li><strong>من حيث التعقيد:</strong> <strong>معقدة</strong> (فيها نظم فرعية كتير وعلاقات صعبة) و<strong>بسيطة</strong> (نظم فرعية قليلة).</li>
+                    <li><strong>من حيث المستوى:</strong> <strong>رئيسية</strong> (النظام الشامل) و<strong>فرعية</strong> (جزء بيتبع الرئيسي).</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">نظم المعلومات المحاسبية - د. سمر سليمان | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: النموذج العام والمثال التطبيقي -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🔄</span> رابعاً: النموذج العام للنظام (مهم جداً)
+            </div>
+
+            <section class="glass-card">
+                <p>أي نظام في الدنيا بيتكون من 5 مكونات أساسية، رسمتهملك في الشكل ده:</p>
+                
+                <div class="diagram-container">
+                    <div class="diag-control">الرقابة (Control)</div>
+                    <div class="diag-box">المدخلات<br>(Inputs)</div>
+                    <div class="diag-arrow">⬅️</div>
+                    <div class="diag-box" style="background: var(--blue);">عمليات التشغيل<br>(Processing)</div>
+                    <div class="diag-arrow">⬅️</div>
+                    <div class="diag-box">المخرجات<br>(Outputs)</div>
+                    <div class="diag-feedback">التغذية العكسية (Feedback)</div>
+                </div>
+
+                <h3>شرح المكونات:</h3>
+                <ol>
+                    <li><strong>المدخلات (Inputs):</strong> البيانات الخام اللي بتدخل النظام (زي المواد الخام في المصنع، أو أرقام الفواتير في المحاسبة).</li>
+                    <li><strong>عمليات التشغيل (Processing):</strong> العمليات اللي بتحصل على المدخلات عشان تتحول لمخرجات (زي تصنيع المواد، أو معالجة البيانات المالية).</li>
+                    <li><strong>المخرجات (Outputs):</strong> النتايج النهائية (زي المنتجات الجاهزة، أو التقارير المالية).</li>
+                    <li><strong>التغذية العكسية (Feedback):</strong> عملية مطابقة المخرجات بالأهداف، عشان نتأكد إن النظام شغال صح.</li>
+                    <li><strong>الرقابة (Control):</strong> تقييم المعلومات المرتدة، واكتشاف الانحرافات، واتخاذ إجراءات تصحيحية. <br><em>(ملاحظة: التغذية العكسية جزء من الرقابة، بس الرقابة أشمل لأنها بتعتمد على المعرفة السابقة بكيفية عمل النظام).</em></li>
+                </ol>
+            </section>
+
+            <div class="main-title-banner">
+                <span>🏭</span> خامساً: المثال التطبيقي (شركة أدوات كهربائية)
+            </div>
+
+            <section class="glass-card">
+                <p><strong>المطلوب:</strong> تحليل الشركة كنظام.</p>
+                <ul>
+                    <li><strong>الهدف:</strong> تحقيق ربحية واستمرارية وتعظيم رضا العملاء.</li>
+                    <li><strong>النظم الفرعية:</strong> الإنتاج، التسويق والمبيعات، الموارد البشرية، التمويل والمحاسبة.</li>
+                    <li><strong>المدخلات:</strong> مواد خام، عمالة، بيانات مالية، بيانات سوقية، طاقة.</li>
+                    <li><strong>عمليات التشغيل:</strong> تحويل المواد لمنتجات، تشغيل البيانات المالية، تخطيط الإنتاج، معالجة طلبات العملاء.</li>
+                    <li><strong>المخرجات:</strong> منتجات نهائية، تقارير مالية، معلومات إدارية، إيرادات، قرارات.</li>
+                    <li><strong>البيئة الخارجية:</strong> الموردون، العملاء، القوانين، المنافسون، الظروف الاقتصادية.</li>
+                    <li><strong>التغذية العكسية:</strong> تقارير الأداء المالي، شكاوى العملاء، تقارير الجودة.</li>
+                    <li><strong>تصنيف النظام:</strong> نظام مفتوح، معقد، تشغيلي (مصنوع)، قابل للتعديل.</li>
+                </ul>
+            </section>
+            
+            <div class="example-box" style="border-color: var(--gold); color: #FDE68A;">
+                <strong>📝 تطبيقات مطلوبة من الدكتور (حلها قبل المحاضرة الجاية):</strong><br>
+                1. تحليل شركة صناعية لإنتاج الأدوات الصحية كنظام.<br>
+                2. اختيار منشأة خدمية أو تعليمية وتحليلها كنظام (المدخلات، العمليات، المخرجات، التغذية العكسية، الخصائص).
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">نظم المعلومات المحاسبية - د. سمر سليمان | صفحة 3</div>
+        </div>
+    </div>
+
+</body>
+</html>
