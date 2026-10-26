@@ -424,7 +424,13 @@ p1 = Person(<span class="string">"Emil"</span>, 36)<br>
                     <div class="output-content">Emil<br>36</div>
                 </div>
                 <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> الـ <code>__init__</code> دي دالة بتبتدي أوتوماتيك أول ما تعمل Object جديد. وظيفتها إنها تحط القيم الابتدائية (name و age). كلمة <code>self</code> دي إشارة للكائن نفسه (عشان الكود يعرف إن name ده بتاع الكائن ده مش بتاع حاجة تانية).
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>class Person:</code> بنقول لبايثون "اعملي قالب جديد اسمه Person".<br>
+                    • <code>def __init__(self, name, age):</code> دي دالة البداية (Constructor)، بتشتغل أوتوماتيك أول ما تنشئ كائن. الـ <code>self</code> هو الكائن نفسه، والـ name و age دول القيم اللي هتيجي من بره.<br>
+                    • <code>self.name = name</code> بنخزن القيمة اللي جات (name) جوه الكائن نفسه (self.name).<br>
+                    • <code>self.age = age</code> نفس الكلام للسن.<br>
+                    • <code>p1 = Person("Emil", 36)</code> هنا إحنا أنشأنا كائن جديد اسمه p1 من القالب Person، وادينا الاسم "Emil" والسن 36.<br>
+                    • <code>print(p1.name)</code> بنطبع الاسم اللي متخزن جوه p1.
                 </div>
 
                 <p><strong>مثال 2: تعيين قيمة افتراضية (Default Value)</strong></p>
@@ -446,7 +452,11 @@ p2 = Person(<span class="string">"Tobias"</span>, 25)<br>
                     <div class="output-content">Emil 18<br>Tobias 25</div>
                 </div>
                 <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> هنا حطينا <code>age=18</code> كقيمة افتراضية. لو المستخدم مدخلش السن، هيتحط 18 أوتوماتيك (زي p1). لو دخل السن (زي p2)، هيتحط السن اللي دخله.
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>age=18</code> دي قيمة افتراضية. يعني لو المستخدم مدخلش سن، بايثون هتعتبره 18.<br>
+                    • <code>p1 = Person("Emil")</code> هنا مدخلناش سن، فهيتحط 18 أوتوماتيك.<br>
+                    • <code>p2 = Person("Tobias", 25)</code> هنا دخلنا 25، فهيتحط 25.<br>
+                    • <code>print(p1.name, p1.age)</code> هتطبع Emil 18.
                 </div>
             </section>
         </div>
@@ -484,11 +494,16 @@ car1.display_info()
                     </div>
                 </div>
                 <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
+                    <div class="output-header"><span>_</span> Terminal Output</div>
                     <div class="output-content">2020 Toyota Corolla</div>
                 </div>
                 <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> عملنا دالة اسمها <code>display_info</code> جوه الكلاس. الدالة دي بتستخدم بيانات الكائن (brand, model, year) عشان تطبعهم. عشان نستدعيها، بنكتب اسم الكائن وبعدين نقطة واسم الدالة.
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • الـ <code>__init__</code> هنا بياخد 3 قيم (براند، موديل، سنة) وبيخزنهم جوه الكائن.<br>
+                    • <code>def display_info(self):</code> دي دالة تانية جوه الكلاس، وظيفتها تطبع البيانات.<br>
+                    • <code>f"{self.year} {self.brand} {self.model}"</code> دي طريقة تنسيق النص (f-string) عشان نحط المتغيرات جوه النص.<br>
+                    • <code>car1 = Car(...)</code> بننشئ كائن جديد ونبعتله البيانات.<br>
+                    • <code>car1.display_info()</code> بنستدعي الدالة عشان تطبع.
                 </div>
 
                 <p><strong>مثال 4: دالة ترحب بالمستخدم</strong></p>
@@ -505,11 +520,15 @@ p1.greet()
                     </div>
                 </div>
                 <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
+                    <div class="output-header"><span>_</span> Terminal Output</div>
                     <div class="output-content">Hello, my name is Emil</div>
                 </div>
                 <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> نفس الفكرة، الدالة <code>greet</code> بتاخد الاسم من الكائن وتطبعه. لاحظ إننا بنستخدم <code>self.name</code> عشان نوصل للاسم اللي جوه الكائن.
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • الـ <code>__init__</code> هنا بياخد الاسم بس ويخزنه في <code>self.name</code>.<br>
+                    • <code>def greet(self):</code> دالة تطبع ترحيب.<br>
+                    • <code>"Hello, my name is " + self.name</code> هنا بنجمع نص ثابت مع الاسم اللي متخزن جوه الكائن.<br>
+                    • <code>p1.greet()</code> بنستدعي الدالة عشان تشتغل.
                 </div>
 
                 <p><strong>مثال 5: الدوال بتاخد Parameters (زي الدوال العادية)</strong></p>
@@ -527,11 +546,15 @@ calc = Calculator()<br>
                     </div>
                 </div>
                 <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
+                    <div class="output-header"><span>_</span> Terminal Output</div>
                     <div class="output-content">8<br>28</div>
                 </div>
                 <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> هنا الدالة <code>add</code> بتاخد رقمين (a و b) وبترجع الناتج. لما استدعيناها واديناها 5 و 3، رجعت 8. وكلمة <code>self</code> هنا مش مستخدمة في الحسابات، بس لازم تتكتب عشان بايثون تعرف إن دي دالة جوه كلاس.
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • الكلاس <code>Calculator</code> فيه دالتين: واحدة للجمع وواحدة للضرب.<br>
+                    • <code>def add(self, a, b)</code> بتاخد رقمين، وبترجع الناتج <code>return a + b</code>.<br>
+                    • <code>calc = Calculator()</code> عملنا كائن جديد.<br>
+                    • <code>calc.add(5, 3)</code> استدعينا دالة الجمع واديناها 5 و 3، رجعت 8.
                 </div>
             </section>
         </div>
@@ -557,303 +580,4 @@ calc = Calculator()<br>
                 <div class="code-window">
                     <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
                     <div class="code-content">
-<span class="keyword">class</span> Person:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, name, age):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.age = age<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">celebrate_birthday</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.age += 1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(f<span class="string">"Happy birthday! You are now {self.age}"</span>)<br><br>
-p1 = Person(<span class="string">"Linus"</span>, 25)<br>
-p1.celebrate_birthday()<br>
-p1.celebrate_birthday()
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">Happy birthday! You are now 26<br>Happy birthday! You are now 27</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> الدالة <code>celebrate_birthday</code> بتزود العمر بـ 1 (<code>self.age += 1</code>) وبتطبع رسالة. كل مرة بنستدعيها، السن بيزيد.
-                </div>
-            </section>
-
-            <section class="glass-card">
-                <h3>الوراثة (Inheritance)</h3>
-                <p><strong>يعني إيه؟</strong> لو عندك Class اسمه <code>Person</code> (فيه الاسم والطباعة)، وعايز تعمل Class جديد اسمه <code>Student</code> (طالب)، الطالب ده برضه شخص، فممكن يرث كل خصائصه، ويضيف عليه حاجة جديدة (زي سنة التخرج).</p>
-                
-                <p><strong>مثال 7: وراثة بسيطة</strong></p>
-                <div class="code-window">
-                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="code-content">
-<span class="keyword">class</span> Person:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, fname, lname):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.firstname = fname<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.lastname = lname<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">printname</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(self.firstname, self.lastname)<br><br>
-<span class="keyword">class</span> Student(Person):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, fname, lname, year):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">super</span>().<span class="func">__init__</span>(fname, lname)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.graduationyear = year<br><br>
-x = Student(<span class="string">"Mike"</span>, <span class="string">"Olsen"</span>, 2019)<br>
-x.printname()<br>
-<span class="keyword">print</span>(x.graduationyear)
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">Mike Olsen<br>2019</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> <code>Student</code> ورث من <code>Person</code> كل حاجة. عشان نضيف سنة التخرج، استخدمنا <code>super().__init__</code> عشان ننادي على الـ init بتاع الأب (عشان ياخد الاسم الأول والأخير)، وبعدها ضفنا <code>graduationyear</code>. كده الطالب عنده اسم، وطباعة اسم، وسنة تخرج.
-                </div>
-            </section>
-        </div>
-        <div class="footer-bar">
-            <div class="footer-brand">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-                <div class="footer-brand-name">الدحيح</div>
-            </div>
-            <div class="footer-center-text">أساسيات البرمجة الشينية - د. مريم سامي | صفحة 4</div>
-        </div>
-    </div>
-
-    <!-- الصفحة الخامسة: الوراثة (تابع) وأنواعها -->
-    <div class="a4-page">
-        <div class="watermark"></div>
-        <div class="content-wrapper">
-            <div class="main-title-banner">
-                <span>🌳</span> الوراثة (تابع) وأنواعها
-            </div>
-
-            <section class="glass-card">
-                <p><strong>مثال 8: إضافة Method جديدة في الفئة الوريثة</strong></p>
-                <div class="code-window">
-                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="code-content">
-<span class="keyword">class</span> Person:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, fname, lname):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.firstname = fname<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.lastname = lname<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">printname</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(self.firstname, self.lastname)<br><br>
-<span class="keyword">class</span> Student(Person):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, fname, lname, year):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">super</span>().<span class="func">__init__</span>(fname, lname)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.graduationyear = year<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">welcome</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Welcome"</span>, self.firstname, self.lastname, <span class="string">"to the class of"</span>, self.graduationyear)<br><br>
-x = Student(<span class="string">"Mike"</span>, <span class="string">"Olsen"</span>, 2024)<br>
-x.welcome()
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">Welcome Mike Olsen to the class of 2024</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> ضفنا دالة <code>welcome</code> جوه الكلاس <code>Student</code> بس (مش موجودة في Person). عشان نستخدمها، عملنا كائن جديد واديناها سنة التخرج 2024، ونادينا الدالة اللي طبعت الرسالة.
-                </div>
-            </section>
-
-            <section class="glass-card">
-                <h3>أنواع الوراثة (Types of Inheritance)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>النوع</th>
-                            <th>الشرح</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Single</strong></td>
-                            <td>كلاس واحد يورث من كلاس واحد (زي Student من Person).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Multilevel</strong></td>
-                            <td>سلسلة (Class A يورث Class B، وClass B يورث Class C).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hierarchical</strong></td>
-                            <td>كلاس أب واحد، بيورث منه أكتر من كلاس (زي Person يورث منه Student و Doctor).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Multiple</strong></td>
-                            <td>كلاس واحد بيورث من أكتر من كلاس أب.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hybrid</strong></td>
-                            <td>خليط بين أكتر من نوع من الأنواع اللي فوق.</td>
-                        </tr>
-                    </table>
-                </div>
-            </section>
-        </div>
-        <div class="footer-bar">
-            <div class="footer-brand">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-                <div class="footer-brand-name">الدحيح</div>
-            </div>
-            <div class="footer-center-text">أساسيات البرمجة الشينية - د. مريم سامي | صفحة 5</div>
-        </div>
-    </div>
-
-    <!-- الصفحة السادسة: التغليف، تعدد الأشكال، التجريد -->
-    <div class="a4-page">
-        <div class="watermark"></div>
-        <div class="content-wrapper">
-            <div class="main-title-banner">
-                <span>🔒</span> التغليف (Encapsulation)
-            </div>
-
-            <section class="glass-card">
-                <p><strong>يعني إيه تغليف؟</strong> هو إننا نخبي البيانات (الخصائص) جوه الكلاس، ومحدش يقدر يوصلها من بره غير من خلال دوال معينة (Getters و Setters). بنعمل ده عشان نحمي البيانات من التعديل الغلط.</p>
-                
-                <p><strong>مثال 9: Private Property (خاصية خاصة)</strong></p>
-                <div class="code-window">
-                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="code-content">
-<span class="keyword">class</span> Person:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, name, age):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__age = age <span class="comment"># Private property</span><br><br>
-p1 = Person(<span class="string">"Emil"</span>, 25)<br>
-<span class="keyword">print</span>(p1.name)<br>
-<span class="keyword">print</span>(p1.__age) <span class="comment"># This will cause an error</span>
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">Emil<br>AttributeError: 'Person' object has no attribute '__age'</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> حطينا <code>__age</code> (شرطتين تحت) عشان نخليها خاصة. لما حاولنا نطبعها من بره، بايثون عملت Error لأننا مش مسموح لنا نوصلها مباشرة.
-                </div>
-
-                <p><strong>مثال 10: Getters و Setters</strong></p>
-                <div class="code-window">
-                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="code-content">
-<span class="keyword">class</span> Person:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">__init__</span>(self, name, age):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__age = age<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">get_age</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> self.__age<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">set_age</span>(self, age):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> age > 0:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__age = age<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Age must be positive"</span>)<br><br>
-p1 = Person(<span class="string">"Ali"</span>, 25)<br>
-<span class="keyword">print</span>(p1.get_age()) <span class="comment"># 25</span><br>
-p1.set_age(26)<br>
-<span class="keyword">print</span>(p1.get_age()) <span class="comment"># 26</span>
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">25<br>26</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> عشان نوصل للـ <code>__age</code>، عملنا دالة <code>get_age</code> (بترجع القيمة) ودالة <code>set_age</code> (بتغير القيمة). في <code>set_age</code> حطينا شرط إن السن لازم يكون أكبر من صفر، وده بيحمي البيانات من القيم الغلط.
-                </div>
-            </section>
-        </div>
-        <div class="footer-bar">
-            <div class="footer-brand">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-                <div class="footer-brand-name">الدحيح</div>
-            </div>
-            <div class="footer-center-text">أساسيات البرمجة الشينية - د. مريم سامي | صفحة 6</div>
-        </div>
-    </div>
-
-    <!-- الصفحة السابعة: تعدد الأشكال والتجريد -->
-    <div class="a4-page">
-        <div class="watermark"></div>
-        <div class="content-wrapper">
-            <div class="main-title-banner">
-                <span>🎭</span> تعدد الأشكال (Polymorphism)
-            </div>
-
-            <section class="glass-card">
-                <p><strong>يعني إيه تعدد أشكال؟</strong> إن يكون عندنا كلاسات مختلفة (عربية، مركب، طيارة)، وكلهم ليهم نفس اسم الدالة (move)، بس كل كلاس بينفذها بطريقته. لما نستدعي الدالة، كل كائن هيتصرف بطريقته.</p>
-                
-                <p><strong>مثال 11: تعدد الأشكال في الدوال</strong></p>
-                <div class="code-window">
-                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="code-content">
-<span class="keyword">class</span> Car:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">move</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Drive!"</span>)<br><br>
-<span class="keyword">class</span> Boat:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">move</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Sail!"</span>)<br><br>
-<span class="keyword">class</span> Plane:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">move</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Fly!"</span>)<br><br>
-car1 = Car()<br>
-boat1 = Boat()<br>
-plane1 = Plane()<br><br>
-<span class="keyword">for</span> x <span class="keyword">in</span> (car1, boat1, plane1):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;x.move()
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">Drive!<br>Sail!<br>Fly!</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> عملنا 3 كلاسات (Car, Boat, Plane). كلهم فيهم دالة اسمها <code>move</code>، بس كل واحد بيطبع حاجة مختلفة. لما لفينا عليهم بـ for، كل كائن نفذ الدالة بتاعته، وده هو تعدد الأشكال.
-                </div>
-            </section>
-
-            <div class="main-title-banner">
-                <span>🧩</span> التجريد (Abstraction)
-            </div>
-
-            <section class="glass-card">
-                <p><strong>يعني إيه تجريد؟</strong> إننا نخفي التفاصيل المعقدة، ونظهر للمستخدم واجهة بسيطة. في بايثون، بنستخدم مكتبة <code>abc</code> عشان نعمل كلاس مجرد (Abstract Class) مش ينفع نعمل منه كائن مباشرة، ولازم الكلاسات اللي هتورث منه تنفذ الدوال بتاعته.</p>
-                
-                <p><strong>مثال 12: التجريد في بايثون</strong></p>
-                <div class="code-window">
-                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="code-content">
-<span class="keyword">from</span> abc <span class="keyword">import</span> ABC, abstractmethod<br><br>
-<span class="keyword">class</span> Animal(ABC):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">@abstractmethod</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">doAction</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">pass</span><br><br>
-<span class="keyword">class</span> Human(Animal):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">doAction</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"I can walk and run"</span>)<br><br>
-<span class="keyword">class</span> Snake(Animal):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="func">doAction</span>(self):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"I can crawl"</span>)<br><br>
-R = Human()<br>
-R.doAction()<br>
-K = Snake()<br>
-K.doAction()
-                    </div>
-                </div>
-                <div class="output-window">
-                    <div class="output-header"><span>>_</span> Terminal Output</div>
-                    <div class="output-content">I can walk and run<br>I can crawl</div>
-                </div>
-                <div class="explanation-box">
-                    💡 <strong>الشرح:</strong> الكلاس <code>Animal</code> مش ينفع نعمل منه كائن، هو مجرد قالب. الكلاسات التانية (Human, Snake) لازم تنفذ الدالة <code>doAction</code> بطريقتها. ده بيجبر أي كلاس جديد يلتزم بالشكل ده.
-                </div>
-            </section>
-        </div>
-        <div class="footer-bar">
-            <div class="footer-brand">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-                <div class="footer-brand-name">الدحيح</div>
-            </div>
-            <div class="footer-center-text">أساسيات البرمجة الشينية - د. مريم سامي | صفحة 7</div>
-        </div>
-    </div>
-
-</body>
-</html>
+<span class="keyword">class</span> Person:<
