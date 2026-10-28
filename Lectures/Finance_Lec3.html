@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.12;
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            // (تم تعطيل التطرد عشان يفتح على جهازك)
+            /*
+            try {
+                if (window.top === window.self || !window.top.location.href.includes('course4.html')) {
+                    window.location.replace('../login.html');
+                }
+            } catch (e) {
+                window.location.replace('../login.html');
+            }
+            let checkLogin = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            if (!checkLogin) { window.location.replace('../login.html'); }
+            */
+
+            // منع كليك يمين واختصارات المطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح";
+            let sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادئ المالية العامة - المحاضرة الثالثة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
+            
+            --heading-main: #4C1D95;
+            
+            --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 850px; /* عريضة شوية عشان الجداول */
+            min-height: 1080px;
+            padding: 40px 45px 65px 45px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 20px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--heading-main);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--navy-blue); font-weight: 700; }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 25px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 4px;
+            background-color: var(--gold-primary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        h2 {
+            font-size: 1.4rem; color: var(--heading-main); margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); padding-bottom: 5px; width: fit-content;
+        }
+        h2 span.icon { font-size: 1.2rem; background: rgba(76, 29, 149, 0.1); padding: 4px 10px; border-radius: 6px; }
+
+        h3 {
+            font-size: 1.15rem; color: var(--heading-main); margin: 18px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '❖'; color: var(--gold-primary); font-size: 0.9rem; }
+
+        p, li { font-size: 1rem; margin-bottom: 10px; color: var(--text-main); }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--gold-primary); }
+        ol li::marker { color: var(--heading-main); font-weight: bold; }
+        
+        .boxed-heading {
+            color: var(--heading-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 1.5px solid var(--heading-main);
+            border-radius: 8px;
+            padding: 2px 10px;
+            background-color: rgba(76, 29, 149, 0.05);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .text-red { color: var(--red-alert); font-weight: 800; }
+        .text-blue { color: var(--navy-blue); font-weight: 800; }
+
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: rgba(253, 224, 71, 0.4); padding: 2px 4px; border-radius: 4px; font-weight: 700; }
+
+        .summary-box {
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #78350F;
+            font-weight: 700;
+        }
+
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; }
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; }
+        .tip-box h3::before { content: '💡'; }
+
+        /* تصميم الجداول - عريضة وواضحة */
+        .table-wrapper { 
+            overflow-x: auto; /* للسحب في الشاشات الصغيرة جداً فقط */
+            margin: 15px 0; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            background: #FFF;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+            font-size: 0.9rem; 
+            min-width: 600px; /* عشان الأعمدة تبان كويسة */
+        }
+        th, td { padding: 10px 8px; border: 1px solid var(--border-color); }
+        th { background: rgba(6, 78, 59, 0.08); color: var(--heading-main); font-weight: 800; }
+        tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
+        .highlight-row { background: rgba(16, 185, 129, 0.1); font-weight: bold; border: 1px solid var(--emerald-light); }
+
+        /* الرسم البياني */
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 20px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); }
+        .flow-chart { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; }
+        .flow-op { font-size: 2rem; color: var(--gold-primary); font-weight: bold; }
+
+        /* الكويزات */
+        .quiz-card { background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .quiz-q { font-size: 1.05rem; font-weight: 700; color: var(--heading-sub); margin-bottom: 10px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .quiz-opt { background: #F9FAFB; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.95rem; }
+        .answer-box { background: rgba(16, 185, 129, 0.1); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 4px; font-weight: 700; color: var(--emerald-dark); font-size: 0.95rem; display: block; }
+        
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 10px 65px 10px; border-radius: 0; border: none; border-bottom: 2px solid var(--gold-primary); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 10px; }
+            ul, ol { margin-right: 15px; }
+            p, li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            
+            table { font-size: 0.75rem; }
+            th, td { padding: 6px 4px; }
+            .boxed-heading { font-size: 0.95rem; padding: 2px 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>مبادئ المالية العامة المعاصرة</h1>
+                <p>المحاضرة الثالثة - الآثار الاقتصادية للنفقات العامة</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">شعبة (نظم الأعمال – المحاسبة) | المستوى الرابع | د. فاطمة إبراهيم</p>
+            </header>
+
+            <section class="glass-card">
+                <h2><span class="icon">📈</span> أولاً: الآثار المباشرة على الإنتاج القومي</h2>
+                <p>النفقات العامة بتأثر على الناتج القومي عن طريق تأثيرها في <strong>حجم الطلب الكلي الفعال</strong> (لأن النفقات العامة جزء من الطلب الكلي).</p>
+                
+                <div class="summary-box">
+                    <strong>علاقة النفقات العامة بالطلب الكلي بتتوقف على 3 عوامل:</strong>
+                    <ol>
+                        <li>مقدار ونوع النفقات العامة.</li>
+                        <li>درجة مرونة الجهاز الإنتاجي (وقدرته على التوسع في إنتاج السلع والخدمات).</li>
+                        <li>درجة التنمية الاقتصادية والاجتماعية المتحققة في البلد.</li>
+                    </ol>
+                </div>
+                <p>وبالطبع، إنفاق الدولة على إقامة المشروعات الإنتاجية بيؤدي لتوليد دخول مباشرة من عوائدها، وبالتالي زيادة الناتج القومي الإجمالي. <strong>لكن</strong> الزيادة دي بتتوقف على كفاءة الإنفاق العام.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🛒</span> ثانياً: الآثار المباشرة على الاستهلاك القومي</h2>
+                <p>زيادة النفقات العامة بتؤدي لزيادة الطلب الكلي ومن ثم زيادة حجم الاستهلاك، لكن التأثير بيختلف حسب نوع النفقات والغرض منها. <span class="highlight">مثال:</span></p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>نوع الإنفاق</th>
+                            <th>التأثير على الاستهلاك</th>
+                        </tr>
+                        <tr>
+                            <td>شراء الدولة لخدمات استهلاكية</td>
+                            <td>يؤدي مباشرة إلى زيادة الاستهلاك.</td>
+                        </tr>
+                        <tr>
+                            <td>توزيع الدولة لدخول (أجور ومرتبات)</td>
+                            <td>يخصص جزء منها للاستهلاك، مما يؤدي إلى زيادة الاستهلاك.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">💰</span> ثالثاً: الآثار المباشرة على إعادة توزيع الدخل</h2>
+                <p>النفقات العامة ليها دور كبير في إعادة توزيع الدخل القومي بين أفراد المجتمع، وده بيحصل على مرحلتين:</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المرحلة</th>
+                            <th>الشرح</th>
+                            <th>نوع النفقة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>التوزيع الأول</strong></td>
+                            <td>الدولة بتوزع الدخل على عوامل الإنتاج اللي بتعمل لديها (زي الأجور والمرتبات للعاملين بالقطاع العام). ونتيجة عوامل سياسية واجتماعية، ممكن يحصل خلل في التوزيع (فيه ناس دخلها بيزيد وناس بيقل)، فبيتطلب من الدولة تعمل إعادة توزيع تانية.</td>
+                            <td><strong>النفقات الحقيقية</strong> (اللي بتدفع مقابل خدمة أو إنتاج).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>التوزيع الثاني</strong></td>
+                            <td>الدولة هنا بتستخدم النفقات العامة لإعادة توزيع الدخل. تأثيرها بيختلف حسب نوع النفقة. 
+                            <br>• <strong>النفقات التحويلية الاجتماعية:</strong> بتؤدي لإعادة توزيع الدخل لصالح الطبقات الفقيرة.
+                            <br>• <strong>النفقات التحويلية الاقتصادية:</strong> بتعمل إعادة توزيع الدخل بشكل عيني في صورة سلع وخدمات، وبتتم إعادة توزيع الدخل أفقياً.</td>
+                            <td><strong>النفقات التحويلية</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة (مسألة 1) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="summary-box" style="text-align: center; font-size: 1.1rem; background: var(--navy-blue); color: #FFF; border: none;">
+                📝 مسائل وتطبيقات (مهمة جداً للامتحان)
+            </div>
+
+            <section class="glass-card">
+                <h2><span class="icon">1️⃣</span> مسألة (1): اختيار المشروعات</h2>
+                <p><strong>المعطيات:</strong> لدينا <strong>700 مليون جنيه</strong> موجهة لإنشاء طرق سريعة، وهناك 6 بدائل مقترحة. المطلوب: اختيار أفضل المشروعات المتاحة.</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المشروع</th>
+                            <th>التكاليف (ت)</th>
+                            <th>المنافع (م)</th>
+                            <th>المنافع الصافية (م - ت)</th>
+                            <th>المنافع النسبية (م / ت)</th>
+                            <th>الترتيب</th>
+                        </tr>
+                        <tr>
+                            <td>المشروع الأول</td>
+                            <td>400</td>
+                            <td>700</td>
+                            <td>300</td>
+                            <td>1.75</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع الثاني</td>
+                            <td>200</td>
+                            <td>300</td>
+                            <td>100</td>
+                            <td>1.50</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع الثالث</td>
+                            <td>150</td>
+                            <td>200</td>
+                            <td>50</td>
+                            <td>1.33</td>
+                            <td>4</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>المشروع الرابع</td>
+                            <td>100</td>
+                            <td>250</td>
+                            <td>150</td>
+                            <td>2.50</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع الخامس</td>
+                            <td>200</td>
+                            <td>200</td>
+                            <td>0</td>
+                            <td>1.00</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع السادس</td>
+                            <td>300</td>
+                            <td>270</td>
+                            <td>-30</td>
+                            <td>0.90</td>
+                            <td>6</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="alert-box" style="background: rgba(16, 185, 129, 0.1); border-right-color: var(--emerald-dark);">
+                    <h3 style="color: var(--emerald-dark);">✅ الحل بالتفصيل:</h3>
+                    <p>1. <strong>نحسب المنافع النسبية (م/ت)</strong> لكل مشروع. (زي المشروع الأول: 700 / 400 = 1.75).</p>
+                    <p>2. <strong>نرتب المشروعات تنازلياً</strong> حسب المنافع النسبية (الأعلى أولاً).</p>
+                    <p>3. <strong>نبدأ نختار</strong> من الترتيب الأول لحد ما نستهلك الميزانية (700 مليون):</p>
+                    <ul>
+                        <li>المشروع الرابع (الترتيب 1): تكلفته 100.</li>
+                        <li>المشروع الأول (الترتيب 2): تكلفته 400.</li>
+                        <li>المشروع الثاني (الترتيب 3): تكلفته 200.</li>
+                    </ul>
+                    <p><strong>إجمالي التكلفة = 100 + 400 + 200 = 700 مليون جنيه.</strong> (وهو نفس الميزانية المتاحة).</p>
+                    <p><strong>الاختيار الأمثل هو: المشروع الرابع، الأول، والثاني.</strong></p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة (مسألة 2) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">2️⃣</span> مسألة (2): اختيار المشروعات</h2>
+                <p><strong>المعطيات:</strong> لدينا <strong>600 مليون جنيه</strong> لإنشاء طرق سريعة، وهناك 6 بدائل. المطلوب: اختيار أفضل المشروعات.</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المشروع</th>
+                            <th>التكاليف (ت)</th>
+                            <th>المنافع (م)</th>
+                            <th>المنافع الصافية (م - ت)</th>
+                            <th>المنافع النسبية (م / ت)</th>
+                            <th>الترتيب</th>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>المشروع الأول</td>
+                            <td>500</td>
+                            <td>600</td>
+                            <td>100</td>
+                            <td>1.20</td>
+                            <td>2</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>المشروع الثاني</td>
+                            <td>300</td>
+                            <td>500</td>
+                            <td>200</td>
+                            <td>1.67</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع الثالث</td>
+                            <td>200</td>
+                            <td>200</td>
+                            <td>0</td>
+                            <td>1.00</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع الرابع</td>
+                            <td>400</td>
+                            <td>450</td>
+                            <td>50</td>
+                            <td>1.125</td>
+                            <td>5</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>المشروع الخامس</td>
+                            <td>300</td>
+                            <td>400</td>
+                            <td>100</td>
+                            <td>1.33</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع السادس</td>
+                            <td>500</td>
+                            <td>350</td>
+                            <td>-150</td>
+                            <td>0.70</td>
+                            <td>6</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="alert-box" style="background: rgba(16, 185, 129, 0.1); border-right-color: var(--emerald-dark);">
+                    <h3 style="color: var(--emerald-dark);">✅ الحل بالتفصيل:</h3>
+                    <p>1. <strong>نحسب المنافع النسبية (م/ت)</strong> لكل مشروع. (زي المشروع الثاني: 500 / 300 = 1.67).</p>
+                    <p>2. <strong>نرتب المشروعات تنازلياً</strong> حسب المنافع النسبية.</p>
+                    <p>3. <strong>نبدأ نختار</strong> من الترتيب الأول:</p>
+                    <ul>
+                        <li>المشروع الثاني (الترتيب 1): تكلفته 300.</li>
+                        <li>المشروع الأول (الترتيب 2): تكلفته 500.  (مجموعهم 800، وده أكبر من الـ 600 المتاحين!).</li>
+                    </ul>
+                    <p><strong>الاختيار الأمثل هو: المشروع الثاني، والخامس (اللي تكلفته 300).</strong></p>
+                    <p><strong>إجمالي التكلفة = 300 + 300 = 600 مليون جنيه.</strong> (وهو نفس الميزانية المتاحة).</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة (أسئلة صح وخطأ) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem; color: var(--red-alert);">أسئلة (صح) أو (خطأ)</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. تؤثر النفقات العامة في الناتج القومي عن طريق تأثيرها في حجم الطلب الكلي الفعال. ( )</div>
+                <div class="answer-box" style="background: rgba(16, 185, 129, 0.1); border-right-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">2. لا يؤدي قيام الدولة بالإنفاق على إقامة المشروعات الإنتاجية إلى زيادة في الناتج القومي الإجمالي. ( )</div>
+                <div class="answer-box" style="background: rgba(185, 28, 28, 0.1); border-right-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. بيؤدي لزيادة الناتج القومي.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. شراء الدولة لخدمات استهلاكية مثل يؤدي مباشرة إلى زيادة الاستهلاك. ( )</div>
+                <div class="answer-box" style="background: rgba(16, 185, 129, 0.1); border-right-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">4. توزيع الدولة لدخول يخصص جزء منها للاستهلاك مثل الأجور والمرتبات لا يؤدي إلى زيادة الاستهلاك. ( )</div>
+                <div class="answer-box" style="background: rgba(185, 28, 28, 0.1); border-right-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. بيؤدي لزيادة الاستهلاك.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">5. يتمثل التوزيع الأول للدخل في النفقات التحويلية. ( )</div>
+                <div class="answer-box" style="background: rgba(185, 28, 28, 0.1); border-right-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. التوزيع الأول للنفقات <strong>الحقيقية</strong>. (التحويلية هي التوزيع الثاني).</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">6. تعمل الدولة على إعادة توزيع الدخل باستخدام النفقات التحويلية والتي يختلف تأثيرها باختلاف نوع النفقة. ( )</div>
+                <div class="answer-box" style="background: rgba(16, 185, 129, 0.1); border-right-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 5</div>
+        </div>
+    </div>
+
+</body>
+</html>
