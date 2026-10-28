@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المالية العامة - المحاضرة الثانية</title>
-    
     <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
     <noscript>
         <style>body { display: none !important; }</style>
@@ -70,9 +66,10 @@
     </style>
 
     <script>
-        // 1. فحص هل المستخدم هو الأدمن
+        // 1. فحص هل المستخدم هو الأدمن / المطور
         const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
-                      localStorage.getItem('daheeh_is_admin') === 'true';
+                      localStorage.getItem('daheeh_is_admin') === 'true' ||
+                      (window.parent && window.parent.localStorage && window.parent.localStorage.getItem('daheeh_is_admin') === 'true');
 
         if (!isDev) {
             // (تم تعطيل التطرد عشان يفتح على جهازك)
@@ -142,20 +139,29 @@
     </script>
     <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
 
-    <!-- تصميم المادة (Executive Report Vibe) -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادئ المالية العامة - المحاضرة الثانية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #F4F7F9;
-            --bg-page: #FFFFFF;
-            --text-main: #334155;
-            --text-light: #64748B;
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7; /* لون عاجي */
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
             
-            --navy: #0F172A;
-            --blue: #2563EB;
-            --accent: #E11D48;
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
             
-            --border: #E2E8F0;
+            --heading-main: #4C1D95; /* بنفسجي غامق للعناوين الرئيسية */
+            --heading-sub: #9333EA;  /* موف فاتح للعناوين الفرعية */
+            
+            --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -165,7 +171,7 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             line-height: 1.8;
-            padding: 40px 10px;
+            padding: 30px 10px;
             min-height: 100vh;
             display: flex;
             flex-wrap: wrap;
@@ -177,16 +183,17 @@
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
 
+        /* تصميم ورقة A4 */
         .a4-page {
             background-color: var(--bg-page);
-            width: 850px; 
-            min-height: 1100px;
-            padding: 50px 60px 80px 60px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            width: 780px; 
+            min-height: 1060px;
+            padding: 40px 45px 65px 45px;
+            border: 2px solid var(--gold-primary);
             border-radius: 4px;
-            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -196,8 +203,8 @@
         .a4-page::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 8px;
-            background: var(--navy);
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
             z-index: 10;
         }
 
@@ -205,12 +212,12 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 450px; height: 450px;
+            width: 350px; height: 350px;
             background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.02;
+            opacity: 0.04;
             pointer-events: none;
             z-index: 0;
             filter: grayscale(100%);
@@ -224,143 +231,148 @@
             flex-grow: 1;
         }
 
-        .hero-header { 
-            border-bottom: 2px solid var(--navy);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-        
-        .header-titles h1 {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 2.5rem; font-weight: 800;
-            color: var(--navy);
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 20px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--heading-main);
             margin-bottom: 5px;
-            line-height: 1.2;
         }
-        .header-titles p { 
-            font-size: 1.1rem; color: var(--blue); font-weight: 700; 
-        }
-        
-        .header-meta {
-            text-align: left;
-            font-size: 0.9rem;
-            color: var(--text-light);
-            font-weight: 600;
-        }
-        .header-meta strong {
-            color: var(--navy);
-        }
+        .hero-header p { font-size: 1.1rem; color: var(--navy-blue); font-weight: 700; }
 
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 40px 0 20px 0;
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 25px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             position: relative;
         }
         
-        .section-number {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 3rem;
-            font-weight: 800;
-            color: rgba(15, 23, 42, 0.05);
-            line-height: 1;
-            margin-bottom: -10px;
-        }
-        
-        .section-text {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--navy);
-            border-right: 3px solid var(--accent);
-            padding-right: 10px;
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 4px;
+            background-color: var(--gold-primary);
+            border-radius: 0 8px 8px 0;
         }
 
-        .card {
-            background: #FFFFFF;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.01);
+        h2 {
+            font-size: 1.4rem; color: var(--heading-main); margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); padding-bottom: 5px; width: fit-content;
         }
+        h2 span.icon { font-size: 1.2rem; background: rgba(76, 29, 149, 0.1); padding: 4px 10px; border-radius: 6px; }
 
         h3 {
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1.2rem; color: var(--navy); margin: 20px 0 10px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 1.15rem; color: var(--heading-main); margin: 18px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
         }
-        h3::before { 
-            content: ''; 
+        h3::before { content: '❖'; color: var(--gold-primary); font-size: 0.9rem; }
+
+        p, li { font-size: 1rem; margin-bottom: 10px; color: var(--text-main); }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--gold-primary); }
+        ol li::marker { color: var(--heading-main); font-weight: bold; }
+        
+        /* ستايل البوكس للعناوين الفرعية */
+        .boxed-heading {
+            color: var(--heading-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 1.5px solid var(--heading-main);
+            border-radius: 8px;
+            padding: 2px 10px;
+            background-color: rgba(76, 29, 149, 0.05);
             display: inline-block;
-            width: 8px; height: 8px;
-            background: var(--blue);
-            border-radius: 50%;
+            margin-bottom: 8px;
         }
 
-        p, li { font-size: 1.05rem; margin-bottom: 12px; color: var(--text-main); text-align: justify; }
-        ul, ol { margin-right: 20px; margin-bottom: 15px; }
-        ul li::marker { color: var(--blue); }
-        ol li::marker { color: var(--blue); font-weight: bold; }
-        
-        strong { color: var(--navy); font-weight: 800; }
-        
-        .highlight { 
-            background-color: #E0E7FF; 
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            color: var(--blue); 
-            font-weight: bold; 
+        /* ألوان الكلمات المهمة */
+        .text-red { color: var(--red-alert); font-weight: 800; }
+        .text-blue { color: var(--navy-blue); font-weight: 800; }
+
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: rgba(253, 224, 71, 0.4); padding: 2px 4px; border-radius: 4px; font-weight: 700; }
+
+        /* صندوق الملخص السريع */
+        .summary-box {
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #78350F;
+            font-weight: 700;
         }
 
-        .example-box { 
-            background: #F8FAFC; 
-            border-right: 4px solid var(--blue); 
-            padding: 20px; 
-            margin: 20px 0; 
-            color: var(--text-main); 
+        /* صناديق التنبيهات */
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; }
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; }
+        .tip-box h3::before { content: '💡'; }
+
+        /* تصميم الجدول */
+        .table-wrapper { 
+            overflow-x: hidden; 
+            margin: 15px 0; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: right; 
             font-size: 0.95rem; 
-            border-radius: 4px;
         }
+        th, td { padding: 12px 15px; border: 1px solid var(--border-color); }
+        th { background: rgba(6, 78, 59, 0.05); color: var(--heading-main); font-weight: 800; text-align: center; }
+        tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
 
-        .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 6px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.95rem; }
-        th, td { padding: 12px 15px; border: 1px solid var(--border); }
-        th { background: #F1F5F9; color: var(--navy); font-weight: 800; text-align: center; }
-        td { color: var(--text-main); }
+        /* الرسم البياني (Diagram) */
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 20px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); }
+        .flow-chart { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; }
+        .flow-op { font-size: 2rem; color: var(--gold-primary); font-weight: bold; }
 
-        .quiz-card { background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 15px; }
-        .quiz-q { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
-        .quiz-answer { color: var(--blue); font-weight: bold; margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px;}
-
+        /* الكويزات */
+        .quiz-card { background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+        .quiz-q { font-size: 1.05rem; font-weight: 700; color: var(--heading-sub); margin-bottom: 10px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .quiz-opt { background: #F9FAFB; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.95rem; }
+        .answer-box { background: rgba(16, 185, 129, 0.1); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 4px; font-weight: 700; color: var(--emerald-dark); font-size: 0.95rem; display: none; }
+        
+        /* الفوتر */
         .footer-bar {
-            position: absolute; bottom: 30px; left: 60px; right: 60px;
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px solid var(--border); padding-top: 15px; z-index: 2;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 10px; z-index: 2;
         }
-        .footer-brand { display: flex; align-items: center; gap: 10px; }
-        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--navy); object-fit: cover; }
-        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--navy); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-light); font-size: 12px; font-weight: 600; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
 
-        @media (max-width: 850px) {
+        /* التعديلات الخاصة بالموبايل */
+        @media (max-width: 800px) {
             body { padding: 0; gap: 10px; }
-            .a4-page { width: 100vw; min-height: 100vh; padding: 30px 20px 80px 20px; border-radius: 0; border: none; margin-bottom: 5px; }
-            .hero-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .header-meta { text-align: right; }
-            .hero-header h1 { font-size: 2rem; }
-            .glass-card { padding: 15px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 10px 65px 10px; border-radius: 0; border: none; border-bottom: 2px solid var(--gold-primary); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 10px; }
             ul, ol { margin-right: 15px; }
-            li { font-size: 0.95rem; }
-            .footer-bar { left: 20px; right: 20px; }
-            table { font-size: 0.8rem; }
+            p, li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            
+            .table-wrapper { overflow-x: hidden; }
+            table { font-size: 0.75rem; }
+            th, td { padding: 6px 4px; }
+            th { white-space: normal; }
+            .boxed-heading { font-size: 0.95rem; padding: 2px 6px; }
         }
     </style>
 </head>
@@ -371,39 +383,40 @@
         <div class="watermark"></div>
         <div class="content-wrapper">
             <header class="hero-header">
-                <div class="header-titles">
-                    <h1>مبادئ المالية العامة</h1>
-                    <p>المحاضرة الثانية: النفقات العامة</p>
-                </div>
-                <div class="header-meta">
-                    <div>إعداد: <strong>د. فاطمة إبراهيم</strong></div>
-                    <div>المستوى الرابع | شعبة نظم الأعمال والمحاسبة</div>
-                </div>
+                <h1>مبادئ المالية العامة المعاصرة</h1>
+                <p>المحاضرة الثانية - الفصل الثاني: النفقات العامة</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">شعبة (نظم الأعمال – المحاسبة) | المستوى الرابع | د. فاطمة إبراهيم</p>
             </header>
 
-            <div class="section-title">
-                <div class="section-number">01</div>
-                <div class="section-text">تعريف النفقات العامة</div>
-            </div>
-
-            <section class="card">
-                <p><strong>يعني إيه نفقة عامة؟</strong> هي مبلغ من المال بتنفقه الدولة أو إحدى المؤسسات العامة التابعة ليها، بهدف واحد أساسي: <span class="highlight">إشباع حاجة عامة</span>.</p>
+            <section class="glass-card">
+                <h2><span class="icon">💸</span> أولاً: تعريف النفقات العامة</h2>
+                <p><strong>النفقة العامة:</strong> هي مبلغ من المال تنفقه الدولة أو إحدى المؤسسات العامة التي تتبعها بقصد <span class="text-blue">إشباع حاجة عامة</span>.</p>
                 
-                <h3>شروط النفقة العامة (لازم تتوفر فيها 3 حاجات):</h3>
-                <ol>
-                    <li><strong>صدور النفقة من الدولة أو هيئاتها:</strong> يعني لازم تصدر من "شخص عام" (الدولة، وزارة، هيئة حكومية).</li>
-                    <li><strong>النفقة العامة مبلغ من النقود:</strong> بتاخد دايماً طابع نقدي، يعني بتدفع فلوس للحصول على موارد إنتاجية (سلع وخدمات) عشان تقوم بنشاطها.</li>
-                    <li><strong>تحقيق نفع عام:</strong> الهدف الأساسي هو إشباع الحاجات العامة. <strong>وبناءً على كده</strong>، أي نفقة مش بتشبع حاجة عامة ومبتحققش نفع عام، ما بتعتبرش نفقة عامة.</li>
-                </ol>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">النفقة العامة</div>
+                        <div class="flow-op">=</div>
+                        <div class="flow-box-light" style="background: var(--navy-blue);">الدولة أو المؤسسات العامة</div>
+                        <div class="flow-op">&larr;</div>
+                        <div class="flow-box" style="background: var(--gold-primary); color: #000;">إشباع حاجة عامة</div>
+                    </div>
+                </div>
             </section>
 
-            <section class="card">
-                <h3>قواعد الإنفاق العام (عشان تكون نفقة "صح"):</h3>
-                <ul>
-                    <li><strong>قاعدة المنفعة:</strong> لازم الإنفاق يهدف لتحقيق أقصى منفعة اجتماعية.</li>
-                    <li><strong>قاعدة الاقتصاد:</strong> الابتعاد عن الإسراف والتبذير، والاقتصاد في النفقة وحسن التدبير.</li>
-                    <li><strong>قاعدة الترخيص:</strong> النفقة لازم تصرف من هيئة عامة، بأموال عامة، ومن سلطة مختصة.</li>
-                </ul>
+            <section class="glass-card">
+                <h2><span class="icon">🧩</span> عناصر النفقة العامة</h2>
+                <p>عشان العملية تسمى "نفقة عامة" لازم يتحقق فيها 3 عناصر:</p>
+                <ol>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">النفقة العامة مبلغ من النقود:</span> النفقة بتأخذ <span class="text-blue">طابع نقدي</span>، بيتمثل في المال اللي بتدفعه الدولة للحصول على الموارد الإنتاجية (سلع وخدمات) عشان تقوم بنشاطها.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">صدور النفقة من الدولة أو إحدى هيئاتها:</span> لازم النفقة تصدر من <span class="text-blue">الدولة أو هيئاتها</span>. وبهذا المفهوم بتشمل: نفقات الهيئات المحلية، الهيئات العامة القومية، المؤسسات العامة، ونفقات المشروعات العامة.
+                    </li>
+                    <li>
+                        <span class="boxed-heading">النفقة تحقق نفع عام:</span> لازم النفقة تهدف أساساً لإشباع الحاجات العامة وتحقيق النفع العام. وبهذا المعنى، <span class="text-red">مش بتعتبر نفقة عامة</span> أي نفقة مابتشبعش حاجة عامة ومبتحققش نفع عام للأفراد.
+                    </li>
+                </ol>
             </section>
         </div>
         <div class="footer-bar">
@@ -415,43 +428,29 @@
         </div>
     </div>
 
-    <!-- الصفحة الثانية: التصنيفات -->
+    <!-- الصفحة الثانية -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <div class="section-title">
-                <div class="section-number">02</div>
-                <div class="section-text">تصنيفات النفقات العامة</div>
+            <section class="glass-card">
+                <h2><span class="icon">📜</span> قواعد الإنفاق العام</h2>
+                <ul>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">قاعدة المنفعة:</span> ينبغي أن يهدف الإنفاق العام إلى تحقيق أقصى منفعة اجتماعية.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">قاعدة الاقتصاد:</span> الابتعاد عن الإسراف والتبذير، أي الاقتصاد في النفقة وحسن التدبير.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">قاعدة الترخيص:</span> وتعني أن النفقة تصرف من قبل هيئة عامة بأموال عامة من قبل سلطة مختصة.
+                    </li>
+                </ul>
+            </section>
+
+            <div class="tip-box">
+                <h3>💡 نصيحة للامتحان:</h3>
+                <p>لو جالك سؤال بيقولك "هل شراء سيارة لمدير شركة حكومية تعتبر نفقة عامة؟" الإجابة <span class="text-red">لا</span>، لأنها بتحقق نفع شخصي مش نفع عام (وهنا بيختل العنصر الثالث).</p>
             </div>
-
-            <section class="card">
-                <h3>1. النفقات الحقيقية والتحويلية</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>وجه المقارنة</th><th>النفقات الحقيقية</th><th>النفقات التحويلية</th></tr>
-                        <tr><td><strong>التأثير على الإنتاج</strong></td><td>تؤدي مباشرة إلى زيادة الإنتاج القومي (نفقات منتجة).</td><td>لا تؤدي لزيادة الإنتاج مباشرة، لكنها تعيد توزيع الدخل القومي.</td></tr>
-                        <tr><td><strong>المقابل</strong></td><td>بتكون بمقابل (أجور، مرتبات، استثمار عام).</td><td>بتقدمها الدولة بدون مقابل (دعم، إعانات اجتماعية).</td></tr>
-                    </table>
-                </div>
-                <div class="example-box">
-                    <strong>ملاحظة مهمة:</strong> النفقات التحويلية حالياً بقت أهم من الحقيقية بسبب زيادة حجم الإعانات الاجتماعية. وبتتقسم لـ 3 أنواع:
-                    <br>• <strong>اجتماعية:</strong> إعانات بطالة وتأمينات (لرفع مستوى حياة الأفراد).
-                    <br>• <strong>اقتصادية:</strong> إعانات حكومية لمنشآت (لتحقيق توازن اقتصادي).
-                    <br>• <strong>مالية:</strong> فوائد القروض العامة.
-                </div>
-            </section>
-
-            <section class="card">
-                <h3>2. النفقات العادية وغير العادية</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>وجه المقارنة</th><th>النفقات العادية</th><th>النفقات غير العادية</th></tr>
-                        <tr><td><strong>التمويل</strong></td><td>تتمول من إيرادات عادية (ضرائب، رسوم، ممتلكات الدولة).</td><td>تتمول من إيرادات غير عادية (قروض، إصدار نقدي جديد).</td></tr>
-                        <tr><td><strong>التكرار</strong></td><td>تتكرر باستمرار في كل موازنة.</td><td>لا تتكرر في كل الموازنات.</td></tr>
-                        <tr><td><strong>الأثر</strong></td><td>ينتهي أثرها بانتهاء الموازنة (أجور ومرتبات).</td><td>يمتد أثرها لموازنات لاحقة (بناء كباري، طرق، سدود).</td></tr>
-                    </table>
-                </div>
-            </section>
         </div>
         <div class="footer-bar">
             <div class="footer-brand">
@@ -462,37 +461,35 @@
         </div>
     </div>
 
-    <!-- الصفحة الثالثة: التصنيفات (تابع) + المحددات -->
+    <!-- الصفحة الثالثة -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <section class="card">
-                <h3>3. النفقات الجارية والرأسمالية</h3>
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> ثانياً: تصنيفات النفقات العامة</h2>
+                
+                <h3>1. النفقات الحقيقية والتحويلية</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>وجه المقارنة</th><th>النفقات الجارية</th><th>النفقات الرأسمالية</th></tr>
-                        <tr><td><strong>الهدف</strong></td><td>لإدارة أجهزة الدولة والحصول على سلع وخدمات لإشباع حاجات جارية.</td><td>لزيادة إمكانيات الدولة وتمكينها من النمو الاقتصادي.</td></tr>
-                        <tr><td><strong>أمثلة</strong></td><td>أجور، مرتبات، نفقات صيانة (نفقات عادية).</td><td>بناء مصانع، مشروعات بنية أساسية (مترو، قناة السويس، مدن جديدة).</td></tr>
+                        <tr><th>وجه المقارنة</th><th>النفقات الحقيقية</th><th>النفقات التحويلية</th></tr>
+                        <tr>
+                            <td><strong>التأثير على الإنتاج</strong></td>
+                            <td>تؤدي مباشرة إلى زيادة الإنتاج القومي (نفقات منتجة).</td>
+                            <td>لا تؤدي لزيادة الإنتاج مباشرة، لكنها تعيد توزيع الدخل القومي.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>المقابل</strong></td>
+                            <td>بتكون بمقابل (أجور، مرتبات، استثمار عام).</td>
+                            <td>بتقدمها الدولة بدون مقابل (دعم، إعانات اجتماعية).</td>
+                        </tr>
                     </table>
                 </div>
-            </section>
-
-            <div class="section-title">
-                <div class="section-number">03</div>
-                <div class="section-text">محددات حجم النفقات العامة</div>
-            </div>
-
-            <section class="card">
-                <p><strong>إيه اللي بيحدد حجم النفقات العامة؟ (عوامل بتأثر عليها)</strong></p>
-                <ul>
-                    <li><strong>دور الدولة في المجتمع:</strong> 
-                        <br>• <strong>الدولة الحارسة:</strong> (أمن، عدالة، دفاع) = نفقات قليلة ومحدودة.
-                        <br>• <strong>الدولة المتدخلة:</strong> = نفقات متنوعة وزيادة في الحجم.
-                        <br>• <strong>الدولة المنتجة:</strong> = أوسع حجم نفقات وأكثرها تنوعاً.
-                    </li>
-                    <li><strong>قدرة الدولة على تحقيق الإيرادات:</strong> الحجم الأمثل للإنفاق هو اللي يحقق الاستغلال الأمثل للإيرادات ويعطي أعلى نمو مع عدالة في توزيع الأعباء.</li>
-                    <li><strong>مستوى النشاط الاقتصادي:</strong> النفقات بتزيد في الدول المتقدمة (لأن دخلها القومي مرتفع)، وبتقل في الدول النامية.</li>
-                </ul>
+                <div class="summary-box">
+                    <strong>ملاحظة مهمة:</strong> النفقات التحويلية حالياً بقت أهم من الحقيقية بسبب زيادة حجم الإعانات الاجتماعية. وبتتقسم لـ 3 أنواع:
+                    <br>• <strong>اجتماعية:</strong> إعانات بطالة وتأمينات (لرفع مستوى حياة الأفراد).
+                    <br>• <strong>اقتصادية:</strong> إعانات حكومية لمنشآت (لتحقيق توازن اقتصادي).
+                    <br>• <strong>مالية:</strong> فوائد القروض العامة.
+                </div>
             </section>
         </div>
         <div class="footer-bar">
@@ -504,25 +501,51 @@
         </div>
     </div>
 
-    <!-- الصفحة الرابعة: أسباب الزيادة (الظاهرية) -->
+    <!-- الصفحة الرابعة -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <div class="section-title">
-                <div class="section-number">04</div>
-                <div class="section-text">ظاهرة ازدياد النفقات العامة</div>
-            </div>
+            <section class="glass-card">
+                <h3>2. النفقات العادية وغير العادية</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>وجه المقارنة</th><th>النفقات العادية</th><th>النفقات غير العادية</th></tr>
+                        <tr>
+                            <td><strong>التمويل</strong></td>
+                            <td>تتمول من إيرادات عادية (ضرائب، رسوم، ممتلكات الدولة).</td>
+                            <td>تتمول من إيرادات غير عادية (قروض، إصدار نقدي جديد).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>التكرار</strong></td>
+                            <td>تتكرر باستمرار في كل موازنة.</td>
+                            <td>لا تتكرر في كل الموازنات.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الأثر</strong></td>
+                            <td>ينتهي أثرها بانتهاء الموازنة (أجور ومرتبات).</td>
+                            <td>يمتد أثرها لموازنات لاحقة (بناء كباري، طرق، سدود).</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
 
-            <section class="card">
-                <p><strong>النفقات العامة بتزيد ليه؟</strong> في سببين: أسباب <strong>ظاهرية</strong> (بتضخم الرقم الحسابي بس)، وأسباب <strong>حقيقية</strong> (بتزيد الحاجات اللي بتشبعها الدولة فعلاً).</p>
-                
-                <h3>أولاً: الأسباب الظاهرية (تضخم الأرقام فقط)</h3>
-                <p>هي أسباب بتخلي "رقم" النفقات يبان كبير، لكن مفيش زيادة حقيقية في كمية السلع والخدمات المستخدمة.</p>
-                <ol>
-                    <li><strong>انخفاض قيمة النقود (التضخم):</strong> القوة الشرائية للعملة بتقل، فبنحتاج فلوس أكتر عشان نشتري نفس السلعة. (الأسعار بتزيد، فالنفقات بتزيد).</li>
-                    <li><strong>تغير القواعد المالية:</strong> الانتقال من الميزانية الصافية (صافي الإيرادات) للميزانية الإجمالية (اللي بتظهر فيها المصروفات والإيرادات كاملة). ده بيخلي رقم المصروفات يبان أكبر.</li>
-                    <li><strong>توسع مساحة إقليم الدولة أو زيادة عدد السكان:</strong> لما الدولة تكبر أو عدد سكانها يزيد، بتحتاج تزود نفقاتها في (الأمن، العدالة، بناء مدارس ومستشفيات).</li>
-                </ol>
+            <section class="glass-card">
+                <h3>3. النفقات الجارية والرأسمالية</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr><th>وجه المقارنة</th><th>النفقات الجارية</th><th>النفقات الرأسمالية</th></tr>
+                        <tr>
+                            <td><strong>الهدف</strong></td>
+                            <td>لإدارة أجهزة الدولة والحصول على سلع وخدمات لإشباع حاجات جارية.</td>
+                            <td>لزيادة إمكانيات الدولة وتمكينها من النمو الاقتصادي.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>أمثلة</strong></td>
+                            <td>أجور، مرتبات، نفقات صيانة (نفقات عادية).</td>
+                            <td>بناء مصانع، مشروعات بنية أساسية (مترو، قناة السويس، مدن جديدة).</td>
+                        </tr>
+                    </table>
+                </div>
             </section>
         </div>
         <div class="footer-bar">
@@ -534,27 +557,26 @@
         </div>
     </div>
 
-    <!-- الصفحة الخامسة: أسباب الزيادة (الحقيقية) -->
+    <!-- الصفحة الخامسة -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <section class="card">
-                <h3>ثانياً: الأسباب الحقيقية (زيادة فعلية في الحاجات)</h3>
-                <p>هي أسباب بتؤدي لزيادة حقيقية في رقم النفقات، بسبب زيادة الحاجات اللي الدولة بتشبعها وزيادة عدد المستفيدين.</p>
-                <ol>
-                    <li><strong>أسباب اقتصادية:</strong> قيام الدولة بالإنتاج وبناء المصانع والبنية الأساسية (رأس المال الاجتماعي)، وكمان الأزمات الاقتصادية (كساد، تضخم) بتجبر الدولة تتدخل وتزود نفقاتها.</li>
-                    <li><strong>أسباب اجتماعية:</strong> تدخل الدولة لتحقيق التوازن الاجتماعي وإعادة توزيع الدخل وتوفير الخدمات (صحة، تعليم، ثقافة، إسكان).</li>
-                    <li><strong>أسباب سياسية وعسكرية:</strong> زيادة العلاقات الدبلوماسية، النزاعات والحروب، والحاجة للتسليح وحماية الحدود. كل ده بيزود النفقات.</li>
-                    <li><strong>أسباب إدارية ومالية:</strong> زيادة النفقات الجارية والرأسمالية اللي بتروح للتنظيم الإداري للدولة، بسبب حاجتها لجهاز إداري قوي.</li>
-                </ol>
-            </section>
-
-            <section class="card">
-                <h3>تطور النفقات العامة في مصر (من الرسم البياني)</h3>
-                <p>الرسم البياني بيوضح تطور هيكل الإنفاق العام في مصر من 2001/2002 لحد 2022/2023. بنلاحظ زيادة مستمرة في كل بنود الإنفاق (أجور، شراء سلع، فوائد، دعم، استثمارات).</p>
-                <div class="example-box">
-                    <strong>ملاحظة:</strong> أعلى بند في الزيادة كان "الفوائد" (اللون البنفسجي) و"الدعم والإعانات الاجتماعية" (اللون الأزرق)، وده بيعكس أهمية الأسباب الاقتصادية والاجتماعية في زيادة النفقات.
-                </div>
+            <section class="glass-card">
+                <h2><span class="icon">📏</span> ثالثاً: محددات حجم النفقات العامة</h2>
+                <ul>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">دور الدولة في المجتمع:</span> 
+                        <br>• <strong>الدولة الحارسة:</strong> (أمن، عدالة، دفاع) = نفقات قليلة ومحدودة.
+                        <br>• <strong>الدولة المتدخلة:</strong> = نفقات متنوعة وزيادة في الحجم.
+                        <br>• <strong>الدولة المنتجة:</strong> = أوسع حجم نفقات وأكثرها تنوعاً.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">قدرة الدولة على تحقيق الإيرادات:</span> الحجم الأمثل للإنفاق هو اللي يحقق الاستغلال الأمثل للإيرادات ويعطي أعلى نمو مع عدالة في توزيع الأعباء.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <span class="boxed-heading">مستوى النشاط الاقتصادي:</span> النفقات بتزيد في الدول المتقدمة (لأن دخلها القومي مرتفع)، وبتقل في الدول النامية.
+                    </li>
+                </ul>
             </section>
         </div>
         <div class="footer-bar">
@@ -566,77 +588,21 @@
         </div>
     </div>
 
-    <!-- الصفحة السادسة: الأسئلة -->
+    <!-- الصفحة السادسة -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <div class="section-title">
-                <div class="section-number">05</div>
-                <div class="section-text">أسئلة المحاضرة (محلولة)</div>
-            </div>
-
-            <section class="card">
-                <h3>السؤال الأول: صح أو خطأ</h3>
+            <section class="glass-card">
+                <h2><span class="icon">📈</span> رابعاً: ظاهرة ازدياد النفقات العامة</h2>
+                <p>النفقات العامة بتزيد ليه؟ في سببين: أسباب <strong>ظاهرية</strong> (بتضخم الرقم الحسابي بس)، وأسباب <strong>حقيقية</strong> (بتزيد الحاجات اللي بتشبعها الدولة فعلاً).</p>
                 
-                <div class="quiz-card">
-                    <div class="quiz-q">1. يشمل تعريف النفقات العامة ثلاثة شروط هي كمية معينة من النقود، صدور النفقة من جهة عامة، الهدف من الإنفاق هو إشباع حاجة عامة.</div>
-                    <div class="quiz-answer">الإجابة: (صح)</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">2. لا تُعد من النفقات العامة تلك التي يقوم بها القطاع الخاص أو المختلط تنفيذاً لسلطات الدولة الآمرة.</div>
-                    <div class="quiz-answer">الإجابة: (صح) - لأن النفقة العامة لازم تصدر من شخص عام.</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">3. من الأسباب الحقيقية لترايد الإنفاق العام ارتفاع مستوى الأسعار.</div>
-                    <div class="quiz-answer">الإجابة: (خطأ) - ارتفاع الأسعار ده سبب ظاهري مش حقيقي.</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">4. تُعد الأسباب الاقتصادية من الأسباب الظاهرية لترايد الإنفاق العام.</div>
-                    <div class="quiz-answer">الإجابة: (خطأ) - الأسباب الاقتصادية من الأسباب الحقيقية.</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">5. لا توجد علاقة بين زيادة عدد السكان وترايد الإنفاق العام.</div>
-                    <div class="quiz-answer">الإجابة: (خطأ) - فيه علاقة قوية، زيادة السكان بتزود الحاجات (مدارس، مستشفيات) وبالتالي النفقات.</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">6. يُقصد بالأسباب الظاهرية لترايد الإنفاق العام الأسباب التي تؤدي لزيادة النفقات العامة على أن يقابلها زيادة في السلع والخدمات.</div>
-                    <div class="quiz-answer">الإجابة: (خطأ) - الأسباب الظاهرية مش بيقابلها زيادة حقيقية في السلع والخدمات.</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">7. تتم النفقات الحقيقية مقابل تقديم خدمة.</div>
-                    <div class="quiz-answer">الإجابة: (صح)</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">8. تعتبر النفقات العامة تحويلية إذا لم تؤد مباشرة إلى زيادة الإنتاج القومي.</div>
-                    <div class="quiz-answer">الإجابة: (صح)</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">9. من أمثلة النفقات العامة التحويلية الاقتصادية الإعانات الحكومية الممنوحة لمشروعات إنتاجية معينة.</div>
-                    <div class="quiz-answer">الإجابة: (صح)</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">10. إذا كانت النفقة تتم بانتظام أو بصفة دورية تعتبر نفقة عادية.</div>
-                    <div class="quiz-answer">الإجابة: (صح)</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">11. النفقات غير العادية تتعدى الفترة المالية التي أنفقت خلالها.</div>
-                    <div class="quiz-answer">الإجابة: (صح)</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">12. يعتبر صدور النفقة من أحد أشخاص القانون العام شرطاً ضرورياً وكافياً لاعتبار النفقة عامة.</div>
-                    <div class="quiz-answer">الإجابة: (خطأ) - لازم كمان تحقق نفع عام.</div>
-                </div>
+                <h3>1. الأسباب الظاهرية (تضخم الأرقام فقط)</h3>
+                <p>هي أسباب بتخلي "رقم" النفقات يبان كبير، لكن مفيش زيادة حقيقية في كمية السلع والخدمات المستخدمة.</p>
+                <ol>
+                    <li style="margin-bottom: 10px;"><strong>انخفاض قيمة النقود وارتفاع الأسعار (التضخم):</strong> القوة الشرائية للعملة بتقل، فبنحتاج فلوس أكتر عشان نشتري نفس السلعة.</li>
+                    <li style="margin-bottom: 10px;"><strong>تغير القواعد المالية:</strong> الانتقال من الميزانية الصافية (صافي الإيرادات) للميزانية الإجمالية (اللي بتظهر فيها المصروفات والإيرادات كاملة). ده بيخلي رقم المصروفات يبان أكبر.</li>
+                    <li style="margin-bottom: 10px;"><strong>توسع مساحة إقليم الدولة أو زيادة عدد السكان:</strong> لما الدولة تكبر أو عدد سكانها يزيد، بتحتاج تزود نفقاتها في (الأمن، العدالة، بناء مدارس ومستشفيات).</li>
+                </ol>
             </section>
         </div>
         <div class="footer-bar">
@@ -648,55 +614,26 @@
         </div>
     </div>
 
-    <!-- الصفحة السابعة: الاختيار من متعدد -->
+    <!-- الصفحة السابعة -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <section class="card">
-                <h3>السؤال الثاني: اختر الإجابة الصحيحة</h3>
+            <section class="glass-card">
+                <h3>2. الأسباب الحقيقية (زيادة فعلية في الحاجات)</h3>
+                <p>هي أسباب بتؤدي لزيادة حقيقية في رقم النفقات، بسبب زيادة الحاجات اللي الدولة بتشبعها وزيادة عدد المستفيدين.</p>
+                <ol>
+                    <li style="margin-bottom: 10px;"><strong>أسباب اقتصادية:</strong> قيام الدولة بالإنتاج وبناء المصانع والبنية الأساسية (رأس المال الاجتماعي)، وكمان الأزمات الاقتصادية (كساد، تضخم) بتجبر الدولة تتدخل وتزود نفقاتها.</li>
+                    <li style="margin-bottom: 10px;"><strong>أسباب اجتماعية:</strong> تدخل الدولة لتحقيق التوازن الاجتماعي وإعادة توزيع الدخل وتوفير الخدمات (صحة، تعليم، ثقافة، إسكان).</li>
+                    <li style="margin-bottom: 10px;"><strong>أسباب سياسية وعسكرية:</strong> زيادة العلاقات الدبلوماسية، النزاعات والحروب، والحاجة للتسليح وحماية الحدود. كل ده بيزود النفقات.</li>
+                    <li style="margin-bottom: 10px;"><strong>أسباب إدارية ومالية:</strong> زيادة النفقات الجارية والرأسمالية اللي بتروح للتنظيم الإداري للدولة، بسبب حاجتها لجهاز إداري قوي.</li>
+                </ol>
+            </section>
 
-                <div class="quiz-card">
-                    <div class="quiz-q">1. هي مبلغ من المال تنفقه الدولة أو أحدى المؤسسات العامة التي تتبعها بقصد إشباع حاجة عامة.</div>
-                    <ul>
-                        <li>أ- الإيرادات العامة</li>
-                        <li>ب- النفقات العامة</li>
-                        <li>ج- الموازنة العامة</li>
-                        <li>د- لا شيء مما سبق</li>
-                    </ul>
-                    <div class="quiz-answer">الإجابة الصحيحة: (ب) النفقات العامة</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">2. من الأسباب الحقيقية لترايد الإنفاق العام:</div>
-                    <ul>
-                        <li>أ- أسباب اقتصادية</li>
-                        <li>ب- أسباب مالية</li>
-                        <li>ج- أسباب اجتماعية</li>
-                        <li>د- جميع ما سبق</li>
-                    </ul>
-                    <div class="quiz-answer">الإجابة الصحيحة: (د) جميع ما سبق (لأنها كلها أسباب حقيقية).</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">3. من الأسباب الظاهرية لترايد الإنفاق العام:</div>
-                    <ul>
-                        <li>أ- ارتفاع المستوى العام للأسعار</li>
-                        <li>ب- انخفاض قيمة العملة</li>
-                        <li>ج- تغير القواعد المالية</li>
-                        <li>د- جميع ما سبق</li>
-                    </ul>
-                    <div class="quiz-answer">الإجابة الصحيحة: (د) جميع ما سبق.</div>
-                </div>
-
-                <div class="quiz-card">
-                    <div class="quiz-q">4. بمقتضاه تتم النفقات الحقيقية مقابل تقديم خدمة، مثل الخدمات التعليمية أما النفقات التحويلية لا يوجد لها مقابل كالإعانات.</div>
-                    <ul>
-                        <li>أ- معيار القابل</li>
-                        <li>ب- معيار الزيادة المباشرة في الإنتاج</li>
-                        <li>ج- معيار الانتظام والدورية</li>
-                        <li>د- معيار القائم بالاستهلاك المباشر للموارد</li>
-                    </ul>
-                    <div class="quiz-answer">الإجابة الصحيحة: (أ) معيار القابل (لأنها بتفرق بين اللي ليه مقابل واللي ملوش).</div>
+            <section class="glass-card">
+                <h2><span class="icon">🇪🇬</span> تطور النفقات العامة في مصر</h2>
+                <p>الرسم البياني بيوضح تطور هيكل الإنفاق العام في مصر من 2001/2002 لحد 2022/2023. بنلاحظ زيادة مستمرة في كل بنود الإنفاق (أجور، شراء سلع، فوائد، دعم، استثمارات).</p>
+                <div class="summary-box">
+                    <strong>ملاحظة:</strong> أعلى بند في الزيادة كان "الفوائد" (اللون البنفسجي) و"الدعم والإعانات الاجتماعية" (اللون الأزرق)، وده بيعكس أهمية الأسباب الاقتصادية والاجتماعية في زيادة النفقات.
                 </div>
             </section>
         </div>
@@ -706,6 +643,148 @@
                 <div class="footer-brand-name">الدحيح</div>
             </div>
             <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 7</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثامنة (أسئلة صح وخطأ) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem; color: var(--red-alert);">أسئلة (صح) أو (خطأ)</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. يشمل تعريف النفقات العامة ثلاثة شروط هي كمية معينة من النقود، صدور النفقة من جهة عامة، الهدف من الإنفاق هو إشباع حاجة عامة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">2. لا تُعد من النفقات العامة تلك التي يقوم بها القطاع الخاص أو المختلط تنفيذاً لسلطات الدولة الآمرة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. من الأسباب الحقيقية لترايد الإنفاق العام ارتفاع مستوى الأسعار. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. ده سبب ظاهري.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">4. تُعد الأسباب الاقتصادية من الأسباب الظاهرية لترايد الإنفاق العام. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. الأسباب الاقتصادية من الأسباب الحقيقية.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">5. لا توجد علاقة بين زيادة عدد السكان وترايد الإنفاق العام. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. فيه علاقة قوية.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">6. يُقصد بالأسباب الظاهرية لترايد الإنفاق العام الأسباب التي تؤدي لزيادة النفقات العامة على أن يقابلها زيادة في السلع والخدمات. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. مش بيقابلها زيادة حقيقية.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">7. تتم النفقات الحقيقية مقابل تقديم خدمة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">8. تعتبر النفقات العامة تحويلية إذا لم تؤد مباشرة إلى زيادة الإنتاج القومي. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">9. من أمثلة النفقات العامة التحويلية الاقتصادية الإعانات الحكومية الممنوحة لمشروعات إنتاجية معينة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">10. إذا كانت النفقة تتم بانتظام أو بصفة دورية تعتبر نفقة عادية. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">11. النفقات غير العادية تتعدى الفترة المالية التي أنفقت خلالها. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-light); color: var(--emerald-dark);">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">12. يعتبر صدور النفقة من أحد أشخاص القانون العام شرطاً ضرورياً وكافياً لاعتبار النفقة عامة. ( )</div>
+                <div class="answer-box" style="display: block; background: rgba(185, 28, 28, 0.1); border-color: var(--red-alert); color: var(--red-alert);">الإجابة: <span class="text-red">خطأ</span>. لازم كمان تحقق نفع عام.</div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 8</div>
+        </div>
+    </div>
+
+    <!-- الصفحة التاسعة (اختيار من متعدد) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem; color: var(--heading-main);">أسئلة اختيار من متعدد</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. هي مبلغ من المال تنفقه الدولة أو أحدى المؤسسات العامة التي تتبعها بقصد إشباع حاجة عامة.</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ- الإيرادات العامة</div>
+                    <div class="quiz-opt">ب- النفقات العامة</div>
+                    <div class="quiz-opt">ج- الموازنة العامة</div>
+                    <div class="quiz-opt">د- لا شيء مما سبق</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>ب) النفقات العامة</strong></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">2. من الأسباب الحقيقية لترايد الإنفاق العام:</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ- أسباب اقتصادية</div>
+                    <div class="quiz-opt">ب- أسباب مالية</div>
+                    <div class="quiz-opt">ج- أسباب اجتماعية</div>
+                    <div class="quiz-opt">د- جميع ما سبق</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>د) جميع ما سبق</strong></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. من الأسباب الظاهرية لترايد الإنفاق العام:</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ- ارتفاع المستوى العام للأسعار</div>
+                    <div class="quiz-opt">ب- انخفاض قيمة العملة</div>
+                    <div class="quiz-opt">ج- تغير القواعد المالية</div>
+                    <div class="quiz-opt">د- جميع ما سبق</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>د) جميع ما سبق</strong></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">4. بمقتضاه تتم النفقات الحقيقية مقابل تقديم خدمة، مثل الخدمات التعليمية أما النفقات التحويلية لا يوجد لها مقابل كالإعانات.</div>
+                <div class="quiz-options">
+                    <div class="quiz-opt">أ- معيار القابل</div>
+                    <div class="quiz-opt">ب- معيار الزيادة المباشرة في الإنتاج</div>
+                    <div class="quiz-opt">ج- معيار الانتظام والدورية</div>
+                    <div class="quiz-opt">د- معيار القائم بالاستهلاك المباشر للموارد</div>
+                </div>
+                <div class="answer-box" style="display: block;">الإجابة الصحيحة: <strong>أ) معيار القابل</strong></div>
+            </div>
+
+            <div class="hero-header" style="margin-top: 40px; padding-bottom: 0;">
+                <h1 style="font-size: 2rem; color: var(--gold-primary);">شكراً جزيلاً ⭐</h1>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 9</div>
         </div>
     </div>
 
