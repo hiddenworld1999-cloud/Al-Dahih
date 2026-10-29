@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.12;
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            // (تم تعطيل التطرد عشان يفتح على جهازك)
+            /*
+            try {
+                if (window.top === window.self || !window.top.location.href.includes('course4.html')) {
+                    window.location.replace('../login.html');
+                }
+            } catch (e) {
+                window.location.replace('../login.html');
+            }
+            let checkLogin = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            if (!checkLogin) { window.location.replace('../login.html'); }
+            */
+
+            // منع كليك يمين واختصارات المطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح";
+            let sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بحوث العمليات - المحاضرة الأولى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F4F7F9;
+            --bg-page: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            
+            --navy-blue: #1E3A8A;
+            --teal: #0D9488;
+            --teal-light: #14B8A6;
+            --gold: #D97706;
+            --red: #DC2626;
+            
+            --border-color: #E2E8F0;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 40px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 850px;
+            min-height: 1080px;
+            padding: 45px 50px 70px 50px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 8px;
+            background: linear-gradient(90deg, var(--navy-blue), var(--teal), var(--navy-blue));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px; height: 400px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); }
+        .hero-header h1 {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 2.5rem; font-weight: 800; color: var(--navy-blue);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--teal); font-weight: 700; }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px 30px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 5px;
+            background-color: var(--teal);
+            border-radius: 0 12px 12px 0;
+        }
+
+        h2 {
+            font-size: 1.5rem; color: var(--navy-blue); margin-bottom: 20px;
+            display: flex; align-items: center; gap: 12px; font-weight: 800;
+        }
+        h2 span.icon { font-size: 1.4rem; background: rgba(13, 148, 136, 0.1); padding: 6px 12px; border-radius: 8px; color: var(--teal); }
+
+        h3 {
+            font-size: 1.2rem; color: var(--teal); margin: 25px 0 12px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '■'; color: var(--navy-blue); font-size: 0.8rem; }
+
+        p, li { font-size: 1.05rem; margin-bottom: 12px; color: var(--text-main); text-align: justify; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--teal); }
+        ol li::marker { color: var(--navy-blue); font-weight: bold; }
+        
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: #FEF3C7; padding: 2px 6px; border-radius: 4px; color: var(--gold); font-weight: 800; }
+
+        .example-box { background: #F0FDFA; border: 1px dashed var(--teal); padding: 20px; border-radius: 8px; margin: 20px 0; color: #115E59; font-size: 1rem; }
+        .example-box strong { color: var(--teal); }
+
+        /* مخطط التدفق */
+        .flow-chart-container {
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            margin: 30px 0; padding: 30px; background: #F8FAFC;
+            border: 1px solid var(--border-color); border-radius: 10px;
+        }
+        .flow-step {
+            background: #FFFFFF; border: 2px solid var(--teal); color: var(--navy-blue);
+            padding: 12px 25px; border-radius: 8px; font-weight: 700; font-size: 1rem;
+            width: 80%; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .flow-step::after {
+            content: '↓'; position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
+            color: var(--teal); font-size: 1.5rem; font-weight: bold;
+        }
+        .flow-step:last-child::after { content: ''; }
+        .flow-decision {
+            background: #FEF3C7; border-color: var(--gold); width: 60%;
+        }
+
+        .footer-bar {
+            position: absolute; bottom: 20px; left: 50px; right: 50px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 2px solid var(--border-color); padding-top: 15px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 10px; }
+        .footer-logo { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--teal); object-fit: cover; }
+        .footer-brand-name { font-size: 16px; font-weight: 900; color: var(--navy-blue); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 25px 20px 80px 20px; border-radius: 0; border: none; border-bottom: 3px solid var(--teal); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 2rem; }
+            .glass-card { padding: 20px 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.95rem; }
+            .footer-bar { left: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: مقدمة وتعريف -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>بحوث العمليات</h1>
+                <p>المحاضرة الأولى - الفصل الأول: مدخل إلى بحوث العمليات</p>
+            </header>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔍</span> أولاً: يعني إيه "بحوث عمليات"؟</h2>
+                <p><strong>بحوث العمليات (Operations Research - OR)</strong> هي ببساطة مجموعة من <span class="highlight">الأساليب الكمية والتحليلية</span> اللي بنستخدمها عشان نحل مشاكل عملية في الشركات والمؤسسات، ونساعد المديرين في اتخاذ قرارات صح.</p>
+                <p>فكرتها إنها بتحسب كل الاحتمالات المتاحة (البدائل)، وتقولك إيه هو <strong>"القرار الأمثل"</strong> اللي بيجيب أعلى عائد (ربح) وأقل تكلفة، وكمان بيقلل المخاطرة (Risk).</p>
+                
+                <h3>ليه اسمها "بحوث عمليات"؟ (تاريخياً)</h3>
+                <p>ظهرت لأول مرة في <strong>الحرب العالمية الثانية</strong>، لما الحلفاء عملوا فرق بحث عشان تدعم العمليات العسكرية اللوجستية (توصيل الإمدادات، تخطيط الهجمات). بعد الحرب، الفكرة دي انتقلت للمجال الصناعي والمدني.</p>
+                <p>وبعد اختراع الكمبيوتر (المعلوماتية) في النص التاني من القرن العشرين، اتطورت جداً وبقت أداه أساسية لأي شركة كبيرة.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🎯</span> ثانياً: إيه فايدة بحوث العمليات؟</h2>
+                <ul>
+                    <li>بتساعد الإدارة تحل المشاكل في وقتها الحقيقي (Real-time).</li>
+                    <li>بتقلل المخاطرة (Risk) لأقصى حد ممكن.</li>
+                    <li>بتديك الحل الأمثل في ظل ظروف عدم التأكد (Uncertainty) اللي بتحصل في البيزنس.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">بحوث العمليات | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: الخطوات والمخطط -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">⚙️</span> ثالثاً: خطوات عملية بحوث العمليات (7 خطوات)</h2>
+                <p>عشان تحل أي مشكلة ببحوث العمليات، لازم تمشي على الخطوات دي بالترتيب:</p>
+                
+                <div class="flow-chart-container">
+                    <div class="flow-step">1. تعريف وتحليل المشكلة (صياغتها)</div>
+                    <div class="flow-step">2. بناء النموذج الرياضي</div>
+                    <div class="flow-step">3. حساب البدائل (الحلول) للمشكلة</div>
+                    <div class="flow-step">4. تحديد تأثير كل بديل</div>
+                    <div class="flow-step">5. حساب المواصفات لاختيار القرار الأمثل</div>
+                    <div class="flow-step">6. مراجعة القرار اللي اتختار للتنفيذ</div>
+                    <div class="flow-step">7. اتخاذ القرار النهائي</div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h3>شرح مبسط لأهم خطوتين:</h3>
+                <p><strong>1. صياغة المشكلة:</strong> هنا بناخد الكلام الوصفي (زي "عايزين نزود الأرباح") ونحوله لرموز رياضية ومعادلات. لازم نحدد الهدف (Target) والقيود (Constraints) المفروضة.</p>
+                <p><strong>2. بناء النموذج الرياضي:</strong> بنحدد العلاقة بين الثوابت والمتغيرات. وبعدين بنحلل المعلومات ونتأكد من صحتها، وننفذ الحل اللي وصلناله.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">بحوث العمليات | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: التطبيقات -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🏭</span> رابعاً: تطبيقات بحوث العمليات (أمثلة واقعية)</h2>
+                <p>بحوث العمليات بتدخل في كل حاجة تقريباً، ودي 8 تطبيقات أساسية (زي ما ذُكرت في المحاضرة):</p>
+                
+                <div class="example-box">
+                    <strong>1. مشكلة نقل المواد (Materials transportation):</strong>
+                    <br>زي إزاي شركة توصيل بتحدد أفضل طريق لتوصيل البضائع بأقل تكلفة وأسرع وقت.
+                </div>
+
+                <div class="example-box">
+                    <strong>2. مشكلة التعيين والتخصيص (Assignment problem):</strong>
+                    <br>زي إزاي مدير بيوزع الموظفين على المهام بحيث كل واحد يشتغل في الحاجة اللي هو شاطر فيها.
+                </div>
+
+                <div class="example-box">
+                    <strong>3. خلط النفط (Gasoline blending):</strong>
+                    <br>شركات البترول بتستخدمها عشان تحدد النسب المثالية لخلط المواد الخام عشان تطلع بنزين بالمواصفات المطلوبة وأقل تكلفة.
+                </div>
+
+                <div class="example-box">
+                    <strong>4. تخطيط الإنتاج (Production planning):</strong>
+                    <br>المصانع بتحدد إيه الكمية اللي هتنتجها من كل منتج عشان تلبي الطلب وميكنش فيه مخزون راكد.
+                </div>
+
+                <div class="example-box">
+                    <strong>5. التخطيط المالي (Financial planning):</strong>
+                    <br>الشركات بتستخدمها عشان تحدد أفضل استثمار لفلوسها أو إزاي توزع ميزانيتها.
+                </div>
+
+                <div class="example-box">
+                    <strong>6. اختيار الميزانية العامة (Selection of capital budgeting):</strong>
+                    <br>اختيار المشروعات اللي هتاخد تمويل من الميزانية بناءً على العائد المتوقع.
+                </div>
+
+                <div class="example-box">
+                    <strong>7. تخطيط أنماط استهلاك الطاقة (Energy planning):</strong>
+                    <br>عشان نحدد إزاي نوزع الكهرباء أو الغاز على المناطق بكفاءة.
+                </div>
+
+                <div class="example-box">
+                    <strong>8. تحديد المواقع الخدمية والإنتاجية (Facility location and layout):</strong>
+                    <br>زي إزاي شركة بتختار مكان فرعها الجديد عشان يكون قريب من العملاء ومورديها.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">بحوث العمليات | صفحة 3</div>
+        </div>
+    </div>
+
+</body>
+</html>
