@@ -140,22 +140,23 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بحوث العمليات - المحاضرة الثانية (صياغة المسائل)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <title>بحوث العمليات - المحاضرة الثانية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #0F172A;
-            --bg-page: #1E293B;
-            --bg-card: #0B1120;
-            --text-main: #F3F4F6;
-            --text-muted: #94A3B8;
+            --bg-body: #F4F7F9;
+            --bg-page: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
             
-            --neon-cyan: #00F0FF;
-            --neon-green: #00FF41;
-            --neon-purple: #B026FF;
-            --neon-orange: #FF8C00;
+            --navy-blue: #1E3A8A;
+            --teal: #0D9488;
+            --teal-light: #14B8A6;
+            --gold: #D97706;
+            --red: #DC2626;
             
-            --border-color: rgba(0, 240, 255, 0.2);
+            --border-color: #E2E8F0;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -165,7 +166,7 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             line-height: 1.8;
-            padding: 30px 10px;
+            padding: 40px 10px;
             min-height: 100vh;
             display: flex;
             flex-wrap: wrap;
@@ -177,16 +178,16 @@
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 8px; }
 
         .a4-page {
             background-color: var(--bg-page);
             width: 850px;
             min-height: 1080px;
-            padding: 40px 45px 70px 45px;
-            border: 1px solid var(--border-color);
+            padding: 45px 50px 70px 50px;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -196,8 +197,8 @@
         .a4-page::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-green));
+            top: 0; left: 0; width: 100%; height: 8px;
+            background: linear-gradient(90deg, var(--navy-blue), var(--teal), var(--navy-blue));
             z-index: 10;
         }
 
@@ -205,7 +206,7 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 450px; height: 450px;
+            width: 400px; height: 400px;
             background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
             background-repeat: no-repeat;
             background-position: center;
@@ -226,82 +227,87 @@
 
         .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); }
         .hero-header h1 {
-            font-size: 2.4rem; font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 2.5rem; font-weight: 800; color: var(--navy-blue);
             margin-bottom: 5px;
         }
-        .hero-header p { font-size: 1.1rem; color: var(--neon-green); font-weight: 700; }
+        .hero-header p { font-size: 1.1rem; color: var(--teal); font-weight: 700; }
 
         .glass-card {
-            background: var(--bg-card);
+            background: #FFFFFF;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 25px 30px; 
             margin-bottom: 25px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
             position: relative;
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.03);
+            transition: transform 0.2s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 5px;
+            background-color: var(--teal);
+            border-radius: 0 12px 12px 0;
         }
 
         h2 {
-            font-size: 1.5rem; color: var(--neon-cyan); margin-bottom: 20px;
-            display: flex; align-items: center; gap: 10px; font-weight: 800;
-            border-bottom: 1px dashed rgba(0, 240, 255, 0.3); padding-bottom: 10px;
+            font-size: 1.5rem; color: var(--navy-blue); margin-bottom: 20px;
+            display: flex; align-items: center; gap: 12px; font-weight: 800;
         }
-        h2 span.icon { font-size: 1.2rem; background: rgba(0, 240, 255, 0.1); padding: 5px 10px; border-radius: 6px; }
+        h2 span.icon { font-size: 1.4rem; background: rgba(13, 148, 136, 0.1); padding: 6px 12px; border-radius: 8px; color: var(--teal); }
 
         h3 {
-            font-size: 1.2rem; color: var(--neon-purple); margin: 20px 0 10px;
+            font-size: 1.2rem; color: var(--teal); margin: 25px 0 12px;
             font-weight: 700; display: flex; align-items: center; gap: 8px;
         }
-        h3::before { content: '◆'; color: var(--neon-green); font-size: 0.9rem; }
+        h3::before { content: '■'; color: var(--navy-blue); font-size: 0.8rem; }
 
-        p, li { font-size: 1.05rem; margin-bottom: 10px; color: #CBD5E1; }
+        p, li { font-size: 1.05rem; margin-bottom: 12px; color: var(--text-main); text-align: justify; }
         ul, ol { margin-right: 25px; margin-bottom: 15px; }
-        ul li::marker { color: var(--neon-cyan); }
-        ol li::marker { color: var(--neon-purple); font-weight: bold; }
+        ul li::marker { color: var(--teal); }
+        ol li::marker { color: var(--navy-blue); font-weight: bold; }
         
-        strong { color: #FFFFFF; font-weight: 800; }
-        .highlight { color: var(--neon-orange); font-weight: bold; }
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: #FEF3C7; padding: 2px 6px; border-radius: 4px; color: var(--gold); font-weight: 800; }
 
         /* صندوق السؤال */
-        .question-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-right: 4px solid var(--neon-orange);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .question-box h4 { color: var(--neon-orange); font-size: 1.1rem; margin-bottom: 10px; }
+        .question-box { background: #F8FAFC; border: 1px solid var(--border-color); border-right: 4px solid var(--gold); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .question-box h4 { color: var(--gold); font-size: 1.1rem; margin-bottom: 10px; font-weight: 800; }
 
         /* الجداول */
         .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-color); }
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem; background: #000; }
-        th, td { padding: 12px 10px; border: 1px solid rgba(255,255,255,0.05); }
-        th { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); font-weight: 700; }
-        td { color: #CBD5E1; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem; }
+        th, td { padding: 12px 10px; border: 1px solid var(--border-color); }
+        th { background: rgba(13, 148, 136, 0.08); color: var(--navy-blue); font-weight: 700; }
+        td { color: var(--text-main); }
 
         /* الأكواد والمعادلات */
-        .code-window { background: #050A15; border-radius: 8px; margin: 10px 0; border: 1px solid #1E3A8A; overflow: hidden; }
-        .code-content { padding: 15px; font-family: 'Fira Code', monospace; color: var(--neon-green); direction: ltr; text-align: left; font-size: 0.95rem; line-height: 1.6; }
-        .code-content .keyword { color: var(--neon-cyan); font-weight: bold; }
-        .code-content .variable { color: var(--neon-orange); }
+        .code-window { background: #0F172A; border-radius: 8px; margin: 10px 0; border: 1px solid #1E293B; overflow: hidden; }
+        .code-content { padding: 15px; font-family: 'Fira Code', monospace; color: #A5D6FF; direction: ltr; text-align: left; font-size: 0.95rem; line-height: 1.6; }
+        .code-content .keyword { color: #FF7B72; font-weight: bold; }
+        .code-content .variable { color: #FDE047; }
         .code-content .comment { color: #8B949E; font-style: italic; }
 
         .footer-bar {
-            position: absolute; bottom: 20px; left: 45px; right: 45px;
+            position: absolute; bottom: 20px; left: 50px; right: 50px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px solid var(--border-color); padding-top: 15px; z-index: 2;
+            border-top: 2px solid var(--border-color); padding-top: 15px; z-index: 2;
         }
         .footer-brand { display: flex; align-items: center; gap: 10px; }
-        .footer-logo { width: 35px; height: 35px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
-        .footer-brand-name { font-size: 16px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-logo { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--teal); object-fit: cover; }
+        .footer-brand-name { font-size: 16px; font-weight: 900; color: var(--navy-blue); }
         .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
 
         @media (max-width: 800px) {
             body { padding: 0; gap: 10px; }
-            .a4-page { width: 100vw; min-height: 100vh; padding: 25px 20px 80px 20px; border-radius: 0; border: none; border-bottom: 3px solid var(--neon-cyan); margin-bottom: 5px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 25px 20px 80px 20px; border-radius: 0; border: none; border-bottom: 3px solid var(--teal); margin-bottom: 5px; }
             .hero-header h1 { font-size: 2rem; }
             .glass-card { padding: 20px 15px; }
             ul, ol { margin-right: 15px; }
@@ -313,7 +319,7 @@
 </head>
 <body>
 
-    <!-- الصفحة الأولى: المسألة الأولى (المنتجات الثلاثة) -->
+    <!-- الصفحة الأولى: المسألة الأولى -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
@@ -322,93 +328,97 @@
                 <p>المحاضرة الثانية - صياغة مسائل البرمجة الخطية (Problem Formulation)</p>
             </header>
 
-            <div class="question-box">
-                <h4>📝 المسألة الأولى (منتجات الشركة):</h4>
-                <p>تنتج شركة إنتاجية ثلاثة منتجات. وكل منتج يحتاج إلى ثلاثة أنواع من المدخلات هي: المادة الخام، الطاقة البشرية، والطاقة الميكانيكية. ويوضح الجدول التالي احتياجات وحدة المنتج من مدخلات الإنتاج والإنتاجية لكل مدخل والربح المتوقع لكل منها:</p>
+            <section class="glass-card">
+                <h2><span class="icon">📝</span> المسألة الأولى (منتجات الشركة)</h2>
                 
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th rowspan="2">البيان</th>
-                            <th colspan="3">احتياجات المنتج من مدخلات الإنتاج</th>
-                            <th rowspan="2">كمية المدخلات المتاحة</th>
-                        </tr>
-                        <tr>
-                            <th>منتج 1</th>
-                            <th>منتج 2</th>
-                            <th>منتج 3</th>
-                        </tr>
-                        <tr>
-                            <td><strong>المادة الخام (كجم)</strong></td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>1200</td>
-                        </tr>
-                        <tr>
-                            <td><strong>طاقة بشرية (ساعة)</strong></td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>900</td>
-                        </tr>
-                        <tr>
-                            <td><strong>طاقة ميكانيكية (ساعة)</strong></td>
-                            <td>3</td>
-                            <td>1</td>
-                            <td>6</td>
-                            <td>1500</td>
-                        </tr>
-                        <tr>
-                            <td><strong>الربح (د.ل. للوحدة)</strong></td>
-                            <td>10</td>
-                            <td>7</td>
-                            <td>5</td>
-                            <td>-</td>
-                        </tr>
-                    </table>
+                <div class="question-box">
+                    <h4>السؤال الرسمي:</h4>
+                    <p>تنتج شركة إنتاجية ثلاثة منتجات. وكل منتج يحتاج إلى ثلاثة أنواع من المدخلات هي: المادة الخام، الطاقة البشرية، والطاقة الميكانيكية. ويوضح الجدول التالي احتياجات وحدة المنتج من مدخلات الإنتاج والإنتاجية لكل مدخل والربح المتوقع لكل منها:</p>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th rowspan="2">البيان</th>
+                                <th colspan="3">احتياجات المنتج من مدخلات الإنتاج</th>
+                                <th rowspan="2">كمية المدخلات المتاحة</th>
+                            </tr>
+                            <tr>
+                                <th>منتج 1</th>
+                                <th>منتج 2</th>
+                                <th>منتج 3</th>
+                            </tr>
+                            <tr>
+                                <td><strong>المادة الخام (كجم)</strong></td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>1200</td>
+                            </tr>
+                            <tr>
+                                <td><strong>طاقة بشرية (ساعة)</strong></td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>900</td>
+                            </tr>
+                            <tr>
+                                <td><strong>طاقة ميكانيكية (ساعة)</strong></td>
+                                <td>3</td>
+                                <td>1</td>
+                                <td>6</td>
+                                <td>1500</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الربح (د.ل. للوحدة)</strong></td>
+                                <td>10</td>
+                                <td>7</td>
+                                <td>5</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p><strong>المطلوب:</strong> صياغة نموذج البرمجة الخطية لتحديد الكمية الواجب إنتاجها من كل منتج لتعظيم الربح إلى أقصى حد ممكن.</p>
                 </div>
-                <p><strong>المطلوب:</strong> صياغة نموذج البرمجة الخطية لتحديد الكمية الواجب إنتاجها من كل منتج لتعظيم الربح إلى أقصى حد ممكن.</p>
-            </div>
 
-            <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
-            
-            <h3>1. تحديد متغيرات النموذج (Decision Variables):</h3>
-            <p>بما أن المطلوب هو كمية الإنتاج من كل منتج، فإن المتغيرات هي:</p>
-            <ul>
-                <li><span class="highlight">x1</span> = كمية الإنتاج من المنتج 1</li>
-                <li><span class="highlight">x2</span> = كمية الإنتاج من المنتج 2</li>
-                <li><span class="highlight">x3</span> = كمية الإنتاج من المنتج 3</li>
-            </ul>
+                <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
+                
+                <h3>1. تحديد متغيرات النموذج (Decision Variables):</h3>
+                <p>بما أن المطلوب هو كمية الإنتاج من كل منتج، فإن المتغيرات هي:</p>
+                <ul>
+                    <li><span class="highlight">x1</span> = كمية الإنتاج من المنتج 1</li>
+                    <li><span class="highlight">x2</span> = كمية الإنتاج من المنتج 2</li>
+                    <li><span class="highlight">x3</span> = كمية الإنتاج من المنتج 3</li>
+                </ul>
 
-            <h3>2. صياغة دالة الهدف (Objective Function):</h3>
-            <p>الهدف هو <strong>تعظيم الربح الإجمالي</strong>. الربح بيجي من (ربح الوحدة × كمية الإنتاج).</p>
-            <div class="code-window">
-                <div class="code-content">
+                <h3>2. صياغة دالة الهدف (Objective Function):</h3>
+                <p>الهدف هو <strong>تعظيم الربح الإجمالي</strong>. الربح بيجي من (ربح الوحدة × كمية الإنتاج).</p>
+                <div class="code-window">
+                    <div class="code-content">
 <span class="keyword">Maximize</span> Z = 10<span class="variable">x1</span> + 7<span class="variable">x2</span> + 5<span class="variable">x3</span>
+                    </div>
                 </div>
-            </div>
 
-            <h3>3. صياغة القيود (Constraints):</h3>
-            <p>القيود هي حدود الموارد المتاحة (المادة الخام، الطاقة البشرية، الطاقة الميكانيكية).</p>
-            <div class="code-window">
-                <div class="code-content">
+                <h3>3. صياغة القيود (Constraints):</h3>
+                <p>القيود هي حدود الموارد المتاحة (المادة الخام، الطاقة البشرية، الطاقة الميكانيكية).</p>
+                <div class="code-window">
+                    <div class="code-content">
 <span class="comment">// قيد المادة الخام</span><br>
 2<span class="variable">x1</span> + 3<span class="variable">x2</span> + 4<span class="variable">x3</span> ≤ 1200<br><br>
 <span class="comment">// قيد الطاقة البشرية</span><br>
 <span class="variable">x1</span> + 2<span class="variable">x2</span> + 3<span class="variable">x3</span> ≤ 900<br><br>
 <span class="comment">// قيد الطاقة الميكانيكية</span><br>
 3<span class="variable">x1</span> + <span class="variable">x2</span> + 6<span class="variable">x3</span> ≤ 1500
+                    </div>
                 </div>
-            </div>
 
-            <h3>4. شروط عدم السلبية (Non-Negativity):</h3>
-            <p>كمية الإنتاج لازم تكون موجبة أو صفر (مينفعش ننتج كمية سالبة).</p>
-            <div class="code-window">
-                <div class="code-content">
+                <h3>4. شروط عدم السلبية (Non-Negativity):</h3>
+                <p>كمية الإنتاج لازم تكون موجبة أو صفر (مينفعش ننتج كمية سالبة).</p>
+                <div class="code-window">
+                    <div class="code-content">
 <span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span> ≥ 0
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
         <div class="footer-bar">
             <div class="footer-brand">
@@ -419,62 +429,66 @@
         </div>
     </div>
 
-    <!-- الصفحة الثانية: المسألة الثانية (الاستثمار) -->
+    <!-- الصفحة الثانية: المسألة الثانية -->
     <div class="a4-page">
         <div class="watermark"></div>
         <div class="content-wrapper">
-            <div class="question-box">
-                <h4>📝 المسألة الثانية (شركة الاستثمارات):</h4>
-                <p>قررت إحدى شركات الاستثمارات الداخلية استثمار مبلغ <strong>50,000 د.ل</strong> في ثلاثة مشاريع هي: بناء عقارات، إدارة مشروع زراعي، وتجارة سلع. وقد قدّر عائد أرباحها السنوي بنسبة <strong>7%، 9%، 14%</strong> على التوالي. ومن ضمن خططات الشركة الاستثمارية:</p>
-                <ol>
-                    <li>الحصول على العائد السنوي بها لا يقل عن 5000 د.ل.</li>
-                    <li>توفير 10,000 على الأقل (في المشروع الزراعي).</li>
-                    <li>التوفير من تجارة السلع الداخلية لا يزيد عن التوفير في باقي الاستثمارات.</li>
-                    <li>التوفير في بناء العقارات لا يقل عن 5000 د.ل ولا يزيد عن 15,000 د.ل.</li>
-                </ol>
-                <p><strong>المطلوب:</strong> كيفية توزيع المبلغ المستثمر 50,000 د.ل في المشاريع الثلاثة بحيث يحقق أكبر استثمار ممكن.</p>
-            </div>
-
-            <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
-            
-            <h3>1. تحديد متغيرات النموذج:</h3>
-            <ul>
-                <li><span class="highlight">x1</span> = الاستثمار في العقارات (د.ل)</li>
-                <li><span class="highlight">x2</span> = الاستثمار في إدارة المشروع الزراعي (د.ل)</li>
-                <li><span class="highlight">x3</span> = الاستثمار في تجارة السلع (د.ل)</li>
-            </ul>
-
-            <h3>2. صياغة دالة الهدف:</h3>
-            <p>الهدف هو <strong>تعظيم العائد السنوي</strong> (الربح). بنضرب نسبة العائد في المبلغ المستثمر في كل مشروع.</p>
-            <div class="code-window">
-                <div class="code-content">
-<span class="keyword">Maximize</span> Z = 0.07<span class="variable">x1</span> + 0.09<span class="variable">x2</span> + 0.14<span class="variable">x3</span>
+            <section class="glass-card">
+                <h2><span class="icon">📝</span> المسألة الثانية (شركة الاستثمارات)</h2>
+                
+                <div class="question-box">
+                    <h4>السؤال الرسمي:</h4>
+                    <p>قررت إحدى شركات الاستثمارات الداخلية استثمار مبلغ <strong>50,000 د.ل</strong> في ثلاثة مشاريع هي: بناء عقارات، إدارة مشروع زراعي، وتجارة سلع. وقد قدّر عائد أرباحها السنوي بنسبة <strong>7%، 9%، 14%</strong> على التوالي. ومن ضمن خططات الشركة الاستثمارية:</p>
+                    <ol>
+                        <li>الحصول على العائد السنوي بها لا يقل عن 5000 د.ل.</li>
+                        <li>توفير 10,000 على الأقل (في المشروع الزراعي).</li>
+                        <li>التوفير من تجارة السلع الداخلية لا يزيد عن التوفير في باقي الاستثمارات.</li>
+                        <li>التوفير في بناء العقارات لا يقل عن 5000 د.ل ولا يزيد عن 15,000 د.ل.</li>
+                    </ol>
+                    <p><strong>المطلوب:</strong> كيفية توزيع المبلغ المستثمر 50,000 د.ل في المشاريع الثلاثة بحيث يحقق أكبر استثمار ممكن.</p>
                 </div>
-            </div>
 
-            <h3>3. صياغة القيود:</h3>
-            <div class="code-window">
-                <div class="code-content">
+                <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
+                
+                <h3>1. تحديد متغيرات النموذج:</h3>
+                <ul>
+                    <li><span class="highlight">x1</span> = الاستثمار في العقارات (د.ل)</li>
+                    <li><span class="highlight">x2</span> = الاستثمار في إدارة المشروع الزراعي (د.ل)</li>
+                    <li><span class="highlight">x3</span> = الاستثمار في تجارة السلع (د.ل)</li>
+                </ul>
+
+                <h3>2. صياغة دالة الهدف:</h3>
+                <p>الهدف هو <strong>تعظيم العائد السنوي</strong> (الربح). بنضرب نسبة العائد في المبلغ المستثمر في كل مشروع.</p>
+                <div class="code-window">
+                    <div class="code-content">
+<span class="keyword">Maximize</span> Z = 0.07<span class="variable">x1</span> + 0.09<span class="variable">x2</span> + 0.14<span class="variable">x3</span>
+                    </div>
+                </div>
+
+                <h3>3. صياغة القيود:</h3>
+                <div class="code-window">
+                    <div class="code-content">
 <span class="comment">// 1. العائد السنوي لا يقل عن 5000</span><br>
 0.07<span class="variable">x1</span> + 0.09<span class="variable">x2</span> + 0.14<span class="variable">x3</span> ≥ 5000<br><br>
 <span class="comment">// 2. توفير 10,000 على الأقل (للمشروع الزراعي)</span><br>
 <span class="variable">x2</span> ≥ 10,000<br><br>
 <span class="comment">// 3. التوفير في تجارة السلع لا يزيد عن باقي الاستثمارات (العقارات + الزراعي)</span><br>
-<span class="variable">x3</span> ≤ <span class="variable">x1</span> + <span class="variable">x2</span>  <span class="comment">// أو: -x1 - x2 + x3 ≤ 0</span><br><br>
+<span class="variable">x3</span> ≤ <span class="variable">x1</span> + <span class="variable">x2</span> <span class="comment">// أو: -x1 - x2 + x3 ≤ 0</span><br><br>
 <span class="comment">// 4. التوفير في العقارات بين 5000 و 15000</span><br>
 <span class="variable">x1</span> ≥ 5000<br>
 <span class="variable">x1</span> ≤ 15000<br><br>
 <span class="comment">// 5. مجموع الاستثمارات لا يزيد عن 50,000</span><br>
 <span class="variable">x1</span> + <span class="variable">x2</span> + <span class="variable">x3</span> ≤ 50,000
+                    </div>
                 </div>
-            </div>
 
-            <h3>4. شروط عدم السلبية:</h3>
-            <div class="code-window">
-                <div class="code-content">
+                <h3>4. شروط عدم السلبية:</h3>
+                <div class="code-window">
+                    <div class="code-content">
 <span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span> ≥ 0
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
         <div class="footer-bar">
             <div class="footer-brand">
