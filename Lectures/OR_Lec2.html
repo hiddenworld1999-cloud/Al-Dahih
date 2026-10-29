@@ -305,15 +305,32 @@
         .footer-brand-name { font-size: 16px; font-weight: 900; color: var(--navy-blue); }
         .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
 
+        /* التعديلات الخاصة بالموبايل */
         @media (max-width: 800px) {
             body { padding: 0; gap: 10px; }
-            .a4-page { width: 100vw; min-height: 100vh; padding: 25px 20px 80px 20px; border-radius: 0; border: none; border-bottom: 3px solid var(--teal); margin-bottom: 5px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 25px 15px 80px 15px; border-radius: 0; border: none; border-bottom: 3px solid var(--teal); margin-bottom: 5px; }
             .hero-header h1 { font-size: 2rem; }
-            .glass-card { padding: 20px 15px; }
+            .glass-card { padding: 15px; }
             ul, ol { margin-right: 15px; }
-            li { font-size: 0.95rem; }
-            .footer-bar { left: 20px; right: 20px; }
-            table { font-size: 0.75rem; }
+            p, li { font-size: 0.95rem; }
+            
+            /* تعديلات الجداول للموبايل */
+            .table-wrapper { 
+                overflow-x: hidden; /* إخفاء السكرول */
+                margin: 10px 0;
+            }
+            table { 
+                font-size: 0.7rem; /* تصغير الخط */
+                table-layout: fixed; /* تثبيت عرض الأعمدة */
+                width: 100%;
+            }
+            th, td { 
+                padding: 4px 2px; /* تقليل المسافات الداخلية جداً */
+                word-wrap: break-word; /* كسر الكلام الطويل */
+            }
+            th { 
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
