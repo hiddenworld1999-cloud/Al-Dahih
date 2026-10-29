@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.12;
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            // (تم تعطيل التطرد عشان يفتح على جهازك)
+            /*
+            try {
+                if (window.top === window.self || !window.top.location.href.includes('course4.html')) {
+                    window.location.replace('../login.html');
+                }
+            } catch (e) {
+                window.location.replace('../login.html');
+            }
+            let checkLogin = localStorage.getItem('isLoggedInDaheeh') === 'true';
+            if (!checkLogin) { window.location.replace('../login.html'); }
+            */
+
+            // منع كليك يمين واختصارات المطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح";
+            let sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بحوث العمليات - المحاضرة الثانية (صياغة المسائل)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0F172A;
+            --bg-page: #1E293B;
+            --bg-card: #0B1120;
+            --text-main: #F3F4F6;
+            --text-muted: #94A3B8;
+            
+            --neon-cyan: #00F0FF;
+            --neon-green: #00FF41;
+            --neon-purple: #B026FF;
+            --neon-orange: #FF8C00;
+            
+            --border-color: rgba(0, 240, 255, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 850px;
+            min-height: 1080px;
+            padding: 40px 45px 70px 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-green));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px; height: 450px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); }
+        .hero-header h1 {
+            font-size: 2.4rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--neon-green); font-weight: 700; }
+
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px 30px; 
+            margin-bottom: 25px; 
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.03);
+        }
+
+        h2 {
+            font-size: 1.5rem; color: var(--neon-cyan); margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+            border-bottom: 1px dashed rgba(0, 240, 255, 0.3); padding-bottom: 10px;
+        }
+        h2 span.icon { font-size: 1.2rem; background: rgba(0, 240, 255, 0.1); padding: 5px 10px; border-radius: 6px; }
+
+        h3 {
+            font-size: 1.2rem; color: var(--neon-purple); margin: 20px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '◆'; color: var(--neon-green); font-size: 0.9rem; }
+
+        p, li { font-size: 1.05rem; margin-bottom: 10px; color: #CBD5E1; }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--neon-cyan); }
+        ol li::marker { color: var(--neon-purple); font-weight: bold; }
+        
+        strong { color: #FFFFFF; font-weight: 800; }
+        .highlight { color: var(--neon-orange); font-weight: bold; }
+
+        /* صندوق السؤال */
+        .question-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 4px solid var(--neon-orange);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .question-box h4 { color: var(--neon-orange); font-size: 1.1rem; margin-bottom: 10px; }
+
+        /* الجداول */
+        .table-wrapper { overflow-x: auto; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem; background: #000; }
+        th, td { padding: 12px 10px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); font-weight: 700; }
+        td { color: #CBD5E1; }
+
+        /* الأكواد والمعادلات */
+        .code-window { background: #050A15; border-radius: 8px; margin: 10px 0; border: 1px solid #1E3A8A; overflow: hidden; }
+        .code-content { padding: 15px; font-family: 'Fira Code', monospace; color: var(--neon-green); direction: ltr; text-align: left; font-size: 0.95rem; line-height: 1.6; }
+        .code-content .keyword { color: var(--neon-cyan); font-weight: bold; }
+        .code-content .variable { color: var(--neon-orange); }
+        .code-content .comment { color: #8B949E; font-style: italic; }
+
+        .footer-bar {
+            position: absolute; bottom: 20px; left: 45px; right: 45px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color); padding-top: 15px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 10px; }
+        .footer-logo { width: 35px; height: 35px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 16px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 25px 20px 80px 20px; border-radius: 0; border: none; border-bottom: 3px solid var(--neon-cyan); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 2rem; }
+            .glass-card { padding: 20px 15px; }
+            ul, ol { margin-right: 15px; }
+            li { font-size: 0.95rem; }
+            .footer-bar { left: 20px; right: 20px; }
+            table { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: المسألة الأولى (المنتجات الثلاثة) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>بحوث العمليات</h1>
+                <p>المحاضرة الثانية - صياغة مسائل البرمجة الخطية (Problem Formulation)</p>
+            </header>
+
+            <div class="question-box">
+                <h4>📝 المسألة الأولى (منتجات الشركة):</h4>
+                <p>تنتج شركة إنتاجية ثلاثة منتجات. وكل منتج يحتاج إلى ثلاثة أنواع من المدخلات هي: المادة الخام، الطاقة البشرية، والطاقة الميكانيكية. ويوضح الجدول التالي احتياجات وحدة المنتج من مدخلات الإنتاج والإنتاجية لكل مدخل والربح المتوقع لكل منها:</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th rowspan="2">البيان</th>
+                            <th colspan="3">احتياجات المنتج من مدخلات الإنتاج</th>
+                            <th rowspan="2">كمية المدخلات المتاحة</th>
+                        </tr>
+                        <tr>
+                            <th>منتج 1</th>
+                            <th>منتج 2</th>
+                            <th>منتج 3</th>
+                        </tr>
+                        <tr>
+                            <td><strong>المادة الخام (كجم)</strong></td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>1200</td>
+                        </tr>
+                        <tr>
+                            <td><strong>طاقة بشرية (ساعة)</strong></td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>900</td>
+                        </tr>
+                        <tr>
+                            <td><strong>طاقة ميكانيكية (ساعة)</strong></td>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>6</td>
+                            <td>1500</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الربح (د.ل. للوحدة)</strong></td>
+                            <td>10</td>
+                            <td>7</td>
+                            <td>5</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>المطلوب:</strong> صياغة نموذج البرمجة الخطية لتحديد الكمية الواجب إنتاجها من كل منتج لتعظيم الربح إلى أقصى حد ممكن.</p>
+            </div>
+
+            <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
+            
+            <h3>1. تحديد متغيرات النموذج (Decision Variables):</h3>
+            <p>بما أن المطلوب هو كمية الإنتاج من كل منتج، فإن المتغيرات هي:</p>
+            <ul>
+                <li><span class="highlight">x1</span> = كمية الإنتاج من المنتج 1</li>
+                <li><span class="highlight">x2</span> = كمية الإنتاج من المنتج 2</li>
+                <li><span class="highlight">x3</span> = كمية الإنتاج من المنتج 3</li>
+            </ul>
+
+            <h3>2. صياغة دالة الهدف (Objective Function):</h3>
+            <p>الهدف هو <strong>تعظيم الربح الإجمالي</strong>. الربح بيجي من (ربح الوحدة × كمية الإنتاج).</p>
+            <div class="code-window">
+                <div class="code-content">
+<span class="keyword">Maximize</span> Z = 10<span class="variable">x1</span> + 7<span class="variable">x2</span> + 5<span class="variable">x3</span>
+                </div>
+            </div>
+
+            <h3>3. صياغة القيود (Constraints):</h3>
+            <p>القيود هي حدود الموارد المتاحة (المادة الخام، الطاقة البشرية، الطاقة الميكانيكية).</p>
+            <div class="code-window">
+                <div class="code-content">
+<span class="comment">// قيد المادة الخام</span><br>
+2<span class="variable">x1</span> + 3<span class="variable">x2</span> + 4<span class="variable">x3</span> ≤ 1200<br><br>
+<span class="comment">// قيد الطاقة البشرية</span><br>
+<span class="variable">x1</span> + 2<span class="variable">x2</span> + 3<span class="variable">x3</span> ≤ 900<br><br>
+<span class="comment">// قيد الطاقة الميكانيكية</span><br>
+3<span class="variable">x1</span> + <span class="variable">x2</span> + 6<span class="variable">x3</span> ≤ 1500
+                </div>
+            </div>
+
+            <h3>4. شروط عدم السلبية (Non-Negativity):</h3>
+            <p>كمية الإنتاج لازم تكون موجبة أو صفر (مينفعش ننتج كمية سالبة).</p>
+            <div class="code-window">
+                <div class="code-content">
+<span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span> ≥ 0
+                </div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">بحوث العمليات - المحاضرة الثانية | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: المسألة الثانية (الاستثمار) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="question-box">
+                <h4>📝 المسألة الثانية (شركة الاستثمارات):</h4>
+                <p>قررت إحدى شركات الاستثمارات الداخلية استثمار مبلغ <strong>50,000 د.ل</strong> في ثلاثة مشاريع هي: بناء عقارات، إدارة مشروع زراعي، وتجارة سلع. وقد قدّر عائد أرباحها السنوي بنسبة <strong>7%، 9%، 14%</strong> على التوالي. ومن ضمن خططات الشركة الاستثمارية:</p>
+                <ol>
+                    <li>الحصول على العائد السنوي بها لا يقل عن 5000 د.ل.</li>
+                    <li>توفير 10,000 على الأقل (في المشروع الزراعي).</li>
+                    <li>التوفير من تجارة السلع الداخلية لا يزيد عن التوفير في باقي الاستثمارات.</li>
+                    <li>التوفير في بناء العقارات لا يقل عن 5000 د.ل ولا يزيد عن 15,000 د.ل.</li>
+                </ol>
+                <p><strong>المطلوب:</strong> كيفية توزيع المبلغ المستثمر 50,000 د.ل في المشاريع الثلاثة بحيث يحقق أكبر استثمار ممكن.</p>
+            </div>
+
+            <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
+            
+            <h3>1. تحديد متغيرات النموذج:</h3>
+            <ul>
+                <li><span class="highlight">x1</span> = الاستثمار في العقارات (د.ل)</li>
+                <li><span class="highlight">x2</span> = الاستثمار في إدارة المشروع الزراعي (د.ل)</li>
+                <li><span class="highlight">x3</span> = الاستثمار في تجارة السلع (د.ل)</li>
+            </ul>
+
+            <h3>2. صياغة دالة الهدف:</h3>
+            <p>الهدف هو <strong>تعظيم العائد السنوي</strong> (الربح). بنضرب نسبة العائد في المبلغ المستثمر في كل مشروع.</p>
+            <div class="code-window">
+                <div class="code-content">
+<span class="keyword">Maximize</span> Z = 0.07<span class="variable">x1</span> + 0.09<span class="variable">x2</span> + 0.14<span class="variable">x3</span>
+                </div>
+            </div>
+
+            <h3>3. صياغة القيود:</h3>
+            <div class="code-window">
+                <div class="code-content">
+<span class="comment">// 1. العائد السنوي لا يقل عن 5000</span><br>
+0.07<span class="variable">x1</span> + 0.09<span class="variable">x2</span> + 0.14<span class="variable">x3</span> ≥ 5000<br><br>
+<span class="comment">// 2. توفير 10,000 على الأقل (للمشروع الزراعي)</span><br>
+<span class="variable">x2</span> ≥ 10,000<br><br>
+<span class="comment">// 3. التوفير في تجارة السلع لا يزيد عن باقي الاستثمارات (العقارات + الزراعي)</span><br>
+<span class="variable">x3</span> ≤ <span class="variable">x1</span> + <span class="variable">x2</span>  <span class="comment">// أو: -x1 - x2 + x3 ≤ 0</span><br><br>
+<span class="comment">// 4. التوفير في العقارات بين 5000 و 15000</span><br>
+<span class="variable">x1</span> ≥ 5000<br>
+<span class="variable">x1</span> ≤ 15000<br><br>
+<span class="comment">// 5. مجموع الاستثمارات لا يزيد عن 50,000</span><br>
+<span class="variable">x1</span> + <span class="variable">x2</span> + <span class="variable">x3</span> ≤ 50,000
+                </div>
+            </div>
+
+            <h3>4. شروط عدم السلبية:</h3>
+            <div class="code-window">
+                <div class="code-content">
+<span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span> ≥ 0
+                </div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">بحوث العمليات - المحاضرة الثانية | صفحة 2</div>
+        </div>
+    </div>
+
+</body>
+</html>
