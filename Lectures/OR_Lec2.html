@@ -474,44 +474,7 @@
                     <li><span class="highlight">x3</span> = الاستثمار في تجارة السلع (د.ل)</li>
                 </ul>
 
-                <!-- جدول المعطيات للحل -->
-                <h3>2. ملخص المعطيات (جدول الحل):</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>المشروع</th>
-                            <th>المتغير</th>
-                            <th>نسبة العائد</th>
-                            <th>الشروط والقيود</th>
-                        </tr>
-                        <tr>
-                            <td>العقارات</td>
-                            <td><span class="highlight">x1</span></td>
-                            <td>7% (0.07)</td>
-                            <td>بين 5,000 و 15,000</td>
-                        </tr>
-                        <tr>
-                            <td>المشروع الزراعي</td>
-                            <td><span class="highlight">x2</span></td>
-                            <td>9% (0.09)</td>
-                            <td>10,000 على الأقل</td>
-                        </tr>
-                        <tr>
-                            <td>تجارة السلع</td>
-                            <td><span class="highlight">x3</span></td>
-                            <td>14% (0.14)</td>
-                            <td>لا يزيد عن (العقارات + الزراعي)</td>
-                        </tr>
-                        <tr>
-                            <td>المبلغ المتاح</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td>50,000 د.ل</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h3>3. صياغة دالة الهدف:</h3>
+                <h3>2. صياغة دالة الهدف:</h3>
                 <p>الهدف هو <strong>تعظيم العائد السنوي</strong> (الربح). بنضرب نسبة العائد في المبلغ المستثمر في كل مشروع.</p>
                 <div class="code-window">
                     <div class="code-content">
@@ -519,7 +482,7 @@
                     </div>
                 </div>
 
-                <h3>4. صياغة القيود:</h3>
+                <h3>3. صياغة القيود:</h3>
                 <div class="code-window">
                     <div class="code-content">
 <span class="comment">// 1. العائد السنوي لا يقل عن 5000</span><br>
@@ -536,7 +499,7 @@
                     </div>
                 </div>
 
-                <h3>5. شروط عدم السلبية:</h3>
+                <h3>4. شروط عدم السلبية:</h3>
                 <div class="code-window">
                     <div class="code-content">
 <span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span> ≥ 0
@@ -553,5 +516,118 @@
         </div>
     </div>
 
+    <!-- الصفحة الثالثة: المسألة الثالثة (الملابس) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">📝</span> المسألة الثالثة (مصنع الملابس)</h2>
+                
+                <div class="question-box">
+                    <h4>السؤال الرسمي (مثال 5-2):</h4>
+                    <p>يقوم مصنع ملابس بإنتاج أربعة أصناف من الملابس (A1, A2, A3, A4) ويستخدم في الإنتاج ثلاثة أنواع من المواد الخام هي (M1, M2, M3). ترغب إدارة المصنع في معرفة التنظيم الأمثل للإنتاج وتحديد الإنتاج الشهري لكل منتج من أجل تحقيق أعلى ربح ممكن.</p>
+                    
+                    <!-- الجدول الأول: المعطيات -->
+                    <h3>أولاً: جدول المعطيات</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th rowspan="2">نوع المادة الخام</th>
+                                <th colspan="4">احتياجات الوحدة من المنتج</th>
+                                <th rowspan="2">الكمية المتاحة</th>
+                            </tr>
+                            <tr>
+                                <th>A1</th>
+                                <th>A2</th>
+                                <th>A3</th>
+                                <th>A4</th>
+                            </tr>
+                            <tr>
+                                <td><strong>M1</strong></td>
+                                <td>1.5</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>2000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>M2</strong></td>
+                                <td>1</td>
+                                <td>5</td>
+                                <td>3.5</td>
+                                <td>1</td>
+                                <td>8000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>M3</strong></td>
+                                <td>1.5</td>
+                                <td>3</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>5000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الربح (جنيه/وحدة)</strong></td>
+                                <td>5.24</td>
+                                <td>7.3</td>
+                                <td>8.34</td>
+                                <td>4.18</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p><strong>المطلوب:</strong> صياغة هذه المشكلة في صورة برنامج خطي لتعظيم الربح؟</p>
+                </div>
+
+                <h3>الحل بالتفصيل (خطوة بخطوة):</h3>
+                
+                <h3>1. تحديد متغيرات النموذج (Decision Variables):</h3>
+                <p>بما أن المطلوب هو تحديد الإنتاج الشهري لكل منتج، فإن المتغيرات هي:</p>
+                <ul>
+                    <li><span class="highlight">x1</span> = كمية الإنتاج من المنتج A1</li>
+                    <li><span class="highlight">x2</span> = كمية الإنتاج من المنتج A2</li>
+                    <li><span class="highlight">x3</span> = كمية الإنتاج من المنتج A3</li>
+                    <li><span class="highlight">x4</span> = كمية الإنتاج من المنتج A4</li>
+                </ul>
+
+                <h3>2. صياغة دالة الهدف (Objective Function):</h3>
+                <p>الهدف هو <strong>تعظيم الربح الإجمالي</strong> (ربح الوحدة × كمية الإنتاج).</p>
+                <div class="code-window">
+                    <div class="code-content">
+<span class="keyword">Maximize</span> Z = 5.24<span class="variable">x1</span> + 7.3<span class="variable">x2</span> + 8.34<span class="variable">x3</span> + 4.18<span class="variable">x4</span>
+                    </div>
+                </div>
+
+                <h3>3. صياغة القيود (Constraints):</h3>
+                <p>القيود هي حدود المواد الخام المتاحة (M1, M2, M3).</p>
+                <div class="code-window">
+                    <div class="code-content">
+<span class="comment">// قيد المادة الخام الأولى (M1)</span><br>
+1.5<span class="variable">x1</span> + 1<span class="variable">x2</span> + 1<span class="variable">x3</span> + 1<span class="variable">x4</span> ≤ 2000<br><br>
+<span class="comment">// قيد المادة الخام الثانية (M2)</span><br>
+1<span class="variable">x1</span> + 5<span class="variable">x2</span> + 3.5<span class="variable">x3</span> + 1<span class="variable">x4</span> ≤ 8000<br><br>
+<span class="comment">// قيد المادة الخام الثالثة (M3)</span><br>
+1.5<span class="variable">x1</span> + 3<span class="variable">x2</span> + 1<span class="variable">x3</span> + 1<span class="variable">x4</span> ≤ 5000
+                    </div>
+                </div>
+
+                <h3>4. شروط عدم السلبية (Non-Negativity):</h3>
+                <p>كمية الإنتاج لازم تكون موجبة أو صفر.</p>
+                <div class="code-window">
+                    <div class="code-content">
+<span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span>, <span class="variable">x4</span> ≥ 0
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">بحوث العمليات - المحاضرة الثانية | صفحة 3</div>
+        </div>
+    </div>
+
 </body>
-</html>
