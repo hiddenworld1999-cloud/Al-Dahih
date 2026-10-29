@@ -474,7 +474,44 @@
                     <li><span class="highlight">x3</span> = الاستثمار في تجارة السلع (د.ل)</li>
                 </ul>
 
-                <h3>2. صياغة دالة الهدف:</h3>
+                <!-- جدول المعطيات للحل -->
+                <h3>2. ملخص المعطيات (جدول الحل):</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المشروع</th>
+                            <th>المتغير</th>
+                            <th>نسبة العائد</th>
+                            <th>الشروط والقيود</th>
+                        </tr>
+                        <tr>
+                            <td>العقارات</td>
+                            <td><span class="highlight">x1</span></td>
+                            <td>7% (0.07)</td>
+                            <td>بين 5,000 و 15,000</td>
+                        </tr>
+                        <tr>
+                            <td>المشروع الزراعي</td>
+                            <td><span class="highlight">x2</span></td>
+                            <td>9% (0.09)</td>
+                            <td>10,000 على الأقل</td>
+                        </tr>
+                        <tr>
+                            <td>تجارة السلع</td>
+                            <td><span class="highlight">x3</span></td>
+                            <td>14% (0.14)</td>
+                            <td>لا يزيد عن (العقارات + الزراعي)</td>
+                        </tr>
+                        <tr>
+                            <td>المبلغ المتاح</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>50,000 د.ل</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>3. صياغة دالة الهدف:</h3>
                 <p>الهدف هو <strong>تعظيم العائد السنوي</strong> (الربح). بنضرب نسبة العائد في المبلغ المستثمر في كل مشروع.</p>
                 <div class="code-window">
                     <div class="code-content">
@@ -482,7 +519,7 @@
                     </div>
                 </div>
 
-                <h3>3. صياغة القيود:</h3>
+                <h3>4. صياغة القيود:</h3>
                 <div class="code-window">
                     <div class="code-content">
 <span class="comment">// 1. العائد السنوي لا يقل عن 5000</span><br>
@@ -499,7 +536,7 @@
                     </div>
                 </div>
 
-                <h3>4. شروط عدم السلبية:</h3>
+                <h3>5. شروط عدم السلبية:</h3>
                 <div class="code-window">
                     <div class="code-content">
 <span class="variable">x1</span>, <span class="variable">x2</span>, <span class="variable">x3</span> ≥ 0
