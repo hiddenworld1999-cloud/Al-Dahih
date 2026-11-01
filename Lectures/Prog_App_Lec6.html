@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملخص الشامل - صفحات تسجيل الدخول (Flask)</title>
+    
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.12;
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            // منع كليك يمين واختصارات المطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح";
+            let sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+    <!-- تصميم المادة (Cyberpunk Vibe) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #020202;
+            --bg-page: #0A0A0F;
+            --bg-card: rgba(20, 20, 25, 0.6);
+            --text-main: #E2E8F0;
+            --text-muted: #94A3B8;
+            
+            --neon-cyan: #00F0FF;
+            --neon-purple: #B026FF;
+            --neon-green: #00FF41;
+            --neon-red: #FF003C;
+            --neon-yellow: #FFD700;
+
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.05), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 30%);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 800px; 
+            min-height: 1050px;
+            padding: 30px 35px 55px 35px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
+            opacity: 0.8;
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 20px; margin-bottom: 15px; }
+        .hero-header h1 {
+            font-size: 2.2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(176, 38, 255, 0.15), rgba(0, 240, 255, 0.15));
+            border-right: 4px solid var(--neon-cyan);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            margin: 20px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass); border-radius: 10px;
+            padding: 20px; margin-bottom: 15px; 
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        h3 {
+            font-size: 1.1rem; color: var(--neon-purple); margin: 15px 0 8px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '◆'; color: var(--neon-cyan); font-size: 0.9rem; }
+
+        p, li { font-size: 0.95rem; margin-bottom: 8px; }
+        ul, ol { margin-right: 20px; margin-bottom: 10px; }
+        ul li::marker { color: var(--neon-cyan); }
+        ol li::marker { color: var(--neon-purple); font-weight: bold; }
+        strong { color: var(--neon-yellow); font-weight: 700; }
+        
+        .code-window { background: #000000; border-radius: 8px; margin: 10px 0 5px 0; border: 1px solid #333; overflow: hidden; }
+        .code-header { background: #111; padding: 6px 10px; display: flex; gap: 5px; border-bottom: 1px solid #333; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot.red { background: #FF5F56; } .dot.yellow { background: #FFBD2E; } .dot.green { background: #27C93F; }
+        .code-content { padding: 12px 15px; font-family: 'Fira Code', monospace; color: var(--neon-green); direction: ltr; text-align: left; overflow-x: auto; font-size: 0.85rem; line-height: 1.5; }
+        .code-content .keyword { color: #FF7B72; } 
+        .code-content .string { color: #A5D6FF; } 
+        .code-content .comment { color: #8B949E; font-style: italic; }
+        .code-content .func { color: #D2A8FF; }
+
+        .output-window { 
+            background: #050A15; 
+            border-radius: 8px; 
+            margin: 0 0 10px 0; 
+            border: 1px solid #1E3A8A; 
+            overflow: hidden; 
+            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.05);
+        }
+        .output-header { 
+            background: #0F172A; 
+            padding: 6px 10px; 
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem; 
+            color: #60A5FA; 
+            border-bottom: 1px solid #1E3A8A; 
+            display: flex; align-items: center; gap: 8px;
+        }
+        .output-content { 
+            padding: 12px 15px; 
+            font-family: 'Fira Code', monospace; 
+            color: #E2E8F0; 
+            direction: ltr; 
+            text-align: left; 
+            font-size: 0.85rem; 
+            line-height: 1.5; 
+            white-space: pre-wrap;
+        }
+
+        .explanation-box {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px dashed var(--neon-cyan);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #E2E8F0;
+            line-height: 1.7;
+        }
+        .explanation-box strong { color: var(--neon-cyan); }
+
+        .table-wrapper { overflow-x: auto; margin: 10px 0; border-radius: 8px; border: 1px solid var(--border-glass); }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.85rem; }
+        th, td { padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); font-weight: 700; }
+
+        .footer-bar {
+            position: absolute; bottom: 12px; left: 20px; right: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 6px; }
+        .footer-logo { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; background-image: none; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 15px 55px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--neon-purple); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 15px; }
+            ul, ol { margin-right: 10px; }
+            li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: مقدمة المصادقة والصلاحيات -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>LECTURE 6 // WEB SECURITY</h1>
+                <p>تطبيقات في برمجة الحاسب - د. مريم سامي</p>
+            </header>
+
+            <div class="main-title-banner">
+                <span>🔐</span> يعني إيه Authentication و Authorization؟
+            </div>
+
+            <section class="glass-card">
+                <p><strong>1. Authentication (التحقق من الهوية):</strong></p>
+                <p>سؤال بيقول <strong>"Who are you?"</strong> (مين انت؟). يعني بيتأكد إن الشخص اللي بيدخل ده هو فعلاً صاحب الحساب. وده بيتم عن طريق إنك تدخل الـ Username والـ Password (زي صفحة تسجيل الدخول).</p>
+                
+                <p><strong>2. Authorization (الصلاحيات):</strong></p>
+                <p>سؤال بيقول <strong>"What may you do?"</strong> (مسموحلك تعمل ايه؟). بعد ما عرفنا مين انت، بنشوف صلاحياتك. مثلاً: هل انت Admin (مدير) وعندك صلاحية تمسح وتعرض؟ ولا مستخدم عادي بتشوف بس؟</p>
+
+                <div class="explanation-box">
+                    💡 <strong>الخلاصة:</strong><br>
+                    • <strong>Authentication:</strong> البوابة اللي بتثبت هويتك (زي ما تبص للكافيه وتقوله دي بطاقتي).<br>
+                    • <strong>Authorization:</strong> الصلاحيات اللي جواك بعد ما دخلت (زي ما تقوله أنا عايز أدخل الـ VIP بس).
+                </div>
+
+                <div class="main-title-banner">
+                    <span>🏗️</span> المكونات الثلاثة لأي نظام تسجيل دخول
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المكون (Component)</th>
+                            <th>وظيفته (Role)</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Client (المتصفح)</strong></td>
+                            <td>بيعرض صفحة الـ HTML وبيبعت البيانات (Username & Password) في طلب (POST Request).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Server (سيرفر بايثون)</strong></td>
+                            <td>بيستقبل البيانات، بيتحقق منها، بيعمل Hash للباسورد، وبيبدأ الـ Session.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Storage (قاعدة البيانات)</strong></td>
+                            <td>بتخزن الـ Username، الإيميل، والـ Password Hash. <strong>عمرها ما بتخزن الباسورد الأصلي.</strong></td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>ملاحظة مهمة:</strong> المتصفح عمره ما بيكلم قاعدة البيانات مباشرة. السيرفر هو اللي بياخد القرار وبيتكلم مع الداتابيز.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية: تدفق التسجيل وتسجيل الدخول -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🔄</span> خطوات التسجيل (Registration Flow)
+            </div>
+
+            <section class="glass-card">
+                <p>لما مستخدم جديد بيعمل حساب، بيمر بـ 5 خطوات كلهم بيحصلوا على السيرفر:</p>
+                <ol>
+                    <li><strong>Submit (إرسال):</strong> المستخدم بيملا الفورم والمتصفح بيبعت POST request.</li>
+                    <li><strong>Validate (تحقق):</strong> السيرفر بيتأكد إن الـ Username صح، الإيميل شكله صح، والباسورد طويل كفاية.</li>
+                    <li><strong>Hash (تشفير):</strong> السيرفر بيحول الباسورد لـ "Salted Hash" وبيتخلص من الباسورد الأصلي.</li>
+                    <li><strong>Store (تخزين):</strong> بيتم إدخال صف جديد في الداتابيز. لو الـ Username أو الإيميل متكرر، بيطلع Error.</li>
+                    <li><strong>Redirect (تحويل):</strong> بيتم تحويل المستخدم لصفحة تسجيل الدخول.</li>
+                </ol>
+                <div class="explanation-box">
+                    💡 <strong>قاعدة ذهبية:</strong> كل الخطوات دي بتحصل على السيرفر. عمرك ما تعتمد على التحقق اللي بيحصل في المتصفح بس (لأنه ممكن يتلعب فيه).
+                </div>
+            </section>
+
+            <div class="main-title-banner">
+                <span>🔑</span> خطوات تسجيل الدخول (Login Flow)
+            </div>
+
+            <section class="glass-card">
+                <p>لما مستخدم قديم بيدخل، بيمر بـ 5 خطوات برضه:</p>
+                <ol>
+                    <li><strong>Submit (إرسال):</strong> المتصفح بيبعت الـ Username والـ Password (عبر HTTPS في المواقع الحقيقية).</li>
+                    <li><strong>Find User (البحث عن المستخدم):</strong> البحث في الداتابيز باستخدام Parameterized Query (عشان نحمي من الاختراق).</li>
+                    <li><strong>Verify (التحقق):</strong> مقارنة الباسورد اللي المستخدم كتبه بالـ Hash المتخزن في الداتابيز.</li>
+                    <li><strong>Session (الجلسة):</strong> حفظ الـ User ID في الـ Session عشان السيرفر يفتكر المستخدم.</li>
+                    <li><strong>Redirect (تحويل):</strong> تحويل المستخدم للـ Dashboard (لوحة التحكم).</li>
+                </ol>
+                <div class="explanation-box">
+                    💡 <strong>ملاحظة أمنية:</strong> لو فشل تسجيل الدخول، لازم تطلع رسالة واحدة بس: <code>Invalid username or password</code> (يعني من غير ما تقول له "الباسورد غلط" أو "اليوزر مش موجود")، عشان المخترقين ميعرفوش مين المستخدمين الموجودين أصلاً.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثالثة: تشفير الباسورد والـ Sessions -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🛡️</span> متخزنش الباسورد عادي (Never Store Plain Passwords)
+            </div>
+
+            <section class="glass-card">
+                <p><strong>لو خزنت الباسورد Plain Text (زي ما هو):</strong></p>
+                <p>لو الداتابيز اتسربت، كل الباسوردات هتتكشف مرة واحدة. والناس بتستخدم نفس الباسورد في مواقع تانية (فممكن يتسرقوا في كل حتة).</p>
+                
+                <p><strong>الحل: Salted Hash (تشفير مع ملح):</strong></p>
+                <p>الباسورد بيتحول لشكل مش مفهوم (مثلاً: <code>script:32768:8:1$iymy...$4038b7...</code>). القيمة المتخزنة دي مستحيل ترجع للباسورد الأصلي. السيرفر بيقارن الـ Hash بس.</p>
+
+                <h3>إيه اللي يخلي الـ Hash كويس؟</h3>
+                <ul>
+                    <li><strong>One-way (اتجاه واحد):</strong> تقدر تحسب الـ Hash من الباسورد، بس متقدرش تجيب الباسورد من الـ Hash.</li>
+                    <li><strong>Salted (ملح):</strong> بيتم خلط قيمة عشوائية، عشان الباسوردات المتشابهة تطلع Hash مختلف.</li>
+                    <li><strong>Slow on purpose (بطيء عن قصد):</strong> بياخد وقت في الحساب، عشان لو حد بيخمن ملايين الباسوردات ياخد وقت طويل جداً.</li>
+                </ul>
+                <div class="explanation-box">
+                    💡 في بايثون، بنستخدم <code>generate_password_hash</code> و <code>check_password_hash</code> (من مكتبة Werkzeug). متحاولش تخترع طريقة تشفير من دماغك.
+                </div>
+            </section>
+
+            <div class="main-title-banner">
+                <span>🍪</span> الـ Sessions: إزاي السيرفر بيفتكرك؟
+            </div>
+
+            <section class="glass-card">
+                <p>الـ HTTP هو بروتوكول <strong>Stateless</strong> (يعني كل طلب جديد مفيش فيه ذكرى للطلب اللي قبله).</p>
+                <p>بعد تسجيل دخول ناجح، Flask بيخزن الـ User ID في <strong>Cookie موقّع (Signed Cookie)</strong>.<br>
+                كل طلب جديد بعد كده بياخد الـ Cookie دي معاه، عشان السيرفر يعرف مين اللي بيكلمه.</p>
+                <ul>
+                    <li><code>POST /login</code> -> السيرفر بيعمل Cookie اسمها <code>session=</code>.</li>
+                    <li><code>GET /dashboard</code> + Cookie -> السيرفر بيقرأ الـ user_id ويرد بـ 200 OK.</li>
+                </ul>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الرابعة: الأدوات وقاعدة البيانات -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🧰</span> أدوات بايثون (Python Toolkit)
+            </div>
+
+            <section class="glass-card">
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>الأداة</th>
+                            <th>وظيفتها</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Flask</strong></td>
+                            <td>إطار عمل ويب صغير: بيعمل Routes، بيقرأ البيانات، بيدير الـ Sessions، وبيعرض الرسائل (Flash messages).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>sqlite3</strong></td>
+                            <td>قاعدة بيانات مدمجة في بايثون. ملف واحد بس، ومحتاجة تسطيب سيرفر.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Werkzeug</strong></td>
+                            <td>بيتسطب مع Flask. فيه موديول Security بيعمل Hash ويتحقق من الباسورد.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <div class="main-title-banner">
+                <span>🗄️</span> الخطوة 1: جدول المستخدمين (The users Table)
+            </div>
+
+            <section class="glass-card">
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="keyword">CREATE TABLE IF NOT EXISTS</span> users (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;id <span class="keyword">INTEGER PRIMARY KEY AUTOINCREMENT</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;username <span class="keyword">TEXT UNIQUE NOT NULL</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;email <span class="keyword">TEXT UNIQUE NOT NULL</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password_hash <span class="keyword">TEXT NOT NULL</span><br>
+)
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>CREATE TABLE IF NOT EXISTS users</code>: بنقول للداتابيز "لو جدول users مش موجود، اعمله".<br>
+                    • <code>id INTEGER PRIMARY KEY AUTOINCREMENT</code>: ده رقم تعريفي لكل مستخدم، بيكبر لوحده (1, 2, 3...). وده اللي هيخزن في الـ Session.<br>
+                    • <code>username TEXT UNIQUE NOT NULL</code>: خانة الاسم، مينفعش تتكرر (UNIQUE) ومينفعش تكون فاضية (NOT NULL).<br>
+                    • <code>email TEXT UNIQUE NOT NULL</code>: نفس الكلام للإيميل.<br>
+                    • <code>password_hash TEXT NOT NULL</code>: خانة تخزين الباسورد المشفر. لاحظ مفيش خانة اسمها password بتخزن الباسورد الأصلي.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الخامسة: كود التسجيل (Register) -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>📝</span> الخطوة 2: كود التسجيل (Read and Validate)
+            </div>
+
+            <section class="glass-card">
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="func">@app.route</span>(<span class="string">"/register"</span>, methods=[<span class="string">"GET"</span>, <span class="string">"POST"</span>])<br>
+<span class="keyword">def</span> <span class="func">register</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> request.method == <span class="string">"POST"</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username = request.form[<span class="string">"username"</span>].strip()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;email = request.form[<span class="string">"email"</span>].strip().lower()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password = request.form[<span class="string">"password"</span>]<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if not</span> re.fullmatch(<span class="string">r"\w{3,20}"</span>, username):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="string">"Username must be 3-20 letters, digits or underscores."</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">elif</span> len(password) < 8:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="string">"Password must be at least 8 characters."</span>)
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>@app.route(...)</code>: بنعرف الرابط بتاع الصفحة (هيكون <code>/register</code>) وبنسمح باستخدام GET (عرض الصفحة) و POST (إرسال البيانات).<br>
+                    • <code>if request.method == "POST":</code>: لو المستخدم ضغط على زرار "تسجيل" وبعت بيانات.<br>
+                    • <code>request.form["username"].strip()</code>: بنجيب الاسم اللي كتبه، و <code>strip()</code> بتشيل أي مسافات زيادة في الأول والآخر.<br>
+                    • <code>.lower()</code>: بتحول الإيميل لحروف صغيرة عشان لو كتب <code>Test@Mail.com</code> يتخزن <code>test@mail.com</code>.<br>
+                    • <code>re.fullmatch(r"\w{3,20}", username)</code>: بنستخدم Regular Expression عشان نتأكد إن الاسم من 3 لـ 20 حرف (حروف أو أرقام أو شرطة سفلية).<br>
+                    • <code>elif len(password) < 8:</code>: بنتأكد إن الباسورد مش أقل من 8 حروف.
+                </div>
+            </section>
+
+            <div class="main-title-banner">
+                <span>🔒</span> الخطوة 3: تشفير وتخزين البيانات (Hash and Store)
+            </div>
+
+            <section class="glass-card">
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get_db().execute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"INSERT INTO users (username, email, password_hash)"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">" VALUES (?, ?, ?)"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(username, email, generate_password_hash(password)),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get_db().commit()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> redirect(url_for(<span class="string">"login"</span>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">except</span> sqlite3.IntegrityError:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="string">"Username or email already exists."</span>)
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>else:</code>: لو البيانات كلها عدت من التحقق (Validation) بنجاح.<br>
+                    • <code>get_db().execute(...)</code>: بننفذ أمر SQL عشان ندخل البيانات في الداتابيز.<br>
+                    • <code>"INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)"</code>: دي الطريقة الآمنة. علامة <code>?</code> دي مكان البيانات، وده بيمنع هجمات <strong>SQL Injection</strong> (لأن الداتابيز هتعتبر أي حاجة بتيجي مكان الاستفهام دي مجرد "بيانات" مش "كود").<br>
+                    • <code>generate_password_hash(password)</code>: دي الدالة السحرية اللي بتشفر الباسورد.<br>
+                    • <code>commit()</code>: لحفظ التغييرات في الداتابيز فعلياً.<br>
+                    • <code>redirect(url_for("login"))</code>: بنحول المستخدم لصفحة الـ login.<br>
+                    • <code>except sqlite3.IntegrityError:</code>: لو حصل خطأ إن الاسم أو الإيميل متكرر (عشان في الداتابيز عاملين UNIQUE). بنطبع رسالة الخطأ.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السادسة: كود تسجيل الدخول والخروج -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🔓</span> الخطوة 4: كود تسجيل الدخول (The Login Route)
+            </div>
+
+            <section class="glass-card">
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="func">@app.route</span>(<span class="string">"/login"</span>, methods=[<span class="string">"GET"</span>, <span class="string">"POST"</span>])<br>
+<span class="keyword">def</span> <span class="func">login</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> request.method == <span class="string">"POST"</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username = request.form[<span class="string">"username"</span>].strip()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password = request.form[<span class="string">"password"</span>]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user = get_db().execute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"SELECT * FROM users WHERE username = ?"</span>, (username,)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).fetchone()<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> user <span class="keyword">is None</span> <span class="keyword">or not</span> check_password_hash(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user[<span class="string">"password_hash"</span>], password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="string">"Invalid username or password."</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;session.clear()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;session[<span class="string">"user_id"</span>] = user[<span class="string">"id"</span>]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> redirect(url_for(<span class="string">"dashboard"</span>))
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>SELECT * FROM users WHERE username = ?</code>: بندور على المستخدم في الداتابيز باستخدام الـ Username.<br>
+                    • <code>fetchone()</code>: بترجع أول نتيجة بتتطابق (لو موجودة).<br>
+                    • <code>if user is None or not check_password_hash(...)</code>: لو المستخدم مش موجود (None)، أو لو الباسورد اللي كتبه مش متطابق مع الـ Hash المخزن.<br>
+                    • <code>flash("Invalid username or password.")</code>: بنطلع رسالة خطأ واحدة (مش بنقول الباسورد غلط ولا الاسم غلط عشان الأمان).<br>
+                    • <code>session.clear()</code>: بنفضي أي بيانات قديمة في الـ Session.<br>
+                    • <code>session["user_id"] = user["id"]</code>: بنخزن الـ ID بتاع المستخدم في الـ Session، وده اللي بيخلي السيرفر يفتكره.<br>
+                    • <code>redirect(url_for("dashboard"))</code>: بنحوله للصفحة الرئيسية.
+                </div>
+            </section>
+
+            <div class="main-title-banner">
+                <span>🚪</span> الخطوة 5: صفحة محمية وتسجيل الخروج (Logout)
+            </div>
+
+            <section class="glass-card">
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+<span class="func">@app.route</span>(<span class="string">"/dashboard"</span>)<br>
+<span class="keyword">def</span> <span class="func">dashboard</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> <span class="string">"user_id"</span> <span class="keyword">not in</span> session:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> redirect(url_for(<span class="string">"login"</span>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user = get_db().execute(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"SELECT username FROM users WHERE id = ?"</span>, (session[<span class="string">"user_id"</span>],)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;).fetchone()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> f<span class="string">"Welcome, {user['username']}!"</span><br><br>
+<span class="func">@app.route</span>(<span class="string">"/logout"</span>)<br>
+<span class="keyword">def</span> <span class="func">logout</span>():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;session.clear()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> redirect(url_for(<span class="string">"login"</span>))
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    💡 <strong>الشرح سطر بسطر:</strong><br>
+                    • <code>if "user_id" not in session:</code>: ده الحارس (Guard). لو مفيش user_id في الـ Session (يعني المستخدم مش مسجل دخول)، بنحوله لصفحة الـ login.<br>
+                    • <code>SELECT username FROM users WHERE id = ?</code>: بنجيب اسم المستخدم من الداتابيز باستخدام الـ ID اللي في الـ Session.<br>
+                    • <code>session.clear()</code>: دي وظيفة الـ Logout. بمجرد ما بنفضي الـ Session، السيرفر بينسى المستخدم تماماً. وبعدها بنحوله لصفحة الدخول.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 6</div>
+        </div>
+    </div>
+
+    <!-- الصفحة السابعة: التشغيل وقائمة الأمان -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>🚀</span> الخطوة 6: تشغيل واختبار التطبيق
+            </div>
+
+            <section class="glass-card">
+                <div class="code-window">
+                    <div class="code-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="code-content">
+pip install flask<br>
+python app.py<br>
+<span class="comment"># then open in the browser:</span><br>
+http://127.0.0.1:5000/register
+                    </div>
+                </div>
+                <p><strong>حالات الاختبار (Test Cases):</strong></p>
+                <ul>
+                    <li>سجل مستخدم جديد.</li>
+                    <li>حاول تسجل دخول بباسورد غلط.</li>
+                    <li>سجل دخول بالباسورد الصح.</li>
+                    <li>اعمل Logout، وبعدين افتح <code>/dashboard</code> (لازم يرجعك للـ login).</li>
+                </ul>
+                <div class="explanation-box">
+                    ⚠️ <strong>تحذير مهم:</strong> كلمة <code>debug=True</code> دي للتطوير بس. قبل ما تنشر الموقع (Deploy)، لازم تخليها <code>False</code> وتحط الـ Secret Key في الـ Environment Variables.
+                </div>
+            </section>
+
+            <div class="main-title-banner">
+                <span>✅</span> قائمة الأمان (Security Checklist)
+            </div>
+
+            <section class="glass-card">
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>الإجراء (Action)</th>
+                            <th>ليه بنعمله؟ (Why)</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Hash and salt</strong></td>
+                            <td>استخدم <code>generate_password_hash</code>. متخزنش الباسورد Plain Text أبداً.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parameterized SQL</strong></td>
+                            <td>استخدم علامات <code>?</code> عشان البيانات متتحولش لكود (حماية من SQL Injection).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>One generic error</strong></td>
+                            <td>متبينش للمستخدم إذا كان الاسم موجود أصلاً ولا لأ.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTTPS and cookies</strong></td>
+                            <td>شفر الترافيك، وخلي الكوكيز <code>Secure</code> و <code>HttpOnly</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Limit attempts</strong></td>
+                            <td>قلل محاولات تخمين الباسورد عن طريق Rate limits أو قفل الحساب مؤقتاً.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CSRF tokens</strong></td>
+                            <td>ضيف توكن مخفي في الفورم (مثلاً باستخدام Flask-WTF) لمنع هجمات CSRF.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 7</div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثامنة: الملخص والمهام -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <div class="main-title-banner">
+                <span>📌</span> الملخص (Summary)
+            </div>
+
+            <section class="glass-card">
+                <ul>
+                    <li><strong>Registration (التسجيل):</strong> تحقق (Validate)، شفر (Hash)، خزن (Store).</li>
+                    <li><strong>Login (تسجيل الدخول):</strong> دور على المستخدم (Find)، تحقق من الـ Hash (Verify)، ابدأ الـ Session (Start Session).</li>
+                    <li><strong>Sessions:</strong> بتخلي السيرفر يتعرف على المستخدم في الطلبات الجديدة.</li>
+                    <li><strong>Security (الأمان):</strong> لازم يكون في تصميمك من أول سطر كود.</li>
+                </ul>
+            </section>
+
+            <div class="main-title-banner">
+                <span>💪</span> جرب بنفسك (Try it yourself)
+            </div>
+
+            <section class="glass-card">
+                <p>عشان تتقن المحاضرة دي، جرب تنفذ المهام دي:</p>
+                <ol>
+                    <li>ضيف حقل (Confirm Password) في صفحة التسجيل.</li>
+                    <li>اكتب <code>login_required</code> decorator (عشان تستخدمه في أي صفحة عايز تحميها).</li>
+                    <li>اعمل ميزة تقفل الحساب (Lock) بعد 5 محاولات دخول فاشلة.</li>
+                    <li>ضيف عمود (role) في جدول المستخدمين، واعمل صفحة مخصصة للـ Admin بس.</li>
+                </ol>
+            </section>
+
+            <div class="explanation-box" style="margin-top: 30px; text-align: center;">
+                <strong>🎉 بالتوفيق يا بطل! لو فهمت الكود ده كويس، انت كده اتقنت أساسيات بناء نظام تسجيل دخول احترافي وآمن.</strong>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">صفحات تسجيل الدخول - د. مريم سامي | صفحة 8</div>
+        </div>
+    </div>
+
+</body>
+</html>
