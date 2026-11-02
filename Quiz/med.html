@@ -1,1 +1,814 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>الاختبار التفاعلي | منصة الدحيح</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+<noscript>
+    <style>body { display: none !important; }</style>
+    <meta http-equiv="refresh" content="0;url=../login.html">
+</noscript>
+
+<style>
+    /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+    * {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-touch-callout: none !important;
+    }
+
+    /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+    @media print {
+        html, body { display: none !important; }
+    }
+
+    /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+    #antiScreenshotShield {
+        position: fixed;
+        inset: 0;
+        background: #020202;
+        color: #ffffff;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 999999;
+        font-family: 'Cairo', sans-serif;
+        text-align: center;
+    }
+
+    /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+    #watermarkGrid {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 99998;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-content: space-around;
+        opacity: 0.12;
+    }
+
+    .watermark-item {
+        transform: rotate(-25deg);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 800;
+        white-space: nowrap;
+        padding: 35px;
+        font-family: monospace;
+        user-select: none;
+        mix-blend-mode: difference;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+    }
+</style>
+
+<script>
+    // 1. فحص هل المستخدم هو الأدمن
+    const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                  localStorage.getItem('daheeh_is_admin') === 'true';
+
+    if (!isDev) {
+        // منع كليك يمين واختصارات المطورين
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen' || 
+                (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // 2. تشغيل العلامة المائية وشاشة التعتيم
+    document.addEventListener("DOMContentLoaded", function () {
+        if (isDev) return;
+
+        const shield = document.createElement("div");
+        shield.id = "antiScreenshotShield";
+        shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+        document.body.appendChild(shield);
+
+        let sName = "طالب الدحيح";
+        let sCode = "";
+        try {
+            sName = localStorage.getItem('studentName') || "طالب الدحيح";
+            sCode = localStorage.getItem('studentCode') || "0000";
+        } catch (e) {}
+
+        const wmContainer = document.createElement("div");
+        wmContainer.id = "watermarkGrid";
+        const watermarkText = `${sName} • ${sCode}`;
+
+        for (let i = 0; i < 45; i++) {
+            const item = document.createElement("div");
+            item.className = "watermark-item";
+            item.innerText = watermarkText;
+            wmContainer.appendChild(item);
+        }
+        document.body.appendChild(wmContainer);
+
+        window.addEventListener("blur", () => { shield.style.display = "flex"; });
+        window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+        window.addEventListener("keyup", (e) => {
+            if (e.key === "PrintScreen") {
+                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                shield.style.display = "flex";
+                setTimeout(() => shield.style.display = "none", 1200);
+            }
+        });
+    });
+</script>
+<!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+
+<!-- ================= تنسيقات الاختبار ================= -->
+<style>
+    :root{
+        --primary:#2563EB;
+        --primary-dark:#1D4ED8;
+        --primary-soft:#EFF6FF;
+        --green:#16A34A;
+        --green-soft:#DCFCE7;
+        --red:#DC2626;
+        --red-soft:#FEE2E2;
+        --text:#0F172A;
+        --muted:#64748B;
+        --border:#E2E8F0;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+        margin:0; padding:0;
+        min-height:100%;
+    }
+
+    body{
+        font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;
+        background:#F1F5F9;
+        background-image:
+            radial-gradient(circle at 8% 0%, #DBEAFE 0%, transparent 42%),
+            radial-gradient(circle at 95% 8%, #E0E7FF 0%, transparent 38%);
+        background-attachment:fixed;
+        color:var(--text);
+        -webkit-font-smoothing:antialiased;
+        line-height:1.6;
+    }
+
+    .app{
+        max-width:720px;
+        margin:0 auto;
+        padding:18px 16px 60px;
+    }
+
+    /* ============ الهيدر ============ */
+    .quiz-header{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        background:#fff;
+        border:1px solid rgba(226,232,240,.9);
+        border-radius:22px;
+        padding:16px 18px;
+        margin-bottom:16px;
+        box-shadow:0 6px 24px rgba(15,23,42,.07);
+    }
+
+    .header-icon{
+        width:52px; height:52px;
+        flex:0 0 52px;
+        border-radius:16px;
+        display:flex; align-items:center; justify-content:center;
+        font-size:25px;
+        background:linear-gradient(135deg,#2563EB,#1D4ED8);
+        box-shadow:0 8px 18px rgba(37,99,235,.35);
+    }
+
+    .quiz-header h1{
+        margin:0 0 3px;
+        font-size:19px;
+        font-weight:800;
+        letter-spacing:-.2px;
+    }
+
+    .quiz-header p{
+        margin:0;
+        font-size:12.5px;
+        color:var(--muted);
+        font-weight:600;
+    }
+
+    /* ============ شريط التقدم ============ */
+    .progress-wrap{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        margin:0 4px 18px;
+    }
+
+    .progress-bar{
+        flex:1;
+        height:10px;
+        background:#E2E8F0;
+        border-radius:99px;
+        overflow:hidden;
+    }
+
+    #progressFill{
+        display:block;
+        height:100%;
+        width:0%;
+        border-radius:99px;
+        background:linear-gradient(90deg,#60A5FA,#2563EB);
+        transition:width .35s ease;
+    }
+
+    #progressText{
+        font-size:13px;
+        font-weight:800;
+        color:#475569;
+        white-space:nowrap;
+    }
+
+    /* ============ كارت السؤال ============ */
+    .q-card{
+        background:#fff;
+        border:1px solid rgba(226,232,240,.9);
+        border-radius:20px;
+        padding:18px;
+        margin-bottom:14px;
+        box-shadow:0 4px 18px rgba(15,23,42,.06);
+        animation:fadeUp .45s ease both;
+    }
+
+    .q-card:nth-child(1){ animation-delay:.02s; }
+    .q-card:nth-child(2){ animation-delay:.07s; }
+    .q-card:nth-child(3){ animation-delay:.12s; }
+    .q-card:nth-child(4){ animation-delay:.17s; }
+    .q-card:nth-child(5){ animation-delay:.22s; }
+
+    @keyframes fadeUp{
+        from{ opacity:0; transform:translateY(12px); }
+        to{ opacity:1; transform:none; }
+    }
+
+    .q-head{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        margin-bottom:10px;
+    }
+
+    .q-num{
+        width:32px; height:32px;
+        display:flex; align-items:center; justify-content:center;
+        border-radius:10px;
+        background:var(--primary-soft);
+        color:var(--primary);
+        font-weight:800;
+        font-size:15px;
+    }
+
+    .q-status{
+        display:none;
+        font-size:12px;
+        font-weight:800;
+        padding:5px 11px;
+        border-radius:99px;
+    }
+
+    .q-status.ok{ display:inline-block; background:var(--green-soft); color:#15803D; }
+    .q-status.no{ display:inline-block; background:var(--red-soft); color:#B91C1C; }
+
+    .q-text{
+        margin:0 0 14px;
+        font-size:16.5px;
+        font-weight:700;
+        line-height:1.75;
+    }
+
+    .q-options{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    /* ============ الخيارات ============ */
+    .option{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        padding:13px 15px;
+        border:2px solid var(--border);
+        border-radius:14px;
+        background:#fff;
+        cursor:pointer;
+        font-size:15.5px;
+        font-weight:600;
+        color:var(--text);
+        transition:border-color .2s, background .2s, transform .15s;
+    }
+
+    .option:hover{
+        border-color:#CBD5E1;
+        background:#F8FAFC;
+    }
+
+    .option:active{ transform:scale(.99); }
+
+    .option:focus-within{
+        border-color:var(--primary);
+        box-shadow:0 0 0 4px rgba(37,99,235,.13);
+    }
+
+    .option input{
+        position:absolute;
+        opacity:0;
+        width:0; height:0;
+        pointer-events:none;
+    }
+
+    .option .letter{
+        width:30px; height:30px;
+        flex:0 0 30px;
+        display:flex; align-items:center; justify-content:center;
+        border-radius:50%;
+        background:var(--primary-soft);
+        color:var(--primary);
+        font-size:14px;
+        font-weight:800;
+        transition:.2s;
+    }
+
+    .option.selected{
+        border-color:var(--primary);
+        background:var(--primary-soft);
+    }
+
+    .option.selected .letter{
+        background:var(--primary);
+        color:#fff;
+    }
+
+    /* --- حالة بعد التسليم --- */
+    .option.locked{ pointer-events:none; }
+
+    .option.correct{
+        border-color:var(--green);
+        background:var(--green-soft);
+    }
+    .option.correct .letter{ background:var(--green); color:#fff; }
+    .option.correct .mark{ color:var(--green); }
+
+    .option.wrong{
+        border-color:var(--red);
+        background:var(--red-soft);
+    }
+    .option.wrong .letter{ background:var(--red); color:#fff; }
+    .option.wrong .mark{ color:var(--red); }
+
+    .option .mark{
+        margin-inline-start:auto;
+        font-size:17px;
+        font-weight:800;
+        line-height:1;
+    }
+
+    /* ============ كارت النتيجة ============ */
+    .result-card{
+        border-radius:24px;
+        padding:24px 20px;
+        margin-bottom:18px;
+        text-align:center;
+        color:#fff;
+        background:linear-gradient(135deg,#2563EB 0%,#1E40AF 100%);
+        box-shadow:0 14px 34px rgba(37,99,235,.35);
+        animation:pop .5s cubic-bezier(.2,.9,.3,1.2) both;
+    }
+
+    @keyframes pop{
+        from{ opacity:0; transform:scale(.93); }
+        to{ opacity:1; transform:none; }
+    }
+
+    .result-emoji{ font-size:40px; line-height:1; margin-bottom:8px; }
+
+    .result-title{
+        margin:0 0 12px;
+        font-size:18px;
+        font-weight:800;
+    }
+
+    .result-score{
+        font-size:48px;
+        font-weight:800;
+        line-height:1;
+        margin-bottom:12px;
+        letter-spacing:-1px;
+    }
+
+    .result-score small{
+        font-size:20px;
+        font-weight:700;
+        opacity:.85;
+        letter-spacing:0;
+    }
+
+    .result-msg{
+        margin:0 0 14px;
+        font-size:14px;
+        font-weight:600;
+        opacity:.96;
+    }
+
+    .result-bar{
+        height:10px;
+        border-radius:99px;
+        background:rgba(255,255,255,.25);
+        overflow:hidden;
+        margin-bottom:14px;
+    }
+
+    .result-bar i{
+        display:block;
+        height:100%;
+        width:0%;
+        border-radius:99px;
+        background:#fff;
+        transition:width .9s cubic-bezier(.2,.8,.3,1) .15s;
+    }
+
+    .result-note{
+        margin:0;
+        font-size:12.5px;
+        font-weight:700;
+        opacity:.92;
+    }
+
+    /* ============ الأزرار ============ */
+    .btn{
+        display:block;
+        width:100%;
+        padding:16px;
+        border:none;
+        border-radius:16px;
+        font-family:inherit;
+        font-size:17px;
+        font-weight:800;
+        cursor:pointer;
+        transition:transform .15s, box-shadow .2s, background .2s;
+    }
+
+    .btn:active{ transform:scale(.98); }
+
+    .btn-primary{
+        color:#fff;
+        background:linear-gradient(135deg,#2563EB,#1D4ED8);
+        box-shadow:0 10px 24px rgba(37,99,235,.35);
+    }
+
+    .btn-primary:hover{ box-shadow:0 12px 28px rgba(37,99,235,.45); }
+
+    .btn-ghost{
+        margin-top:12px;
+        color:var(--primary);
+        background:#fff;
+        border:2px solid var(--border);
+        box-shadow:0 4px 14px rgba(15,23,42,.05);
+    }
+
+    .btn-ghost:hover{ border-color:var(--primary); background:var(--primary-soft); }
+
+    .hidden{ display:none !important; }
+
+    /* ============ التوست ============ */
+    .toast{
+        position:fixed;
+        left:50%;
+        bottom:26px;
+        transform:translate(-50%, 140%);
+        background:#0F172A;
+        color:#fff;
+        font-size:14px;
+        font-weight:700;
+        padding:13px 22px;
+        border-radius:14px;
+        box-shadow:0 10px 28px rgba(15,23,42,.3);
+        z-index:99999;
+        transition:transform .35s cubic-bezier(.2,.9,.3,1.2);
+        max-width:88vw;
+        text-align:center;
+    }
+
+    .toast.show{ transform:translate(-50%, 0); }
+
+    @media (max-width:420px){
+        .quiz-header h1{ font-size:17px; }
+        .q-text{ font-size:15.5px; }
+        .option{ font-size:14.5px; padding:12px 13px; }
+        .result-score{ font-size:42px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+    <!-- الهيدر -->
+    <header class="quiz-header">
+        <div class="header-icon">📝</div>
+        <div>
+            <h1>الاختبار التفاعلي</h1>
+            <p>اختر الإجابة الصحيحة لكل سؤال، ثم اضغط «تسليم الامتحان»</p>
+        </div>
+    </header>
+
+    <!-- شريط التقدم -->
+    <div class="progress-wrap">
+        <div class="progress-bar"><span id="progressFill"></span></div>
+        <span id="progressText">0 / 5</span>
+    </div>
+
+    <!-- كارت النتيجة -->
+    <div id="resultCard" class="result-card hidden"></div>
+
+    <!-- الأسئلة -->
+    <div id="questionsContainer"></div>
+
+    <!-- الأزرار -->
+    <button id="submitBtn" class="btn btn-primary">تسليم الامتحان</button>
+    <button id="retryBtn" class="btn btn-ghost hidden">إعادة المحاولة</button>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* =========================================================
+   1) بيانات الأسئلة — عدّل من هنا فقط
+   ========================================================= */
+const QUIZ = [
+    {
+        text: "أيٌّ من الكواكب التالية يُعرف باسم «الكوكب الأحمر»؟",
+        options: ["الزهرة", "المريخ", "المشتري", "عطارد"],
+        correct: 1
+    },
+    {
+        text: "ما إعراب كلمة (العلمُ) في جملة: «العلمُ نورٌ»؟",
+        options: ["خبر مرفوع", "فاعل مرفوع", "مبتدأ مرفوع", "مفعول به منصوب"],
+        correct: 2
+    },
+    {
+        text: "كم عدد أيام السنة الميلادية العادية (غير الكبيسة)؟",
+        options: ["٣٦٥ يومًا", "٣٦٠ يومًا", "٣٦٦ يومًا", "٣٦٤ يومًا"],
+        correct: 0
+    },
+    {
+        text: "أيٌّ من التالي يُعد وحدة قياس للقوة؟",
+        options: ["الجول", "الواط", "الأمبير", "النيوتن"],
+        correct: 3
+    },
+    {
+        text: "ما هو الحيوان الذي يُلقَّب بـ «سفينة الصحراء»؟",
+        options: ["الحصان", "الجمل", "الفيل", "الحمار الوحشي"],
+        correct: 1
+    }
+];
+
+/* =========================================================
+   2) الحالة العامة
+   ========================================================= */
+const LETTERS = ['أ', 'ب', 'ج', 'د'];
+const TOTAL = QUIZ.length;
+
+const state = {
+    submitted: false,
+    answers: new Array(TOTAL).fill(null)
+};
+
+const container   = document.getElementById('questionsContainer');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const submitBtn   = document.getElementById('submitBtn');
+const retryBtn    = document.getElementById('retryBtn');
+const resultCard  = document.getElementById('resultCard');
+const toastEl     = document.getElementById('toast');
+
+/* =========================================================
+   3) رسم الأسئلة
+   ========================================================= */
+function renderQuiz() {
+    container.innerHTML = QUIZ.map((q, i) => `
+        <div class="q-card" data-card="${i}">
+            <div class="q-head">
+                <span class="q-num">${i + 1}</span>
+                <span class="q-status" id="status-${i}"></span>
+            </div>
+            <p class="q-text">${q.text}</p>
+            <div class="q-options">
+                ${q.options.map((opt, j) => `
+                    <label class="option" data-q="${i}" data-o="${j}">
+                        <input type="radio" name="q${i}" value="${j}" data-q="${i}" data-o="${j}">
+                        <span class="letter">${LETTERS[j]}</span>
+                        <span class="opt-text">${opt}</span>
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    updateProgress();
+}
+
+/* =========================================================
+   4) اختيار الإجابة
+   ========================================================= */
+container.addEventListener('change', function (e) {
+    const input = e.target.closest('input[type="radio"]');
+    if (!input || state.submitted) return;
+
+    const qIndex = Number(input.dataset.q);
+    state.answers[qIndex] = Number(input.value);
+
+    // إزالة التحديد من باقي الخيارات في نفس السؤال
+    container
+        .querySelectorAll(`.option[data-q="${qIndex}"]`)
+        .forEach(el => el.classList.remove('selected'));
+
+    // تمييز الخيار المختار
+    input.closest('.option').classList.add('selected');
+
+    updateProgress();
+});
+
+/* =========================================================
+   5) شريط التقدم
+   ========================================================= */
+function updateProgress() {
+    const answered = state.answers.filter(a => a !== null).length;
+    progressFill.style.width = (answered / TOTAL * 100) + '%';
+    progressText.textContent = `${answered} / ${TOTAL}`;
+}
+
+/* =========================================================
+   6) تسليم الامتحان
+   ========================================================= */
+submitBtn.addEventListener('click', function () {
+    if (state.submitted) return;
+
+    const unanswered = state.answers.filter(a => a === null).length;
+    if (unanswered > 0) {
+        showToast(`⚠️ لديك ${unanswered} سؤال${unanswered > 1 ? 'اً' : ''} بدون إجابة`);
+        return;
+    }
+
+    state.submitted = true;
+    submitBtn.classList.add('hidden');
+
+    let score = 0;
+
+    QUIZ.forEach((q, i) => {
+        const chosen  = state.answers[i];
+        const isRight = chosen === q.correct;
+        if (isRight) score++;
+
+        const options = container.querySelectorAll(`.option[data-q="${i}"]`);
+
+        options.forEach(optEl => {
+            const idx = Number(optEl.dataset.o);
+            optEl.classList.add('locked');
+            optEl.classList.remove('selected');
+
+            // الإجابة الصحيحة تُلوَّن بالأخضر دائماً
+            if (idx === q.correct) {
+                optEl.classList.add('correct');
+                optEl.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
+            }
+
+            // الإجابة الخاطئة التي اختارها الطالب تُلوَّن بالأحمر
+            if (idx === chosen && !isRight) {
+                optEl.classList.add('wrong');
+                optEl.insertAdjacentHTML('beforeend', '<span class="mark">✗</span>');
+            }
+        });
+
+        const statusEl = document.getElementById(`status-${i}`);
+        statusEl.textContent = isRight ? 'إجابة صحيحة' : 'إجابة خاطئة';
+        statusEl.className = 'q-status ' + (isRight ? 'ok' : 'no');
+    });
+
+    // إظهار النتيجة
+    showResult(score, TOTAL);
+
+    // زر إعادة المحاولة
+    retryBtn.classList.remove('hidden');
+
+    // ===== إرسال الدرجة إلى المنصة الأم =====
+    let sent = false;
+    try {
+        if (window.parent && typeof window.parent.saveInteractiveExamScore === 'function') {
+            window.parent.saveInteractiveExamScore(score, total);
+            sent = true;
+        }
+    } catch (err) {
+        console.warn('تعذر إرسال الدرجة إلى المنصة الأم:', err);
+    }
+
+    const note = document.getElementById('resultNote');
+    if (note) {
+        note.textContent = sent
+            ? '✅ تم إرسال درجتك إلى المنصة بنجاح'
+            : 'تم احتساب درجتك، وستظهر في سجل المنصة';
+    }
+});
+
+/* =========================================================
+   7) عرض كارت النتيجة
+   ========================================================= */
+function showResult(score, total) {
+    const percent = Math.round((score / total) * 100);
+
+    let emoji = '🎉';
+    let title = 'ممتاز! أداء رائع';
+
+    if (percent < 50) {
+        emoji = '💪';
+        title = 'لا بأس، حاول مرة أخرى';
+    } else if (percent < 80) {
+        emoji = '👍';
+        title = 'جيد جدًا، واصل التقدّم';
+    }
+
+    resultCard.innerHTML = `
+        <div class="result-emoji">${emoji}</div>
+        <h2 class="result-title">${title}</h2>
+        <div class="result-score">${score} <small>/ ${total}</small></div>
+        <p class="result-msg">أجبت بشكل صحيح على ${score} من أصل ${total} أسئلة (${percent}%).</p>
+        <div class="result-bar"><i id="resultBarFill"></i></div>
+        <p class="result-note" id="resultNote">جارٍ إرسال الدرجة إلى المنصة…</p>
+    `;
+
+    resultCard.classList.remove('hidden');
+
+    // تحريك شريط النسبة بعد لحظة بسيطة
+    requestAnimationFrame(() => {
+        const fill = document.getElementById('resultBarFill');
+        if (fill) {
+            setTimeout(() => { fill.style.width = percent + '%'; }, 60);
+        }
+    });
+
+    // التمرير إلى كارت النتيجة
+    resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* =========================================================
+   8) إعادة المحاولة
+   ========================================================= */
+retryBtn.addEventListener('click', function () {
+    state.submitted = false;
+    state.answers = new Array(TOTAL).fill(null);
+
+    resultCard.classList.add('hidden');
+    resultCard.innerHTML = '';
+
+    retryBtn.classList.add('hidden');
+    submitBtn.classList.remove('hidden');
+
+    renderQuiz();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* =========================================================
+   9) التوست
+   ========================================================= */
+let toastTimer = null;
+function showToast(message) {
+    toastEl.textContent = message;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+}
+
+/* =========================================================
+   10) التشغيل
+   ========================================================= */
+renderQuiz();
+</script>
+</body>
+</html>
