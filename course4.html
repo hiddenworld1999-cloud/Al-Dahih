@@ -1999,14 +1999,6 @@
             if (!resolvedVideoUrl && fileName && (fileName.includes('drive.google.com') || fileName.includes('youtu'))) {
                 resolvedVideoUrl = fileName;
             }
-
-            let btnTxt = currentLang === 'en' ? 'Start Lecture Quiz' : 'ابدأ اختبار المحاضرة'; 
-            let btnIcon = 'quiz'; let btnStyle = '';
-            
-            if(isAlreadyCompleted) { 
-                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
-                btnIcon = 'replay'; btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
-            }
             
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             
@@ -2079,10 +2071,6 @@
                 ${videoButtonHtml}
                 ${aiButtonHtml}
                 ${fileButtonHtml}
-
-                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${num}', ${cacheIndex})">
-                    <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${num}">${btnTxt}</span>
-                </button>
                 
                 <button class="btn-lecture-quiz" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 12px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
                     <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
@@ -2163,10 +2151,12 @@
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
-            let btnTxt = currentLang === 'en' ? 'Test Yourself (Quiz)' : 'أسئلة من غير إجابات (اختبر نفسك)'; 
-            let btnIcon = 'quiz'; 
-            let btnStyle = 'background:#10B981; color:white; border:none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);'; 
+            // تهيئة نصوص وألوان الزر البنفسجي (زر تحدي الامتحان)
+            let btnTxt = currentLang === 'en' ? 'Interactive Exam Challenge' : 'تحدي الامتحان التفاعلي (بدون إجابات)'; 
+            let btnIcon = 'bolt'; 
+            let btnStyle = 'background:#9c27b0; color:white; border:none; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.25);'; 
             
+            // إذا كان الطالب قد أجرى الامتحان مسبقاً، يتم تحويل الزر البنفسجي ليكون "إعادة الاختبار (بدون نقاط)"
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
                 btnIcon = 'replay'; 
@@ -2176,14 +2166,13 @@
             let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
             let pdfHtml = ''; 
             
-            // دالة مساعدة لاكتشاف إذا كان الملف التفاعلي (HTML) بدون ما نعدل أي حاجة في الشيت
             const isHtmlFile = (url) => {
                 if(!url) return false;
                 const clean = url.toLowerCase().trim();
                 return clean.endsWith('.html') || clean.endsWith('.htm');
             };
 
-            // 1. زرار الامتحان المحلول (سواء PDF أو تفاعلي)
+            // 1. زرار الامتحان المحلول (أزرق)
             if(fileName) {
                 if(isHtmlFile(fileName)) {
                     pdfHtml += `
@@ -2202,13 +2191,13 @@
                 pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
             }
 
-            // 2. زرار الامتحان بدون إجابات (سواء PDF أو تحدي تفاعلي)
+            // 2. زرار الامتحان بدون إجابات (البنفسجي أو الرمادي في حال الإعادة)
             if (unsolvedFileName) {
                 if(isHtmlFile(unsolvedFileName)) {
                     pdfHtml += `
-                    <button onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(156,39,176,0.25);">
-                        <span class="material-icons" style="margin-inline-end:10px;">bolt</span>
-                        <span data-ar="تحدي الامتحان التفاعلي (بدون إجابات)" data-en="Interactive Exam Challenge">تحدي الامتحان التفاعلي (بدون إجابات)</span>
+                    <button id="quizActionBtn_${type}" onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="justify-content:center; ${btnStyle} padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">${btnIcon}</span>
+                        <span id="quizBtnTxt_${type}">${btnTxt}</span>
                     </button>`;
                 } else {
                     pdfHtml += `
@@ -2240,10 +2229,6 @@
                 <p style="color:var(--grey); margin-bottom:18px; font-size:0.9rem; font-weight:600;">اختر مسار المراجعة المناسب لك:</p>
 
                 ${pdfHtml}
-
-                <button class="btn-lecture-quiz" style="${btnStyle}" onclick="openQuiz('${type}')">
-                    <span class="material-icons">${btnIcon}</span> <span id="quizBtnTxt_${type}">${btnTxt}</span>
-                </button>
 
                 <button class="btn-lecture-quiz" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 12px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
                     <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
@@ -2567,15 +2552,19 @@
                 
                 alert(`عاش يا بطل! 🚀\nجبت ${score} من ${total}\nتم إضافة النقاط لملفك وتم تسجيلك في لوحة شرف الأوائل للامتحان ده!`);
                 
-                // تغيير شكل زرار الكويز الأصلي عشان الطالب يعرف إنه اتمتحن (اختياري)
+                // تغيير شكل الزر البنفسجي لـ "إعادة الاختبار (بدون نقاط)"
                 let btnTxtEl = document.getElementById(`quizBtnTxt_${examType}`); 
                 if(btnTxtEl) { 
                     btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
-                    btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; 
-                    btnTxtEl.parentElement.style.color = 'var(--text-grey)'; 
-                    btnTxtEl.parentElement.style.boxShadow = 'none'; 
-                    btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; 
-                    btnTxtEl.previousElementSibling.innerText = 'replay'; 
+                    const actionBtn = document.getElementById(`quizActionBtn_${examType}`);
+                    if(actionBtn) {
+                        actionBtn.style.background = 'rgba(0,0,0,0.05)'; 
+                        actionBtn.style.color = 'var(--text-grey)'; 
+                        actionBtn.style.boxShadow = 'none'; 
+                        actionBtn.style.border = '1px solid var(--text-grey)'; 
+                        const iconSpan = actionBtn.querySelector('.material-icons');
+                        if(iconSpan) iconSpan.innerText = 'replay'; 
+                    }
                 }
             } else {
                 alert(`ممتاز! 👏\nجبت ${score} من ${total}\n(ملاحظة: حصلت على نقاط هذا الامتحان مسبقاً ولن تُضاف مرة أخرى لمنع التكرار)`);
