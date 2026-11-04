@@ -49,10 +49,10 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
+    <!-- مكاتب الـ PDF والتصوير -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root { 
@@ -872,18 +872,18 @@
     </div>
 
     <!-- السبورة -->
-    <div id="whiteboardModal" class="modal fixed top-0 left-0 w-full h-full bg-white z-[4000] hidden flex-col">
-        <div class="wb-header flex justify-between items-center p-[15px_20px] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.05)] border-b border-gray-200">
+    <div id="whiteboardModal" class="modal modal-trackable">
+        <div class="wb-header">
             <span class="material-icons" onclick="history.back()" style="cursor:pointer; font-size:28px; color:var(--text);">close</span>
             <span style="font-weight:bold; color:var(--primary); font-size:1.2rem;" data-ar="سبورة الشخبطة 🎨" data-en="Whiteboard 🎨">سبورة الشخبطة 🎨</span>
             <span class="material-icons" onclick="clearWhiteboard()" style="cursor:pointer; color:#d32f2f; font-size:28px;" title="مسح الكل">delete</span>
         </div>
-        <div class="wb-tools flex justify-center gap-4 p-2 bg-white shadow-[0_4px_10px_rgba(0,0,0,0.05)] border-b border-gray-200 z-10">
+        <div class="wb-tools">
             <button class="color-btn active" style="background:#0A2647;" onclick="setBrushColor('#0A2647', this)"></button>
             <button class="color-btn" style="background:#FFC800;" onclick="setBrushColor('#FFC800', this)"></button>
             <button class="color-btn" style="background:#f44336;" onclick="setBrushColor('#f44336', this)"></button>
             <button class="color-btn" style="background:#4caf50;" onclick="setBrushColor('#4caf50', this)"></button>
-            <button class="color-btn flex justify-center items-center" style="background:#ffffff; border: 1px solid #ccc;" onclick="setBrushColor('#ffffff', this)" title="أستيكة">
+            <button class="color-btn" style="background:#ffffff; border: 1px solid #ccc; display:flex; justify-content:center; align-items:center;" onclick="setBrushColor('#ffffff', this)" title="أستيكة">
                 <span class="material-icons" style="font-size:16px; color:#ccc;">ink_eraser</span>
             </button>
         </div>
@@ -952,6 +952,7 @@
         window.rawLecturesList = [];
         let currentVideoLecNum = 1;
         
+        // متغير عالمي لتسجيل نوع الامتحان اللي الطالب فاتحه حالياً
         window.currentActiveExamType = null;
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
@@ -1008,6 +1009,7 @@
             }
         });
 
+        // ------------------ التبديل بين أقسام المحتوى / الامتحانات ------------------
         function switchCourseSection(sec, btn) {
             document.querySelectorAll('.tab-head-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -1026,6 +1028,7 @@
             }
         }
 
+        // ------------------ السبورة العادية ------------------
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
@@ -1088,6 +1091,7 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
+        // حركة السحب للرجوع بدون طرد للرئيسية
         let touchStartX = 0; let touchStartY = 0;
         document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
         document.addEventListener('touchend', e => {
@@ -1133,9 +1137,11 @@
             if (e.touches.length < 2) { initialPinchDistance = null; pdfWrapper.style.transition = 'width 0.2s ease-out'; } 
         });
 
+        // === السيرفر بتاع رابعة الجديد الشغال ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
+        // === مواد سنة رابعة مع الصور المخصصة لكل مادة ===
         const allCourses = {
             401: { titleAr: "تطبيقات في برمجة الحاسب الآلي", titleEn: "Programming Applications", profAr: "د. مريم سامي", profEn: "Dr. Maryam Samy", cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80" },
             402: { titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Information Systems", profAr: "د. مريم سامي", profEn: "Dr. Maryam Samy", cover: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" },
@@ -1144,6 +1150,7 @@
             405: { titleAr: "مبادئ المالية العامة", titleEn: "Principles of Public Finance", profAr: "د. فاطمة إبراهيم", profEn: "Dr. Fatima Ibrahim", cover: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80" }
         };
 
+        // ================= استخراج كود المادة بشكل مضمون 100% =================
         function getResolvedCourseId() {
             try {
                 const params = new URLSearchParams(window.location.search);
@@ -1164,13 +1171,22 @@
                 }
             } catch (e) {}
 
-            const fallbackKeys = ['daheeh_last_opened_course', 'selectedCourseId', 'selectedCourse', 'currentCourseId', 'currentCourse', 'courseId', 'daheehCourseId'];
+            const fallbackKeys = [
+                'daheeh_last_opened_course',
+                'selectedCourseId',
+                'selectedCourse',
+                'currentCourseId',
+                'currentCourse',
+                'courseId',
+                'daheehCourseId'
+            ];
             for (let k of fallbackKeys) {
                 const val = localStorage.getItem(k);
                 if (val && allCourses[val]) {
                     return val.toString().trim();
                 }
             }
+
             return '401';
         }
 
@@ -1202,9 +1218,10 @@
             const completedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || ''; 
             if(!sCode) return;
             const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}&completed=${completedQuizzes}`;
-            fetch(requestUrl).then(res => res.json()).catch(err => console.log('Error'));
+            fetch(requestUrl).then(res => res.json()).catch(err => console.log('Error Syncing'));
         }
 
+        // مزامنة الـ XP المباشر من الشيت وتطبيقه فوراً
         function fetchXPFromSheet() {
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
@@ -1235,7 +1252,7 @@
                         }
                     }
                 }
-            }).catch(err => {});
+            }).catch(err => console.log('Syncing...'));
         }
 
         function updateXPDisplay() { 
@@ -1284,7 +1301,7 @@
             document.body.classList.add('dark-mode'); 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
             if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
-            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'dark_mode'; 
         } else { 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
             if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
@@ -1894,18 +1911,42 @@
             }
         }
 
-        // ================= دالة التحميل الآمنة للـ PDF (التي تظهر زر الحفظ) =================
-        async function downloadAsPDF(url, title) {
-            let cleanUrl = (url || '').trim();
-            try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
-            cleanUrl = cleanUrl.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
+        // ================= أدوات تحويل الـ PDF الجديدة والمستقرة =================
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-            if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-                if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
-                if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
-                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
+        function textToImage(text) {
+            const c = document.createElement('canvas');
+            const ctx = c.getContext('2d');
+            const font = "bold 48px 'IBM Plex Sans Arabic', sans-serif";
+            ctx.font = font;
+            const w = Math.ceil(ctx.measureText(text).width) + 40;
+            const h = 90;
+            c.width = w; c.height = h;
+            ctx.font = font;
+            ctx.fillStyle = '#000000';
+            ctx.textBaseline = 'middle';
+            ctx.direction = 'rtl';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, w / 2, h / 2);
+            return { data: c.toDataURL('image/png'), w, h };
+        }
+
+        function resolveUrl(url) {
+            let u = (url || '').trim();
+            try { u = decodeURIComponent(u); } catch (e) {}
+            u = u.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
+            if (!u.startsWith('http://') && !u.startsWith('https://')) {
+                if (u.startsWith('/')) u = u.substring(1);
+                if (!u.startsWith('./')) u = './' + u;
+                u = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + u.replace('./', '');
             }
+            return u;
+        }
 
+        // الدالة الرئيسية للتحميل المدمجة بالكامل
+        window.downloadAsPDF = async function(url, title) {
+            let cleanUrl = resolveUrl(url);
+            
             const sName = localStorage.getItem('studentName') || 'Student';
             const sCode = localStorage.getItem('studentCode') || '000';
             const watermarkText = `${sName} - ${sCode}`;
@@ -1925,42 +1966,7 @@
             iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
             document.body.appendChild(iframe);
 
-            const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-            const H2C_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-
-            function loadScriptOnce(src, objCheck) {
-                if (objCheck()) return Promise.resolve();
-                return new Promise((resolve, reject) => {
-                    const s = document.createElement('script');
-                    s.src = src;
-                    s.onload = resolve;
-                    s.onerror = () => reject(new Error('تعذر تحميل المكتبة: ' + src));
-                    document.head.appendChild(s);
-                });
-            }
-
-            function textToImage(text) {
-                const c = document.createElement('canvas');
-                const ctx = c.getContext('2d');
-                const font = "bold 48px 'IBM Plex Sans Arabic', sans-serif";
-                ctx.font = font;
-                const w = Math.ceil(ctx.measureText(text).width) + 40;
-                const h = 90;
-                c.width = w; c.height = h;
-                ctx.font = font;
-                ctx.fillStyle = '#000000';
-                ctx.textBaseline = 'middle';
-                ctx.direction = 'rtl';
-                ctx.textAlign = 'center';
-                ctx.fillText(text, w / 2, h / 2);
-                return { data: c.toDataURL('image/png'), w, h };
-            }
-
             try {
-                await loadScriptOnce(H2C_URL, () => window.html2canvas);
-                await loadScriptOnce(JSPDF_URL, () => window.jspdf && window.jspdf.jsPDF);
-
                 const { jsPDF } = window.jspdf;
 
                 await new Promise((resolve, reject) => {
@@ -1968,10 +1974,11 @@
                     iframe.onerror = () => reject(new Error('فشل تحميل محتوى المحاضرة'));
                 });
 
-                await sleep(2000); 
+                await sleep(2500); 
 
                 const doc = iframe.contentDocument || iframe.contentWindow.document;
 
+                // إصلاح لون العنوان المتدرج
                 const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], *[style*="background-clip:text"], .gradient-text');
                 gradientTitles.forEach(el => {
                     el.style.background = 'none';
@@ -2041,13 +2048,17 @@
                     <div style="background:#1E293B; padding:30px; border-radius:20px; text-align:center; max-width:90%; width:350px; box-shadow:0 15px 35px rgba(0,0,0,0.5);">
                         <span class="material-icons" style="font-size:60px; color:#10B981; margin-bottom:15px;">check_circle</span>
                         <h3 style="margin:0 0 10px 0; color:#fff; font-weight:bold;">الملف جاهز!</h3>
-                        <p style="color:#94A3B8; font-size:0.9rem; margin-bottom:25px; line-height:1.6;">تم تجهيز الملف بنجاح. اضغط أدناه لحفظه على جهازك.</p>
+                        <p style="color:#94A3B8; font-size:0.9rem; margin-bottom:25px; line-height:1.6;">تم دمج العلامة المائية بنجاح.</p>
                         
-                        <a href="${pdfUrl}" download="${fileName}" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#10B981; color:#fff; text-decoration:none; padding:15px; border-radius:12px; font-weight:bold; font-size:1.1rem; margin-bottom:15px;" onclick="setTimeout(() => { document.body.removeChild(document.getElementById('pdfLoader')); URL.revokeObjectURL('${pdfUrl}'); }, 1000);">
-                            <span class="material-icons">save_alt</span> حفظ الملف
+                        <a href="${pdfUrl}" download="${fileName}" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#10B981; color:#fff; text-decoration:none; padding:15px; border-radius:12px; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">
+                            <span class="material-icons">save_alt</span> حفظ / مشاركة
                         </a>
+
+                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader')); openPdfViewerInsideApp('${pdfUrl}');" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#2563EB; color:#fff; border:none; padding:15px; border-radius:12px; font-weight:bold; font-size:1.1rem; margin-bottom:15px; width:100%; font-family:inherit; cursor:pointer;">
+                            <span class="material-icons">visibility</span> عرض داخل التطبيق
+                        </button>
                         
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:transparent; border:1px solid #475569; color:#94A3B8; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">إغلاق</button>
+                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:transparent; border:1px solid #475569; color:#94A3B8; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold; width:100%;">إغلاق</button>
                     </div>
                 `;
 
@@ -2058,13 +2069,13 @@
                         <span class="material-icons" style="font-size:60px; color:#EF4444; margin-bottom:15px;">error</span>
                         <h3 style="margin:0 0 10px 0; color:#fff;">حدث خطأ!</h3>
                         <p style="color:#94A3B8; font-size:0.9rem; margin-bottom:20px;">تعذر تجهيز الملف. ${err.message}</p>
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:#EF4444; border:none; color:#fff; padding:10px 30px; border-radius:10px; font-weight:bold;">حسناً</button>
+                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:#EF4444; border:none; color:#fff; padding:10px 30px; border-radius:10px; font-weight:bold; width:100%;">حسناً</button>
                     </div>
                 `;
             } finally {
                 if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
             }
-        }
+        };
 
         // ================= تحميل المحاضرات =================
         function loadLectures() {
