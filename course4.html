@@ -49,6 +49,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- مكتبة التحويل لـ PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -1784,9 +1785,9 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات والامتحانات (HTML) بدون شاشة بيضاء =================
+        // ================= فتح المحاضرات والامتحانات (HTML) =================
         async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
-            window.currentActiveExamType = examType;
+            window.currentActiveExamType = examType; 
             
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
@@ -1813,49 +1814,86 @@
 
             openModalWithHistory('contentModal');
 
-            // تحميل الـ HTML مباشرة باستخدام fetch وتطبيق العلامة المائية عليه ديناميكياً لتفادي الشاشة البيضاء
-            fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now())
-                .then(res => res.text())
-                .then(htmlStr => {
-                    const sName = localStorage.getItem('studentName') || "Student"; 
-                    const sCode = localStorage.getItem('studentCode') || "000"; 
-                    const watermarkHtml = `
-                        <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; pointer-events:none; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; overflow:hidden; opacity:0.12;">
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                        </div>
-                    `;
-                    
-                    let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
-                    if (!htmlStr.includes('<base ') && basePath) {
-                        htmlStr = htmlStr.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
-                    }
-                    
-                    if (htmlStr.includes('</body>')) {
-                        htmlStr = htmlStr.replace('</body>', watermarkHtml + '</body>');
-                    } else {
-                        htmlStr += watermarkHtml;
-                    }
+            const storageKey = 'offline_lecture_cache_' + cleanUrl;
+            let cachedHTML = localStorage.getItem(storageKey);
 
-                    contentBox.innerHTML = `
-                        <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
-                            <iframe id="offlineLectureIframe" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    style="width: 100%; height: 100%; border: none; display: block;">
-                            </iframe>
+            if (cachedHTML && (cachedHTML.includes('File not found') || cachedHTML.includes('404'))) {
+                localStorage.removeItem(storageKey);
+                cachedHTML = null;
+            }
+
+            function displayHtmlContent(htmlStr) {
+                let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                let finalHtml = htmlStr;
+                if (!finalHtml.includes('<base ') && basePath) {
+                    finalHtml = finalHtml.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+                }
+
+                contentBox.innerHTML = `
+                    <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
+                        <iframe id="offlineLectureIframe" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                style="width: 100%; height: 100%; border: none; display: block;">
+                        </iframe>
+                    </div>
+                `;
+                const iframeEl = document.getElementById('offlineLectureIframe');
+                iframeEl.srcdoc = finalHtml;
+            }
+
+            function displayInAppOfflineError() {
+                contentBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--text);">
+                        <div style="width:70px; height:70px; border-radius:50%; background:rgba(239, 68, 68, 0.1); display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                            <span class="material-icons" style="font-size:36px; color:#ef4444;">wifi_off</span>
                         </div>
-                    `;
-                    document.getElementById('offlineLectureIframe').srcdoc = htmlStr;
-                })
-                .catch(err => {
-                    contentBox.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><h3>عذراً، تعذر تحميل المحتوى. تأكد من اتصال الإنترنت.</h3></div>`;
-                });
+                        <h3 style="margin:0 0 8px 0; font-weight:900; font-size:1.2rem; color:var(--text);">لا يوجد اتصال بالإنترنت</h3>
+                        <p style="color:var(--grey); max-width:320px; font-size:0.92rem; line-height:1.6; margin:0 0 20px 0; font-weight:600;">
+                            تحتاج للاتصال بالإنترنت لتحميل هذا المحتوى لأول مرة، وسيتم حفظه تلقائياً.
+                        </p>
+                        <button onclick="history.back()" style="background:var(--primary); color:#ffffff; border:none; padding:12px 28px; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:inherit; box-shadow:0 4px 15px rgba(37,99,235,0.3);">
+                            العودة
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (cachedHTML) {
+                displayHtmlContent(cachedHTML);
+            } else {
+                contentBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--primary);">
+                        <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">lock_open</span>
+                        <p style="font-weight:bold; margin-top:12px; font-size:1rem;">جاري فتح وتأمين المحتوى...</p>
+                    </div>
+                `;
+            }
+
+            if (navigator.onLine) {
+                try {
+                    const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                    const response = await fetch(fetchUrl);
+                    if (response.ok) {
+                        const freshHTML = await response.text();
+                        if (freshHTML && !freshHTML.includes('File not found') && !freshHTML.includes('404')) {
+                            localStorage.setItem(storageKey, freshHTML);
+                            displayHtmlContent(freshHTML);
+                        } else if (!cachedHTML) {
+                            displayInAppOfflineError();
+                        }
+                    } else if (!cachedHTML) {
+                        displayInAppOfflineError();
+                    }
+                } catch (e) {
+                    if (!cachedHTML) displayInAppOfflineError();
+                }
+            } else if (!cachedHTML) {
+                displayInAppOfflineError();
+            }
         }
 
-        // ================= دالة التحميل الذكية والآمنة للـ PDF (طريقة الطباعة المخفية) =================
-        function downloadAsPDF(url, title) {
+        // ================= دالة التحميل الآمنة للـ PDF (بدون Crash وفي الخلفية) =================
+        async function downloadAsPDF(url, title) {
             let cleanUrl = (url || '').trim();
             try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
             cleanUrl = cleanUrl.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
@@ -1866,64 +1904,103 @@
                 cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
-            // إشعار بسيط للطالب
-            alert("سيتم تحضير الملف للتحميل أو الطباعة، يرجى الانتظار...");
+            const sName = localStorage.getItem('studentName') || 'Student';
+            const sCode = localStorage.getItem('studentCode') || '000';
+            const watermarkText = `${sName} - ${sCode}`;
 
-            // إنشاء iframe مخفي تماماً لتحميل الملف
-            const printIframe = document.createElement('iframe');
-            printIframe.style.position = 'absolute';
-            printIframe.style.width = '0';
-            printIframe.style.height = '0';
-            printIframe.style.border = 'none';
-            document.body.appendChild(printIframe);
+            // مؤشر تحميل لطيف لتنبيه الطالب
+            const loader = document.createElement('div');
+            loader.id = 'pdfLoader';
+            loader.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.2rem;gap:15px;';
+            loader.innerHTML = '<span class="material-icons" style="font-size:50px;animation:pulse 1.5s infinite;">hourglass_empty</span><span>جاري تحضير ملف الـ PDF... يرجى الانتظار</span>';
+            document.body.appendChild(loader);
 
-            // جلب محتوى الـ HTML لوضع العلامة المائية ثم طباعته
-            fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now())
-                .then(res => res.text())
-                .then(htmlStr => {
-                    const sName = localStorage.getItem('studentName') || "Student"; 
-                    const sCode = localStorage.getItem('studentCode') || "000"; 
-                    const watermarkHtml = `
-                        <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; pointer-events:none; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; overflow:hidden; opacity:0.12;">
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
-                        </div>
-                    `;
-                    
-                    let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
-                    if (!htmlStr.includes('<base ') && basePath) {
-                        htmlStr = htmlStr.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+            // حاوية خلفية مخفية لتجميع المحتوى
+            const holder = document.createElement('div');
+            holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;background:#ffffff;color:#000000;direction:rtl;padding:20px;box-sizing:border-box;';
+            document.body.appendChild(holder);
+
+            const cleanup = () => {
+                if (holder.parentNode) holder.parentNode.removeChild(holder);
+                if (loader.parentNode) loader.parentNode.removeChild(loader);
+            };
+
+            try {
+                // جلب المحتوى الأصلي
+                const res = await fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now());
+                if (!res.ok) throw new Error('فشل جلب الملف');
+                const htmlStr = await res.text();
+
+                // معالجة المحتوى لتحسين العرض
+                const parsed = new DOMParser().parseFromString(htmlStr, 'text/html');
+                const basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+
+                // تصحيح مسارات الصور لتجنب مشاكل الـ CORS أو الروابط المكسورة
+                parsed.querySelectorAll('img[src]').forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && !/^(https?:|data:|\/\/)/i.test(src)) {
+                        img.setAttribute('src', basePath + src);
+                        img.crossOrigin = "anonymous";
                     }
-                    
-                    if (htmlStr.includes('</body>')) {
-                        htmlStr = htmlStr.replace('</body>', watermarkHtml + '</body>');
-                    } else {
-                        htmlStr += watermarkHtml;
-                    }
-
-                    const printDoc = printIframe.contentWindow.document;
-                    printDoc.open();
-                    printDoc.write(htmlStr);
-                    printDoc.close();
-
-                    // انتظار تحميل المحتوى بالكامل ثم تفعيل نافذة الطباعة/الحفظ كـ PDF المدمجة بالجهاز
-                    printIframe.onload = function() {
-                        setTimeout(() => {
-                            printIframe.contentWindow.focus();
-                            printIframe.contentWindow.print();
-                            // تنظيف بعد الطباعة
-                            setTimeout(() => {
-                                document.body.removeChild(printIframe);
-                            }, 2000);
-                        }, 500);
-                    };
-                })
-                .catch(err => {
-                    document.body.removeChild(printIframe);
-                    alert("تعذر الوصول لملف التحميل، يرجى المحاولة مرة أخرى.");
                 });
+
+                // نقل الستايلات لضمان التنسيق الصحيح
+                parsed.querySelectorAll('style, link[rel="stylesheet"]').forEach(st => {
+                     if(st.tagName === 'LINK'){
+                         const href = st.getAttribute('href');
+                          if (href && !/^(https?:|\/\/)/i.test(href)) {
+                             st.setAttribute('href', basePath + href);
+                          }
+                     }
+                     holder.appendChild(st.cloneNode(true));
+                });
+
+                const content = document.createElement('div');
+                content.innerHTML = parsed.body.innerHTML;
+                // إزالة السكربتات لتجنب الأخطاء أثناء التحويل
+                content.querySelectorAll('script, iframe').forEach(s => s.remove());
+                holder.appendChild(content);
+
+                // --- إضافة العلامة المائية الشفافة فوق المحتوى المخفي ---
+                const watermarkLayer = document.createElement('div');
+                watermarkLayer.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;overflow:hidden;opacity:0.1;';
+                
+                let wmHTML = "";
+                for(let i = 0; i < 40; i++) {
+                    wmHTML += `<span style="font-size:28px; font-weight:bold; transform:rotate(-45deg); padding:50px; white-space:nowrap; user-select:none;">${watermarkText}</span>`;
+                }
+                watermarkLayer.innerHTML = wmHTML;
+                holder.appendChild(watermarkLayer);
+                // --------------------------------------------------------
+
+                // التأكد من تحميل الخطوط والصور قبل بدء التحويل
+                if (document.fonts && document.fonts.ready) await document.fonts.ready;
+                await Promise.all(Array.from(holder.querySelectorAll('img')).map(img =>
+                    img.complete ? Promise.resolve() : new Promise(r => { img.onload = img.onerror = r; })
+                ));
+
+                // تأخير بسيط لضمان اكتمال بناء الشجرة (DOM) قبل التقاطها
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const safeTitle = (title || 'document').replace(/[\\/:*?"<>|]/g, '').trim();
+
+                const opt = {
+                    margin:       10,
+                    filename:     `${safeTitle}_${sCode}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, logging: false },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                // تنفيذ عملية التحويل
+                await html2pdf().set(opt).from(holder).save();
+
+            } catch (err) {
+                console.error("PDF Generation Error:", err);
+                alert('تعذر تجهيز ملف الـ PDF. يرجى التأكد من اتصال الإنترنت والمحاولة مرة أخرى.');
+            } finally {
+                cleanup();
+            }
         }
 
         // ================= تحميل المحاضرات =================
