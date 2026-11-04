@@ -1777,18 +1777,48 @@
 
             openModalWithHistory('contentModal');
 
-            // العرض الفوري والآمن عن طريق الـ iframe مع الرابط الكامل لتفادي أي مشاكل CORS أو شاشة بيضاء
-            contentBox.innerHTML = `
-                <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
-                    <iframe src="${cleanUrl}" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            style="width: 100%; height: 100%; border: none; display: block;">
-                    </iframe>
-                </div>
-            `;
+            // تحميل الـ HTML مباشرة باستخدام fetch وتطبيق العلامة المائية عليه ديناميكياً لتفادي الشاشة البيضاء
+            fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now())
+                .then(res => res.text())
+                .then(htmlStr => {
+                    const sName = localStorage.getItem('studentName') || "Student"; 
+                    const sCode = localStorage.getItem('studentCode') || "000"; 
+                    const watermarkHtml = `
+                        <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; pointer-events:none; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; overflow:hidden; opacity:0.12;">
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                        </div>
+                    `;
+                    
+                    let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                    if (!htmlStr.includes('<base ') && basePath) {
+                        htmlStr = htmlStr.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+                    }
+                    
+                    if (htmlStr.includes('</body>')) {
+                        htmlStr = htmlStr.replace('</body>', watermarkHtml + '</body>');
+                    } else {
+                        htmlStr += watermarkHtml;
+                    }
+
+                    contentBox.innerHTML = `
+                        <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
+                            <iframe id="offlineLectureIframe" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    style="width: 100%; height: 100%; border: none; display: block;">
+                            </iframe>
+                        </div>
+                    `;
+                    document.getElementById('offlineLectureIframe').srcdoc = htmlStr;
+                })
+                .catch(err => {
+                    contentBox.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><h3>عذراً، تعذر تحميل المحتوى. تأكد من اتصال الإنترنت.</h3></div>`;
+                });
         }
 
-        // ================= دالة التحميل الآمنة والمستقرة (بدون Crash ولا شاشة بيضاء) =================
+        // ================= دالة التحميل الذكية والآمنة للـ PDF (طريقة الطباعة وحفظ PDF) =================
         function downloadAsPDF(url, title) {
             let cleanUrl = (url || '').trim();
             try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
@@ -1800,7 +1830,6 @@
                 cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
-            // فتح الملف في نافذة جديدة نظيفة ليقوم المتصفح أو تطبيق التابلت بحفظه أو طباعته كـ PDF مباشرة بدون إجهاد الرام
             const printWindow = window.open(cleanUrl, '_blank');
             if (!printWindow) {
                 alert("يرجى السماح للنوافذ المنبثقة (Pop-ups) لتحميل الملف.");
@@ -2508,7 +2537,7 @@
                     }
                 }
             } else {
-                alert(`ممتاز! 👏\nجبت ${score} من ${total}\n(ملاحظة: حصلت على نقاط هذا الامتحان مسبقاً ولن تُضاف مرة أخرى لمنع التكرار)`);
+                alert(`ممتاز! 👏\nجبت ${score} من `${total}\n(ملاحظة: حصلت على نقاط هذا الامتحان مسبقاً ولن تُضاف مرة أخرى لمنع التكرار)`);
             }
         };
 
