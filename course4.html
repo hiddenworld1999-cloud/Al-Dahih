@@ -49,6 +49,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root { 
@@ -1094,6 +1095,41 @@
             }
         }, {passive: true});
 
+        let pdfInitialWidth = 100; let initialPinchDistance = null; let initialScrollTop = 0; let initialScrollLeft = 0; let pinchCenterX = 0; let pinchCenterY = 0;
+        const pdfWrapper = document.getElementById('pdfWrapper');
+        const pdfScrollContainer = document.getElementById('pdfScrollContainer');
+        
+        pdfWrapper.addEventListener('touchstart', (e) => { 
+            if (e.touches.length === 2) { 
+                initialPinchDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
+                pdfInitialWidth = parseFloat(pdfWrapper.style.width) || 100; 
+                pdfWrapper.style.transition = 'none'; 
+                pinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                pinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                initialScrollTop = pdfScrollContainer.scrollTop;
+                initialScrollLeft = pdfScrollContainer.scrollLeft;
+            } 
+        }, { passive: false });
+        
+        pdfWrapper.addEventListener('touchmove', (e) => { 
+            if (e.touches.length === 2 && initialPinchDistance) { 
+                e.preventDefault(); 
+                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY); 
+                let scaleChange = currentDistance / initialPinchDistance; 
+                let newWidth = pdfInitialWidth * scaleChange; 
+                if (newWidth < 100) newWidth = 100; 
+                if (newWidth > 400) newWidth = 400; 
+                let actualScale = newWidth / pdfInitialWidth;
+                pdfWrapper.style.width = newWidth + '%'; 
+                pdfScrollContainer.scrollTop = (initialScrollTop + pinchCenterY) * actualScale - pinchCenterY;
+                pdfScrollContainer.scrollLeft = (initialScrollLeft + pinchCenterX) * actualScale - pinchCenterX;
+            } 
+        }, { passive: false });
+        
+        pdfWrapper.addEventListener('touchend', (e) => { 
+            if (e.touches.length < 2) { initialPinchDistance = null; pdfWrapper.style.transition = 'width 0.2s ease-out'; } 
+        });
+
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
@@ -1244,8 +1280,8 @@
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
             document.body.classList.add('dark-mode'); 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
-            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
-            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'dark_mode'; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'light_mode'; 
         } else { 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
             if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
@@ -1818,7 +1854,7 @@
                 });
         }
 
-        // ================= دالة التحميل الذكية والآمنة للـ PDF (طريقة الطباعة وحفظ PDF) =================
+        // ================= دالة التحميل الذكية والآمنة للـ PDF (طريقة الطباعة المخفية) =================
         function downloadAsPDF(url, title) {
             let cleanUrl = (url || '').trim();
             try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
@@ -1830,46 +1866,64 @@
                 cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
-            const printWindow = window.open(cleanUrl, '_blank');
-            if (!printWindow) {
-                alert("يرجى السماح للنوافذ المنبثقة (Pop-ups) لتحميل الملف.");
-                return;
-            }
+            // إشعار بسيط للطالب
+            alert("سيتم تحضير الملف للتحميل أو الطباعة، يرجى الانتظار...");
 
-            printWindow.onload = function() {
-                const sName = localStorage.getItem('studentName') || "Student"; 
-                const sCode = localStorage.getItem('studentCode') || "000"; 
-                
-                try {
-                    let doc = printWindow.document;
-                    let watermarkDiv = doc.createElement('div');
-                    watermarkDiv.style.position = 'fixed';
-                    watermarkDiv.style.top = '0';
-                    watermarkDiv.style.left = '0';
-                    watermarkDiv.style.width = '100vw';
-                    watermarkDiv.style.height = '100vh';
-                    watermarkDiv.style.zIndex = '999999';
-                    watermarkDiv.style.pointerEvents = 'none';
-                    watermarkDiv.style.display = 'flex';
-                    watermarkDiv.style.flexWrap = 'wrap';
-                    watermarkDiv.style.justifyContent = 'space-around';
-                    watermarkDiv.style.alignContent = 'space-around';
-                    watermarkDiv.style.overflow = 'hidden';
+            // إنشاء iframe مخفي تماماً لتحميل الملف
+            const printIframe = document.createElement('iframe');
+            printIframe.style.position = 'absolute';
+            printIframe.style.width = '0';
+            printIframe.style.height = '0';
+            printIframe.style.border = 'none';
+            document.body.appendChild(printIframe);
+
+            // جلب محتوى الـ HTML لوضع العلامة المائية ثم طباعته
+            fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now())
+                .then(res => res.text())
+                .then(htmlStr => {
+                    const sName = localStorage.getItem('studentName') || "Student"; 
+                    const sCode = localStorage.getItem('studentCode') || "000"; 
+                    const watermarkHtml = `
+                        <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; pointer-events:none; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; overflow:hidden; opacity:0.12;">
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                        </div>
+                    `;
                     
-                    let textHTML = "";
-                    for(let i=0; i<12; i++) {
-                        textHTML += `<span style="color: rgba(0, 0, 0, 0.12); font-size: 22px; font-weight: bold; transform: rotate(-45deg); padding: 50px;">${sName} - ${sCode}</span>`;
+                    let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                    if (!htmlStr.includes('<base ') && basePath) {
+                        htmlStr = htmlStr.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
                     }
-                    watermarkDiv.innerHTML = textHTML;
-                    doc.body.appendChild(watermarkDiv);
                     
-                    setTimeout(() => {
-                        printWindow.print();
-                    }, 600);
-                } catch(err) {
-                    console.log("Watermark applied successfully");
-                }
-            };
+                    if (htmlStr.includes('</body>')) {
+                        htmlStr = htmlStr.replace('</body>', watermarkHtml + '</body>');
+                    } else {
+                        htmlStr += watermarkHtml;
+                    }
+
+                    const printDoc = printIframe.contentWindow.document;
+                    printDoc.open();
+                    printDoc.write(htmlStr);
+                    printDoc.close();
+
+                    // انتظار تحميل المحتوى بالكامل ثم تفعيل نافذة الطباعة/الحفظ كـ PDF المدمجة بالجهاز
+                    printIframe.onload = function() {
+                        setTimeout(() => {
+                            printIframe.contentWindow.focus();
+                            printIframe.contentWindow.print();
+                            // تنظيف بعد الطباعة
+                            setTimeout(() => {
+                                document.body.removeChild(printIframe);
+                            }, 2000);
+                        }, 500);
+                    };
+                })
+                .catch(err => {
+                    document.body.removeChild(printIframe);
+                    alert("تعذر الوصول لملف التحميل، يرجى المحاولة مرة أخرى.");
+                });
         }
 
         // ================= تحميل المحاضرات =================
@@ -2414,7 +2468,7 @@
 
         function saveExamScoreToCloud(quizId, currentScore, totalScore) {
             const sCode = localStorage.getItem('studentCode') || ''; const sName = localStorage.getItem('studentName') || ''; if(!sCode) return;
-            fetch(`${SCRIPT_URL}?action=saveExamScore&quizId=${quizId}&code=${sCode}&name=${encodeURIComponent(sName)}&score=${currentScore}&total=${totalScore}`).then(res => res.json()).catch(err => {});
+            fetch(`${SCRIPT_URL}?action=saveExamScore&quizId=${quizId}&code=${sCode}&name=${encodeURIComponent(sName)}&score=${currentScore}&total=${totalScore}`).then(res => res.json()).catch(err => console.log('Error'));
         }
 
         function openExamLeaderboard(quizId) {
@@ -2537,7 +2591,7 @@
                     }
                 }
             } else {
-                alert(`ممتاز! 👏\nجبت ${score} من `${total}\n(ملاحظة: حصلت على نقاط هذا الامتحان مسبقاً ولن تُضاف مرة أخرى لمنع التكرار)`);
+                alert(`ممتاز! 👏\nجبت ${score} من ${total}\n(ملاحظة: حصلت على نقاط هذا الامتحان مسبقاً ولن تُضاف مرة أخرى لمنع التكرار)`);
             }
         };
 
