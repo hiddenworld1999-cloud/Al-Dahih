@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محول المحاضرات إلى PDF - الدحيح</title>
+    
+    <!-- خطوط جوجل والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- مكتبات التحويل (html2canvas & jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; }
+        body { background: #F8FAFC; color: #0F172A; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .container { background: #FFFFFF; width: 100%; max-width: 550px; border-radius: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); padding: 40px 30px; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+        
+        .header-icon { width: 80px; height: 80px; background: rgba(37, 99, 235, 0.1); color: #2563EB; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; }
+        .header-icon .material-icons { font-size: 40px; }
+        
+        h1 { font-size: 1.8rem; font-weight: 900; color: #1E293B; margin-bottom: 10px; }
+        p.subtitle { color: #64748B; font-size: 0.95rem; margin-bottom: 30px; font-weight: 500; line-height: 1.6; }
+
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .input-group label { display: block; font-weight: 700; color: #334155; margin-bottom: 8px; font-size: 0.95rem; }
+        .input-group input { width: 100%; padding: 15px 18px; border-radius: 14px; border: 2px solid #E2E8F0; font-size: 1rem; color: #1E293B; outline: none; transition: 0.3s; background: #F8FAFC; }
+        .input-group input:focus { border-color: #2563EB; background: #FFFFFF; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        .input-hint { font-size: 0.8rem; color: #94A3B8; margin-top: 6px; display: block; }
+
+        .btn-submit { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #2563EB; color: #FFFFFF; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); margin-top: 10px; }
+        .btn-submit:active { transform: scale(0.97); }
+
+        .loader-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; color: #FFFFFF; text-align: center; padding: 20px; }
+        .loader-overlay .material-icons { font-size: 60px; color: #60A5FA; animation: pulse 1s infinite; margin-bottom: 20px; }
+        
+        .success-box { display: none; background: #FFFFFF; padding: 40px; border-radius: 24px; text-align: center; max-width: 400px; width: 100%; color: #0F172A;}
+        .success-box .material-icons { font-size: 70px; color: #10B981; margin-bottom: 15px; animation: none; }
+        .success-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 10px; }
+        .btn-reload { display: inline-flex; align-items: center; gap: 8px; background: #F1F5F9; color: #334155; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; font-family: inherit; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-icon">
+            <span class="material-icons">transform</span>
+        </div>
+        <h1>محول المحاضرات الذكي</h1>
+        <p class="subtitle">أدخل رابط ملف الـ HTML المرفوع على المنصة، واسمك وكودك، وسيتم تحويله لملف PDF مختوم بعلامتك المائية.</p>
+
+        <div class="input-group">
+            <label>رابط أو اسم ملف المحاضرة (HTML)</label>
+            <input type="text" id="fileUrl" placeholder="مثال: lecture1.html أو الرابط كاملاً..." required>
+            <span class="input-hint">يفضل أن يكون الملف على نفس السيرفر (GitHub) لتجنب أخطاء الحماية.</span>
+        </div>
+
+        <div class="input-group" style="display: flex; gap: 15px;">
+            <div style="flex: 2;">
+                <label>الاسم الرباعي</label>
+                <input type="text" id="studentName" placeholder="اكتب اسمك..." required>
+            </div>
+            <div style="flex: 1;">
+                <label>الكود</label>
+                <input type="text" id="studentCode" placeholder="مثال: 12345" required>
+            </div>
+        </div>
+
+        <button class="btn-submit" onclick="generatePDF()">
+            <span class="material-icons">picture_as_pdf</span> استخراج الـ PDF
+        </button>
+    </div>
+
+    <!-- شاشة التحميل والنجاح -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <div id="loadingContent">
+            <span class="material-icons">auto_mode</span>
+            <h3 style="font-weight: 900; font-size: 1.4rem;">جاري تحويل المحاضرة...</h3>
+            <p style="margin-top: 10px; color: #94A3B8;">يتم الآن تشغيل الملف ودمج العلامة المائية، برجاء الانتظار.</p>
+        </div>
+        
+        <div class="success-box" id="successBox">
+            <span class="material-icons">check_circle</span>
+            <h3>تم التحميل بنجاح!</h3>
+            <p style="color: #64748B;">تم استخراج ملف الـ PDF وحفظه على جهازك.</p>
+            <button class="btn-reload" onclick="location.reload()">
+                <span class="material-icons" style="font-size: 18px;">refresh</span> استخراج ملف آخر
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        // دالة تحويل النص لصورة لضمان دعم اللغة العربية في jsPDF
+        function textToImage(text) {
+            const c = document.createElement('canvas');
+            const ctx = c.getContext('2d');
+            const font = "bold 48px 'IBM Plex Sans Arabic', sans-serif";
+            ctx.font = font;
+            const w = Math.ceil(ctx.measureText(text).width) + 40;
+            const h = 90;
+            c.width = w; c.height = h;
+            ctx.font = font;
+            ctx.fillStyle = '#000000';
+            ctx.textBaseline = 'middle';
+            ctx.direction = 'rtl';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, w / 2, h / 2);
+            return { data: c.toDataURL('image/png'), w, h };
+        }
+
+        // معالجة الرابط
+        function resolveUrl(url) {
+            let u = (url || '').trim();
+            if (!u.startsWith('http://') && !u.startsWith('https://')) {
+                if (u.startsWith('/')) u = u.substring(1);
+                if (!u.startsWith('./')) u = './' + u;
+                u = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + u.replace('./', '');
+            }
+            return u;
+        }
+
+        async function generatePDF() {
+            const fileUrlInput = document.getElementById('fileUrl').value;
+            const name = document.getElementById('studentName').value.trim();
+            const code = document.getElementById('studentCode').value.trim();
+
+            if (!fileUrlInput || !name || !code) {
+                alert('يرجى تعبئة جميع الحقول المطلوبة!');
+                return;
+            }
+
+            const cleanUrl = resolveUrl(fileUrlInput);
+            const watermarkText = `${name} - ${code}`;
+
+            // إظهار اللودر
+            document.getElementById('loaderOverlay').style.display = 'flex';
+            document.getElementById('loadingContent').style.display = 'block';
+            document.getElementById('successBox').style.display = 'none';
+
+            // إنشاء iframe مخفي لفتح ملف الـ HTML
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:800px; height:100vh; border:none; background:#fff;';
+            iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+            document.body.appendChild(iframe);
+
+            iframe.onload = async () => {
+                try {
+                    // انتظار السكريبتات ترسم محتوى المحاضرة (2.5 ثانية)
+                    await sleep(2500);
+
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+                    // إخفاء درع الحماية لو موجود
+                    const shield = doc.getElementById('antiScreenshotShield');
+                    if (shield) shield.style.display = 'none';
+
+                    // تظبيط ألوان النصوص المتدرجة
+                    const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], .gradient-text');
+                    gradientTitles.forEach(el => {
+                        el.style.background = 'none';
+                        el.style.color = '#2563EB';
+                        el.style.webkitTextFillColor = 'initial';
+                    });
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    
+                    const watermarkImg = textToImage(watermarkText);
+                    const wmWidth = 70;
+                    const wmHeight = (watermarkImg.h / watermarkImg.w) * wmWidth;
+
+                    const drawWatermark = () => {
+                        pdf.setGState(new pdf.GState({ opacity: 0.15 }));
+                        for (let x = -10; x < pdfWidth + 40; x += 85) {
+                            for (let y = 10; y < pdfHeight + 40; y += 70) {
+                                pdf.addImage(watermarkImg.data, 'PNG', x, y, wmWidth, wmHeight, undefined, 'FAST', 45);
+                            }
+                        }
+                        pdf.setGState(new pdf.GState({ opacity: 1 }));
+                    };
+
+                    const pages = doc.querySelectorAll('.a4-page');
+                    if (pages.length > 0) {
+                        for (let i = 0; i < pages.length; i++) {
+                            const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, logging: false });
+                            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                            if (i > 0) pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+                            drawWatermark();
+                        }
+                    } else {
+                        const containerToCapture = doc.getElementById('pagesContainer') || doc.body;
+                        const canvas = await html2canvas(containerToCapture, { scale: 2, useCORS: true, logging: false });
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                        const imgHeightInMM = (canvas.height * pdfWidth) / canvas.width;
+                        let heightLeft = imgHeightInMM;
+                        let position = 0;
+
+                        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
+                        drawWatermark();
+                        heightLeft -= pdfHeight;
+
+                        while (heightLeft > 0) {
+                            position = heightLeft - imgHeightInMM;
+                            pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
+                            drawWatermark();
+                            heightLeft -= pdfHeight;
+                        }
+                    }
+
+                    const safeTitle = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
+                    pdf.save(`محاضرة_${safeTitle}_${code}.pdf`);
+
+                    // إظهار شاشة النجاح
+                    document.getElementById('loadingContent').style.display = 'none';
+                    document.getElementById('successBox').style.display = 'block';
+
+                } catch (err) {
+                    console.error("خطأ أثناء التحويل:", err);
+                    alert("تعذر الوصول لملف المحاضرة! تأكد من أن الرابط صحيح وأنه مرفوع على نفس المنصة.");
+                    document.getElementById('loaderOverlay').style.display = 'none';
+                } finally {
+                    document.body.removeChild(iframe);
+                }
+            };
+
+            iframe.onerror = () => {
+                alert("تعذر تحميل الصفحة المستهدفة. تأكد من صحة الرابط.");
+                document.getElementById('loaderOverlay').style.display = 'none';
+                document.body.removeChild(iframe);
+            };
+        }
+    </script>
+</body>
+</html>
