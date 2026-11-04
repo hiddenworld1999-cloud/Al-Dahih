@@ -49,6 +49,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root { 
@@ -1825,6 +1826,7 @@
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
+                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
             const contentBox = document.getElementById('contentBody');
@@ -1913,6 +1915,83 @@
                 }
             } else if (!cachedHTML) {
                 displayInAppOfflineError();
+            }
+        }
+
+        // ================= دالة التحميل بصيغة PDF مع العلامة المائية =================
+        async function downloadAsPDF(url, title) {
+            let cleanUrl = (url || '').trim();
+            try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
+            cleanUrl = cleanUrl.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
+
+            if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+                if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
+                if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
+                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
+            }
+
+            try {
+                const response = await fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now());
+                if (!response.ok) throw new Error("Network response was not ok");
+                let htmlStr = await response.text();
+
+                const tempDiv = document.createElement('div');
+                tempDiv.style.position = 'absolute';
+                tempDiv.style.left = '-9999px';
+                tempDiv.style.top = '0';
+                tempDiv.style.width = '794px';
+                tempDiv.style.backgroundColor = '#ffffff';
+                
+                let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                if (!htmlStr.includes('<base ') && basePath) {
+                    htmlStr = htmlStr.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+                }
+                tempDiv.innerHTML = htmlStr;
+
+                const sName = localStorage.getItem('studentName') || "Student"; 
+                const sCode = localStorage.getItem('studentCode') || "000"; 
+                const watermarkText = `${sName} - ${sCode}`;
+                
+                const watermarkLayer = document.createElement('div');
+                watermarkLayer.style.position = 'absolute';
+                watermarkLayer.style.top = '0';
+                watermarkLayer.style.left = '0';
+                watermarkLayer.style.width = '100%';
+                watermarkLayer.style.height = '100%';
+                watermarkLayer.style.pointerEvents = 'none';
+                watermarkLayer.style.zIndex = '9999';
+                watermarkLayer.style.overflow = 'hidden';
+                watermarkLayer.style.display = 'flex';
+                watermarkLayer.style.flexWrap = 'wrap';
+                watermarkLayer.style.justifyContent = 'center';
+                watermarkLayer.style.alignContent = 'flex-start';
+                
+                let repeatedText = "";
+                for(let i=0; i<50; i++) {
+                    repeatedText += `<span style="color: rgba(0, 0, 0, 0.1); font-size: 24px; font-weight: bold; transform: rotate(-45deg); display: inline-block; padding: 40px; white-space: nowrap;">${watermarkText}</span>`;
+                }
+                watermarkLayer.innerHTML = repeatedText;
+                tempDiv.appendChild(watermarkLayer);
+                
+                document.body.appendChild(tempDiv);
+
+                const opt = {
+                    margin:       0,
+                    filename:     `${title}_${sCode}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, logging: true },
+                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                setTimeout(() => {
+                    html2pdf().from(tempDiv).set(opt).save().then(() => {
+                        document.body.removeChild(tempDiv);
+                    });
+                }, 500);
+
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                alert(currentLang === 'en' ? 'Error generating PDF. Please try again.' : 'حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
             }
         }
 
@@ -2010,11 +2089,18 @@
                 const trimmedData = typeof rawAiData === 'string' ? rawAiData.trim() : '';
                 if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
                     isAiHtml = true;
+                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); downloadAsPDF('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
+                                            <span class="material-icons">file_download</span>
+                                        </button>`;
+                                        
                     aiButtonHtml = `
-                    <button onclick="openHtmlLectureInsideApp('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
-                        <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
-                        <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
-                    </button>`;
+                    <div style="display:flex; width:100%; margin-bottom: 12px;">
+                        <button onclick="openHtmlLectureInsideApp('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="flex:1; justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; box-shadow: 0 8px 25px rgba(37,99,235,0.25); margin-bottom:0;">
+                            <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
+                            <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
+                        </button>
+                        ${downloadBtnHtml}
+                    </div>`;
                 } else {
                     aiButtonHtml = `
                     <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
@@ -2037,11 +2123,18 @@
             if (fileName && fileName.trim() !== '' && fileName !== 'undefined' && !resolvedVideoUrl && !isAiHtml) {
                 const lowerFileName = fileName.toLowerCase().trim();
                 if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
+                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); downloadAsPDF('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
+                                            <span class="material-icons">file_download</span>
+                                        </button>`;
+                                        
                     fileButtonHtml = `
-                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
-                        <span class="material-icons" style="margin-inline-end:10px;">web</span> 
-                        <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
-                    </button>`;
+                    <div style="display:flex; width:100%; margin-bottom: 12px;">
+                        <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="flex:1; justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; margin-bottom:0;">
+                            <span class="material-icons" style="margin-inline-end:10px;">web</span> 
+                            <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
+                        </button>
+                        ${downloadBtnHtml}
+                    </div>`;
                 } else {
                     fileButtonHtml = `
                     <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
@@ -2151,12 +2244,10 @@
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
-            // تهيئة نصوص وألوان الزر البنفسجي (زر تحدي الامتحان)
             let btnTxt = currentLang === 'en' ? 'Interactive Exam Challenge' : 'تحدي الامتحان التفاعلي (بدون إجابات)'; 
             let btnIcon = 'bolt'; 
             let btnStyle = 'background:#9c27b0; color:white; border:none; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.25);'; 
             
-            // إذا كان الطالب قد أجرى الامتحان مسبقاً، يتم تحويل الزر البنفسجي ليكون "إعادة الاختبار (بدون نقاط)"
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
                 btnIcon = 'replay'; 
@@ -2175,11 +2266,18 @@
             // 1. زرار الامتحان المحلول (أزرق)
             if(fileName) {
                 if(isHtmlFile(fileName)) {
+                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); downloadAsPDF('${fileName.replace(/'/g, "\\'")}', '${title}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
+                                            <span class="material-icons">file_download</span>
+                                        </button>`;
+                                        
                     pdfHtml += `
-                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${title}', '${type}')" class="btn-card" style="justify-content:center; background:#2563EB; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
-                        <span class="material-icons" style="margin-inline-end:10px;">auto_awesome</span>
-                        <span data-ar="الامتحان التفاعلي الذكي (محلول)" data-en="Interactive Smart Exam (Solved)">الامتحان التفاعلي الذكي (محلول)</span>
-                    </button>`;
+                    <div style="display:flex; width:100%; margin-bottom: 12px;">
+                        <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${title}', '${type}')" class="btn-card" style="flex:1; justify-content:center; background:#2563EB; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; box-shadow: 0 4px 15px rgba(37,99,235,0.25); margin-bottom:0;">
+                            <span class="material-icons" style="margin-inline-end:10px;">auto_awesome</span>
+                            <span data-ar="الامتحان التفاعلي الذكي (محلول)" data-en="Interactive Smart Exam (Solved)">الامتحان التفاعلي الذكي (محلول)</span>
+                        </button>
+                        ${downloadBtnHtml}
+                    </div>`;
                 } else {
                     pdfHtml += `
                     <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
@@ -2191,14 +2289,21 @@
                 pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
             }
 
-            // 2. زرار الامتحان بدون إجابات (البنفسجي أو الرمادي في حال الإعادة)
+            // 2. زرار الامتحان بدون إجابات
             if (unsolvedFileName) {
                 if(isHtmlFile(unsolvedFileName)) {
+                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); downloadAsPDF('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
+                                            <span class="material-icons">file_download</span>
+                                        </button>`;
+                                        
                     pdfHtml += `
-                    <button id="quizActionBtn_${type}" onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="justify-content:center; ${btnStyle} padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px;">
-                        <span class="material-icons" style="margin-inline-end:10px;">${btnIcon}</span>
-                        <span id="quizBtnTxt_${type}">${btnTxt}</span>
-                    </button>`;
+                    <div style="display:flex; width:100%; margin-bottom: 14px;">
+                        <button id="quizActionBtn_${type}" onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="flex:1; justify-content:center; ${btnStyle} padding:16px; border-radius:18px; font-size:1.05rem; margin-bottom:0;">
+                            <span class="material-icons" style="margin-inline-end:10px;">${btnIcon}</span>
+                            <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                        </button>
+                        ${downloadBtnHtml}
+                    </div>`;
                 } else {
                     pdfHtml += `
                     <button onclick="openPdfViewerInsideApp('${unsolvedFileName}')" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(156,39,176,0.25);">
@@ -2493,7 +2598,6 @@
             const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
             let xpRewardText = ''; let xpColor = '#4caf50';
 
-            // حفظ السكور في الشيت فقط لأول مرة
             if (!isAlreadyCompleted) {
                 saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
             }
@@ -2525,7 +2629,6 @@
 
         // ================= كوبري (Bridge) استقبال نتيجة الامتحان التفاعلي الخارجي =================
         window.saveInteractiveExamScore = function(score, total) {
-            // التحقق من نوع الامتحان المفتوح حالياً (midterm أو final)
             if (!window.currentActiveExamType) return; 
             
             const examType = window.currentActiveExamType; 
@@ -2533,13 +2636,9 @@
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
             if (!isAlreadyCompleted) {
-                // حفظ النتيجة في الشيت للوحة الشرف
                 saveExamScoreToCloud(quizKey, score, total);
-                
-                // إضافة النقاط للـ XP العام (نفس رقم السكور)
                 addXP(score);
                 
-                // منع التكرار
                 localStorage.setItem(quizKey, 'true');
                 let savedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || '';
                 if(!savedQuizzes.includes(quizKey)) { 
@@ -2547,12 +2646,10 @@
                     localStorage.setItem('daheehAllCompleted_Y4', savedQuizzes); 
                 }
                 
-                // مزامنة الـ XP مع الشيت
                 syncXPToCloud();
                 
                 alert(`عاش يا بطل! 🚀\nجبت ${score} من ${total}\nتم إضافة النقاط لملفك وتم تسجيلك في لوحة شرف الأوائل للامتحان ده!`);
                 
-                // تغيير شكل الزر البنفسجي لـ "إعادة الاختبار (بدون نقاط)"
                 let btnTxtEl = document.getElementById(`quizBtnTxt_${examType}`); 
                 if(btnTxtEl) { 
                     btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
