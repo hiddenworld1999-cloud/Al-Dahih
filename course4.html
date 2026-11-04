@@ -48,11 +48,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- مكاتب الـ PDF والتصوير -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         :root { 
@@ -952,7 +948,7 @@
         window.rawLecturesList = [];
         let currentVideoLecNum = 1;
         
-        // متغير عالمي لتسجيل نوع الامتحان اللي الطالب فاتحه حالياً
+        // متغير عالمي لتسجيل نوع الامتحان اللي الطالب فاتحه حالياً (عشان نسمّع فيه النقاط)
         window.currentActiveExamType = null;
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
@@ -983,16 +979,19 @@
         }
 
         window.addEventListener('popstate', function(event) {
+            // 1. إغلاق جميع النوافذ المنبثقة
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
             const vPlayer = document.getElementById('videoIframePlayer');
             if (vPlayer) vPlayer.src = '';
 
+            // تفريغ الميتينج فوراً لقطع الكاميرا والمايك
             const meetingBox = document.getElementById('liveMeetingFrameBox');
             if (meetingBox) meetingBox.innerHTML = '';
 
             if (typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
 
+            // 2. معالجة حالة السجل
             if (event.state && event.state.view === 'lecture_detail') {
                 document.getElementById('lecturesListCard').style.display = 'none';
                 document.getElementById('lectureDetailInline').style.display = 'block';
@@ -1002,6 +1001,7 @@
             } else if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
             } else {
+                // العودة للقوائم الرئيسية في شيت المادة
                 document.getElementById('lectureDetailInline').style.display = 'none';
                 document.getElementById('lecturesListCard').style.display = 'block';
                 document.getElementById('examDetailInline').style.display = 'none';
@@ -1300,7 +1300,7 @@
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
             document.body.classList.add('dark-mode'); 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
-            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
             if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'dark_mode'; 
         } else { 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
@@ -1351,6 +1351,7 @@
         }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
+        // ================= نظام الميتينج والبث المباشر المربوط بالشيت =================
         let isMeetingActive = false;
         let activeMeetingUrl = "";
         let currentMeetingStatusText = "مغلق";
@@ -1454,6 +1455,7 @@
                 .catch(() => {});
         }
 
+        // دالة الفتح في متصفح خارجي لحل مشاكل WebRTC على الكمبيوتر
         function openMeetingInExternalBrowser() {
             if (!activeMeetingUrl) return;
             const sName = localStorage.getItem('studentName') || 'طالب دحيح';
@@ -1501,6 +1503,7 @@
             }
         }
 
+        // === دالة تحويل رابط الفيديو لـ Embed نظيف ومحترف ===
         function formatEmbedVideoUrl(rawUrl) {
             if (!rawUrl) return "";
             let url = rawUrl.trim();
@@ -1520,6 +1523,7 @@
             return url;
         }
 
+        // === فتح واجهة مشغل الفيديو ===
         function openVideoLectureModal(videoUrl, lectureName, lectureNum, cacheIndex) {
             currentVideoLecNum = lectureNum;
             const embedUrl = formatEmbedVideoUrl(videoUrl);
@@ -1597,6 +1601,7 @@
             }
         }
 
+        // ================= نظام التعليقات =================
         function scrollToCommentsSection() {
             const scrollArea = document.getElementById('videoPlaylistScrollArea');
             const target = document.getElementById('commentsWrapperTarget');
@@ -1706,6 +1711,7 @@
                 });
         }
 
+        // === تبويبات المحاضرة التفاعلية الحديثة ===
         function switchInteractiveTab(tabId, el) {
             document.querySelectorAll('#interactiveLectureModal .tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -1804,9 +1810,9 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات والامتحانات (HTML) =================
+        // ================= فتح المحاضرات والامتحانات (HTML) بحماية تامة =================
         async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
-            window.currentActiveExamType = examType;
+            window.currentActiveExamType = examType; // حفظ نوع الامتحان (midterm أو final) لاستخدامه في توزيع النقاط
             
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
@@ -1819,7 +1825,6 @@
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
-                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
             const contentBox = document.getElementById('contentBody');
@@ -1910,172 +1915,6 @@
                 displayInAppOfflineError();
             }
         }
-
-        // ================= أدوات تحويل الـ PDF الجديدة والمستقرة =================
-        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-        function textToImage(text) {
-            const c = document.createElement('canvas');
-            const ctx = c.getContext('2d');
-            const font = "bold 48px 'IBM Plex Sans Arabic', sans-serif";
-            ctx.font = font;
-            const w = Math.ceil(ctx.measureText(text).width) + 40;
-            const h = 90;
-            c.width = w; c.height = h;
-            ctx.font = font;
-            ctx.fillStyle = '#000000';
-            ctx.textBaseline = 'middle';
-            ctx.direction = 'rtl';
-            ctx.textAlign = 'center';
-            ctx.fillText(text, w / 2, h / 2);
-            return { data: c.toDataURL('image/png'), w, h };
-        }
-
-        function resolveUrl(url) {
-            let u = (url || '').trim();
-            try { u = decodeURIComponent(u); } catch (e) {}
-            u = u.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
-            if (!u.startsWith('http://') && !u.startsWith('https://')) {
-                if (u.startsWith('/')) u = u.substring(1);
-                if (!u.startsWith('./')) u = './' + u;
-                u = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + u.replace('./', '');
-            }
-            return u;
-        }
-
-        // الدالة الرئيسية للتحميل المدمجة بالكامل
-        window.downloadAsPDF = async function(url, title) {
-            let cleanUrl = resolveUrl(url);
-            
-            const sName = localStorage.getItem('studentName') || 'Student';
-            const sCode = localStorage.getItem('studentCode') || '000';
-            const watermarkText = `${sName} - ${sCode}`;
-
-            const loader = document.createElement('div');
-            loader.id = 'pdfLoader';
-            loader.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:sans-serif;direction:rtl;';
-            loader.innerHTML = `
-                <span class="material-icons" style="font-size:60px; color:#2563EB; animation:pulse 1s infinite;">picture_as_pdf</span>
-                <h3 style="margin-top:20px; font-weight:bold;">جاري تحضير الملف...</h3>
-                <p style="color:#aaa; font-size:0.9rem;">يرجى عدم إغلاق الصفحة.</p>
-            `;
-            document.body.appendChild(loader);
-
-            const iframe = document.createElement('iframe');
-            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:800px; height:100vh; border:none; background:#fff;';
-            iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-            document.body.appendChild(iframe);
-
-            try {
-                const { jsPDF } = window.jspdf;
-
-                await new Promise((resolve, reject) => {
-                    iframe.onload = resolve;
-                    iframe.onerror = () => reject(new Error('فشل تحميل محتوى المحاضرة'));
-                });
-
-                await sleep(2500); 
-
-                const doc = iframe.contentDocument || iframe.contentWindow.document;
-
-                // إصلاح لون العنوان المتدرج
-                const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], *[style*="background-clip:text"], .gradient-text');
-                gradientTitles.forEach(el => {
-                    el.style.background = 'none';
-                    el.style.color = '#2563EB';
-                    el.style.webkitTextFillColor = 'initial';
-                });
-
-                const shield = doc.getElementById('antiScreenshotShield');
-                if (shield) shield.style.display = 'none';
-
-                const pages = doc.querySelectorAll('.a4-page');
-                const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-                const watermarkImg = textToImage(watermarkText);
-                const wmWidth = 70;
-                const wmHeight = (watermarkImg.h / watermarkImg.w) * wmWidth;
-
-                const drawWatermark = () => {
-                    pdf.setGState(new pdf.GState({ opacity: 0.15 }));
-                    for (let x = -10; x < pdfWidth + 40; x += 85) {
-                        for (let y = 10; y < pdfHeight + 40; y += 70) {
-                            pdf.addImage(watermarkImg.data, 'PNG', x, y, wmWidth, wmHeight, undefined, 'FAST', 45);
-                        }
-                    }
-                    pdf.setGState(new pdf.GState({ opacity: 1 }));
-                };
-
-                if (pages.length > 0) {
-                    for (let i = 0; i < pages.length; i++) {
-                        const canvas = await window.html2canvas(pages[i], { scale: 2, useCORS: true, logging: false });
-                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                        
-                        if (i > 0) pdf.addPage();
-                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
-                        drawWatermark();
-                    }
-                } else {
-                    const containerToCapture = doc.getElementById('pagesContainer') || doc.body;
-                    const canvas = await window.html2canvas(containerToCapture, { scale: 2, useCORS: true, logging: false });
-                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                    const imgHeightInMM = (canvas.height * pdfWidth) / canvas.width;
-                    let heightLeft = imgHeightInMM;
-                    let position = 0;
-
-                    pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
-                    drawWatermark();
-                    heightLeft -= pdfHeight;
-
-                    while (heightLeft > 0) {
-                        position = heightLeft - imgHeightInMM;
-                        pdf.addPage();
-                        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
-                        drawWatermark();
-                        heightLeft -= pdfHeight;
-                    }
-                }
-
-                const safeTitle = (title || 'document').replace(/[\\/:*?"<>|]/g, '').trim();
-                const fileName = `${safeTitle}_${sCode}.pdf`;
-
-                const pdfBlob = pdf.output('blob');
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                
-                loader.innerHTML = `
-                    <div style="background:#1E293B; padding:30px; border-radius:20px; text-align:center; max-width:90%; width:350px; box-shadow:0 15px 35px rgba(0,0,0,0.5);">
-                        <span class="material-icons" style="font-size:60px; color:#10B981; margin-bottom:15px;">check_circle</span>
-                        <h3 style="margin:0 0 10px 0; color:#fff; font-weight:bold;">الملف جاهز!</h3>
-                        <p style="color:#94A3B8; font-size:0.9rem; margin-bottom:25px; line-height:1.6;">تم دمج العلامة المائية بنجاح.</p>
-                        
-                        <a href="${pdfUrl}" download="${fileName}" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#10B981; color:#fff; text-decoration:none; padding:15px; border-radius:12px; font-weight:bold; font-size:1.1rem; margin-bottom:10px;">
-                            <span class="material-icons">save_alt</span> حفظ / مشاركة
-                        </a>
-
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader')); openPdfViewerInsideApp('${pdfUrl}');" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#2563EB; color:#fff; border:none; padding:15px; border-radius:12px; font-weight:bold; font-size:1.1rem; margin-bottom:15px; width:100%; font-family:inherit; cursor:pointer;">
-                            <span class="material-icons">visibility</span> عرض داخل التطبيق
-                        </button>
-                        
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:transparent; border:1px solid #475569; color:#94A3B8; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold; width:100%;">إغلاق</button>
-                    </div>
-                `;
-
-            } catch (err) {
-                console.error(err);
-                loader.innerHTML = `
-                    <div style="background:#1E293B; padding:30px; border-radius:20px; text-align:center; max-width:90%; width:350px;">
-                        <span class="material-icons" style="font-size:60px; color:#EF4444; margin-bottom:15px;">error</span>
-                        <h3 style="margin:0 0 10px 0; color:#fff;">حدث خطأ!</h3>
-                        <p style="color:#94A3B8; font-size:0.9rem; margin-bottom:20px;">تعذر تجهيز الملف. ${err.message}</p>
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:#EF4444; border:none; color:#fff; padding:10px 30px; border-radius:10px; font-weight:bold; width:100%;">حسناً</button>
-                    </div>
-                `;
-            } finally {
-                if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-            }
-        };
 
         // ================= تحميل المحاضرات =================
         function loadLectures() {
@@ -2171,18 +2010,11 @@
                 const trimmedData = typeof rawAiData === 'string' ? rawAiData.trim() : '';
                 if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
                     isAiHtml = true;
-                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
-                                            <span class="material-icons">file_download</span>
-                                        </button>`;
-                                        
                     aiButtonHtml = `
-                    <div style="display:flex; width:100%; margin-bottom: 12px;">
-                        <button onclick="openHtmlLectureInsideApp('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="flex:1; justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; box-shadow: 0 8px 25px rgba(37,99,235,0.25); margin-bottom:0;">
-                            <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
-                            <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
-                        </button>
-                        ${downloadBtnHtml}
-                    </div>`;
+                    <button onclick="openHtmlLectureInsideApp('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
+                        <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
+                    </button>`;
                 } else {
                     aiButtonHtml = `
                     <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
@@ -2205,18 +2037,11 @@
             if (fileName && fileName.trim() !== '' && fileName !== 'undefined' && !resolvedVideoUrl && !isAiHtml) {
                 const lowerFileName = fileName.toLowerCase().trim();
                 if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
-                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
-                                            <span class="material-icons">file_download</span>
-                                        </button>`;
-                                        
                     fileButtonHtml = `
-                    <div style="display:flex; width:100%; margin-bottom: 12px;">
-                        <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="flex:1; justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; margin-bottom:0;">
-                            <span class="material-icons" style="margin-inline-end:10px;">web</span> 
-                            <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
-                        </button>
-                        ${downloadBtnHtml}
-                    </div>`;
+                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">web</span> 
+                        <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
+                    </button>`;
                 } else {
                     fileButtonHtml = `
                     <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
@@ -2266,6 +2091,7 @@
             if(listCard) listCard.style.display = 'block';
         }
 
+        // ================= فتح خيارات الامتحانات الذكية =================
         function openExam(type) {
             const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
             const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; 
@@ -2325,10 +2151,12 @@
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
+            // تهيئة نصوص وألوان الزر البنفسجي (زر تحدي الامتحان)
             let btnTxt = currentLang === 'en' ? 'Interactive Exam Challenge' : 'تحدي الامتحان التفاعلي (بدون إجابات)'; 
             let btnIcon = 'bolt'; 
             let btnStyle = 'background:#9c27b0; color:white; border:none; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.25);'; 
             
+            // إذا كان الطالب قد أجرى الامتحان مسبقاً، يتم تحويل الزر البنفسجي ليكون "إعادة الاختبار (بدون نقاط)"
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
                 btnIcon = 'replay'; 
@@ -2344,20 +2172,14 @@
                 return clean.endsWith('.html') || clean.endsWith('.htm');
             };
 
+            // 1. زرار الامتحان المحلول (أزرق)
             if(fileName) {
                 if(isHtmlFile(fileName)) {
-                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${fileName.replace(/'/g, "\\'")}', '${title}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
-                                            <span class="material-icons">file_download</span>
-                                        </button>`;
-                                        
                     pdfHtml += `
-                    <div style="display:flex; width:100%; margin-bottom: 12px;">
-                        <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${title}', '${type}')" class="btn-card" style="flex:1; justify-content:center; background:#2563EB; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; box-shadow: 0 4px 15px rgba(37,99,235,0.25); margin-bottom:0;">
-                            <span class="material-icons" style="margin-inline-end:10px;">auto_awesome</span>
-                            <span data-ar="الامتحان التفاعلي الذكي (محلول)" data-en="Interactive Smart Exam (Solved)">الامتحان التفاعلي الذكي (محلول)</span>
-                        </button>
-                        ${downloadBtnHtml}
-                    </div>`;
+                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${title}', '${type}')" class="btn-card" style="justify-content:center; background:#2563EB; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px;">auto_awesome</span>
+                        <span data-ar="الامتحان التفاعلي الذكي (محلول)" data-en="Interactive Smart Exam (Solved)">الامتحان التفاعلي الذكي (محلول)</span>
+                    </button>`;
                 } else {
                     pdfHtml += `
                     <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
@@ -2369,20 +2191,14 @@
                 pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
             }
 
+            // 2. زرار الامتحان بدون إجابات (البنفسجي أو الرمادي في حال الإعادة)
             if (unsolvedFileName) {
                 if(isHtmlFile(unsolvedFileName)) {
-                    const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
-                                            <span class="material-icons">file_download</span>
-                                        </button>`;
-                                        
                     pdfHtml += `
-                    <div style="display:flex; width:100%; margin-bottom: 14px;">
-                        <button id="quizActionBtn_${type}" onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="flex:1; justify-content:center; ${btnStyle} padding:16px; border-radius:18px; font-size:1.05rem; margin-bottom:0;">
-                            <span class="material-icons" style="margin-inline-end:10px;">${btnIcon}</span>
-                            <span id="quizBtnTxt_${type}">${btnTxt}</span>
-                        </button>
-                        ${downloadBtnHtml}
-                    </div>`;
+                    <button id="quizActionBtn_${type}" onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="justify-content:center; ${btnStyle} padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">${btnIcon}</span>
+                        <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                    </button>`;
                 } else {
                     pdfHtml += `
                     <button onclick="openPdfViewerInsideApp('${unsolvedFileName}')" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(156,39,176,0.25);">
@@ -2677,6 +2493,7 @@
             const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
             let xpRewardText = ''; let xpColor = '#4caf50';
 
+            // حفظ السكور في الشيت فقط لأول مرة
             if (!isAlreadyCompleted) {
                 saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
             }
@@ -2706,7 +2523,9 @@
             document.getElementById('quizBody').scrollTop = 0; 
         }
 
+        // ================= كوبري (Bridge) استقبال نتيجة الامتحان التفاعلي الخارجي =================
         window.saveInteractiveExamScore = function(score, total) {
+            // التحقق من نوع الامتحان المفتوح حالياً (midterm أو final)
             if (!window.currentActiveExamType) return; 
             
             const examType = window.currentActiveExamType; 
@@ -2714,9 +2533,13 @@
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
             if (!isAlreadyCompleted) {
+                // حفظ النتيجة في الشيت للوحة الشرف
                 saveExamScoreToCloud(quizKey, score, total);
+                
+                // إضافة النقاط للـ XP العام (نفس رقم السكور)
                 addXP(score);
                 
+                // منع التكرار
                 localStorage.setItem(quizKey, 'true');
                 let savedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || '';
                 if(!savedQuizzes.includes(quizKey)) { 
@@ -2724,10 +2547,12 @@
                     localStorage.setItem('daheehAllCompleted_Y4', savedQuizzes); 
                 }
                 
+                // مزامنة الـ XP مع الشيت
                 syncXPToCloud();
                 
                 alert(`عاش يا بطل! 🚀\nجبت ${score} من ${total}\nتم إضافة النقاط لملفك وتم تسجيلك في لوحة شرف الأوائل للامتحان ده!`);
                 
+                // تغيير شكل الزر البنفسجي لـ "إعادة الاختبار (بدون نقاط)"
                 let btnTxtEl = document.getElementById(`quizBtnTxt_${examType}`); 
                 if(btnTxtEl) { 
                     btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
@@ -2750,7 +2575,7 @@
 
         function sendOnlineStatus(status) {
             const sCode = localStorage.getItem('studentCode'); if(!sCode) return; 
-            fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { keepalive: true }).catch(e => {}); 
+            fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { keepalive: true }).catch(e => console.log("Error")); 
         }
 
         window.addEventListener('load', () => {
