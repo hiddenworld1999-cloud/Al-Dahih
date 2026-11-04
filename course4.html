@@ -49,7 +49,6 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <!-- مكتبة التحويل لـ PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -950,6 +949,7 @@
         window.rawLecturesList = [];
         let currentVideoLecNum = 1;
         
+        // متغير عالمي لتسجيل نوع الامتحان اللي الطالب فاتحه حالياً (عشان نسمّع فيه النقاط)
         window.currentActiveExamType = null;
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
@@ -980,16 +980,19 @@
         }
 
         window.addEventListener('popstate', function(event) {
+            // 1. إغلاق جميع النوافذ المنبثقة
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
             const vPlayer = document.getElementById('videoIframePlayer');
             if (vPlayer) vPlayer.src = '';
 
+            // تفريغ الميتينج فوراً لقطع الكاميرا والمايك
             const meetingBox = document.getElementById('liveMeetingFrameBox');
             if (meetingBox) meetingBox.innerHTML = '';
 
             if (typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
 
+            // 2. معالجة حالة السجل
             if (event.state && event.state.view === 'lecture_detail') {
                 document.getElementById('lecturesListCard').style.display = 'none';
                 document.getElementById('lectureDetailInline').style.display = 'block';
@@ -999,6 +1002,7 @@
             } else if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
             } else {
+                // العودة للقوائم الرئيسية في شيت المادة
                 document.getElementById('lectureDetailInline').style.display = 'none';
                 document.getElementById('lecturesListCard').style.display = 'block';
                 document.getElementById('examDetailInline').style.display = 'none';
@@ -1006,6 +1010,7 @@
             }
         });
 
+        // ------------------ التبديل بين أقسام المحتوى / الامتحانات ------------------
         function switchCourseSection(sec, btn) {
             document.querySelectorAll('.tab-head-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -1024,6 +1029,7 @@
             }
         }
 
+        // ------------------ السبورة العادية ------------------
         const canvas = document.getElementById('drawingCanvas');
         const ctxCanvas = canvas ? canvas.getContext('2d') : null;
         let isDrawing = false;
@@ -1086,6 +1092,7 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
+        // حركة السحب للرجوع بدون طرد للرئيسية
         let touchStartX = 0; let touchStartY = 0;
         document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
         document.addEventListener('touchend', e => {
@@ -1131,9 +1138,11 @@
             if (e.touches.length < 2) { initialPinchDistance = null; pdfWrapper.style.transition = 'width 0.2s ease-out'; } 
         });
 
+        // === السيرفر بتاع رابعة الجديد الشغال ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg_IWlqYNc0BmHP4aQHmH_GWhDGHbFgH0G4-VhS3L_AZ67L8HOdFb056kTYiVdyPo6/exec";
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
+        // === مواد سنة رابعة مع الصور المخصصة لكل مادة ===
         const allCourses = {
             401: { titleAr: "تطبيقات في برمجة الحاسب الآلي", titleEn: "Programming Applications", profAr: "د. مريم سامي", profEn: "Dr. Maryam Samy", cover: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80" },
             402: { titleAr: "أنظمة معلومات المؤسسات", titleEn: "Enterprise Information Systems", profAr: "د. مريم سامي", profEn: "Dr. Maryam Samy", cover: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" },
@@ -1142,6 +1151,7 @@
             405: { titleAr: "مبادئ المالية العامة", titleEn: "Principles of Public Finance", profAr: "د. فاطمة إبراهيم", profEn: "Dr. Fatima Ibrahim", cover: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80" }
         };
 
+        // ================= استخراج كود المادة بشكل مضمون 100% =================
         function getResolvedCourseId() {
             try {
                 const params = new URLSearchParams(window.location.search);
@@ -1162,13 +1172,22 @@
                 }
             } catch (e) {}
 
-            const fallbackKeys = ['daheeh_last_opened_course', 'selectedCourseId', 'selectedCourse', 'currentCourseId', 'currentCourse', 'courseId', 'daheehCourseId'];
+            const fallbackKeys = [
+                'daheeh_last_opened_course',
+                'selectedCourseId',
+                'selectedCourse',
+                'currentCourseId',
+                'currentCourse',
+                'courseId',
+                'daheehCourseId'
+            ];
             for (let k of fallbackKeys) {
                 const val = localStorage.getItem(k);
                 if (val && allCourses[val]) {
                     return val.toString().trim();
                 }
             }
+
             return '401';
         }
 
@@ -1200,9 +1219,10 @@
             const completedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || ''; 
             if(!sCode) return;
             const requestUrl = `${SCRIPT_URL}?action=updateXP&code=${sCode}&name=${encodeURIComponent(sName)}&xp=${currentXP}&completed=${completedQuizzes}`;
-            fetch(requestUrl).then(res => res.json()).catch(err => console.log('Error'));
+            fetch(requestUrl).then(res => res.json()).catch(err => console.log('Error Syncing'));
         }
 
+        // مزامنة الـ XP المباشر من الشيت وتطبيقه فوراً
         function fetchXPFromSheet() {
             const sCode = localStorage.getItem('studentCode');
             if(!sCode) return;
@@ -1233,7 +1253,7 @@
                         }
                     }
                 }
-            }).catch(err => {});
+            }).catch(err => console.log('Syncing...'));
         }
 
         function updateXPDisplay() { 
@@ -1332,6 +1352,7 @@
         }
         function resetPomodoro() { clearInterval(pomoInterval); pomoTime = 25 * 60; isPomoRunning = false; document.getElementById('pomoStartBtn').innerText = currentLang === 'en' ? 'Start' : 'بدأ'; updatePomoDisplay(); }
 
+        // ================= نظام الميتينج والبث المباشر المربوط بالشيت =================
         let isMeetingActive = false;
         let activeMeetingUrl = "";
         let currentMeetingStatusText = "مغلق";
@@ -1435,6 +1456,7 @@
                 .catch(() => {});
         }
 
+        // دالة الفتح في متصفح خارجي لحل مشاكل WebRTC على الكمبيوتر
         function openMeetingInExternalBrowser() {
             if (!activeMeetingUrl) return;
             const sName = localStorage.getItem('studentName') || 'طالب دحيح';
@@ -1482,6 +1504,7 @@
             }
         }
 
+        // === دالة تحويل رابط الفيديو لـ Embed نظيف ومحترف ===
         function formatEmbedVideoUrl(rawUrl) {
             if (!rawUrl) return "";
             let url = rawUrl.trim();
@@ -1501,6 +1524,7 @@
             return url;
         }
 
+        // === فتح واجهة مشغل الفيديو ===
         function openVideoLectureModal(videoUrl, lectureName, lectureNum, cacheIndex) {
             currentVideoLecNum = lectureNum;
             const embedUrl = formatEmbedVideoUrl(videoUrl);
@@ -1578,6 +1602,7 @@
             }
         }
 
+        // ================= نظام التعليقات =================
         function scrollToCommentsSection() {
             const scrollArea = document.getElementById('videoPlaylistScrollArea');
             const target = document.getElementById('commentsWrapperTarget');
@@ -1687,6 +1712,7 @@
                 });
         }
 
+        // === تبويبات المحاضرة التفاعلية الحديثة ===
         function switchInteractiveTab(tabId, el) {
             document.querySelectorAll('#interactiveLectureModal .tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -1785,9 +1811,9 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات والامتحانات (HTML) =================
+        // ================= فتح المحاضرات والامتحانات (HTML) بدون شاشة بيضاء =================
         async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
-            window.currentActiveExamType = examType; 
+            window.currentActiveExamType = examType;
             
             document.getElementById('contentTitle').innerText = title || 'المحاضرة';
             const modalBody = document.getElementById('contentModalBody');
@@ -1814,85 +1840,48 @@
 
             openModalWithHistory('contentModal');
 
-            const storageKey = 'offline_lecture_cache_' + cleanUrl;
-            let cachedHTML = localStorage.getItem(storageKey);
-
-            if (cachedHTML && (cachedHTML.includes('File not found') || cachedHTML.includes('404'))) {
-                localStorage.removeItem(storageKey);
-                cachedHTML = null;
-            }
-
-            function displayHtmlContent(htmlStr) {
-                let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
-                let finalHtml = htmlStr;
-                if (!finalHtml.includes('<base ') && basePath) {
-                    finalHtml = finalHtml.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
-                }
-
-                contentBox.innerHTML = `
-                    <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
-                        <iframe id="offlineLectureIframe" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                style="width: 100%; height: 100%; border: none; display: block;">
-                        </iframe>
-                    </div>
-                `;
-                const iframeEl = document.getElementById('offlineLectureIframe');
-                iframeEl.srcdoc = finalHtml;
-            }
-
-            function displayInAppOfflineError() {
-                contentBox.innerHTML = `
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--text);">
-                        <div style="width:70px; height:70px; border-radius:50%; background:rgba(239, 68, 68, 0.1); display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
-                            <span class="material-icons" style="font-size:36px; color:#ef4444;">wifi_off</span>
+            // تحميل الـ HTML مباشرة باستخدام fetch وتطبيق العلامة المائية عليه ديناميكياً لتفادي الشاشة البيضاء
+            fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now())
+                .then(res => res.text())
+                .then(htmlStr => {
+                    const sName = localStorage.getItem('studentName') || "Student"; 
+                    const sCode = localStorage.getItem('studentCode') || "000"; 
+                    const watermarkHtml = `
+                        <div style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; pointer-events:none; display:flex; flex-wrap:wrap; justify-content:space-around; align-content:space-around; overflow:hidden; opacity:0.12;">
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
+                            <span style="font-size:24px; font-weight:bold; transform:rotate(-45deg);">${sName} - ${sCode}</span>
                         </div>
-                        <h3 style="margin:0 0 8px 0; font-weight:900; font-size:1.2rem; color:var(--text);">لا يوجد اتصال بالإنترنت</h3>
-                        <p style="color:var(--grey); max-width:320px; font-size:0.92rem; line-height:1.6; margin:0 0 20px 0; font-weight:600;">
-                            تحتاج للاتصال بالإنترنت لتحميل هذا المحتوى لأول مرة، وسيتم حفظه تلقائياً.
-                        </p>
-                        <button onclick="history.back()" style="background:var(--primary); color:#ffffff; border:none; padding:12px 28px; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:inherit; box-shadow:0 4px 15px rgba(37,99,235,0.3);">
-                            العودة
-                        </button>
-                    </div>
-                `;
-            }
-
-            if (cachedHTML) {
-                displayHtmlContent(cachedHTML);
-            } else {
-                contentBox.innerHTML = `
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--primary);">
-                        <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">lock_open</span>
-                        <p style="font-weight:bold; margin-top:12px; font-size:1rem;">جاري فتح وتأمين المحتوى...</p>
-                    </div>
-                `;
-            }
-
-            if (navigator.onLine) {
-                try {
-                    const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-                    const response = await fetch(fetchUrl);
-                    if (response.ok) {
-                        const freshHTML = await response.text();
-                        if (freshHTML && !freshHTML.includes('File not found') && !freshHTML.includes('404')) {
-                            localStorage.setItem(storageKey, freshHTML);
-                            displayHtmlContent(freshHTML);
-                        } else if (!cachedHTML) {
-                            displayInAppOfflineError();
-                        }
-                    } else if (!cachedHTML) {
-                        displayInAppOfflineError();
+                    `;
+                    
+                    let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                    if (!htmlStr.includes('<base ') && basePath) {
+                        htmlStr = htmlStr.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
                     }
-                } catch (e) {
-                    if (!cachedHTML) displayInAppOfflineError();
-                }
-            } else if (!cachedHTML) {
-                displayInAppOfflineError();
-            }
+                    
+                    if (htmlStr.includes('</body>')) {
+                        htmlStr = htmlStr.replace('</body>', watermarkHtml + '</body>');
+                    } else {
+                        htmlStr += watermarkHtml;
+                    }
+
+                    contentBox.innerHTML = `
+                        <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
+                            <iframe id="offlineLectureIframe" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    style="width: 100%; height: 100%; border: none; display: block;">
+                            </iframe>
+                        </div>
+                    `;
+                    document.getElementById('offlineLectureIframe').srcdoc = htmlStr;
+                })
+                .catch(err => {
+                    contentBox.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><h3>عذراً، تعذر تحميل المحتوى. تأكد من اتصال الإنترنت.</h3></div>`;
+                });
         }
 
-        // ================= دالة التحميل الآمنة للـ PDF (بدون Crash وفي الخلفية) =================
+        // ================= دالة التحميل الآمنة والمستقرة للـ PDF (بدون Crash وفي الخلفية) =================
         async function downloadAsPDF(url, title) {
             let cleanUrl = (url || '').trim();
             try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
@@ -1917,6 +1906,7 @@
 
             // حاوية خلفية مخفية لتجميع المحتوى
             const holder = document.createElement('div');
+            // إخفاء الحاوية بعيداً عن الشاشة دون التأثير على أبعادها
             holder.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;background:#ffffff;color:#000000;direction:rtl;padding:20px;box-sizing:border-box;';
             document.body.appendChild(holder);
 
@@ -1940,7 +1930,7 @@
                     const src = img.getAttribute('src');
                     if (src && !/^(https?:|data:|\/\/)/i.test(src)) {
                         img.setAttribute('src', basePath + src);
-                        img.crossOrigin = "anonymous";
+                        img.crossOrigin = "anonymous"; // ضروري لـ html2canvas
                     }
                 });
 
