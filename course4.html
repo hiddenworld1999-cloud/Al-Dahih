@@ -49,7 +49,6 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root { 
@@ -1810,6 +1809,770 @@
 
             openModalWithHistory('interactiveLectureModal');
         }
+
+        // ================= فتح المحاضرات والامتحانات (HTML) بحماية تامة =================
+        async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
+            window.currentActiveExamType = examType; // حفظ نوع الامتحان (midterm أو final) لاستخدامه في توزيع النقاط
+            
+            document.getElementById('contentTitle').innerText = title || 'المحاضرة';
+            const modalBody = document.getElementById('contentModalBody');
+            if (modalBody) modalBody.style.padding = '0';
+
+            let cleanUrl = (htmlUrl || '').trim();
+            try { cleanUrl = decodeURIComponent(cleanUrl); } catch (e) {}
+            cleanUrl = cleanUrl.replace(/[\u200B-\u200D\uFEFF\u200E\u200F\u00A0]/g, '').trim();
+
+            if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+                if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
+                if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
+            }
+
+            const contentBox = document.getElementById('contentBody');
+            contentBox.style.padding = '0';
+            contentBox.style.background = 'transparent';
+            contentBox.style.boxShadow = 'none';
+            contentBox.style.border = 'none';
+            contentBox.style.margin = '0';
+            contentBox.style.width = '100%';
+            contentBox.style.height = '100%';
+
+            openModalWithHistory('contentModal');
+
+            const storageKey = 'offline_lecture_cache_' + cleanUrl;
+            let cachedHTML = localStorage.getItem(storageKey);
+
+            if (cachedHTML && (cachedHTML.includes('File not found') || cachedHTML.includes('404'))) {
+                localStorage.removeItem(storageKey);
+                cachedHTML = null;
+            }
+
+            function displayHtmlContent(htmlStr) {
+                let basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                let finalHtml = htmlStr;
+                if (!finalHtml.includes('<base ') && basePath) {
+                    finalHtml = finalHtml.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+                }
+
+                contentBox.innerHTML = `
+                    <div style="width: 100%; height: calc(100vh - 75px); overflow: hidden; -webkit-overflow-scrolling: touch; background: #ffffff;">
+                        <iframe id="offlineLectureIframe" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                style="width: 100%; height: 100%; border: none; display: block;">
+                        </iframe>
+                    </div>
+                `;
+                const iframeEl = document.getElementById('offlineLectureIframe');
+                iframeEl.srcdoc = finalHtml;
+            }
+
+            function displayInAppOfflineError() {
+                contentBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--text);">
+                        <div style="width:70px; height:70px; border-radius:50%; background:rgba(239, 68, 68, 0.1); display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                            <span class="material-icons" style="font-size:36px; color:#ef4444;">wifi_off</span>
+                        </div>
+                        <h3 style="margin:0 0 8px 0; font-weight:900; font-size:1.2rem; color:var(--text);">لا يوجد اتصال بالإنترنت</h3>
+                        <p style="color:var(--grey); max-width:320px; font-size:0.92rem; line-height:1.6; margin:0 0 20px 0; font-weight:600;">
+                            تحتاج للاتصال بالإنترنت لتحميل هذا المحتوى لأول مرة، وسيتم حفظه تلقائياً.
+                        </p>
+                        <button onclick="history.back()" style="background:var(--primary); color:#ffffff; border:none; padding:12px 28px; border-radius:14px; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:inherit; box-shadow:0 4px 15px rgba(37,99,235,0.3);">
+                            العودة
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (cachedHTML) {
+                displayHtmlContent(cachedHTML);
+            } else {
+                contentBox.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 100px); text-align:center; padding:25px; color:var(--primary);">
+                        <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">lock_open</span>
+                        <p style="font-weight:bold; margin-top:12px; font-size:1rem;">جاري فتح وتأمين المحتوى...</p>
+                    </div>
+                `;
+            }
+
+            if (navigator.onLine) {
+                try {
+                    const fetchUrl = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+                    const response = await fetch(fetchUrl);
+                    if (response.ok) {
+                        const freshHTML = await response.text();
+                        if (freshHTML && !freshHTML.includes('File not found') && !freshHTML.includes('404')) {
+                            localStorage.setItem(storageKey, freshHTML);
+                            displayHtmlContent(freshHTML);
+                        } else if (!cachedHTML) {
+                            displayInAppOfflineError();
+                        }
+                    } else if (!cachedHTML) {
+                        displayInAppOfflineError();
+                    }
+                } catch (e) {
+                    if (!cachedHTML) displayInAppOfflineError();
+                }
+            } else if (!cachedHTML) {
+                displayInAppOfflineError();
+            }
+        }
+
+        // ================= تحميل المحاضرات =================
+        function loadLectures() {
+            const listCard = document.getElementById('lecturesListCard'); 
+            const studentCode = localStorage.getItem('studentCode') || '';
+            const currentCId = courseId.toString().trim();
+            const cacheKey = `daheeh_lectures_cache_${currentCId}`; 
+
+            const cachedData = localStorage.getItem(cacheKey);
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    renderLectures(parsed);
+                } catch(e) {}
+            } else {
+                listCard.innerHTML = `<div style="text-align:center; padding:35px; color:var(--primary);"><span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">autorenew</span><p style="font-weight:bold; margin-top:10px;">جاري تحميل المحاضرات...</p></div>`;
+            }
+            applyLanguage();
+            
+            fetch(`${SCRIPT_URL}?action=getLectures&courseId=${currentCId}&code=${encodeURIComponent(studentCode)}&_t=${Date.now()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if (data.success && data.lectures) { 
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderLectures(data);
+                    }
+                })
+                .catch(error => { 
+                    if (!cachedData) {
+                        listCard.innerHTML = `<div style="text-align:center; padding:35px; color:#d32f2f;"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">wifi_off</span><p>تحتاج للإنترنت لعرض المحتوى لأول مرة.</p></div>`; 
+                        applyLanguage(); 
+                    }
+                });
+        }
+
+        function renderLectures(data) {
+            const listCard = document.getElementById('lecturesListCard');
+            listCard.innerHTML = ''; 
+            window.lecturesDataCache = {}; 
+            window.rawLecturesList = (data.success && data.lectures) ? data.lectures : [];
+
+            if (data.success && data.lectures && data.lectures.length > 0) { 
+                data.lectures.forEach((lec, index) => { 
+                    const lectureNumber = index + 1; 
+                    window.lecturesDataCache[index] = lec.aiContent || null;
+
+                    const quizKey = `completed_quiz_${courseId}_${lectureNumber}`;
+                    const isCompleted = localStorage.getItem(quizKey) === 'true';
+
+                    let statusClass = isCompleted ? 'status-completed' : (index === 0 ? 'status-current' : 'status-locked');
+                    let statusIcon = isCompleted ? 'check' : (index === 0 ? 'play_arrow' : 'lock');
+                    let activeCardClass = index === 0 ? 'active-now' : '';
+
+                    listCard.innerHTML += `
+                    <div class="lecture-row-card ${activeCardClass}" onclick="showDynamicLecture('${lec.name.replace(/'/g, "\\'")}', '${lec.file || ''}', ${lectureNumber}, ${index}, '${lec.videoUrl || ''}')">
+                        <div class="lec-info">
+                            <span class="lec-title">${lec.name}</span>
+                            <span class="lec-meta"><span class="material-icons" style="font-size:14px;">schedule</span> المحاضرة ${lectureNumber} • شرح متكامل</span>
+                        </div>
+                        <div class="lec-status-icon ${statusClass}">
+                            <span class="material-icons" style="font-size:18px;">${statusIcon}</span>
+                        </div>
+                    </div>`; 
+                }); 
+            } else { 
+                listCard.innerHTML = `<div style="text-align:center; padding:35px; color:var(--grey);"><span class="material-icons" style="font-size:40px; margin-bottom:10px;">folder_off</span><p>لا توجد محاضرات متاحة حالياً لهذه المادة.</p></div>`; 
+            }
+            applyLanguage();
+        }
+
+        function showDynamicLecture(lectureName, fileName, num, cacheIndex, videoUrl) {
+            const quizKey = `completed_quiz_${courseId}_${num}`; 
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+            
+            let resolvedVideoUrl = videoUrl && videoUrl.trim() !== '' ? videoUrl : '';
+            if (!resolvedVideoUrl && fileName && (fileName.includes('drive.google.com') || fileName.includes('youtu'))) {
+                resolvedVideoUrl = fileName;
+            }
+            
+            let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
+            
+            const rawAiData = window.lecturesDataCache[cacheIndex];
+            let aiButtonHtml = '';
+            let isAiHtml = false;
+            
+            if (rawAiData) {
+                const trimmedData = typeof rawAiData === 'string' ? rawAiData.trim() : '';
+                if (trimmedData.endsWith('.html') || trimmedData.endsWith('.htm')) {
+                    isAiHtml = true;
+                    aiButtonHtml = `
+                    <button onclick="openHtmlLectureInsideApp('${trimmedData.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
+                        <span data-ar="فتح المحاضرة التفاعلية ⚡" data-en="Open Interactive HTML Lecture ⚡">فتح المحاضرة التفاعلية (HTML) ⚡</span>
+                    </button>`;
+                } else {
+                    aiButtonHtml = `
+                    <button onclick="openInteractiveLectureByIndex(${cacheIndex}, ${num})" class="btn-card" style="justify-content:center; background: #2563EB; color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(37,99,235,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px; color:#ffffff;">auto_awesome</span> 
+                        <span data-ar="فتح المحاضرة التفاعلية الفاخرة ⚡" data-en="Open Premium Interactive Lecture ⚡">فتح المحاضرة التفاعلية الفاخرة ⚡</span>
+                    </button>`;
+                }
+            }
+
+            let videoButtonHtml = '';
+            if (resolvedVideoUrl && resolvedVideoUrl.trim() !== '') {
+                videoButtonHtml = `
+                <button onclick="openVideoLectureModal('${resolvedVideoUrl}', '${lectureName.replace(/'/g, "\\'")}', ${num}, ${cacheIndex})" class="btn-card" style="justify-content:center; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color:white; border:none; padding:18px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 8px 25px rgba(15,23,42,0.3);">
+                    <span class="material-icons" style="margin-inline-end:10px; color:#2563EB;">smart_display</span> 
+                    <span data-ar="مشاهدة فيديو الشرح 🎬" data-en="Watch Video Lecture 🎬">مشاهدة فيديو الشرح 🎬</span>
+                </button>`;
+            }
+
+            let fileButtonHtml = '';
+            if (fileName && fileName.trim() !== '' && fileName !== 'undefined' && !resolvedVideoUrl && !isAiHtml) {
+                const lowerFileName = fileName.toLowerCase().trim();
+                if (lowerFileName.endsWith('.html') || lowerFileName.endsWith('.htm')) {
+                    fileButtonHtml = `
+                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${lectureName.replace(/'/g, "\\'")}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">web</span> 
+                        <span data-ar="عرض المحاضرة (HTML)" data-en="View Lecture (HTML)">عرض المحاضرة (HTML)</span>
+                    </button>`;
+                } else {
+                    fileButtonHtml = `
+                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span> 
+                        <span data-ar="اقرأ المحاضرة (PDF)" data-en="Read Lecture (PDF)">اقرأ المحاضرة (PDF)</span>
+                    </button>`;
+                }
+            }
+
+            const detailContainer = document.getElementById('lectureDetailInline');
+            const listCard = document.getElementById('lecturesListCard');
+
+            detailContainer.innerHTML = `
+            <div style="animation: fadeInTab 0.3s ease forwards;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="material-icons" style="color:var(--primary); font-size:26px;">school</span>
+                        <h3 style="margin:0; font-size:1.15rem; font-weight:900; color:var(--text);">${lectureName}</h3>
+                    </div>
+                    <button onclick="closeLectureInline()" style="background:var(--light-grey); border:none; padding:6px 14px; border-radius:12px; font-weight:800; color:var(--grey); cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
+                        <span class="material-icons" style="font-size:16px;">arrow_forward</span> <span>رجوع</span>
+                    </button>
+                </div>
+
+                <p style="color:var(--grey); margin-bottom:18px; font-size:0.9rem; font-weight:600;">اختر مسار المذاكرة الذي تفضله لهذه المحاضرة:</p>
+
+                ${videoButtonHtml}
+                ${aiButtonHtml}
+                ${fileButtonHtml}
+                
+                <button class="btn-lecture-quiz" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 12px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
+                    <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
+                </button>
+            </div>`;
+
+            listCard.style.display = 'none';
+            detailContainer.style.display = 'block';
+
+            history.pushState({ view: 'lecture_detail' }, '', '');
+            applyLanguage();
+        }
+
+        function closeLectureInline() {
+            const detailContainer = document.getElementById('lectureDetailInline');
+            const listCard = document.getElementById('lecturesListCard');
+            if(detailContainer) detailContainer.style.display = 'none';
+            if(listCard) listCard.style.display = 'block';
+        }
+
+        // ================= فتح خيارات الامتحانات الذكية =================
+        function openExam(type) {
+            const titleAr = type === 'midterm' ? 'أسئلة الميدترم' : 'أسئلة الفاينل'; 
+            const titleEn = type === 'midterm' ? 'Midterm Exam' : 'Final Exam'; 
+            const title = currentLang === 'en' ? titleEn : titleAr;
+            
+            const detailContainer = document.getElementById('examDetailInline');
+            const listContainer = document.getElementById('examsListContainer');
+
+            listContainer.style.display = 'none';
+            detailContainer.style.display = 'block';
+            history.pushState({ view: 'exam_detail' }, '', '');
+            
+            detailContainer.innerHTML = `
+                <div style="text-align:center; padding:40px; color:var(--primary);">
+                    <span class="material-icons" style="font-size:45px; animation: pulse 1s infinite;">autorenew</span>
+                    <h3 style="margin-top:12px; font-weight:800;">جاري جلب تفاصيل الامتحان...</h3>
+                </div>`;
+            
+            const studentCode = localStorage.getItem('studentCode') || '';
+            const cacheKey = `daheeh_exams_cache_${courseId}`; 
+            
+            fetch(`${SCRIPT_URL}?action=getExams&courseId=${courseId}&code=${encodeURIComponent(studentCode)}&_t=${Date.now()}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { 
+                        alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); 
+                        localStorage.removeItem('isLoggedInDaheeh'); 
+                        window.location.href = 'login.html'; 
+                        return; 
+                    }
+                    if(data.success) { 
+                        localStorage.setItem(cacheKey, JSON.stringify(data)); 
+                        renderExamsInline(data, type, title); 
+                    }
+                })
+                .catch(err => { 
+                    const cachedData = localStorage.getItem(cacheKey);
+                    if (cachedData) { 
+                        renderExamsInline(JSON.parse(cachedData), type, title); 
+                    } else { 
+                        detailContainer.innerHTML = `
+                            <div style="text-align:center; padding:35px; color:#d32f2f;">
+                                <span class="material-icons" style="font-size:45px; margin-bottom:10px;">wifi_off</span>
+                                <h3>تحتاج للإنترنت لعرض المحتوى لأول مرة.</h3>
+                                <button onclick="closeExamInline()" style="margin-top:15px; padding:8px 20px; border-radius:12px; border:none; background:var(--light-grey); font-weight:800; cursor:pointer;">رجوع</button>
+                            </div>`; 
+                        applyLanguage(); 
+                    }
+                });
+        }
+
+        function renderExamsInline(data, type, title) {
+            const detailContainer = document.getElementById('examDetailInline');
+            const fileName = type === 'midterm' ? data.exams.midterm : data.exams.final; 
+            const unsolvedFileName = type === 'midterm' ? data.exams.unsolved_midterm : data.exams.unsolved_final; 
+            
+            const quizKey = `completed_quiz_${courseId}_${type}`; 
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+            
+            // تهيئة نصوص وألوان الزر البنفسجي (زر تحدي الامتحان)
+            let btnTxt = currentLang === 'en' ? 'Interactive Exam Challenge' : 'تحدي الامتحان التفاعلي (بدون إجابات)'; 
+            let btnIcon = 'bolt'; 
+            let btnStyle = 'background:#9c27b0; color:white; border:none; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.25);'; 
+            
+            // إذا كان الطالب قد أجرى الامتحان مسبقاً، يتم تحويل الزر البنفسجي ليكون "إعادة الاختبار (بدون نقاط)"
+            if(isAlreadyCompleted) { 
+                btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                btnIcon = 'replay'; 
+                btnStyle = 'background: rgba(0,0,0,0.05); color: var(--text-grey); box-shadow: none; border: 1px solid var(--text-grey);'; 
+            }
+            
+            let leaderBtnTxt = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل';
+            let pdfHtml = ''; 
+            
+            const isHtmlFile = (url) => {
+                if(!url) return false;
+                const clean = url.toLowerCase().trim();
+                return clean.endsWith('.html') || clean.endsWith('.htm');
+            };
+
+            // 1. زرار الامتحان المحلول (أزرق)
+            if(fileName) {
+                if(isHtmlFile(fileName)) {
+                    pdfHtml += `
+                    <button onclick="openHtmlLectureInsideApp('${fileName.replace(/'/g, "\\'")}', '${title}', '${type}')" class="btn-card" style="justify-content:center; background:#2563EB; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px;">auto_awesome</span>
+                        <span data-ar="الامتحان التفاعلي الذكي (محلول)" data-en="Interactive Smart Exam (Solved)">الامتحان التفاعلي الذكي (محلول)</span>
+                    </button>`;
+                } else {
+                    pdfHtml += `
+                    <button onclick="openPdfViewerInsideApp('${fileName}')" class="btn-card" style="justify-content:center; background:var(--primary); color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(37,99,235,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px;">chrome_reader_mode</span>
+                        <span data-ar="الامتحان بالحل (PDF)" data-en="Exam with Answers (PDF)">الامتحان بالحل (PDF)</span>
+                    </button>`; 
+                }
+            } else { 
+                pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
+            }
+
+            // 2. زرار الامتحان بدون إجابات (البنفسجي أو الرمادي في حال الإعادة)
+            if (unsolvedFileName) {
+                if(isHtmlFile(unsolvedFileName)) {
+                    pdfHtml += `
+                    <button id="quizActionBtn_${type}" onclick="openHtmlLectureInsideApp('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)', '${type}')" class="btn-card" style="justify-content:center; ${btnStyle} padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px;">
+                        <span class="material-icons" style="margin-inline-end:10px;">${btnIcon}</span>
+                        <span id="quizBtnTxt_${type}">${btnTxt}</span>
+                    </button>`;
+                } else {
+                    pdfHtml += `
+                    <button onclick="openPdfViewerInsideApp('${unsolvedFileName}')" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(156,39,176,0.25);">
+                        <span class="material-icons" style="margin-inline-end:10px;">edit_document</span>
+                        <span data-ar="أسئلة بدون إجابات (PDF للحل)" data-en="Unsolved Exam (PDF)">أسئلة بدون إجابات (PDF للحل)</span>
+                    </button>`;
+                }
+            } else {
+                pdfHtml += `
+                <button onclick="alert('سيتم إضافة ملف الأسئلة قريباً')" class="btn-card" style="justify-content:center; background:#9c27b0; color:white; border:none; padding:16px; border-radius:18px; font-size:1.05rem; width:100%; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(156,39,176,0.25);">
+                    <span class="material-icons" style="margin-inline-end:10px;">edit_document</span>
+                    <span data-ar="أسئلة بدون إجابات (PDF للحل)" data-en="Unsolved Exam (PDF)">أسئلة بدون إجابات (PDF للحل)</span>
+                </button>`;
+            }
+            
+            detailContainer.innerHTML = `
+            <div style="animation: fadeInTab 0.3s ease forwards;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="material-icons" style="color:${type === 'midterm' ? '#ff9800' : '#f44336'}; font-size:26px;">assignment</span>
+                        <h3 style="margin:0; font-size:1.15rem; font-weight:900; color:var(--text);">${title}</h3>
+                    </div>
+                    <button onclick="closeExamInline()" style="background:var(--light-grey); border:none; padding:6px 14px; border-radius:12px; font-weight:800; color:var(--grey); cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px;">
+                        <span class="material-icons" style="font-size:16px;">arrow_forward</span> <span>رجوع</span>
+                    </button>
+                </div>
+
+                <p style="color:var(--grey); margin-bottom:18px; font-size:0.9rem; font-weight:600;">اختر مسار المراجعة المناسب لك:</p>
+
+                ${pdfHtml}
+
+                <button class="btn-lecture-quiz" style="background: transparent; color: var(--primary); border: 2px solid var(--primary); margin-top: 12px; box-shadow: none;" onclick="openExamLeaderboard('${quizKey}')">
+                    <span class="material-icons">emoji_events</span> <span>${leaderBtnTxt}</span>
+                </button>
+            </div>`;
+            applyLanguage();
+        }
+
+        function closeExamInline() {
+            const detailContainer = document.getElementById('examDetailInline');
+            const listContainer = document.getElementById('examsListContainer');
+            if(detailContainer) detailContainer.style.display = 'none';
+            if(listContainer) listContainer.style.display = 'block';
+        }
+
+        let isPdfDrawMode = false; let pdfBrushColor = '#0A2647'; let pdfBrushSize = 3; let isPdfDrawing = false; let activePdfCtx = null;
+        function togglePdfDrawMode() {
+            isPdfDrawMode = !isPdfDrawMode;
+            const tools = document.getElementById('pdfDrawTools'); const toggleBtn = document.getElementById('pdfDrawToggleBtn');
+            const drawLayers = document.querySelectorAll('.pdf-draw-layer'); const wrapper = document.getElementById('pdfWrapper');
+            if(isPdfDrawMode) { tools.style.display = 'flex'; toggleBtn.style.color = 'var(--primary)'; drawLayers.forEach(c => c.style.pointerEvents = 'auto'); wrapper.style.touchAction = 'none'; } 
+            else { tools.style.display = 'none'; toggleBtn.style.color = 'var(--text)'; drawLayers.forEach(c => c.style.pointerEvents = 'none'); wrapper.style.touchAction = 'auto'; }
+        }
+
+        function setPdfBrush(color, size, btnEl) {
+            pdfBrushColor = color; pdfBrushSize = size;
+            document.querySelectorAll('#pdfDrawTools .color-btn').forEach(b => b.classList.remove('active')); btnEl.classList.add('active');
+        }
+
+        function attachPdfDrawEvents(drawCanvas) {
+            const ctx = drawCanvas.getContext('2d');
+            const getX = (e) => { const rect = drawCanvas.getBoundingClientRect(); const scaleX = drawCanvas.width / rect.width; return ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX; };
+            const getY = (e) => { const rect = drawCanvas.getBoundingClientRect(); const scaleY = drawCanvas.height / rect.height; return ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY; };
+
+            const startDraw = (e) => { if(!isPdfDrawMode) return; isPdfDrawing = true; activePdfCtx = ctx; ctx.beginPath(); ctx.moveTo(getX(e), getY(e)); e.preventDefault(); };
+            const draw = (e) => {
+                if(!isPdfDrawing || activePdfCtx !== ctx) return;
+                ctx.lineTo(getX(e), getY(e));
+                if(pdfBrushColor === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = pdfBrushSize; } 
+                else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = pdfBrushColor; ctx.lineWidth = pdfBrushSize; }
+                ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(); e.preventDefault();
+            };
+            const stopDraw = () => { isPdfDrawing = false; if(activePdfCtx) activePdfCtx.closePath(); activePdfCtx = null; };
+
+            drawCanvas.addEventListener('mousedown', startDraw); drawCanvas.addEventListener('mousemove', draw); drawCanvas.addEventListener('mouseup', stopDraw); drawCanvas.addEventListener('mouseout', stopDraw);
+            drawCanvas.addEventListener('touchstart', startDraw, {passive: false}); drawCanvas.addEventListener('touchmove', draw, {passive: false}); drawCanvas.addEventListener('touchend', stopDraw);
+        }
+
+        function openPdfViewerInsideApp(pdfUrl) {
+            window.currentOpenedPdf = pdfUrl; 
+            const wrapper = document.getElementById('pdfWrapper'); const watermark = document.getElementById('pdfWatermarkOverlay');
+            wrapper.style.width = '100%'; wrapper.querySelectorAll('div[style*="position: relative"]').forEach(c => c.remove()); 
+            wrapper.querySelectorAll('canvas').forEach(c => c.remove()); wrapper.querySelectorAll('.loading-msg').forEach(m => m.remove());
+            if (watermark) watermark.innerHTML = ''; 
+            
+            isPdfDrawMode = false;
+            if(document.getElementById('pdfDrawTools')) document.getElementById('pdfDrawTools').style.display = 'none';
+            if(document.getElementById('pdfDrawToggleBtn')) document.getElementById('pdfDrawToggleBtn').style.color = 'var(--text)';
+            wrapper.style.touchAction = 'auto';
+
+            const loadingDiv = document.createElement('div'); loadingDiv.className = 'loading-msg'; 
+            loadingDiv.style = "padding:40px; color:var(--primary); font-weight:bold; font-size:1.2rem; text-align:center; width:100%;"; 
+            loadingDiv.innerHTML = `<span class="material-icons" style="font-size:40px; animation: pulse 1s infinite;">hourglass_empty</span><br>${currentLang==='en'?'Loading PDF...':'جاري تحضير الملف...'}`; 
+            wrapper.insertBefore(loadingDiv, watermark); 
+            
+            openModalWithHistory('pdfViewer');
+            
+            const sName = localStorage.getItem('studentName') || "Student"; const sCode = localStorage.getItem('studentCode') || "000"; 
+            const watermarkText = `${sName} - ${sCode}`;
+            
+            pdfjsLib.getDocument({ url: pdfUrl, cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/cmaps/', cMapPacked: true }).promise.then(pdfDoc => {
+                loadingDiv.remove();
+                for (let num = 1; num <= pdfDoc.numPages; num++) {
+                    pdfDoc.getPage(num).then(page => {
+                        const viewport = page.getViewport({ scale: 1.5 }); 
+                        const pageContainer = document.createElement('div'); pageContainer.style.position = 'relative'; pageContainer.style.margin = '0 auto 15px auto'; pageContainer.style.width = '100%';
+                        const canvas = document.createElement('canvas'); canvas.style.display = 'block'; canvas.style.width = '100%'; canvas.style.borderRadius = '8px'; canvas.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)'; canvas.style.position = 'relative'; canvas.style.zIndex = '1'; canvas.height = viewport.height; canvas.width = viewport.width; 
+
+                        const drawCanvas = document.createElement('canvas'); drawCanvas.className = 'pdf-draw-layer'; drawCanvas.style.position = 'absolute'; drawCanvas.style.top = '0'; drawCanvas.style.left = '0'; drawCanvas.style.width = '100%'; drawCanvas.style.height = '100%'; drawCanvas.style.zIndex = '5'; drawCanvas.style.borderRadius = '8px'; drawCanvas.style.pointerEvents = 'none'; drawCanvas.width = viewport.width; drawCanvas.height = viewport.height;
+                        
+                        pageContainer.appendChild(canvas); pageContainer.appendChild(drawCanvas); wrapper.insertBefore(pageContainer, watermark);
+                        
+                        const ctx = canvas.getContext('2d');
+                        page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
+                            ctx.save(); ctx.translate(canvas.width / 2, canvas.height / 2); ctx.rotate(-Math.PI / 4); ctx.font = "bold 28px 'IBM Plex Sans Arabic', sans-serif"; ctx.fillStyle = "rgba(0, 0, 0, 0.15)"; ctx.textAlign = "center";
+                            for (let x = -canvas.width; x < canvas.width * 2; x += 550) { for (let y = -canvas.height; y < canvas.height * 2; y += 350) { ctx.fillText(watermarkText, x, y); } } ctx.restore();
+                            if(typeof attachPdfDrawEvents === 'function') { attachPdfDrawEvents(drawCanvas); }
+                        });
+                    });
+                }
+            }).catch(e => { loadingDiv.innerHTML = `<div style="padding:40px; color:#d32f2f; font-weight:bold;"><span class="material-icons" style="font-size:40px;">error_outline</span><br>${currentLang==='en'?'Failed to load file.':'عذراً، تعذر تحميل الملف.'}</div>`; });
+        }
+
+        let score = 0; let activeQuizQuestions = []; let currentLectureNum = ''; let userAnswers = []; let quizTimerInterval; let remainingQuizTime = 0;
+        
+        function openQuiz(lectureNum, cacheIndex) { 
+            const interModal = document.getElementById('interactiveLectureModal');
+            if (interModal) interModal.style.display = 'none';
+
+            currentLectureNum = lectureNum.toString(); 
+            const courseName = currentLang === 'en' ? course.titleEn : course.titleAr; let dynamicTitle = '';
+            if (currentLectureNum === 'midterm') { dynamicTitle = currentLang === 'en' ? `Midterm Exam - ${courseName}` : `امتحان ميدتيرم لمادة ${courseName}`; } 
+            else if (currentLectureNum === 'final') { dynamicTitle = currentLang === 'en' ? `Final Exam - ${courseName}` : `امتحان الفاينل لمادة ${courseName}`; } 
+            else { dynamicTitle = currentLang === 'en' ? `Lecture ${currentLectureNum} Quiz - ${courseName}` : `اختبار محاضرة ${currentLectureNum} لمادة ${courseName}`; }
+            document.getElementById('quizModalTitle').innerText = dynamicTitle;
+
+            if (cacheIndex !== undefined && window.lecturesDataCache && window.lecturesDataCache[cacheIndex]) {
+                try {
+                    let parsedJson = window.lecturesDataCache[cacheIndex];
+                    if (typeof parsedJson === 'string') {
+                        parsedJson = JSON.parse(parsedJson);
+                    }
+                    if (parsedJson && parsedJson.quiz && parsedJson.quiz.length > 0) {
+                        openModalWithHistory('quizModal');
+                        applyLanguage();
+                        renderQuizData({ questions: parsedJson.quiz });
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            const body = document.getElementById('quizBody');
+            body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--primary);"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite;">autorenew</span><h3 style="margin-top:15px;">جاري تجهيز الأسئلة...</h3></div>`;
+            openModalWithHistory('quizModal'); applyLanguage();
+            
+            const studentCode = localStorage.getItem('studentCode') || ''; const cacheKey = `daheeh_quiz_cache_${courseId}_${currentLectureNum}`; 
+            
+            fetch(`${SCRIPT_URL}?action=getQuizzes&courseId=${courseId}&lectureNum=${currentLectureNum}&code=${studentCode}&_t=${Date.now()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error === 'unauthorized') { alert(currentLang === 'en' ? 'Unauthorized access!' : 'عفواً، الدخول غير مصرح به!'); localStorage.removeItem('isLoggedInDaheeh'); window.location.href = 'login.html'; return; }
+                    if (data.success && data.questions) { localStorage.setItem(cacheKey, JSON.stringify(data)); renderQuizData(data); }
+                })
+                .catch(error => { 
+                    const cachedData = localStorage.getItem(cacheKey);
+                    if (cachedData) { renderQuizData(JSON.parse(cachedData)); } 
+                    else { body.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px; margin-bottom:15px;">wifi_off</span><h3>تحتاج للإنترنت لتحميل الأسئلة لأول مرة!</h3></div>`; applyLanguage(); }
+                });
+        }
+
+        function renderQuizData(data) {
+            const body = document.getElementById('quizBody');
+            if (data.questions && data.questions.length > 0) { 
+                activeQuizQuestions = data.questions; 
+                const stateKey = `quizState_${courseId}_${currentLectureNum}`; const savedState = JSON.parse(localStorage.getItem(stateKey));
+                let defaultTime = (currentLectureNum === 'midterm' || currentLectureNum === 'final') ? 60 * 60 : 10 * 60;
+                
+                if (savedState && savedState.answers && savedState.answers.length === activeQuizQuestions.length && savedState.time > 0) { userAnswers = savedState.answers; remainingQuizTime = savedState.time; } 
+                else { userAnswers = new Array(activeQuizQuestions.length).fill(null); remainingQuizTime = defaultTime; }
+
+                score = 0; showAllQuestions(); startQuizTimer(stateKey);
+            } else { 
+                body.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:60px; margin-bottom:15px; opacity:0.5;">quiz</span><h3>لا توجد أسئلة متاحة!</h3></div>`; applyLanguage(); 
+            }
+        }
+        
+        function startQuizTimer(stateKey) {
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = setInterval(() => {
+                remainingQuizTime--; updateTimerDisplay();
+                localStorage.setItem(stateKey, JSON.stringify({ answers: userAnswers, time: remainingQuizTime }));
+                if (remainingQuizTime <= 0) { clearInterval(quizTimerInterval); alert(currentLang === 'en' ? 'Time is up! Submitting automatically.' : 'انتهى الوقت! سيتم تسليم الامتحان تلقائياً.'); submitFullQuiz(true); }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('quizTimerDisplay'); if(!display) return;
+            let m = Math.floor(remainingQuizTime / 60); let s = remainingQuizTime % 60; display.innerText = (m < 10 ? '0'+m : m) + ':' + (s < 10 ? '0'+s : s);
+            if(remainingQuizTime <= 60) { display.style.color = '#f44336'; display.style.animation = 'pulse 0.5s infinite'; }
+        }
+
+        function showAllQuestions() {
+            const body = document.getElementById('quizBody'); 
+            let html = `<div style="position: sticky; top: -20px; background: var(--card); padding: 12px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+                <div style="font-weight:800; color:var(--primary); display:flex; align-items:center; gap:6px;"><span class="material-icons" style="color:var(--primary);">timer</span> <span>الوقت المتبقي:</span></div>
+                <div id="quizTimerDisplay" style="font-size:1.4rem; font-weight:900; color:var(--primary); font-family:monospace; direction:ltr;">--:--</div></div>`;
+            
+            activeQuizQuestions.forEach((q, qIndex) => {
+                let optsHtml = ''; const qText = currentLang === 'en' ? (q.qEn || q.qAr) : q.qAr; const opts = currentLang === 'en' ? (q.optsEn || q.optsAr) : q.optsAr;
+                opts.forEach((opt, optIndex) => { 
+                    let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    let isSelected = userAnswers[qIndex] === optIndex; let optStyle = isSelected ? 'border-color: var(--primary); background: rgba(37, 99, 235, 0.1);' : ''; let iconDisplay = isSelected ? 'block' : 'none';
+                    optsHtml += `<div class="quiz-opt" id="opt_${qIndex}_${optIndex}" style="${optStyle}" onclick="selectAnswer(${qIndex}, ${optIndex})"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span><span class="material-icons opt-icon" style="display:${iconDisplay}; color:var(--primary); margin-inline-start:10px;">check_circle</span></div>`; 
+                });
+                
+                html += `<div id="question_block_${qIndex}" style="background: var(--card); padding: 22px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); transition: 0.3s;">
+                    <div style="margin-bottom:12px; font-weight:800; color:var(--primary); font-size:0.9rem;">${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`}</div>
+                    <h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div></div>`;
+            });
+            html += `<button class="btn-card" onclick="submitFullQuiz(false)" style="justify-content:center; background:var(--primary); color:#ffffff; font-size:1.2rem; width:100%; margin-top:10px; margin-bottom:30px; border-radius:18px; font-weight:900;"><span class="material-icons" style="margin-inline-end:10px;">done_all</span>${currentLang === 'en' ? 'Submit Exam' : 'تسليم الامتحان'}</button>`;
+            
+            body.innerHTML = html; body.scrollTop = 0; updateTimerDisplay(); applyLanguage();
+        }
+        
+        function selectAnswer(qIndex, optIndex) {
+            userAnswers[qIndex] = optIndex; 
+            const opts = document.querySelectorAll(`[id^="opt_${qIndex}_"]`);
+            opts.forEach(opt => { opt.style.borderColor = 'transparent'; opt.style.background = 'var(--quiz-option-bg)'; opt.querySelector('.opt-icon').style.display = 'none'; });
+            const selectedOpt = document.getElementById(`opt_${qIndex}_${optIndex}`);
+            selectedOpt.style.borderColor = 'var(--primary)'; selectedOpt.style.background = 'rgba(37, 99, 235, 0.1)'; selectedOpt.querySelector('.opt-icon').style.display = 'block';
+            const stateKey = `quizState_${courseId}_${currentLectureNum}`; localStorage.setItem(stateKey, JSON.stringify({ answers: userAnswers, time: remainingQuizTime }));
+            if (navigator.vibrate) { navigator.vibrate(20); }
+        }
+
+        function saveExamScoreToCloud(quizId, currentScore, totalScore) {
+            const sCode = localStorage.getItem('studentCode') || ''; const sName = localStorage.getItem('studentName') || ''; if(!sCode) return;
+            fetch(`${SCRIPT_URL}?action=saveExamScore&quizId=${quizId}&code=${sCode}&name=${encodeURIComponent(sName)}&score=${currentScore}&total=${totalScore}`).then(res => res.json()).catch(err => console.log('Error'));
+        }
+
+        function openExamLeaderboard(quizId) {
+            const modalBody = document.getElementById('examLeaderboardBody');
+            modalBody.innerHTML = `<div style="text-align:center; padding:40px;"><span class="material-icons" style="font-size:50px; animation: pulse 1s infinite; color:#f59e0b;">emoji_events</span><h3 style="margin-top:15px;">جاري جلب لوحة الشرف...</h3></div>`;
+            openModalWithHistory('examLeaderboardModal');
+            const sCode = localStorage.getItem('studentCode') || ''; 
+            fetch(`${SCRIPT_URL}?action=getExamLeaderboard&quizId=${quizId}&code=${sCode}&_t=${Date.now()}`).then(res => res.json()).then(data => {
+                if (data.error === 'unauthorized') { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">gpp_bad</span><h3 style="margin-top:15px;">غير مصرح لك بعرض البيانات</h3></div>`; return; }
+                if(data.success && data.leaderboard && data.leaderboard.length > 0) {
+                    let html = '';
+                    data.leaderboard.forEach((student, index) => {
+                        let medal = ''; if(index === 0) medal = '🥇'; else if(index === 1) medal = '🥈'; else if(index === 2) medal = '🥉'; else medal = `<span style="display:inline-block; width:24px; text-align:center; font-weight:bold; color:var(--grey);">${index + 1}</span>`;
+                        html += `<div style="display:flex; align-items:center; justify-content:space-between; background:var(--card); padding:16px 20px; border-radius:16px; margin-bottom:12px; border:1px solid var(--border-color); box-shadow:var(--card-shadow);">
+                            <div style="display:flex; align-items:center; gap:12px;"><div style="font-size:1.6rem;">${medal}</div><div style="font-weight:800; color:var(--text);">${student.name}</div></div>
+                            <div style="font-weight:900; color:var(--primary); background:rgba(37,99,235,0.08); padding:6px 14px; border-radius:10px;">${student.score} <span style="font-size:0.8rem; color:var(--grey)">/ ${student.total}</span></div></div>`;
+                    }); modalBody.innerHTML = html;
+                } else { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:var(--grey);"><span class="material-icons" style="font-size:50px; opacity:0.5;">sentiment_dissatisfied</span><h3 style="margin-top:15px;">لا يوجد بيانات حتى الآن</h3><p>كن أول من يمتحن ويدخل لوحة الشرف!</p></div>`; }
+            }).catch(err => { modalBody.innerHTML = `<div style="text-align:center; padding:40px; color:#d32f2f;"><span class="material-icons" style="font-size:50px;">wifi_off</span><h3 style="margin-top:15px;">عفواً، فشل الاتصال بالخادم</h3></div>`; });
+        }
+        
+        function submitFullQuiz(forceSubmit = false) {
+            const firstUnansweredIndex = userAnswers.indexOf(null);
+            if (!forceSubmit && firstUnansweredIndex !== -1) {
+                alert(currentLang === 'en' ? 'Please answer all questions! You missed Question ' + (firstUnansweredIndex + 1) : 'عفواً، لازم تجاوب على كل الأسئلة! إنت نسيت السؤال رقم ' + (firstUnansweredIndex + 1));
+                const missedQuestionEl = document.getElementById('question_block_' + firstUnansweredIndex);
+                if(missedQuestionEl) { missedQuestionEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); missedQuestionEl.style.boxShadow = '0 0 15px rgba(244, 67, 54, 0.5)'; missedQuestionEl.style.borderColor = '#f44336';
+                    setTimeout(() => { missedQuestionEl.style.boxShadow = 'var(--card-shadow)'; missedQuestionEl.style.borderColor = 'var(--border-color)'; }, 2000); } return; 
+            }
+            
+            clearInterval(quizTimerInterval); const stateKey = `quizState_${courseId}_${currentLectureNum}`; localStorage.removeItem(stateKey);
+            score = 0; let reviewHtml = '';
+            
+            activeQuizQuestions.forEach((q, qIndex) => {
+                const isCorrect = userAnswers[qIndex] === q.ans; if (isCorrect) score++;
+                let optsHtml = ''; const qText = currentLang === 'en' ? (q.qEn || q.qAr) : q.qAr; const opts = currentLang === 'en' ? (q.optsEn || q.optsAr) : q.optsAr;
+                
+                opts.forEach((opt, optIndex) => {
+                    let safeOpt = opt.toString().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    let optStyle = 'background: var(--quiz-option-bg); border: 2px solid transparent; opacity: 0.6;'; let iconHtml = '';
+                    if (optIndex === q.ans) { optStyle = 'background: #e8f5e9; border-color: #4caf50; color: #2e7d32; opacity: 1; font-weight: bold;'; iconHtml = '<span class="material-icons" style="color:#4caf50; margin-inline-start:10px;">check_circle</span>'; } 
+                    else if (optIndex === userAnswers[qIndex] && !isCorrect) { optStyle = 'background: #ffebee; border-color: #f44336; color: #c62828; opacity: 1;'; iconHtml = '<span class="material-icons" style="color:#f44336; margin-inline-start:10px;">cancel</span>'; }
+                    optsHtml += `<div class="quiz-opt" style="${optStyle} pointer-events: none; display: flex; justify-content: space-between; align-items: center;"><span dir="auto" style="flex: 1; text-align: start;">${safeOpt}</span>${iconHtml}</div>`;
+                });
+                
+                const headerColor = isCorrect ? '#4caf50' : '#f44336'; const headerIcon = isCorrect ? 'check_circle' : 'cancel'; const headerText = userAnswers[qIndex] === null ? (currentLang === 'en' ? 'Not Answered' : 'لم يتم الإجابة') : '';
+                
+                reviewHtml += `<div style="background: var(--card); padding: 20px; border-radius: 18px; margin-bottom: 20px; border: 2px solid ${headerColor}; position: relative; overflow: hidden; box-shadow: var(--card-shadow);">
+                    <div style="position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: ${headerColor};"></div>
+                    <div style="margin-bottom:12px; font-weight:800; color:${headerColor}; display:flex; align-items:center; gap:6px; font-size:0.95rem;">
+                        <span class="material-icons" style="font-size:20px;">${headerIcon}</span> ${currentLang === 'en' ? `Question ${qIndex + 1}` : `السؤال ${qIndex + 1}`} <span style="margin-right:auto;">${headerText}</span>
+                    </div><h3 dir="auto" style="margin-bottom:20px; line-height:1.6; font-size:1.1rem; overflow-x: auto;">${qText}</h3><div>${optsHtml}</div></div>`;
+            });
+            
+            const quizKey = `completed_quiz_${courseId}_${currentLectureNum}`; const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true'; 
+            let xpRewardText = ''; let xpColor = '#4caf50';
+
+            // حفظ السكور في الشيت فقط لأول مرة
+            if (!isAlreadyCompleted) {
+                saveExamScoreToCloud(quizKey, score, activeQuizQuestions.length);
+            }
+
+            if(score > 0) {
+                if (!isAlreadyCompleted) { 
+                    addXP(score); 
+                    localStorage.setItem(quizKey, 'true'); 
+                    let savedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || '';
+                    if(!savedQuizzes.includes(quizKey)) { savedQuizzes += quizKey + ','; localStorage.setItem('daheehAllCompleted_Y4', savedQuizzes); }
+                    syncXPToCloud(); 
+                    
+                    xpRewardText = currentLang === 'en' ? `+${score} Point Earned!` : `+${score} نقطة مكتسبة!`; 
+                    let btnTxtEl = document.getElementById(`quizBtnTxt_${currentLectureNum}`); 
+                    if(btnTxtEl) { btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; btnTxtEl.parentElement.style.background = 'rgba(0,0,0,0.05)'; btnTxtEl.parentElement.style.color = 'var(--text-grey)'; btnTxtEl.parentElement.style.boxShadow = 'none'; btnTxtEl.parentElement.style.border = '1px solid var(--text-grey)'; btnTxtEl.previousElementSibling.innerText = 'replay'; } 
+                } else { xpRewardText = currentLang === 'en' ? `(XP already claimed for this quiz)` : `(حصلت على نقاط هذا الاختبار مسبقاً)`; xpColor = 'var(--text-grey)'; }
+            }
+            
+            const resTitle = currentLang === 'en' ? 'Final Score' : 'النتيجة النهائية'; const finishBtn = currentLang === 'en' ? 'Return to Course' : 'العودة للمادة'; const leaderBtn = currentLang === 'en' ? 'Top 10 Leaderboard' : 'لوحة شرف الأوائل للامتحان';
+            
+            document.getElementById('quizBody').innerHTML = `<div style="text-align:center; padding:25px 0 15px 0; border-bottom: 2px dashed rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <h2 style="color: var(--primary); font-weight:900;">${resTitle}</h2><h1 style="font-size:4.2rem; color:var(--primary); margin: 12px 0; font-weight: 900;">${score} <span style="font-size:2rem; color:var(--grey);">/ ${activeQuizQuestions.length}</span></h1><p style="color:${xpColor}; font-weight:bold; font-size:1.15rem; margin-bottom:20px;">${xpRewardText}</p>
+                <button class="btn-card" onclick="openExamLeaderboard('${quizKey}')" style="justify-content:center; background:var(--primary); color:#ffffff; font-weight:900; margin-bottom:15px; border-radius:16px; padding: 16px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); border:none;"><span class="material-icons" style="margin-inline-end:8px;">emoji_events</span> ${leaderBtn}</button></div>
+            <h3 style="margin-bottom: 20px; color: var(--text); display:flex; align-items:center; gap:8px; font-weight:800;"><span class="material-icons" style="color:var(--primary);">fact_check</span>${currentLang === 'en' ? 'Answers Review:' : 'مراجعة الإجابات والتصحيح:'}</h3>${reviewHtml}
+            <button class="btn-card" onclick="history.back()" style="justify-content:center; background:var(--primary); color:white; margin-top:20px; border-radius:16px; padding: 16px; font-weight:800;"><span class="material-icons" style="margin-inline-end:8px;">arrow_forward</span> ${finishBtn}</button>`;
+            
+            document.getElementById('quizBody').scrollTop = 0; 
+        }
+
+        // ================= كوبري (Bridge) استقبال نتيجة الامتحان التفاعلي الخارجي =================
+        window.saveInteractiveExamScore = function(score, total) {
+            // التحقق من نوع الامتحان المفتوح حالياً (midterm أو final)
+            if (!window.currentActiveExamType) return; 
+            
+            const examType = window.currentActiveExamType; 
+            const quizKey = `completed_quiz_${courseId}_${examType}`;
+            const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
+            
+            if (!isAlreadyCompleted) {
+                // حفظ النتيجة في الشيت للوحة الشرف
+                saveExamScoreToCloud(quizKey, score, total);
+                
+                // إضافة النقاط للـ XP العام (نفس رقم السكور)
+                addXP(score);
+                
+                // منع التكرار
+                localStorage.setItem(quizKey, 'true');
+                let savedQuizzes = localStorage.getItem('daheehAllCompleted_Y4') || '';
+                if(!savedQuizzes.includes(quizKey)) { 
+                    savedQuizzes += quizKey + ','; 
+                    localStorage.setItem('daheehAllCompleted_Y4', savedQuizzes); 
+                }
+                
+                // مزامنة الـ XP مع الشيت
+                syncXPToCloud();
+                
+                alert(`عاش يا بطل! 🚀\nجبت ${score} من ${total}\nتم إضافة النقاط لملفك وتم تسجيلك في لوحة شرف الأوائل للامتحان ده!`);
+                
+                // تغيير شكل الزر البنفسجي لـ "إعادة الاختبار (بدون نقاط)"
+                let btnTxtEl = document.getElementById(`quizBtnTxt_${examType}`); 
+                if(btnTxtEl) { 
+                    btnTxtEl.innerText = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
+                    const actionBtn = document.getElementById(`quizActionBtn_${examType}`);
+                    if(actionBtn) {
+                        actionBtn.style.background = 'rgba(0,0,0,0.05)'; 
+                        actionBtn.style.color = 'var(--text-grey)'; 
+                        actionBtn.style.boxShadow = 'none'; 
+                        actionBtn.style.border = '1px solid var(--text-grey)'; 
+                        const iconSpan = actionBtn.querySelector('.material-icons');
+                        if(iconSpan) iconSpan.innerText = 'replay'; 
+                    }
+                }
+            } else {
+                alert(`ممتاز! 👏\nجبت ${score} من ${total}\n(ملاحظة: حصلت على نقاط هذا الامتحان مسبقاً ولن تُضاف مرة أخرى لمنع التكرار)`);
+            }
+        };
+
+        applyLanguage(); updatePomoDisplay(); fetchXPFromSheet(); loadLectures(); checkActiveMeeting();
+
         function sendOnlineStatus(status) {
             const sCode = localStorage.getItem('studentCode'); if(!sCode) return; 
             fetch(`${SCRIPT_URL}?action=updateStatus&code=${sCode}&status=${encodeURIComponent(status)}`, { keepalive: true }).catch(e => console.log("Error")); 
