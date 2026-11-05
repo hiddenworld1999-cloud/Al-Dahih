@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادئ المالية العامة - المحاضرة الرابعة (ملخص)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
+            
+            --heading-main: #4C1D95;
+            
+            --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 850px;
+            min-height: 1080px;
+            padding: 40px 45px 65px 45px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 20px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--heading-main);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--navy-blue); font-weight: 700; }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 25px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 4px;
+            background-color: var(--gold-primary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        h2 {
+            font-size: 1.4rem; color: var(--heading-main); margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); padding-bottom: 5px; width: fit-content;
+        }
+        h2 span.icon { font-size: 1.2rem; background: rgba(76, 29, 149, 0.1); padding: 4px 10px; border-radius: 6px; }
+
+        h3 {
+            font-size: 1.15rem; color: var(--heading-main); margin: 18px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '❖'; color: var(--gold-primary); font-size: 0.9rem; }
+
+        p, li { font-size: 1rem; margin-bottom: 10px; color: var(--text-main); }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--gold-primary); }
+        ol li::marker { color: var(--heading-main); font-weight: bold; }
+        
+        .boxed-heading {
+            color: var(--heading-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 1.5px solid var(--heading-main);
+            border-radius: 8px;
+            padding: 2px 10px;
+            background-color: rgba(76, 29, 149, 0.05);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .text-red { color: var(--red-alert); font-weight: 800; }
+        .text-blue { color: var(--navy-blue); font-weight: 800; }
+        .text-green { color: var(--emerald-dark); font-weight: 800; }
+
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: rgba(253, 224, 71, 0.4); padding: 2px 4px; border-radius: 4px; font-weight: 700; }
+
+        .summary-box {
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #78350F;
+            font-weight: 700;
+        }
+
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; }
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; }
+        .tip-box h3::before { content: '💡'; }
+
+        .table-wrapper { 
+            overflow-x: hidden; 
+            margin: 15px 0; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            background: #FFF;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+            font-size: 0.9rem; 
+        }
+        th, td { padding: 10px 8px; border: 1px solid var(--border-color); }
+        th { background: rgba(6, 78, 59, 0.08); color: var(--heading-main); font-weight: 800; }
+        tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
+        .highlight-row { background: rgba(16, 185, 129, 0.1); font-weight: bold; border: 1px solid var(--emerald-light); }
+
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 20px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); }
+        .flow-chart { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 1rem; }
+        .flow-op { font-size: 1.6rem; color: var(--gold-primary); font-weight: bold; }
+
+        .quiz-card { background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px 20px; margin-bottom: 15px; }
+        .quiz-q { font-size: 1.02rem; font-weight: 700; color: var(--heading-main); margin-bottom: 10px; }
+        .answer-box { background: rgba(16, 185, 129, 0.1); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 4px; font-weight: 700; color: var(--emerald-dark); font-size: 0.95rem; display: block; }
+        .answer-box.wrong { background: rgba(185, 28, 28, 0.1); border-right-color: var(--red-alert); color: var(--red-alert); }
+        
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 10px 65px 10px; border-radius: 0; border: none; border-bottom: 2px solid var(--gold-primary); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 10px; }
+            ul, ol { margin-right: 15px; }
+            p, li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.78rem; }
+            th, td { padding: 6px 4px; }
+            .boxed-heading { font-size: 0.95rem; padding: 2px 6px; }
+            .flow-box, .flow-box-light { font-size: 0.85rem; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= الصفحة الأولى: الغلاف + مفهوم الإيرادات + التقسيمات ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>مبادئ المالية العامة المعاصرة</h1>
+                <p>المحاضرة الرابعة - الإيرادات العامة</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">شعبة (نظم الأعمال – المحاسبة) | المستوى الرابع | د. فاطمة إبراهيم</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">الفصل الدراسي الأول 2026 / 2027</p>
+            </header>
+
+            <section class="glass-card">
+                <h2><span class="icon">💵</span> أولاً: مفهوم الإيرادات العامة</h2>
+                <p><strong>الإيرادات العامة:</strong> هي الموارد المالية اللي الدولة بتحصل عليها من مصادر معينة، وهي محتاجة ليها عشان تموّل بيها النفقات العامة.</p>
+                
+                <div class="summary-box">
+                    <strong>فكرة بسيطة:</strong> النفقات = المصروفات اللي الدولة بتصرفها. الإيرادات = الفلوس اللي بتدخل للدولة عشان تقدر تصرف. لازم الإيراد يغطي النفقة.
+                </div>
+
+                <h3>مصادر الإيرادات العامة (4 مصادر)</h3>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">الضرائب</div>
+                        <div class="flow-op">+</div>
+                        <div class="flow-box-light">القروض</div>
+                        <div class="flow-op">+</div>
+                        <div class="flow-box">الإيرادات الإدارية</div>
+                        <div class="flow-op">+</div>
+                        <div class="flow-box-light">أملاك الدولة (الدومين)</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🗂️</span> تقسيمات (تصنيفات) الإيرادات العامة</h2>
+                <p>بنقسم الإيرادات العامة بطريقتين:</p>
+
+                <h3>التقسيم الأول: من حيث الإلزام (اختيارية / جبرية)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>النوع</th>
+                            <th>الوصف</th>
+                            <th>أمثلة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>إيرادات اختيارية</strong></td>
+                            <td>بتكون بصفة اختيارية، مش إجبارية.</td>
+                            <td>القروض وإيرادات الدولة.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>إيرادات جبرية</strong></td>
+                            <td>بتكون بصفة إجبارية.</td>
+                            <td>الضرائب وبعض الرسوم.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>التقسيم الثاني: من حيث التكرار (عادية / غير عادية)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>النوع</th>
+                            <th>الوصف</th>
+                            <th>أمثلة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>إيرادات غير عادية</strong></td>
+                            <td>إيرادات مش بتتكرر كل سنة.</td>
+                            <td>القروض.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>إيرادات عادية</strong></td>
+                            <td>بتتكرر كل سنة بشكل دوري.</td>
+                            <td>الضرائب والرسوم وإيرادات الدولة من ممتلكاتها.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الثانية: أملاك الدولة (الدومين) ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🏛️</span> أولاً: أملاك الدولة (الدومين)</h2>
+                <p><strong>التعريف:</strong> هي أملاك بتمتلكها الدولة وتُسمى بالقطاع العام للدولة، وتُسمى كمان بـ<strong>الدومين</strong>. يعني الدومين هو نفسه أملاك الدولة.</p>
+                
+                <h3>ينقسم الدومين إلى نوعين:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th>الدومين العام</th>
+                            <th>الدومين الخاص</th>
+                        </tr>
+                        <tr>
+                            <td><strong>التعريف</strong></td>
+                            <td>أملاك الدولة المخصصة للاستعمال العام.</td>
+                            <td>أملاك الدولة الخاصة من منشآت إنتاجية وزراعية وتجارية.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>أمثلة</strong></td>
+                            <td>الطرق، الكباري.</td>
+                            <td>المنشآت الإنتاجية والتجارية والزراعية.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الهدف</strong></td>
+                            <td>مخصص للجمهور بدون مقابل.</td>
+                            <td>يهدف إلى الربح وتحقيق عائد مادي للدولة.</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>هل يدر عائداً؟</strong></td>
+                            <td>لا يدر عائداً على الدولة.</td>
+                            <td>يدر عائداً على الدولة.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="tip-box">
+                    <h3>مفتاح الحفظ</h3>
+                    <p>لو الأملاك دي <strong>بيستخدمها الجمهور ببلاش</strong> (طرق وكباري) = <strong>دومين عام</strong>. لو الدولة بتستغلها <strong>لتحقيق ربح</strong> = <strong>دومين خاص</strong>.</p>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🧩</span> أنواع الدومين الخاص (3 أنواع)</h2>
+                <ol>
+                    <li>
+                        <span class="boxed-heading">الدومين العقاري</span><br>
+                        زي أملاك الدولة من الأراضي الزراعية، والمناجم، والمحاجر، والعقارات.
+                    </li>
+                    <li>
+                        <span class="boxed-heading">الدومين الصناعي والتجاري</span><br>
+                        ومع زيادة تدخل الدولة في النشاط الاقتصادي، قامت بإنشاء مشروعات إنتاجية وتجارية، وده اللي زوّد الدومين الصناعي والتجاري. وده بيهدف لإنتاج السلع وبيعها للأفراد بما يسمى <strong>«بالثمن العام»</strong>.
+                    </li>
+                    <li>
+                        <span class="boxed-heading">الدومين المالي</span><br>
+                        وهو ممتلكات الدولة من الأوراق المالية، سواء كانت في صورة <strong>أسهم</strong> أو <strong>سندات</strong>.
+                    </li>
+                </ol>
+
+                <div class="summary-box">
+                    <strong>تلخيص سريع:</strong> عقاري = أراضي وعقارات. صناعي وتجاري = مشروعات بتنتج وتبيع. مالي = أسهم وسندات.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الثالثة: الإيرادات الإدارية (الرسوم) ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🧾</span> ثانياً: الإيرادات الإدارية للدولة</h2>
+                <p>الإيرادات الإدارية بتنقسم لنوعين رئيسيين:</p>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-box">الرسوم</div>
+                        <div class="flow-op">+</div>
+                        <div class="flow-box-light">الإتاوة (رسوم التحسين)</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">📌</span> الرسوم: التعريف والعناصر</h2>
+                <p><strong>التعريف:</strong> مبلغ من النقود يدفعه الفرد <strong>جبراً</strong> إلى الدولة، مقابل ما تقدمه له من <strong>نفع خاص</strong> يؤدي إلى تحقيق <strong>نفع عام</strong>.</p>
+                <p>وبمعنى تاني: الرسم هو مبلغ من المال يدفعه المواطن لهيئة عامة، مقابل خدمة خاصة ذات نفع عام تؤدى له بناءً على طلبه.</p>
+
+                <h3>عناصر الرسوم الأربعة الرئيسية</h3>
+                <ol>
+                    <li><strong>عنصر الصفة النقدية:</strong> يعني الرسم بيتدفع فلوس (نقود).</li>
+                    <li><strong>عنصر الإجبار:</strong> يعني إجباري مش اختياري.</li>
+                    <li><strong>عنصر المقابل:</strong> يعني في خدمة/مقابل بياخده الفرد.</li>
+                    <li><strong>عنصر تحقيق النفع العام والخاص معاً:</strong> مش نفع خاص بس، ده فيه نفع عام كمان.</li>
+                </ol>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> تقدير مستوى الرسم</h2>
+                <p>الأصل في الرسوم إن قيمتها تكون <strong>أقل من تكلفة الخدمة</strong> المقدمة لدافع الرسم، ليه؟ لأن الجهات الإدارية بتغطي جزء من نفقاتها بالرسوم، وتغطي الباقي من <strong>الضرائب</strong>، لأن النفع اللي بيتولد من الرسم نفع عام بجانب النفع الخاص.</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>الحالة</th>
+                            <th>الشرح</th>
+                        </tr>
+                        <tr>
+                            <td><strong>الأصل</strong></td>
+                            <td>قيمة الرسم <strong>أقل</strong> من تكلفة الخدمة.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>أحياناً</strong></td>
+                            <td>قيمة الرسم <strong>تتساوى</strong> مع قيمة الخدمة المقدمة.</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>لا يمكن</strong></td>
+                            <td>قيمة الرسم <strong>تتجاوز</strong> قيمة الخدمة. لأن كده الرسم بيحمل جواه <strong>ضريبة مستترة</strong>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="alert-box">
+                    <h3>مثال على الضريبة المستترة</h3>
+                    <p>رسوم التوثيق العقاري حالياً، لما بتزيد، بتعتبر <strong>ضريبة على تداول الثروة</strong> (مش رسم حقيقي)، لأنها بتتجاوز قيمة الخدمة.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الرابعة: الإتاوة + الفرق بينها وبين الرسوم ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🏗️</span> الإتاوة (مقابل التحسين)</h2>
+                <p><strong>التعريف:</strong> هي مبلغ من المال بتلزم بيه الدولة بعض <strong>ملاك العقارات</strong> بدفعه، مقابل <strong>منفعة خاصة</strong> تحققت لهم، نتيجة قيام الدولة بأعمال هدفها أصلاً <strong>تحقيق نفع عام</strong> (زي إنشاء شارع، أو تخطيط ميدان، أو إقامة كوبري).</p>
+                <p>فبجانب النفع العام، صاحب العقار بيحصل على <strong>نفع خاص</strong> نتيجة ارتفاع قيمة عقاراته، فبالتالي الدولة بتقوم بتحصيل <strong>مقابل التحسين</strong> وده اللي بنسميه <strong>الإتاوة</strong>.</p>
+
+                <div class="tip-box">
+                    <h3>مثال يوضح الفكرة</h3>
+                    <p>الدولة عملت كوبري جديد (ده نفع عام للكل). بس اللي عنده عقار جنب الكوبري، قيمة عقاره زادت (ده نفع خاص ليه). فالدولة بتاخد منه مبلغ مقابل الزيادة دي = إتاوة (مقابل التحسين).</p>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔍</span> الفرق بين الإتاوات والرسوم</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th>الرسوم</th>
+                            <th>الإتاوات</th>
+                        </tr>
+                        <tr>
+                            <td><strong>التكرار</strong></td>
+                            <td>بيتكرر دفعه بتكرار الحصول على الخدمة.</td>
+                            <td>بتتدفع مرة واحدة فقط.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>من يلتزم بها</strong></td>
+                            <td>كافة أفراد المجتمع الراغبين في خدمات الدولة.</td>
+                            <td>أصحاب العقارات فقط.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>أساس التقدير</strong></td>
+                            <td>على نصيب الفرد من تكاليف الخدمة المقدمة إليه.</td>
+                            <td>على الزيادة في قيمة العقار.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="summary-box">
+                    <strong>خلاصة سريعة:</strong> الرسم = مقابل خدمة متكررة بتقدمها الدولة لأي حد يطلبها. الإتاوة = مقابل تحسين بيحصل مرة واحدة، وأصحاب العقارات بس اللي بيدفعوها.
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الخامسة: الضرائب + الأركان ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🧮</span> ثالثاً: الضرائب - التعريف والخصائص</h2>
+                <p><strong>تعريف الضريبة:</strong> هي فريضة مالية جبرية، بيلزم المموّل بدفعها <strong>دون مقابل خاص</strong>، وتهدف إلى تغطية النفقات العامة تحقيقاً لمصالح المجتمع، وبتكون في شكل نقود.</p>
+                <p>وبمعنى تاني: مبلغ من النقود بتجبيه الدولة جبراً من الأفراد دون مقابل، وذلك لتمويل نفقاتها العامة وتحقيق الأهداف النابعة من مضمون فلسفتها السياسية.</p>
+
+                <h3>خصائص الضريبة الأربعة</h3>
+                <ol>
+                    <li><span class="text-red">الضريبة مبلغ من النقود.</span></li>
+                    <li><span class="text-red">الضريبة تدفع جبراً.</span></li>
+                    <li><span class="text-red">الضريبة ليس لها مقابل معين.</span></li>
+                    <li><span class="text-red">الضريبة تدفع بصفة نهائية.</span></li>
+                </ol>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🏛️</span> أركان الضريبة الأربعة</h2>
+                
+                <h3>1- فريضة جبرية تصدر عن السلطة التقديرية للدولة</h3>
+                <p>يعني الخاضعين للضريبة ليس لديهم خيار في دفعها أو عدمه، بل هم ملزمين بأدائها دون النظر لرضاهم أو عدم رضاهم. والدولة بتمارس سلطتها في فرض وتحصيل الضريبة، وهي اللي بتحدد <strong>وعاء الضريبة</strong> و<strong>سعرها</strong> و<strong>أسلوب تحصيلها</strong>.</p>
+
+                <h3>2- الضريبة فريضة بلا مقابل خاص</h3>
+                <p>فرض الضريبة على الممولين مش بيتطلب وجود نفع خاص يعود عليهم من فرضها، فبتتفرض بناءً على <strong>المقدرة التمويلية</strong> للفرد الممول مش بناءً على النفع اللي يعود عليه. وده مش معناه إنه مش بيحصل على منفعة، لكنه بيحصل عليها <strong>بصفته عضواً في المجتمع</strong> مش بصفته دافعاً للضريبة.</p>
+
+                <h3>3- الغرض من الضريبة تحقيق أهداف عامة</h3>
+                <p>الضريبة بتهدف لتحقيق نفع عام. وكان زمان الاعتقاد السائد إن الضرائب ليها غرض مالي فقط (تغطية النفقات العامة)، لكن بعد ظهور <strong>الفكر الكينزي</strong> وتطور المالية العامة، أصبح للضرائب أهداف عامة متعددة، منها <strong>أهداف اجتماعية وسياسية واقتصادية</strong>.</p>
+
+                <h3>4- حصيلة الضريبة مبلغ من النقود</h3>
+                <p>الاتجاه السائد في العصر الحديث إن الضريبة تتحصل في صورة <strong>نقدية</strong> مش عينية (زي ما كان زمان)، فالنفقات العامة بقت في صورة نقدية، وده بيخلي الضريبة لازم تكون في صورة نقدية برضه، نظراً لسهولة تحصيلها وانخفاض تكلفة تحصيلها.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة السادسة: المقارنة + المفاهيم الأساسية ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> المقارنة بين الرسم والضريبة</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th>الرسم</th>
+                            <th>الضريبة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>الشكل</strong></td>
+                            <td colspan="2">كلاهما يأخذ <strong>شكل نقدي</strong> (تشابه).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الإلزام</strong></td>
+                            <td colspan="2">كلاهما <strong>إلزامي</strong> الدفع (تشابه).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>المقابل</strong></td>
+                            <td>مقابل <strong>نفع خاص وعام</strong>.</td>
+                            <td>مقابل <strong>نفع عام فقط</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الأهداف</strong></td>
+                            <td>غرض <strong>مالي فقط</strong>.</td>
+                            <td>ليها أهداف <strong>اقتصادية واجتماعية ومالية</strong>.</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">📚</span> بعض المفاهيم الأساسية المتعلقة بالضريبة</h2>
+                
+                <h3>وعاء الضريبة</h3>
+                <p>هو المادة الضريبية اللي بيختارها المشرع المالي، ويفرض عليها الضريبة، وهذه المادة إما تكون <strong>شخصاً</strong> أو <strong>مالاً</strong>.</p>
+
+                <h3>سعر الضريبة</h3>
+                <p>هو نسبة ما يدفعه المكلف كضريبة إلى مقدار الوعاء الضريبي أو المادة الخاضعة لها.</p>
+
+                <h3>الازدواج الضريبي</h3>
+                <p>بيُقصد بيه فرض الضريبة نفسها أكثر من مرة على الشخص ذاته، وعن المال نفسه، وفي المدة ذاتها.</p>
+
+                <h3>التهرب الضريبي</h3>
+                <p>بيُقصد بيه الظاهرة اللي بيحاول بواسطتها الشخص المكلف التخلص من دفع الضريبة كلها أو بعضها.</p>
+
+                <h3>نقل عبء الضريبة</h3>
+                <p>بيُقصد بيه إن اللي بيدفع الضريبة مش هو اللي يتحملها نهائياً، وإنما بيقوم بنقل عبئها إلى غيره. والنقل ده إما يكون <strong>كلياً</strong> أو <strong>جزئياً</strong>، أو يكون <strong>مقصوداً</strong> أو <strong>غير مقصود</strong>.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 6</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة السابعة: أسئلة صح وخطأ ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 15px; border-bottom: none; margin-bottom: 10px;">
+                <h1 style="font-size: 1.8rem; color: var(--red-alert);">ضع علامة (صح) أو (خطأ)</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. النفقات العامة هي تلك الموارد المالية التي تحصل عليها الدولة من مصادر معينة والتي تحتاج إليها لتمويل النفقات العامة. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. ده تعريف <strong>الإيرادات العامة</strong>، أما النفقات فهي اللي بتتمول بيها.</div>
+            </div>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">2. تتكون الإيرادات العامة من ممتلكات الدولة (الدومين) فقط. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. الإيرادات العامة بتتكون من 4 مصادر: الضرائب، القروض، الإيرادات الإدارية، أملاك الدولة (الدومين). فالدومين واحد بس من المصادر.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. ممتلكات الدولة هي التي تسمى بالقطاع العام للدولة وتسمى بالدومين أيضاً. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">4. الدومين الخاص هو ممتلكات الدولة المخصصة للاستعمال العام مثل الطرق والكباري، والأصل في الدومين العام أنه مخصص للجمهور بدون مقابل، أي أن الدومين العام لا يدر عائداً على الدولة. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. فيه خلط بين المفهومين: الوصف ده كله بيخص <strong>الدومين العام</strong>، أما <strong>الدومين الخاص</strong> فهو اللي بيهدف للربح ويدر عائداً على الدولة (زي المنشآت الإنتاجية والتجارية).</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">5. الدومين العقاري هو عبارة عن ممتلكات الدولة من الأوراق المالية سواء كانت في صورة أسهم أو سندات. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. الوصف ده بيخص <strong>الدومين المالي</strong>. أما <strong>الدومين العقاري</strong> فهو الأراضي الزراعية والمناجم والمحاجر والعقارات.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">6. الأصل في الرسوم أن تكون قيمتها أكبر من تكلفة الخدمة المقدمة إلى دافع الرسم. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. الأصل إن قيمة الرسم <strong>أقل</strong> من تكلفة الخدمة، ولو زادت عنها بتبقى ضريبة مستترة.</div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 7</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الثامنة: اختر الإجابة + الأبحاث ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 10px; border-bottom: none; margin-bottom: 5px;">
+                <h1 style="font-size: 1.8rem; color: var(--red-alert);">اختر الإجابة الصحيحة</h1>
+            </header>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. مبلغ من النقود يدفعه الفرد جبراً إلى الدولة مقابل ما تقدمه له من نفع خاص يؤدي إلى تحقيق نفع عام:</div>
+                <div class="answer-box">
+                    الإجابة الصحيحة: <strong>ب - الرسوم</strong>.<br>
+                    <span style="color:#4B5563; font-weight:600;">ليه؟ لأن ده تعريف الرسم بالظبط (مقابل نفع خاص + نفع عام). أما الضريبة فمقابل نفع عام فقط، وأملاك الدولة والقروض مش كده.</span>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">2. من عناصر الرسوم:</div>
+                <div class="answer-box">
+                    الإجابة الصحيحة: <strong>د - كل ما سبق</strong>.<br>
+                    <span style="color:#4B5563; font-weight:600;">العناصر هي: عنصر الإجبار + عنصر المقابل + عنصر تحقيق النفع العام والخاص معاً (+ الصفة النقدية).</span>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. هي مبلغ من المال تلزم الدولة بعض ملاك العقارات بدفعه مقابل منفعة خاصة تحققت لهم، نتيجة قيام الدولة بأعمال الهدف منها أصلاً تحقيق نفع عام:</div>
+                <div class="answer-box">
+                    الإجابة الصحيحة: <strong>الإتاوة (مقابل التحسين)</strong>.<br>
+                    <span style="color:#4B5563; font-weight:600;">زى ما شرحنا: الدولة عملت حاجة هدفها نفع عام، بس أصحاب العقارات حصلوا على نفع خاص، فبتاخد منهم مقابل التحسين = الإتاوة.</span>
+                </div>
+            </div>
+
+            <section class="glass-card" style="margin-top: 25px;">
+                <h2><span class="icon">📝</span> الأبحاث المطلوبة</h2>
+                <ol>
+                    <li>النفقات العامة في مصر.</li>
+                    <li>الإيرادات العامة في مصر.</li>
+                    <li>الموازنة العامة وتطورها في مصر.</li>
+                    <li>السياسة المالية في مصر.</li>
+                    <li>تطور النظام الضريبي في مصر.</li>
+                </ol>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 8</div>
+        </div>
+    </div>
+
+</body>
+</html>
