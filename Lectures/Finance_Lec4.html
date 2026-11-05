@@ -329,10 +329,10 @@
         .highlight-row { background: rgba(16, 185, 129, 0.1); font-weight: bold; border: 1px solid var(--emerald-light); }
 
         .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 20px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); }
-        .flow-chart { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; direction: rtl; }
-        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 1rem; }
-        .flow-op { font-size: 1.6rem; color: var(--gold-primary); font-weight: bold; }
+        .flow-chart { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 20px; border-radius: 6px; font-weight: 700; font-size: 1.1rem; }
+        .flow-op { font-size: 2rem; color: var(--gold-primary); font-weight: bold; }
 
         .quiz-card { background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px 20px; margin-bottom: 15px; }
         .quiz-q { font-size: 1.02rem; font-weight: 700; color: var(--heading-main); margin-bottom: 10px; }
@@ -387,17 +387,19 @@
 
                 <h3>مصادر الإيرادات العامة (4 مصادر)</h3>
                 
+                <!-- التعديل هنا: توزيع المربعات عشان تبقى جنب بعض ومتتقصش -->
                 <div class="diagram-container" style="padding: 15px 5px;">
-                    <div class="flow-chart" style="flex-wrap: nowrap; gap: 5px; width: 100%;">
-                        <div class="flow-box-light" style="font-size: 0.85rem; padding: 8px 10px; white-space: nowrap;">أملاك الدولة (الدومين)</div>
-                        <div class="flow-op" style="font-size: 1.2rem;">+</div>
-                        <div class="flow-box" style="font-size: 0.85rem; padding: 8px 10px; white-space: nowrap;">الإيرادات الإدارية</div>
-                        <div class="flow-op" style="font-size: 1.2rem;">+</div>
-                        <div class="flow-box-light" style="font-size: 0.85rem; padding: 8px 10px; white-space: nowrap;">الضرائب</div>
-                        <div class="flow-op" style="font-size: 1.2rem;">+</div>
-                        <div class="flow-box" style="font-size: 0.85rem; padding: 8px 10px; white-space: nowrap;">القروض</div>
+                    <div class="flow-chart" style="flex-wrap: nowrap; gap: 4px; width: 100%; justify-content: center;">
+                        <div class="flow-box-light" style="font-size: 0.8rem; padding: 8px 8px; white-space: nowrap; flex-shrink: 1;">أملاك الدولة (الدومين)</div>
+                        <div class="flow-op" style="font-size: 1.2rem; flex-shrink: 0;">+</div>
+                        <div class="flow-box" style="font-size: 0.8rem; padding: 8px 8px; white-space: nowrap; flex-shrink: 1;">الإيرادات الإدارية</div>
+                        <div class="flow-op" style="font-size: 1.2rem; flex-shrink: 0;">+</div>
+                        <div class="flow-box-light" style="font-size: 0.8rem; padding: 8px 8px; white-space: nowrap; flex-shrink: 1;">الضرائب</div>
+                        <div class="flow-op" style="font-size: 1.2rem; flex-shrink: 0;">+</div>
+                        <div class="flow-box" style="font-size: 0.8rem; padding: 8px 8px; white-space: nowrap; flex-shrink: 1;">القروض</div>
                     </div>
                 </div>
+                <!-- نهاية التعديل -->
 
             </section>
 
