@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        /* 1. منع تحديد النصوص والنسخ والقوائم المنبثقة على الموبايل والكمبيوتر */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* 2. إخفاء الصفحة تماماً لو حاول أي شخص طباعتها أو حفظها كـ PDF */
+        @media print {
+            html, body { display: none !important; }
+        }
+
+        /* 3. شاشة التعتيم الفوري عند محاولة التقاط الشاشة على الكمبيوتر */
+        #antiScreenshotShield {
+            position: fixed;
+            inset: 0;
+            background: #020202;
+            color: #ffffff;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999999;
+            font-family: 'Cairo', sans-serif;
+            text-align: center;
+        }
+
+        /* 4. شبكة العلامة المائية الشفافة ببيانات الطالب المتكيفة مع الأبيض والأسود */
+        #watermarkGrid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.12;
+        }
+
+        .watermark-item {
+            transform: rotate(-25deg);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding: 35px;
+            font-family: monospace;
+            user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8), 1px 1px 2px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+
+    <script>
+        // 1. فحص هل المستخدم هو الأدمن
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            // منع كليك يمين واختصارات المطورين
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // 2. تشغيل العلامة المائية وشاشة التعتيم
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح";
+            let sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية الموحد لمنصة الدحيح ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادئ المالية العامة - المحاضرة الخامسة (ملخص)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
+            
+            --heading-main: #4C1D95;
+            
+            --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            padding: 30px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px; 
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 850px;
+            min-height: 1080px;
+            padding: 40px 45px 65px 45px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 30px; margin-bottom: 20px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem; font-weight: 700; color: var(--heading-main);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.1rem; color: var(--navy-blue); font-weight: 700; }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 25px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 4px;
+            background-color: var(--gold-primary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        h2 {
+            font-size: 1.4rem; color: var(--heading-main); margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); padding-bottom: 5px; width: fit-content;
+        }
+        h2 span.icon { font-size: 1.2rem; background: rgba(76, 29, 149, 0.1); padding: 4px 10px; border-radius: 6px; }
+
+        h3 {
+            font-size: 1.15rem; color: var(--heading-main); margin: 18px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 8px;
+        }
+        h3::before { content: '❖'; color: var(--gold-primary); font-size: 0.9rem; }
+
+        p, li { font-size: 1rem; margin-bottom: 10px; color: var(--text-main); }
+        ul, ol { margin-right: 25px; margin-bottom: 15px; }
+        ul li::marker { color: var(--gold-primary); }
+        ol li::marker { color: var(--heading-main); font-weight: bold; }
+        
+        .boxed-heading {
+            color: var(--heading-main);
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: 1.5px solid var(--heading-main);
+            border-radius: 8px;
+            padding: 2px 10px;
+            background-color: rgba(76, 29, 149, 0.05);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .text-red { color: var(--red-alert); font-weight: 800; }
+        .text-blue { color: var(--navy-blue); font-weight: 800; }
+        .text-green { color: var(--emerald-dark); font-weight: 800; }
+
+        strong { color: var(--navy-blue); font-weight: 800; }
+        .highlight { background-color: rgba(253, 224, 71, 0.4); padding: 2px 4px; border-radius: 4px; font-weight: 700; }
+
+        .summary-box {
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            color: #78350F;
+            font-weight: 700;
+        }
+
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; }
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 15px 20px; border-radius: 6px; margin: 15px 0; }
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; }
+        .tip-box h3::before { content: '💡'; }
+
+        .table-wrapper { 
+            overflow-x: hidden; 
+            margin: 15px 0; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            background: #FFF;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+            font-size: 0.9rem; 
+        }
+        th, td { padding: 10px 8px; border: 1px solid var(--border-color); }
+        th { background: rgba(6, 78, 59, 0.08); color: var(--heading-main); font-weight: 800; }
+        tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
+        .highlight-row { background: rgba(16, 185, 129, 0.1); font-weight: bold; border: 1px solid var(--emerald-light); }
+
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; padding: 20px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); }
+        .flow-chart { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; direction: rtl; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: 1rem; }
+        .flow-op { font-size: 1.6rem; color: var(--gold-primary); font-weight: bold; }
+
+        /* Responsive fixes for flow-chart */
+        .sources-diagram .flow-chart {
+            flex-wrap: nowrap;
+            gap: 5px;
+            width: 100%;
+            justify-content: center;
+        }
+        .sources-diagram .flow-box,
+        .sources-diagram .flow-box-light {
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            white-space: nowrap;
+        }
+        .sources-diagram .flow-op {
+            font-size: 1.2rem;
+        }
+
+        .quiz-card { background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px 20px; margin-bottom: 15px; }
+        .quiz-q { font-size: 1.02rem; font-weight: 700; color: var(--heading-main); margin-bottom: 10px; }
+        .answer-box { background: rgba(16, 185, 129, 0.1); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 4px; font-weight: 700; color: var(--emerald-dark); font-size: 0.95rem; display: block; }
+        .answer-box.wrong { background: rgba(185, 28, 28, 0.1); border-right-color: var(--red-alert); color: var(--red-alert); }
+        
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        @media (max-width: 800px) {
+            body { padding: 0; gap: 10px; }
+            .a4-page { width: 100vw; min-height: 100vh; padding: 15px 10px 65px 10px; border-radius: 0; border: none; border-bottom: 2px solid var(--gold-primary); margin-bottom: 5px; }
+            .hero-header h1 { font-size: 1.8rem; }
+            .glass-card { padding: 12px 10px; }
+            ul, ol { margin-right: 15px; }
+            p, li { font-size: 0.9rem; }
+            .watermark { width: 200px; height: 200px; }
+            table { font-size: 0.78rem; }
+            th, td { padding: 6px 4px; }
+            .boxed-heading { font-size: 0.95rem; padding: 2px 6px; }
+            
+            .sources-diagram .flow-chart {
+                flex-wrap: wrap; 
+                gap: 8px;
+            }
+            .sources-diagram .flow-box,
+            .sources-diagram .flow-box-light {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+                white-space: normal; 
+                text-align: center;
+            }
+            .sources-diagram .flow-op {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= الصفحة الأولى: الغلاف + تعريف الضريبة + الأركان (1 و 2) ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header">
+                <h1>مبادئ المالية العامة المعاصرة</h1>
+                <p>المحاضرة الخامسة - الضرائب (تعريف، أركان، قواعد، أنواع)</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">شعبة (نظم الأعمال – المحاسبة) | المستوى الرابع | د. فاطمة إبراهيم</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">الفصل الدراسي الأول 2026 / 2027</p>
+            </header>
+
+            <section class="glass-card">
+                <h2><span class="icon">🧮</span> أولاً: تعريف الضريبة وخصائصها</h2>
+                <p><strong>تعريف الضريبة:</strong> هي فريضة مالية جبرية، يلزم المول بدفعها دون مقابل خاص، وتهدف إلى تغطية النفقات العامة تحقيقاً لمصالح المجتمع، ويكون في شكل نقود.</p>
+                <p>يعني ببساطة: مبلغ فلوس بتاخده الدولة منك <strong>بالعافية</strong>، <strong>من غير ما تديك حاجة معينة في المقابل</strong>، عشان تقدر تصرف على مصالح البلد.</p>
+
+                <div class="summary-box">
+                    <strong>خصائص الضريبة الأربعة (حفظ):</strong>
+                    <ol>
+                        <li>الضريبة مبلغ من النقود.</li>
+                        <li>الضريبة تدفع جبراً.</li>
+                        <li>الضريبة ليس لها مقابل معين.</li>
+                        <li>الضريبة تدفع بصفة نهائية.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🏛️</span> ثانياً: أركان الضريبة الأربعة</h2>
+                
+                <h3>1- فريضة جبرية تصدر عن السلطة التقديرية للدولة</h3>
+                <p>يعني إنت كفرد مالكش خيار تدفع أو متدفعش، إنت ملزم تدفع سواء راضي أو مش راضي. والدولة هي اللي بتحدد <strong>وعاء الضريبة</strong> (الحاجة اللي بتتحسب عليها)، و<strong>سعرها</strong>، و<strong>طريقة تحصيلها</strong>.</p>
+
+                <h3>2- الضريبة فريضة بلا مقابل خاص</h3>
+                <p>الدولة مش بتاخد منك الضريبة عشان تديك خدمة معينة إنت طلبتها (زي الرسم)، هي بتاخدها بناءً على <strong>قدرتك المالية</strong> (مقدرتك التمويلية). طبعاً إنت بتستفيد منها كعضو في المجتمع (زي الأمن والتعليم)، بس مش بصفة إنك دافع الضريبة نفسه.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 1</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الثانية: الأركان (3 و 4) + المقارنة مع الرسم ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🎯</span> ثانياً: أركان الضريبة (تكملة)</h2>
+                
+                <h3>3- الغرض من الضريبة تحقيق أهداف عامة</h3>
+                <p>الضريبة بتهدف لتحقيق نفع عام. زمان كانوا فاكرين إن هدف الضريبة الوحيد هو <strong>مالي</strong> (عشان تغطي نفقات الدولة بس)، لكن بعد ظهور <strong>الفكر الكينزي</strong> وتطور المالية العامة، بقى ليها أهداف تانية <strong>اجتماعية واقتصادية وسياسية</strong> (زي إعادة توزيع الدخل أو الحد من الاستهلاك الضار).</p>
+
+                <h3>4- حصيلة الضريبة مبلغ من النقود</h3>
+                <p>دلوقتي الضريبة بتتحصل فلوس (نقود) مش عيني (زي زمان اللي كانوا بيدفعوا قمح أو مواشي)، والسبب إن النفقات العامة بقت بتتصرف فلوس، فبتكون أسهل في التحصيل وتكلفتها أقل.</p>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> المقارنة بين الرسم والضريبة</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>وجه المقارنة</th>
+                            <th>الرسم</th>
+                            <th>الضريبة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>الشكل (وجه الشبه)</strong></td>
+                            <td colspan="2">كلاهما يأخذ <strong>شكل نقدي</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الإلزام (وجه الشبه)</strong></td>
+                            <td colspan="2">كلاهما <strong>إلزامي</strong> الدفع.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>المقابل (وجه الاختلاف)</strong></td>
+                            <td>مقابل <strong>نفع خاص وعام</strong> (خدمة معينة بتاخدها).</td>
+                            <td>مقابل <strong>نفع عام فقط</strong> (من غير خدمة مخصصة).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الأهداف (وجه الاختلاف)</strong></td>
+                            <td>ليها غرض <strong>مالي فقط</strong>.</td>
+                            <td>ليها أهداف <strong>اقتصادية واجتماعية ومالية</strong>.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="tip-box">
+                    <h3>مفتاح الحفظ</h3>
+                    <p>الرسم دايمًا مرتبط بخدمة بتاخدها (مقابل). الضريبة بتدفعها عشان إنت مواطن وعندك فلوس، مش عشان بتاخد خدمة معينة.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 2</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الثالثة: المفاهيم الأساسية ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">📚</span> ثالثاً: المفاهيم الأساسية المتعلقة بالضريبة</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المفهوم</th>
+                            <th>الشرح المبسط</th>
+                        </tr>
+                        <tr>
+                            <td><strong>وعاء الضريبة</strong></td>
+                            <td>الحاجة اللي بتتحسب عليها الضريبة. ممكن تكون <strong>شخص</strong> أو <strong>مال</strong> (زي الدخل أو العقار).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>سعر الضريبة</strong></td>
+                            <td>النسبة اللي بتتدفع من الوعاء الضريبي (مثلاً 10% من الدخل).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>الازدواج الضريبي</strong></td>
+                            <td>إن الدولة تفرض نفس الضريبة أكتر من مرة، على نفس الشخص، ونفس الفلوس، وفي نفس الفترة الزمنية.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>التهرب الضريبي</strong></td>
+                            <td>محاولة الشخص المكلف إنه يتخلص من دفع الضريبة كلها أو جزء منها (بطرق غير قانونية).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>نقل عبء الضريبة</strong></td>
+                            <td>إن اللي دفع الضريبة مش هو اللي بيتحملها في الآخر، لكنه بينقل العبء لغيره. (ممكن يكون كلي أو جزئي، مقصود أو غير مقصود).</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">⚖️</span> رابعاً: قواعد الضريبة (شروط نجاحها)</h2>
+                
+                <h3>1- قاعدة العدالة (المساواة)</h3>
+                <p>توزيع عبء الضريبة على أفراد المجتمع بطريقة عادلة حسب مقدرتهم المالية. وبتظهر العدالة في شكلين:</p>
+                <ul>
+                    <li><strong>العدالة الأفقية:</strong> الممولين اللي في نفس الظروف الاقتصادية بياخدوا نفس المعاملة الضريبية.</li>
+                    <li><strong>العدالة الرأسية:</strong> الفئات اللي دخلها مختلف بتاخد معاملة ضريبية مختلفة (يعني اللي دخله أكتر بيدفع أكتر).</li>
+                </ul>
+
+                <h3>2- ملائمة الضريبة لإمكانيات الممول وظروفه</h3>
+                <p>يعني الضريبة لازم تتناسب مع ظروف الشخص. مثلاً فلاحين الأراضي الزراعية بيتحصل منهم الضريبة <strong>موسمياً</strong> (بعد الحصاد)، والموظفين بيتحصل منهم <strong>شهرياً</strong>.</p>
+
+                <h3>3- ملائمة الضريبة لإمكانيات الإدارة الضريبية</h3>
+                <p>لازم الضريبة تكون مناسبة لقدرة موظفي الضرايب على تحصيلها بأقل تكلفة ممكنة (مبدأ الاقتصاد في نفقات التحصيل).</p>
+
+                <h3>4- التوزيع المناسب لعبء الضريبة</h3>
+                <p>الضريبة تتوزع بحيث تحقق الغرض منها. قديماً كان الغرض مالي بس، دلوقتي بقى اقتصادي واجتماعي وسياسي.</p>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 3</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الرابعة: التقسيمات الرئيسية (مباشرة وغير مباشرة) ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">🗂️</span> خامساً: التقسيمات الرئيسية لأنواع الضرائب</h2>
+                <p>بنقسم الضرائب بشكل أساسي لنوعين:</p>
+                <div class="diagram-container sources-diagram" style="padding: 15px 5px;">
+                    <div class="flow-chart">
+                        <div class="flow-box-light">الضرائب المباشرة<br><span style="font-size:0.8rem;">(على الدخل والثروة)</span></div>
+                        <div class="flow-op" style="font-size: 1.5rem;">+</div>
+                        <div class="flow-box">الضرائب غير المباشرة<br><span style="font-size:0.8rem;">(على الإنفاق والمبيعات)</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">🔍</span> معايير التفريق بين المباشرة وغير المباشرة</h2>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المعيار</th>
+                            <th>الضرائب المباشرة</th>
+                            <th>الضرائب غير المباشرة</th>
+                        </tr>
+                        <tr>
+                            <td><strong>1. من يتحمل العبء؟</strong></td>
+                            <td>دافع الضريبة هو اللي بيتحملها، ومش بينقلها لغيره.</td>
+                            <td>دافعها بيقدر ينقل عبئها لغيره (زي التاجر اللي بيحطها على المستهلك).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. طريقة الجباية</strong></td>
+                            <td>بتتحصل بناءً على أوراق وقيود (جداول اسمية).</td>
+                            <td>مش مرتبطة ببيانات شخصية (محتاجة جداول أسماء).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. استمرارية المادة</strong></td>
+                            <td>مصدرها ثابت ودائم (زي الدخل والثروة).</td>
+                            <td>مصدرها طارئ أو عارض (زي الاستهلاك).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. علاقتها بالدخل</strong></td>
+                            <td>بتفرض على الدخل عند <strong>تحقيقه/الحصول عليه</strong>. <br><span style="font-size:0.8rem; color:var(--red-alert);">(تصحيح: السلايد فيها غلطة مطبعية وبتقول عند إنفاقه)</span></td>
+                            <td>بتفرض على الدخل عند <strong>إنفاقه</strong> (لما تشتري حاجة).</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 4</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الخامسة: مزايا وعيوب المباشرة وغير المباشرة ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">👍</span> مزايا وعيوب الضرائب المباشرة</h2>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="tip-box" style="flex: 1; min-width: 300px; margin: 0;">
+                        <h3>المزايا (حلوها)</h3>
+                        <ul>
+                            <li><strong>عدالة:</strong> كل واحد بيدفع على قد مقدرته.</li>
+                            <li><strong>ثبات الحصيلة:</strong> بتتفرض على مصادر ثابتة (دخل وثروة).</li>
+                            <li><strong>سهولة التطبيق:</strong> الإدارة الضريبية بتقدر تطبق قواعد الملائمة عليها.</li>
+                        </ul>
+                    </div>
+                    <div class="alert-box" style="flex: 1; min-width: 300px; margin: 0;">
+                        <h3>العيوب (وحشها)</h3>
+                        <ul>
+                            <li><strong>ثقل نفسي:</strong> الممول بيحس بتدخل الدولة في فلوسه، فبيحاول يهرب (وده بيتوقف على الوعي الضريبي وفاعلية الإنفاق العام).</li>
+                            <li><strong>تأخر الحصيلة:</strong> بتتحصل في آخر السنة المالية، وممكن الدولة تحتاج الفلوس قبل كده.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card">
+                <h2><span class="icon">👎</span> مزايا وعيوب الضرائب غير المباشرة</h2>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div class="tip-box" style="flex: 1; min-width: 300px; margin: 0;">
+                        <h3>المزايا (حلوها)</h3>
+                        <ul>
+                            <li><strong>سهولة الدفع:</strong> متضمنة في سعر السلعة، فالمستهلك بيدفعها وهو مش واخد باله.</li>
+                            <li><strong>صعوبة التهرب:</strong> بتحصل مع كل عملية شراء، وحصيلتها ضخمة.</li>
+                            <li><strong>اتساع النطاق:</strong> بتشمل الإنتاج والاستهلاك، فبتناسب الدول النامية اللي وعاءها الضريبي صغير.</li>
+                        </ul>
+                    </div>
+                    <div class="alert-box" style="flex: 1; min-width: 300px; margin: 0;">
+                        <h3>العيوب (وحشها)</h3>
+                        <ul>
+                            <li><strong>مش عادلة:</strong> الغني والفقير بيدفعوا نفس الضريبة على نفس السلعة. (بيتم تلافي ده بزيادة الضريبة على الكماليات وتقليلها على الضروريات).</li>
+                            <li><strong>عدم ثبات الحصيلة:</strong> بتبقى قليلة جداً وقت الأزمات والكساد (لأن الناس بتقلل شراء).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 5</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة السادسة: الضرائب على الثروة ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">💎</span> سادساً: الضرائب على الثروة</h2>
+                <p><strong>الثروة:</strong> هي كل اللي بتمتلكه في لحظة معينة (عقارات، منقولات، حقوق معنوية زي براءات الاختراع).</p>
+                
+                <h3>أنواع الضرائب على الثروة (3 أنواع):</h3>
+                
+                <ol>
+                    <li style="margin-bottom: 15px;">
+                        <span class="boxed-heading">أ- الضريبة التقليدية على الثروة</span><br>
+                        سعرها منخفض جداً (رمزي)، والهدف منها <strong>معلوماتي</strong> (عشان الدولة تعرف حجم ثروات ودخول الناس). <br>
+                        <span class="text-blue">مثال:</span> الضريبة على العقارات، الأراضي الزراعية، الحلي والتحف.
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <span class="boxed-heading">ب- الضريبة على الزيادة الطارئة في الثروة</span><br>
+                        بتفرض لما تزيد ثروة حد من غير ما يبذل مجهود. <br>
+                        <span class="text-blue">مثال:</span> أسعار الأراضي اللي بتغلى فجأة بسبب الامتداد العمراني. الدولة بتفرض ضريبة عليها <strong>عند بيعها أو التصرف فيها</strong>.
+                    </li>
+                    <li>
+                        <span class="boxed-heading">ج- الضريبة على التصرف في الثروة</span><br>
+                        بتفرض لما الثروة تنتقل من مالكها لشخص تاني. وليها نوعين:
+                        <ul>
+                            <li><strong>انتقال بين الأحياء:</strong> زي البيع والشراء (بتفرض غالباً على المشتري بسعر معتدل عشان الناس متتهربش من التسجيل).</li>
+                            <li><strong>الضريبة على التركات (الإرث):</strong> بتفرض بعد وفاة صاحب الثروة على الورثة، بسعر مرتفع وتصاعدي عشان تقلل الفوارق بين الطبقات.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 6</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة السابعة: الضرائب على الدخل ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <section class="glass-card">
+                <h2><span class="icon">💰</span> سابعاً: الضرائب على الدخل</h2>
+                <p>بتنقسم لنوعين رئيسيين، وكل نوع ليه مزايا وعيوب:</p>
+                
+                <h3>1- الضريبة على مجموع الدخل</h3>
+                <p>بتفرض على إجمالي الدخل الصافي اللي بيحصل عليه الشخص في السنة. بيدي <strong>إقرار ضريبي واحد</strong> بيوضح فيه كل مصادر دخله (أرباح، فوائد، عقارات... إلخ).</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المزايا</th>
+                            <th>العيوب</th>
+                        </tr>
+                        <tr>
+                            <td>أسهل للممول (بيدفع مرة واحدة).</td>
+                            <td>مش بتميز بين مصادر الدخل (فمش بتقدر تحقق أهداف اجتماعية معينة).</td>
+                        </tr>
+                        <tr>
+                            <td>أسهل للإدارة الضريبية (إجراءات موحدة).</td>
+                            <td>الممول ممكن يهرب تماماً من دفع أي ضريبة.</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>2- الضرائب النوعية على الدخل</h3>
+                <p>بتفرض ضريبة منفصلة على كل نوع دخل. يعني ضريبة للمرتبات، ضريبة للأرباح التجارية، ضريبة للمهن الحرة، وهكذا.</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>المزايا</th>
+                            <th>العيوب</th>
+                        </tr>
+                        <tr>
+                            <td>بتميز بين مصادر الدخل (بتقدر تحقق أهداف اجتماعية واقتصادية).</td>
+                            <td>تعددها بيؤدي للـ <strong>ازدواج ضريبي</strong> (فرض أكتر من ضريبة على نفس المصدر).</td>
+                        </tr>
+                        <tr>
+                            <td>صعب جداً الممول يهرب منها كلها.</td>
+                            <td>بتضاعف نفقات التحصيل للدولة (تكلفتها عالية).</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 7</div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة الثامنة: التطبيقات (صح/خطأ + اختيار) ================= -->
+    <div class="a4-page">
+        <div class="watermark"></div>
+        <div class="content-wrapper">
+            <header class="hero-header" style="padding-bottom: 10px; border-bottom: none; margin-bottom: 5px;">
+                <h1 style="font-size: 1.8rem; color: var(--red-alert);">تطبيقات (مهمة جداً)</h1>
+            </header>
+
+            <h3 style="margin-top: 0;">أولاً: ضع علامة (صح) أو (خطأ)</h3>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">1. الضريبة هي مبلغ من النقود تجبيه الدولة جبراً من الأفراد دون مقابل وذلك لتمويل نفقاتها العامة. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">2. الضريبة فريضة اختيارية بمعنى أن الخاضعين لها لديهم خيار في دفعها من عدمه. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. هي فريضة <strong>جبرية</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">3. الضريبة تكون فريضة بمقابل خاص يحصل عليه الممول. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. هي فريضة <strong>بلا مقابل خاص</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">4. يتشابه الرسم مع الضريبة في أن كل منهما يأخذ شكل نقدي وأن كل منهما يدفع إلزامي. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">5. يختلف الرسم عن الضريبة في أن الرسم مقابل نفع خاص وعام أما الضريبة فهي مقابل نفع عام فقط. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">6. يقصد بسعر الضريبة المادة التي يختارها المشرع المالي ويفرض عليها الضريبة. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. ده تعريف <strong>وعاء الضريبة</strong>. سعر الضريبة هو النسبة المئوية.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">7. العدالة الأفقية للضريبة هي معاملة الممولين المشتركين في نفس الظروف الاقتصادية معاملة ضريبية واحدة. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">8. يجب أن تكون الضريبة متناسبة مع قدرة الدولة على تحصيلها وقدرة موظفي الجهاز الضريبي على التعامل معها بأقل نفقات اقتصادية. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>. (قاعدة ملائمة الإدارة الضريبية).</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">9. الضرائب المباشرة هي التي يتمكن دافعها من نقل عبئها إلى غيره من الأشخاص. ( )</div>
+                <div class="answer-box wrong">الإجابة: <span class="text-red">خطأ</span>. دي صفة <strong>الضرائب غير المباشرة</strong>. المباشرة بيتحملها دافعها.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">10. الضرائب المباشرة هي التي تفرض على الدخل عند الحصول عليه. ( )</div>
+                <div class="answer-box">الإجابة: <span class="text-green">صح</span>. (تم تصحيحها من إنفاقه في السلايد).</div>
+            </div>
+
+            <h3 style="margin-top: 25px;">ثانياً: اختر الإجابة الصحيحة</h3>
+            
+            <div class="quiz-card">
+                <div class="quiz-q">1. هو نسبة ما يدفعه المكلف كضريبة إلى مقدار الوعاء الضريبي أو المادة الخاضعة لها:</div>
+                <div class="answer-box">الإجابة: <strong>ب - سعر الضريبة</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">2. هي الظاهرة التي يحاول بواسطتها الشخص المكلف التخلص من دفع الضريبة كلها أو بعضها:</div>
+                <div class="answer-box">الإجابة: <strong>د - التهرب الضريبي</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">3. الضرائب على الدخل والثروة من ............</div>
+                <div class="answer-box">الإجابة: <strong>ب - الضرائب المباشرة</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">4. الضرائب على المبيعات والإنفاق من ............</div>
+                <div class="answer-box">الإجابة: <strong>أ - الضرائب غير المباشرة</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">5. هي التي يتحمل عبئها دافع الضريبة نفسه أي أنه لا ينقل عبئها:</div>
+                <div class="answer-box">الإجابة: <strong>ب - الضرائب المباشرة</strong>.</div>
+            </div>
+            <div class="quiz-card">
+                <div class="quiz-q">6. هي التي تفرض على الدخل عند إنفاقه:</div>
+                <div class="answer-box">الإجابة: <strong>أ - الضرائب غير المباشرة</strong>.</div>
+            </div>
+
+        </div>
+        <div class="footer-bar">
+            <div class="footer-brand">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                <div class="footer-brand-name">الدحيح</div>
+            </div>
+            <div class="footer-center-text">مبادئ المالية العامة - د. فاطمة إبراهيم | صفحة 8</div>
+        </div>
+    </div>
+
+</body>
+</html>
