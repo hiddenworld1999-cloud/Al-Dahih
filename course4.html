@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- حماية المحاضرات في حال إيقاف الجافاسكريبت -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
     <script>
     // 1. فحص كود الأدمن السري (تفعيل فوري لصلاحيات المطور)
     const adminParam = new URLSearchParams(window.location.search).get('admin');
@@ -1300,7 +1306,7 @@
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
             document.body.classList.add('dark-mode'); 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
-            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
             if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'dark_mode'; 
         } else { 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
@@ -1810,7 +1816,7 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات والامتحانات (HTML) =================
+        // ================= فتح المحاضرات والامتحانات (HTML) بحماية تامة =================
         async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
             window.currentActiveExamType = examType;
             
@@ -1825,7 +1831,6 @@
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
-                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
             const contentBox = document.getElementById('contentBody');
@@ -1918,7 +1923,6 @@
         }
 
         // ================= دالة التحميل الآمنة (التحويل للمتصفح الخارجي) =================
-                // ================= دالة التحميل الآمنة (التحويل للمتصفح الخارجي) =================
         window.downloadAsPDF = function(url, title) {
             let cleanUrl = (url || '').trim();
             if (cleanUrl.startsWith('./')) cleanUrl = cleanUrl.substring(2);
@@ -2189,10 +2193,12 @@
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
+            // تهيئة نصوص وألوان الزر البنفسجي (زر تحدي الامتحان)
             let btnTxt = currentLang === 'en' ? 'Interactive Exam Challenge' : 'تحدي الامتحان التفاعلي (بدون إجابات)'; 
             let btnIcon = 'bolt'; 
             let btnStyle = 'background:#9c27b0; color:white; border:none; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.25);'; 
             
+            // إذا كان الطالب قد أجرى الامتحان مسبقاً، يتم تحويل الزر البنفسجي ليكون "إعادة الاختبار (بدون نقاط)"
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
                 btnIcon = 'replay'; 
@@ -2208,6 +2214,7 @@
                 return clean.endsWith('.html') || clean.endsWith('.htm');
             };
 
+            // 1. زرار الامتحان المحلول (أزرق)
             if(fileName) {
                 if(isHtmlFile(fileName)) {
                     const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${fileName.replace(/'/g, "\\'")}', '${title}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
@@ -2233,6 +2240,7 @@
                 pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
             }
 
+            // 2. زرار الامتحان بدون إجابات (البنفسجي أو الرمادي في حال الإعادة)
             if (unsolvedFileName) {
                 if(isHtmlFile(unsolvedFileName)) {
                     const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
