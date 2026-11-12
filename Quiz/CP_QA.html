@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>امتحان برمجة الحاسب | منصة الدحيح</title>
     
     <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
@@ -105,9 +105,16 @@
             --neon-green: #00FF41;
             --neon-red: #FF003C;
             --neon-yellow: #FFD700;
+
+            --border-glass: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            overflow-x: hidden !important;
+            width: 100%;
+        }
 
         body {
             font-family: 'Cairo', sans-serif;
@@ -117,32 +124,88 @@
                 radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 30%);
             color: var(--text-main);
             line-height: 1.5;
-            padding: 20px 10px 100px 10px;
+            padding: 70px 5px 100px 5px; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
         }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
 
-        /* ============ تصميم ورقة A4 ============ */
-        .a4-page {
-            background-color: var(--bg-page);
+        /* ============ الشريط العلوي ============ */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        }
+        .top-bar-content {
             width: 100%;
             max-width: 820px;
-            min-height: 1150px;
-            padding: 30px 35px 70px 35px;
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .top-bar-title {
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--neon-cyan);
+            white-space: nowrap;
+        }
+        .progress-container {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-muted);
+            min-width: 60px;
+            text-align: left;
+        }
+
+        /* ============ تصميم ورقة A4 ============ */
+        .page-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 100vw;
+            overflow: hidden; 
+        }
+
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 820px; 
+            flex-shrink: 0; 
+            min-height: 1050px; 
+            height: max-content; 
+            padding: 25px 20px 60px 20px;
+            border-radius: 12px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
             position: relative;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            margin-bottom: 30px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            transform-origin: top center; 
         }
 
         .a4-page::before {
@@ -150,8 +213,7 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 3px;
             background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
-            opacity: 0.8;
-            z-index: 10;
+            opacity: 0.8; z-index: 10;
         }
 
         .content-wrapper {
@@ -162,30 +224,16 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 10px 0 15px; margin-bottom: 10px; }
+        .hero-header { text-align: center; padding: 10px 0 20px; margin-bottom: 15px; }
         .hero-header h1 {
-            font-size: 1.8rem; font-weight: 900;
+            font-size: 2rem; font-weight: 900;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 5px;
         }
-        .hero-header p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
 
-        .main-title-banner {
-            background: linear-gradient(90deg, rgba(176, 38, 255, 0.15), rgba(0, 240, 255, 0.15));
-            border-right: 4px solid var(--neon-cyan);
-            border-radius: 6px;
-            padding: 8px 15px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--neon-cyan);
-            margin: 5px 0 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* فاصل الأقسام */
+        /* ============ فاصل الأقسام ============ */
         .section-divider {
             background: linear-gradient(90deg, rgba(176, 38, 255, 0.2), rgba(0, 240, 255, 0.2));
             border: 1px dashed var(--neon-cyan);
@@ -194,8 +242,8 @@
             padding: 10px;
             border-radius: 8px;
             font-weight: 800;
-            margin: 15px 0;
-            font-size: 15px;
+            margin: 12px 0;
+            font-size: 18px;
             box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
@@ -203,9 +251,9 @@
         .q-card {
             background: var(--bg-card);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid var(--border-glass);
             border-radius: 10px;
-            padding: 14px 16px;
+            padding: 15px 18px;
             margin-bottom: 12px;
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
@@ -238,25 +286,24 @@
         }
 
         .q-head {
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 10px; margin-bottom: 8px;
+            display: flex; align-items: center; justify-content: flex-start;
+            gap: 10px; margin-bottom: 10px;
         }
-        .q-head-right { display: flex; align-items: center; gap: 10px; }
         
         .q-num {
-            width: 30px; height: 30px;
+            width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 8px; 
             background: rgba(176, 38, 255, 0.15);
             color: var(--neon-purple); 
-            font-weight: 800; font-size: 13px;
+            font-weight: 800; font-size: 15px;
             border: 1px solid rgba(176, 38, 255, 0.3);
             font-family: 'Fira Code', monospace;
         }
 
         .info-btn {
             display: none;
-            width: 26px; height: 26px;
+            width: 28px; height: 28px;
             border-radius: 50%;
             background: transparent;
             border: 2px solid var(--neon-cyan);
@@ -271,11 +318,10 @@
         .info-btn.active { background: var(--neon-cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(0, 240, 255, 0.8); }
 
         .q-text {
-            margin: 0 0 12px 0; font-size: 14.5px; font-weight: 700; line-height: 1.5;
+            margin: 0 0 15px 0; font-size: 18px; font-weight: 700; line-height: 1.6;
             color: #FFFFFF;
         }
 
-        /* ============ الخيارات (2x2) ============ */
         .q-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -288,16 +334,16 @@
             flex-direction: row; 
             align-items: center;
             justify-content: flex-start;
-            gap: 8px;
-            min-height: 45px;
-            padding: 8px 10px;
+            gap: 10px;
+            min-height: 50px;
+            padding: 10px 12px;
             border: 1px solid #333;
             border-radius: 8px;
             background: #111;
-            font-size: 12.5px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.3;
+            line-height: 1.4;
             cursor: pointer;
             transition: all 0.2s;
             overflow-wrap: break-word;
@@ -308,12 +354,12 @@
         .option input { position: absolute; opacity: 0; pointer-events: none; }
         
         .option .letter {
-            width: 24px; height: 24px;
+            width: 28px; height: 28px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px;
             background: rgba(255,255,255,0.05);
             color: var(--text-muted);
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 800;
             flex-shrink: 0;
             font-family: 'Fira Code', monospace;
@@ -350,16 +396,16 @@
         .option.wrong .letter { background: var(--neon-red); color: #fff; }
         .option.wrong .opt-text { color: var(--neon-red); }
 
-        .option .mark { margin-inline-start: auto; font-size: 14px; font-weight: bold; }
+        .option .mark { margin-inline-start: auto; font-size: 18px; font-weight: bold; }
 
         .q-explanation {
             display: none;
-            margin-top: 10px;
-            padding: 10px 12px;
+            margin-top: 12px;
+            padding: 12px 15px;
             background: rgba(0, 240, 255, 0.05);
             border: 1px dashed var(--neon-cyan);
             border-radius: 8px;
-            font-size: 12.5px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.6;
@@ -369,26 +415,27 @@
 
         .footer-bar {
             position: absolute;
-            bottom: 15px; left: 35px; right: 35px;
+            bottom: 15px; left: 20px; right: 20px;
             display: flex; align-items: center; justify-content: space-between;
             border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
         }
         .footer-brand { display: flex; align-items: center; gap: 6px; }
         .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
-        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--neon-cyan); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 800; }
 
-        /* ============ زرار التسليم ============ */
-        .submit-container {
+        /* ============ الشريط السفلي (تسليم) ============ */
+        .bottom-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
             background: rgba(10, 10, 15, 0.95);
             backdrop-filter: blur(10px);
-            padding: 15px;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
             display: flex;
             justify-content: center;
+            padding: 12px 15px;
             border-top: 1px solid rgba(0, 240, 255, 0.2);
-            z-index: 1000;
         }
 
         .btn-submit {
@@ -403,44 +450,29 @@
             font-weight: 800;
             font-family: 'Cairo', sans-serif;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
         }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 240, 255, 0.6); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5); }
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { background: #333; color: #888; cursor: not-allowed; box-shadow: none; }
 
         .btn-submit.ready {
             background: linear-gradient(90deg, var(--neon-green), #00cc33);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.6);
-            animation: pulseReady 2s infinite;
+            box-shadow: 0 4px 15px rgba(0, 255, 65, 0.4);
+            animation: pulse-green 2s infinite;
         }
-        @keyframes pulseReady {
-            0% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); }
-            50% { box-shadow: 0 0 35px rgba(0, 255, 65, 0.8); }
-            100% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); }
+        .btn-submit.ready:hover { box-shadow: 0 6px 20px rgba(0, 255, 65, 0.6); }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 65, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
         }
-
-        .result-card {
-            display: none;
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(176, 38, 255, 0.1));
-            border: 2px solid var(--neon-cyan);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-            width: 100%;
-            max-width: 820px;
-            margin-top: 20px;
-        }
-        .result-card h2 { color: var(--neon-cyan); margin-bottom: 10px; font-size: 24px; }
-        .result-score { font-size: 40px; font-weight: 900; color: #fff; margin-bottom: 5px; text-shadow: 0 0 10px var(--neon-cyan); }
-        .result-msg { color: var(--text-muted); font-size: 14px; }
 
         /* ============ شاشة التنبيه (Modal) ============ */
         .modal-overlay {
@@ -452,60 +484,85 @@
             opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        
         .modal-content {
             background: var(--bg-page);
             border: 2px solid var(--neon-red);
             border-radius: 15px;
-            padding: 25px 30px;
+            padding: 30px;
             width: 90%; max-width: 450px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(255, 0, 60, 0.4);
+            box-shadow: 0 0 50px rgba(255, 0, 60, 0.3);
             transform: translateY(20px) scale(0.95);
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
         }
         .modal-overlay.show .modal-content { transform: translateY(0) scale(1); }
+        
         .modal-icon { font-size: 50px; margin-bottom: 10px; animation: float 2s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .modal-content h2 { color: var(--neon-red); margin-bottom: 10px; font-size: 22px; }
+        
+        .modal-content h2 { color: var(--neon-red); margin-bottom: 10px; font-size: 22px; font-weight: 800; }
         .modal-content p { color: var(--text-main); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
+        
         .missed-badges {
             display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px;
+            max-height: 150px; overflow-y: auto; padding: 5px;
         }
         .badge-missed {
-            width: 45px; height: 45px; border-radius: 50%;
+            width: 40px; height: 40px; border-radius: 50%;
             background: rgba(255, 0, 60, 0.1);
             border: 2px solid var(--neon-red);
             color: var(--neon-red);
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 800; font-family: 'Fira Code', monospace;
+            font-size: 16px; font-weight: 800; font-family: 'Fira Code', monospace;
             cursor: pointer; transition: all 0.2s;
         }
         .badge-missed:hover {
             background: var(--neon-red); color: #fff;
             transform: scale(1.1); box-shadow: 0 0 15px var(--neon-red);
         }
+        
         .btn-close-modal {
             background: transparent; border: 2px solid var(--neon-cyan);
-            color: var(--neon-cyan); padding: 10px 25px; border-radius: 8px;
+            color: var(--neon-cyan); padding: 12px 25px; border-radius: 10px;
             font-size: 16px; font-weight: 700; font-family: inherit;
             cursor: pointer; transition: all 0.2s; width: 100%;
         }
         .btn-close-modal:hover { background: var(--neon-cyan); color: #000; }
 
-        @media (max-width: 850px) {
-            body { padding: 0 0 90px 0; }
-            .a4-page { padding: 15px 15px 60px 15px; border-radius: 0; border: none; border-bottom: 2px solid var(--neon-purple); min-height: auto; margin-bottom: 10px; }
-            .footer-bar { left: 15px; right: 15px; bottom: 10px; }
-            .hero-header h1 { font-size: 1.5rem; }
-            .q-options { grid-template-columns: 1fr 1fr; gap: 6px; }
-            .option { min-height: 40px; padding: 6px 8px; font-size: 11.5px; }
-            .option .letter { width: 22px; height: 22px; font-size: 11px; }
-            .q-text { font-size: 13.5px; }
-            .btn-submit { font-size: 16px; padding: 12px; }
+        /* ============ شاشة النتيجة ============ */
+        .result-card {
+            display: none;
+            background: var(--bg-card);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2);
+            width: 100%; max-width: 820px;
+            animation: slideDown 0.5s ease;
         }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .result-card h2 { color: var(--neon-cyan); margin-bottom: 10px; font-size: 24px; font-weight: 800; }
+        .result-score { font-size: 48px; font-weight: 900; color: #fff; margin-bottom: 10px; text-shadow: 0 0 10px var(--neon-cyan); }
+        .result-score small { font-size: 24px; color: var(--text-muted); }
+        .result-msg { color: var(--text-main); font-size: 16px; font-weight: 600; }
     </style>
 </head>
 <body>
+
+    <!-- الشريط العلوي (التقدم) -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-title">Prog Exam</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 0</div>
+        </div>
+    </div>
 
     <!-- شاشة التنبيه للأسئلة الناقصة -->
     <div class="modal-overlay" id="missedModal">
@@ -521,15 +578,15 @@
     <!-- شريط النتيجة -->
     <div class="result-card" id="resultCard">
         <h2>تم تسليم الامتحان!</h2>
-        <div class="result-score" id="resultScore">0 / 0</div>
+        <div class="result-score" id="resultScore">0 <small>/ 0</small></div>
         <p class="result-msg" id="resultMsg">جارٍ إرسال الدرجة للمنصة...</p>
     </div>
 
     <!-- الحاوية اللي هتترسم فيها ورق الـ A4 -->
     <div id="pagesContainer" style="display: contents;"></div>
 
-    <!-- زرار التسليم ثابت تحت -->
-    <div class="submit-container" id="submitContainer">
+    <!-- الشريط السفلي (زرار التسليم) -->
+    <div class="bottom-bar">
         <button class="btn-submit" id="submitBtn" onclick="submitExam()">تسليم الامتحان</button>
     </div>
 
@@ -617,6 +674,9 @@ let state = {
     scoreSent: false
 };
 
+/* =========================================================
+   رسم ورق الـ A4 بالأسئلة
+   ========================================================= */
 function renderPages() {
     let html = '';
     const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
@@ -626,75 +686,123 @@ function renderPages() {
         const pageQuestions = QUIZ.slice(start, start + QUESTIONS_PER_PAGE);
 
         html += `
-        <div class="a4-page">
-            <div class="content-wrapper">
-                ${pageIndex === 0 ? `
-                    <header class="hero-header">
-                        <h1>MIDTERM EXAM</h1>
-                        <p>(اختبر نفسك)بنك أسئلة برمجة الحاسب - الميد ترم</p>
-                    </header>
-                    <div class="main-title-banner">
-                        <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
-                    </div>
-                ` : ''}
+        <div class="page-container">
+            <div class="a4-page">
+                <div class="content-wrapper">
+                    ${pageIndex === 0 ? `
+                        <header class="hero-header">
+                            <h1>MIDTERM EXAM</h1>
+                            <p>امتحان برمجة الحاسب - أجب عن جميع الأسئلة</p>
+                        </header>
+                    ` : ''}
 
-                ${pageQuestions.map((q, qIndex) => {
-                    const globalIndex = start + qIndex;
-                    
-                    let sectionDivider = '';
-                    if (globalIndex === 32) { // تحديث رقم الفاصل بعد إضافة السؤال
-                        sectionDivider = `
-                        <div class="section-divider">
-                            القسم الثاني: أسئلة الصواب والخطأ (True / False)
-                        </div>
-                        `;
-                    }
+                    ${pageQuestions.map((q, qIndex) => {
+                        const globalIndex = start + qIndex;
+                        
+                        let sectionDivider = '';
+                        if (globalIndex === 32) { // تحديث رقم الفاصل بعد إضافة السؤال
+                            sectionDivider = `
+                            <div class="section-divider">
+                                القسم الثاني: أسئلة الصواب والخطأ (True / False)
+                            </div>
+                            `;
+                        }
 
-                    const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
-                                      q.explanation === q.options[q.correct] || 
-                                      q.explanation.length <= q.options[q.correct].length + 3;
+                        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
+                                          q.explanation === q.options[q.correct] || 
+                                          q.explanation.length <= q.options[q.correct].length + 3;
 
-                    return `
-                    ${sectionDivider}
-                    <div class="q-card" data-card="${globalIndex}">
-                        <div class="q-head">
-                            <div class="q-head-right">
+                        return `
+                        ${sectionDivider}
+                        <div class="q-card" data-card="${globalIndex}">
+                            <div class="q-head">
                                 <span class="q-num">${globalIndex + 1}</span>
                                 ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
                             </div>
+                            <p class="q-text">${q.text}</p>
+                            <div class="q-options">
+                                ${q.options.map((opt, j) => `
+                                    <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
+                                        <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
+                                        <span class="letter">${LETTERS[j]}</span>
+                                        <span class="opt-text">${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                            ${!isGeneric ? `
+                            <div class="q-explanation" id="exp-${globalIndex}">
+                                <strong>التعليل: </strong>${q.explanation}
+                            </div>
+                            ` : ''}
                         </div>
-                        <p class="q-text">${q.text}</p>
-                        <div class="q-options">
-                            ${q.options.map((opt, j) => `
-                                <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
-                                    <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
-                                    <span class="letter">${LETTERS[j]}</span>
-                                    <span class="opt-text">${opt}</span>
-                                </label>
-                            `).join('')}
-                        </div>
-                        ${!isGeneric ? `
-                        <div class="q-explanation" id="exp-${globalIndex}">
-                            <strong>التعليل: </strong>${q.explanation}
-                        </div>
-                        ` : ''}
-                    </div>
-                    `;
-                }).join('')}
-            </div>
-            
-            <div class="footer-bar">
-                <div class="footer-brand">
-                    <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
-                    <div class="footer-brand-name">الدحيح</div>
+                        `;
+                    }).join('')}
                 </div>
-                <div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | اسئلة برمجة الحاسب</div>
+                
+                <div class="footer-bar">
+                    <div class="footer-brand">
+                        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                        <div class="footer-brand-name">الدحيح</div>
+                    </div>
+                    <div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | امتحان برمجة الحاسب</div>
+                </div>
             </div>
         </div>
         `;
     }
     container.innerHTML = html;
+    updateProgress();
     updateSubmitBtn();
+    
+    // استدعاء دالة التصغير بعد رسم الصفحات
+    setTimeout(resizePages, 100);
+}
+
+/* =========================================================
+   دالة تصغير ورق الـ A4 عشان تناسب شاشة الموبايل
+   ========================================================= */
+function resizePages() {
+    const pages = document.querySelectorAll('.a4-page');
+    const maxWidth = 820;
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const availableWidth = viewportWidth - 10; 
+    
+    let scale = 1;
+    if (availableWidth < maxWidth) {
+        scale = availableWidth / maxWidth;
+    }
+
+    pages.forEach(page => {
+        const wrapper = page.parentElement;
+        
+        page.style.transform = 'none';
+        const actualHeight = page.offsetHeight;
+
+        if (scale < 1) {
+            page.style.transform = `scale(${scale})`;
+            page.style.transformOrigin = 'top center';
+            
+            wrapper.style.width = `${availableWidth}px`;
+            wrapper.style.height = `${actualHeight * scale}px`;
+        } else {
+            page.style.transform = 'none';
+            wrapper.style.width = '100%';
+            wrapper.style.height = 'auto';
+        }
+    });
+}
+
+window.addEventListener('load', resizePages);
+window.addEventListener('orientationchange', resizePages); 
+
+/* =========================================================
+   التحديثات والدوال
+   ========================================================= */
+function updateProgress() {
+    const answered = state.answers.filter(a => a !== null).length;
+    const percent = (answered / QUIZ.length) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').innerText = `${answered} / ${QUIZ.length}`;
 }
 
 function updateSubmitBtn() {
@@ -706,7 +814,7 @@ function updateSubmitBtn() {
         btn.innerHTML = 'تسليم الامتحان 🚀';
         btn.classList.add('ready');
     } else {
-        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(255,0,60,0.2); color: var(--neon-red); padding: 2px 10px; border-radius: 20px; font-size: 14px; border: 1px solid var(--neon-red);">باقي ${missing}</span>`;
+        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 20px; font-size: 12px;">باقي ${missing}</span>`;
         btn.classList.remove('ready');
     }
 }
@@ -721,6 +829,7 @@ window.selectOption = function(qIndex, oIndex) {
     const card = document.querySelector(`.q-card[data-card="${qIndex}"]`);
     if (card) card.classList.remove('missed');
 
+    updateProgress();
     updateSubmitBtn();
 };
 
@@ -730,7 +839,7 @@ window.goToQuestion = function(index) {
     if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         card.style.transition = "box-shadow 0.3s";
-        card.style.boxShadow = "0 0 30px var(--neon-yellow)";
+        card.style.boxShadow = "0 0 20px rgba(0, 240, 255, 0.6)";
         setTimeout(() => { card.style.boxShadow = ""; }, 1500);
     }
 };
@@ -809,6 +918,7 @@ window.submitExam = function() {
             }
         });
 
+        // إظهار زرار التعليل بعد التسليم
         const infoBtn = document.getElementById(`btn-${i}`);
         if (infoBtn) infoBtn.style.display = 'flex';
     });
@@ -822,7 +932,7 @@ window.submitExam = function() {
     const percent = Math.round((score / QUIZ.length) * 100);
     let msg = percent >= 80 ? "ممتاز! أداء رائع 🎉" : (percent >= 50 ? "جيد جداً، واصل التقدم 👍" : "لا بأس، حاول مرة أخرى 💪");
     
-    resultScore.innerText = `${score} / ${QUIZ.length}`;
+    resultScore.innerHTML = `${score} <small>/ ${QUIZ.length}</small>`;
     resultMsg.innerText = msg + (sent ? " (تم إرسال الدرجة للمنصة)" : "");
     resultCard.style.display = 'block';
 
@@ -841,6 +951,7 @@ window.toggleExplanation = function(index) {
     }
 };
 
+/* ===== تشغيل ===== */
 renderPages();
 </script>
 </body>
