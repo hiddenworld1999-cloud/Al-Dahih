@@ -3,176 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محول المحاضرات إلى PDF - الدحيح</title>
+    <title>جاري تحضير المحاضرة - الدحيح</title>
     
-    <!-- خطوط جوجل والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- مكتبات التحويل (html2canvas & jsPDF) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; }
-        body { background: #F8FAFC; color: #0F172A; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        body { background: #0F172A; color: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         
-        .container { background: #FFFFFF; width: 100%; max-width: 550px; border-radius: 24px; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); padding: 40px 30px; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
-        
-        .header-icon { width: 80px; height: 80px; background: rgba(37, 99, 235, 0.1); color: #2563EB; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; }
-        .header-icon .material-icons { font-size: 40px; }
-        
-        h1 { font-size: 1.8rem; font-weight: 900; color: #1E293B; margin-bottom: 10px; }
-        p.subtitle { color: #64748B; font-size: 0.95rem; margin-bottom: 30px; font-weight: 500; line-height: 1.6; }
+        .loader-box { background: #1E293B; padding: 40px; border-radius: 24px; text-align: center; max-width: 450px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .loader-box .material-icons { font-size: 70px; color: #3B82F6; margin-bottom: 20px; animation: pulse 1s infinite; }
+        .loader-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; color: #F8FAFC; }
+        .loader-box p { color: #94A3B8; font-size: 1rem; line-height: 1.6; }
 
-        .input-group { margin-bottom: 20px; text-align: right; }
-        .input-group label { display: block; font-weight: 700; color: #334155; margin-bottom: 8px; font-size: 0.95rem; }
-        .input-group input { width: 100%; padding: 15px 18px; border-radius: 14px; border: 2px solid #E2E8F0; font-size: 1rem; color: #1E293B; outline: none; transition: 0.3s; background: #F8FAFC; }
-        .input-group input:focus { border-color: #2563EB; background: #FFFFFF; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-        .input-hint { font-size: 0.8rem; color: #94A3B8; margin-top: 6px; display: block; }
-
-        .btn-submit { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #2563EB; color: #FFFFFF; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); margin-top: 10px; }
-        .btn-submit:active { transform: scale(0.97); }
-
-        .loader-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; color: #FFFFFF; text-align: center; padding: 20px; }
-        .loader-overlay .material-icons { font-size: 60px; color: #60A5FA; animation: pulse 1s infinite; margin-bottom: 20px; }
+        .success-box { display: none; background: #1E293B; padding: 40px; border-radius: 24px; text-align: center; max-width: 450px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .success-box .material-icons { font-size: 70px; color: #10B981; margin-bottom: 20px; animation: none; }
+        .success-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; color: #F8FAFC; }
         
-        .success-box { display: none; background: #FFFFFF; padding: 40px; border-radius: 24px; text-align: center; max-width: 400px; width: 100%; color: #0F172A;}
-        .success-box .material-icons { font-size: 70px; color: #10B981; margin-bottom: 15px; animation: none; }
-        .success-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 10px; }
-        .btn-reload { display: inline-flex; align-items: center; gap: 8px; background: #F1F5F9; color: #334155; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 20px; font-family: inherit; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-icon">
-            <span class="material-icons">transform</span>
-        </div>
-        <h1>محول المحاضرات الذكي</h1>
-        <p class="subtitle">أدخل رابط أو اسم ملف المحاضرة المرفوع على المنصة، واسمك وكودك، وسيتم استخراجه بجودة عالية.</p>
-
-        <div class="input-group">
-            <label>رابط أو اسم ملف المحاضرة (HTML)</label>
-            <input type="text" id="fileUrl" placeholder="مثال: course4.html" required>
-            <span class="input-hint">اكتب اسم الملف فقط لتجنب أي أخطاء (مثال: midterm.html).</span>
-        </div>
-
-        <div class="input-group" style="display: flex; gap: 15px;">
-            <div style="flex: 2;">
-                <label>الاسم الرباعي</label>
-                <input type="text" id="studentName" placeholder="اكتب اسمك..." required>
-            </div>
-            <div style="flex: 1;">
-                <label>الكود</label>
-                <input type="text" id="studentCode" placeholder="مثال: 12345" required>
-            </div>
-        </div>
-
-        <button class="btn-submit" onclick="generatePDF()">
-            <span class="material-icons">picture_as_pdf</span> استخراج الـ PDF
-        </button>
+    <div class="loader-box" id="loaderBox">
+        <span class="material-icons">auto_mode</span>
+        <h3>جاري تجهيز المحاضرة...</h3>
+        <p>يتم الآن ختم الملف باسمك وكودك ورفعه بجودة عالية. يرجى عدم إغلاق المتصفح حتى يتم التحميل.</p>
     </div>
-
-    <!-- شاشة التحميل والنجاح -->
-    <div class="loader-overlay" id="loaderOverlay">
-        <div id="loadingContent">
-            <span class="material-icons">auto_mode</span>
-            <h3 style="font-weight: 900; font-size: 1.4rem;">جاري تحويل المحاضرة...</h3>
-            <p style="margin-top: 10px; color: #94A3B8;">يتم الآن رفع الجودة ودمج العلامة المائية، برجاء الانتظار قليلاً.</p>
-        </div>
-        
-        <div class="success-box" id="successBox">
-            <span class="material-icons">check_circle</span>
-            <h3>تم التحميل بنجاح!</h3>
-            <p style="color: #64748B;">تم استخراج ملف الـ PDF بجودة عالية وحفظه على جهازك.</p>
-            <button class="btn-reload" onclick="location.reload()">
-                <span class="material-icons" style="font-size: 18px;">refresh</span> استخراج ملف آخر
-            </button>
-        </div>
+    
+    <div class="success-box" id="successBox">
+        <span class="material-icons">check_circle</span>
+        <h3>تم التحميل بنجاح! 🚀</h3>
+        <p style="color: #94A3B8; margin-bottom: 20px;">تم حفظ المحاضرة في جهازك. يمكنك الآن العودة للتطبيق.</p>
+        <button onclick="window.close()" style="background:#2563EB; color:white; border:none; padding:15px 30px; border-radius:14px; font-weight:bold; font-size:1.1rem; cursor:pointer; width:100%; font-family:inherit;">إغلاق الصفحة</button>
     </div>
 
     <script>
         const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-        // دالة إنشاء العلامة المائية (تم التعديل لتظهر على الألوان الفاتحة والغامقة)
         function textToImage(text) {
             const c = document.createElement('canvas');
             const ctx = c.getContext('2d');
             const font = "bold 45px 'IBM Plex Sans Arabic', sans-serif";
             ctx.font = font;
-            
-            const textWidth = ctx.measureText(text).width;
-            const size = Math.ceil(textWidth) + 100;
-            
-            c.width = size;
-            c.height = size;
-            
-            // تدوير النص مباشرة من الكانفاس لتجنب مشاكل jsPDF
+            const size = Math.ceil(ctx.measureText(text).width) + 100;
+            c.width = size; c.height = size;
             ctx.translate(size / 2, size / 2);
-            ctx.rotate(-Math.PI / 4); // دوران 45 درجة
-            
+            ctx.rotate(-Math.PI / 4);
             ctx.font = font;
             ctx.textBaseline = 'middle';
             ctx.direction = 'rtl';
             ctx.textAlign = 'center';
-            
-            // لون رمادي فاتح نصف شفاف (يظهر على الأسود والأبيض بوضوح)
-            ctx.fillStyle = 'rgba(200, 200, 200, 0.4)';
-            
-            // ظل خفيف جداً لزيادة التباين فوق الأسئلة
+            ctx.fillStyle = 'rgba(200, 200, 200, 0.4)'; 
             ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
             ctx.shadowBlur = 4;
-            
             ctx.fillText(text, 0, 0);
-            
             return { data: c.toDataURL('image/png'), size: size };
         }
 
-        // معالجة الرابط
-        function resolveUrl(url) {
-            let u = (url || '').trim();
-            if (!u.startsWith('http://') && !u.startsWith('https://')) {
-                if (u.startsWith('/')) u = u.substring(1);
-                if (!u.startsWith('./')) u = './' + u;
-                u = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + u.replace('./', '');
-            }
-            return u;
-        }
+        window.onload = async function() {
+            const params = new URLSearchParams(window.location.search);
+            const file = params.get('file');
+            const name = params.get('name');
+            const code = params.get('code');
 
-        async function generatePDF() {
-            const fileUrlInput = document.getElementById('fileUrl').value;
-            const name = document.getElementById('studentName').value.trim();
-            const code = document.getElementById('studentCode').value.trim();
-
-            if (!fileUrlInput || !name || !code) {
-                alert('يرجى تعبئة جميع الحقول المطلوبة!');
+            if (!file || !name || !code) {
+                document.getElementById('loaderBox').innerHTML = `<span class="material-icons" style="color:#ef4444; animation:none;">error</span><h3>رابط غير صالح</h3><p>يرجى فتح هذا الرابط من داخل التطبيق فقط.</p>`;
                 return;
             }
 
-            const cleanUrl = resolveUrl(fileUrlInput);
+            let cleanUrl = file.trim();
+            if (!cleanUrl.startsWith('http')) {
+                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl;
+            }
+            
             const watermarkText = `${name} - ${code}`;
 
-            document.getElementById('loaderOverlay').style.display = 'flex';
-            document.getElementById('loadingContent').style.display = 'block';
-            document.getElementById('successBox').style.display = 'none';
-
-            // إنشاء iframe مخفي
             const iframe = document.createElement('iframe');
             iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:900px; height:100vh; border:none; background:#fff;';
-            iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+            
+            // 🔥 هنا السر: الأداة بتبعت كود الأدمن للمحاضرة عشان تفتح وماتطردش الطالب
+            iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 'admin=daheeh&t=' + Date.now();
             document.body.appendChild(iframe);
 
             iframe.onload = async () => {
                 try {
-                    // انتظار السكريبتات ترسم المحتوى
-                    await sleep(3000);
+                    await sleep(3500); 
 
                     const doc = iframe.contentDocument || iframe.contentWindow.document;
                     const shield = doc.getElementById('antiScreenshotShield');
                     if (shield) shield.style.display = 'none';
 
-                    // توحيد ألوان النصوص المتدرجة
                     const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], .gradient-text');
                     gradientTitles.forEach(el => {
                         el.style.background = 'none';
@@ -180,16 +107,13 @@
                         el.style.webkitTextFillColor = 'initial';
                     });
 
-                    // جلب لون خلفية المحاضرة عشان الـ PDF ميطلعش فيه فواصل بيضاء
                     const bodyStyles = window.getComputedStyle(doc.body);
                     let bgColor = bodyStyles.backgroundColor;
                     if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') bgColor = '#0F172A';
                     
-                    let rgb = [15, 23, 42]; // افتراضي غامق
+                    let rgb = [15, 23, 42];
                     const rgbMatch = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-                    if (rgbMatch) {
-                        rgb = [parseInt(rgbMatch[1]), parseInt(rgbMatch[2]), parseInt(rgbMatch[3])];
-                    }
+                    if (rgbMatch) rgb = [parseInt(rgbMatch[1]), parseInt(rgbMatch[2]), parseInt(rgbMatch[3])];
 
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
@@ -202,7 +126,7 @@
                     };
                     
                     const watermarkImg = textToImage(watermarkText);
-                    const wmSize = 90; // حجم العلامة المائية
+                    const wmSize = 90; 
 
                     const drawWatermark = () => {
                         for (let x = -30; x < pdfWidth + 30; x += 110) {
@@ -215,10 +139,8 @@
                     const pages = doc.querySelectorAll('.a4-page');
                     if (pages.length > 0) {
                         for (let i = 0; i < pages.length; i++) {
-                            // Scale 3 لجودة احترافية عالية جداً
                             const canvas = await html2canvas(pages[i], { scale: 3, useCORS: true, logging: false, backgroundColor: bgColor });
                             const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                            
                             if (i > 0) pdf.addPage();
                             fillBackground();
                             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
@@ -247,27 +169,21 @@
                         }
                     }
 
-                    const safeTitle = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
-                    pdf.save(`محاضرة_${safeTitle}_${code}.pdf`);
+                    const safeTitle = (file.split('.')[0] || 'Lecture').replace(/[\\/:*?"<>| ]/g, '_').trim();
+                    const safeName = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
+                    pdf.save(`محاضرة_${safeTitle}_${safeName}_${code}.pdf`);
 
-                    document.getElementById('loadingContent').style.display = 'none';
+                    document.getElementById('loaderBox').style.display = 'none';
                     document.getElementById('successBox').style.display = 'block';
 
                 } catch (err) {
-                    console.error("خطأ أثناء التحويل:", err);
-                    alert("تعذر الوصول لملف المحاضرة! تأكد من أن الرابط صحيح وأنه مرفوع على المنصة.");
-                    document.getElementById('loaderOverlay').style.display = 'none';
+                    console.error("Error:", err);
+                    document.getElementById('loaderBox').innerHTML = `<span class="material-icons" style="color:#ef4444; animation:none;">error</span><h3>حدث خطأ!</h3><p>تعذر تحميل الملف، يرجى المحاولة مرة أخرى.</p>`;
                 } finally {
                     document.body.removeChild(iframe);
                 }
             };
-
-            iframe.onerror = () => {
-                alert("تعذر تحميل الصفحة المستهدفة. تأكد من صحة الرابط.");
-                document.getElementById('loaderOverlay').style.display = 'none';
-                document.body.removeChild(iframe);
-            };
-        }
+        };
     </script>
 </body>
 </html>
