@@ -34,14 +34,11 @@
     <div class="loader-box" id="loaderBox">
         <span class="material-icons">auto_mode</span>
         <h3>جاري تجهيز المحاضرة...</h3>
-        <p>يتم الآن ختم الملف باسمك وكودك ورفعه بجودة عالية. يرجى عدم إغلاق المتصفح حتى يتم التحميل.</p>
+        <p>يتم الآن ختم الملف باسمك وكودك ورفعه بجودة عالية. يرجى عدم إغلاق الشاشة.</p>
     </div>
     
     <div class="success-box" id="successBox">
-        <span class="material-icons">check_circle</span>
-        <h3>تم التحميل بنجاح! 🚀</h3>
-        <p style="color: #94A3B8; margin-bottom: 20px;">تم حفظ المحاضرة في جهازك. يمكنك الآن العودة للتطبيق.</p>
-        <button onclick="window.close()" style="background:#2563EB; color:white; border:none; padding:15px 30px; border-radius:14px; font-weight:bold; font-size:1.1rem; cursor:pointer; width:100%; font-family:inherit;">إغلاق الصفحة</button>
+        <!-- سيتم ملء هذا الجزء برمجياً بزر المشاركة بعد التوليد -->
     </div>
 
     <script>
@@ -87,8 +84,6 @@
 
             const iframe = document.createElement('iframe');
             iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:900px; height:100vh; border:none; background:#fff;';
-            
-            // 🔥 هنا السر: الأداة بتبعت كود الأدمن للمحاضرة عشان تفتح وماتطردش الطالب
             iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 'admin=daheeh&t=' + Date.now();
             document.body.appendChild(iframe);
 
@@ -169,12 +164,54 @@
                         }
                     }
 
+                    // تجهيز الملف للمشاركة بدلاً من التحميل المباشر
                     const safeTitle = (file.split('.')[0] || 'Lecture').replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const safeName = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
-                    pdf.save(`محاضرة_${safeTitle}_${safeName}_${code}.pdf`);
+                    const fileName = `محاضرة_${safeTitle}_${safeName}_${code}.pdf`;
+                    
+                    const pdfBlob = pdf.output('blob');
+                    const fileToShare = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
                     document.getElementById('loaderBox').style.display = 'none';
-                    document.getElementById('successBox').style.display = 'block';
+                    
+                    const successBox = document.getElementById('successBox');
+                    successBox.style.display = 'block';
+                    successBox.innerHTML = `
+                        <span class="material-icons" style="font-size:70px; color:#10B981; animation:none;">check_circle</span>
+                        <h3 style="font-weight:900; font-size:1.6rem; color:#F8FAFC; margin-bottom:15px;">تم التجهيز بنجاح! 🚀</h3>
+                        <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">الملف جاهز الآن. اضغط على الزر بالأسفل لاختيار (حفظ في الجهاز).</p>
+                        
+                        <button id="shareNativeBtn" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2563EB; color:white; border:none; padding:18px 20px; border-radius:14px; font-weight:900; font-size:1.1rem; cursor:pointer; width:100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); margin-bottom:12px; font-family:inherit;">
+                            <span class="material-icons">share</span> مشاركة / حفظ الملف
+                        </button>
+                        
+                        <button onclick="window.history.back()" style="background:transparent; border:1px solid #334155; color:#94A3B8; padding:12px; border-radius:12px; font-weight:bold; font-size:1rem; cursor:pointer; width:100%; font-family:inherit;">العودة للمنصة</button>
+                    `;
+
+                    // تفعيل زر المشاركة الأصلي لنظام الأندرويد
+                    document.getElementById('shareNativeBtn').addEventListener('click', async () => {
+                        if (navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
+                            try {
+                                await navigator.share({
+                                    files: [fileToShare],
+                                    title: fileName,
+                                    text: 'ملف المحاضرة الخاص بك.'
+                                });
+                            } catch (err) {
+                                console.log('تم إلغاء المشاركة', err);
+                            }
+                        } else {
+                            // حل بديل في حال الأندرويد القديم جداً
+                            const pdfDataUri = pdf.output('datauristring');
+                            const link = document.createElement('a');
+                            link.href = pdfDataUri;
+                            link.download = fileName;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            alert('جهازك لا يدعم المشاركة المباشرة. جاري محاولة التحميل البديل.');
+                        }
+                    });
 
                 } catch (err) {
                     console.error("Error:", err);
