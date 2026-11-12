@@ -14,19 +14,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; }
         body { background: #0F172A; color: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         
-        .loader-box { background: #1E293B; padding: 40px; border-radius: 24px; text-align: center; max-width: 450px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .loader-box, .success-box, .error-box { background: #1E293B; padding: 40px; border-radius: 24px; text-align: center; max-width: 450px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .loader-box .material-icons { font-size: 70px; color: #3B82F6; margin-bottom: 20px; animation: pulse 1s infinite; }
-        .loader-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; color: #F8FAFC; }
-        .loader-box p { color: #94A3B8; font-size: 1rem; line-height: 1.6; }
-
-        .success-box { display: none; background: #1E293B; padding: 40px; border-radius: 24px; text-align: center; max-width: 450px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .success-box .material-icons { font-size: 70px; color: #10B981; margin-bottom: 20px; animation: none; }
-        .success-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; color: #F8FAFC; }
+        .loader-box h3, .success-box h3, .error-box h3 { font-weight: 900; font-size: 1.6rem; margin-bottom: 15px; color: #F8FAFC; }
+        .loader-box p, .error-box p { color: #94A3B8; font-size: 1rem; line-height: 1.6; }
+        .success-box { display: none; }
+        .error-box { display: none; }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
     </style>
 </head>
 <body>
@@ -34,11 +29,15 @@
     <div class="loader-box" id="loaderBox">
         <span class="material-icons">auto_mode</span>
         <h3>جاري تجهيز المحاضرة...</h3>
-        <p>يتم الآن ختم الملف باسمك وكودك ورفعه بجودة عالية. يرجى عدم إغلاق الشاشة.</p>
+        <p>يتم الآن ختم الملف باسمك ورفعه بجودة عالية. يرجى الانتظار.</p>
     </div>
     
-    <div class="success-box" id="successBox">
-        <!-- سيتم ملء هذا الجزء برمجياً بزر المشاركة بعد التوليد -->
+    <div class="success-box" id="successBox"></div>
+    
+    <div class="error-box" id="errorBox">
+        <span class="material-icons" style="font-size:70px; color:#EF4444;">gpp_bad</span>
+        <h3>رابط غير صالح!</h3>
+        <p>هذا الرابط تالف أو تم التلاعب به. يرجى التحميل من داخل المنصة فقط.</p>
     </div>
 
     <script>
@@ -66,14 +65,35 @@
 
         window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
-            const file = params.get('file');
-            const name = params.get('name');
-            const code = params.get('code');
+            const encodedData = params.get('token'); // أخدنا الداتا المتشفرة
 
-            if (!file || !name || !code) {
-                document.getElementById('loaderBox').innerHTML = `<span class="material-icons" style="color:#ef4444; animation:none;">error</span><h3>رابط غير صالح</h3><p>يرجى فتح هذا الرابط من داخل التطبيق فقط.</p>`;
+            if (!encodedData) {
+                document.getElementById('loaderBox').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
                 return;
             }
+
+            let decodedString = '';
+            try {
+                // فك التشفير بأمان
+                decodedString = decodeURIComponent(escape(window.atob(encodedData)));
+            } catch (e) {
+                document.getElementById('loaderBox').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
+                return;
+            }
+
+            // فصل البيانات (رابط الملف|الاسم|الكود)
+            const parts = decodedString.split('|DAHEEH|');
+            if (parts.length !== 3) {
+                document.getElementById('loaderBox').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
+                return;
+            }
+
+            const file = parts[0];
+            const name = parts[1];
+            const code = parts[2];
 
             let cleanUrl = file.trim();
             if (!cleanUrl.startsWith('http')) {
@@ -84,6 +104,7 @@
 
             const iframe = document.createElement('iframe');
             iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:900px; height:100vh; border:none; background:#fff;';
+            
             iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 'admin=daheeh&t=' + Date.now();
             document.body.appendChild(iframe);
 
@@ -164,7 +185,6 @@
                         }
                     }
 
-                    // تجهيز الملف للمشاركة بدلاً من التحميل المباشر
                     const safeTitle = (file.split('.')[0] || 'Lecture').replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const safeName = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const fileName = `محاضرة_${safeTitle}_${safeName}_${code}.pdf`;
@@ -173,35 +193,25 @@
                     const fileToShare = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
                     document.getElementById('loaderBox').style.display = 'none';
-                    
                     const successBox = document.getElementById('successBox');
                     successBox.style.display = 'block';
+                    
                     successBox.innerHTML = `
                         <span class="material-icons" style="font-size:70px; color:#10B981; animation:none;">check_circle</span>
                         <h3 style="font-weight:900; font-size:1.6rem; color:#F8FAFC; margin-bottom:15px;">تم التجهيز بنجاح! 🚀</h3>
-                        <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">الملف جاهز الآن. اضغط على الزر بالأسفل لاختيار (حفظ في الجهاز).</p>
+                        <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">الملف محمي باسمك وكودك. اضغط على الزر بالأسفل لاختيار (حفظ في الجهاز).</p>
                         
                         <button id="shareNativeBtn" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2563EB; color:white; border:none; padding:18px 20px; border-radius:14px; font-weight:900; font-size:1.1rem; cursor:pointer; width:100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); margin-bottom:12px; font-family:inherit;">
                             <span class="material-icons">share</span> مشاركة / حفظ الملف
                         </button>
-                        
-                        <button onclick="window.history.back()" style="background:transparent; border:1px solid #334155; color:#94A3B8; padding:12px; border-radius:12px; font-weight:bold; font-size:1rem; cursor:pointer; width:100%; font-family:inherit;">العودة للمنصة</button>
                     `;
 
-                    // تفعيل زر المشاركة الأصلي لنظام الأندرويد
                     document.getElementById('shareNativeBtn').addEventListener('click', async () => {
                         if (navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
                             try {
-                                await navigator.share({
-                                    files: [fileToShare],
-                                    title: fileName,
-                                    text: 'ملف المحاضرة الخاص بك.'
-                                });
-                            } catch (err) {
-                                console.log('تم إلغاء المشاركة', err);
-                            }
+                                await navigator.share({ files: [fileToShare], title: fileName, text: 'ملف المحاضرة الخاص بك.' });
+                            } catch (err) {}
                         } else {
-                            // حل بديل في حال الأندرويد القديم جداً
                             const pdfDataUri = pdf.output('datauristring');
                             const link = document.createElement('a');
                             link.href = pdfDataUri;
@@ -209,13 +219,15 @@
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
-                            alert('جهازك لا يدعم المشاركة المباشرة. جاري محاولة التحميل البديل.');
                         }
                     });
 
                 } catch (err) {
                     console.error("Error:", err);
-                    document.getElementById('loaderBox').innerHTML = `<span class="material-icons" style="color:#ef4444; animation:none;">error</span><h3>حدث خطأ!</h3><p>تعذر تحميل الملف، يرجى المحاولة مرة أخرى.</p>`;
+                    document.getElementById('loaderBox').style.display = 'none';
+                    document.getElementById('errorBox').style.display = 'block';
+                    document.getElementById('errorBox').querySelector('h3').innerText = 'حدث خطأ!';
+                    document.getElementById('errorBox').querySelector('p').innerText = 'تعذر تحميل الملف، يرجى التأكد من الإنترنت.';
                 } finally {
                     document.body.removeChild(iframe);
                 }
