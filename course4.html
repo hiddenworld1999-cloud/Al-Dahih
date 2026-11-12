@@ -1918,6 +1918,7 @@
         }
 
         // ================= دالة التحميل الآمنة (التحويل للمتصفح الخارجي) =================
+                // ================= دالة التحميل الآمنة (التحويل للمتصفح الخارجي) =================
         window.downloadAsPDF = function(url, title) {
             let cleanUrl = (url || '').trim();
             if (cleanUrl.startsWith('./')) cleanUrl = cleanUrl.substring(2);
@@ -1931,21 +1932,13 @@
             const targetDomain = 'hiddenworld1999-cloud.github.io/Al-Dahih';
             const genUrl = `https://${targetDomain}/pdf-generator.html?file=${encodeURIComponent(cleanUrl)}&name=${encodeURIComponent(sName)}&code=${encodeURIComponent(sCode)}`;
             
-            const isAndroid = /android/i.test(navigator.userAgent.toLowerCase());
-            
-            if (isAndroid) {
-                // إجبار الأندرويد يفتح المتصفح الخارجي (كروم) إجبارياً للتحميل بأمان
-                const intentUrl = `intent://${targetDomain}/pdf-generator.html?file=${encodeURIComponent(cleanUrl)}&name=${encodeURIComponent(sName)}&code=${encodeURIComponent(sCode)}#Intent;scheme=https;end;`;
-                window.location.href = intentUrl;
-            } else {
-                // للآيفون والكمبيوتر يفتح في نافذة جديدة
-                const link = document.createElement('a');
-                link.href = genUrl;
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+            // إجبار فتح الرابط في نافذة جديدة (المتصفح الخارجي) لجميع الأجهزة والـ Web Views
+            const link = document.createElement('a');
+            link.href = genUrl;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         };
 
         // ================= تحميل المحاضرات =================
