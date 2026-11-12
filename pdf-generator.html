@@ -65,7 +65,7 @@
 
         window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
-            const encodedData = params.get('token'); // أخدنا الداتا المتشفرة
+            const encodedData = params.get('token'); 
 
             if (!encodedData) {
                 document.getElementById('loaderBox').style.display = 'none';
@@ -75,7 +75,6 @@
 
             let decodedString = '';
             try {
-                // فك التشفير بأمان
                 decodedString = decodeURIComponent(escape(window.atob(encodedData)));
             } catch (e) {
                 document.getElementById('loaderBox').style.display = 'none';
@@ -83,7 +82,6 @@
                 return;
             }
 
-            // فصل البيانات (رابط الملف|الاسم|الكود)
             const parts = decodedString.split('|DAHEEH|');
             if (parts.length !== 3) {
                 document.getElementById('loaderBox').style.display = 'none';
@@ -185,12 +183,13 @@
                         }
                     }
 
-                    const safeTitle = (file.split('.')[0] || 'Lecture').replace(/[\\/:*?"<>| ]/g, '_').trim();
+                    // تسمية الملف
+                    const safeTitle = (file.split('/').pop().split('.')[0] || 'Lecture').replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const safeName = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const fileName = `محاضرة_${safeTitle}_${safeName}_${code}.pdf`;
                     
-                    const pdfBlob = pdf.output('blob');
-                    const fileToShare = new File([pdfBlob], fileName, { type: 'application/pdf' });
+                    // 🔥 التحميل المباشر للـ PDF أوتوماتيكياً
+                    pdf.save(fileName);
 
                     document.getElementById('loaderBox').style.display = 'none';
                     const successBox = document.getElementById('successBox');
@@ -198,29 +197,13 @@
                     
                     successBox.innerHTML = `
                         <span class="material-icons" style="font-size:70px; color:#10B981; animation:none;">check_circle</span>
-                        <h3 style="font-weight:900; font-size:1.6rem; color:#F8FAFC; margin-bottom:15px;">تم التجهيز بنجاح! 🚀</h3>
-                        <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">الملف محمي باسمك وكودك. اضغط على الزر بالأسفل لاختيار (حفظ في الجهاز).</p>
+                        <h3 style="font-weight:900; font-size:1.6rem; color:#F8FAFC; margin-bottom:15px;">تم التحميل بنجاح! 🚀</h3>
+                        <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">تم تنزيل المحاضرة في مجلد التنزيلات (Downloads) بجهازك بنجاح.</p>
                         
-                        <button id="shareNativeBtn" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2563EB; color:white; border:none; padding:18px 20px; border-radius:14px; font-weight:900; font-size:1.1rem; cursor:pointer; width:100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); margin-bottom:12px; font-family:inherit;">
-                            <span class="material-icons">share</span> مشاركة / حفظ الملف
+                        <button onclick="window.close()" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2563EB; color:white; border:none; padding:16px 20px; border-radius:14px; font-weight:900; font-size:1.1rem; cursor:pointer; width:100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); margin-bottom:12px; font-family:inherit;">
+                            <span class="material-icons">close</span> إغلاق الصفحة
                         </button>
                     `;
-
-                    document.getElementById('shareNativeBtn').addEventListener('click', async () => {
-                        if (navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
-                            try {
-                                await navigator.share({ files: [fileToShare], title: fileName, text: 'ملف المحاضرة الخاص بك.' });
-                            } catch (err) {}
-                        } else {
-                            const pdfDataUri = pdf.output('datauristring');
-                            const link = document.createElement('a');
-                            link.href = pdfDataUri;
-                            link.download = fileName;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        }
-                    });
 
                 } catch (err) {
                     console.error("Error:", err);
