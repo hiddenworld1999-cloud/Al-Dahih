@@ -1300,8 +1300,8 @@
         if (localStorage.getItem('daheehDarkMode') === 'true') { 
             document.body.classList.add('dark-mode'); 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'dark_mode'; 
-            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
-            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'light_mode'; 
+            if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'dark_mode'; 
+            if (document.getElementById('darkModeToggleHtml')) document.getElementById('darkModeToggleHtml').innerText = 'dark_mode'; 
         } else { 
             if (document.getElementById('darkModeToggle')) document.getElementById('darkModeToggle').querySelector('.material-icons').innerText = 'light_mode'; 
             if (document.getElementById('darkModeTogglePdf')) document.getElementById('darkModeTogglePdf').innerText = 'light_mode'; 
@@ -1810,7 +1810,7 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات والامتحانات (HTML) بحماية تامة =================
+        // ================= فتح المحاضرات والامتحانات (HTML) =================
         async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
             window.currentActiveExamType = examType;
             
@@ -1825,6 +1825,7 @@
             if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
                 if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
                 if (!cleanUrl.startsWith('./')) cleanUrl = './' + cleanUrl;
+                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace('./', '');
             }
 
             const contentBox = document.getElementById('contentBody');
@@ -1916,225 +1917,34 @@
             }
         }
 
-        // ================= أدوات التحويل والجودة العالية للـ PDF =================
-        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-        function loadScriptOnce(src, isReady) {
-            if (isReady && isReady()) return Promise.resolve();
-            return new Promise((resolve, reject) => {
-                const s = document.createElement('script');
-                s.src = src;
-                s.onload = resolve;
-                s.onerror = () => reject(new Error('تعذر تحميل المكتبة: ' + src));
-                document.head.appendChild(s);
-            });
-        }
-
-        // دالة إنشاء العلامة المائية الشفافة (تدعم الوضع الليلي والفاتح)
-        function textToImage(text) {
-            const c = document.createElement('canvas');
-            const ctx = c.getContext('2d');
-            const font = "bold 45px 'IBM Plex Sans Arabic', sans-serif";
-            ctx.font = font;
+        // ================= دالة التحميل الآمنة (التحويل للمتصفح الخارجي) =================
+        window.downloadAsPDF = function(url, title) {
+            let cleanUrl = (url || '').trim();
+            if (cleanUrl.startsWith('./')) cleanUrl = cleanUrl.substring(2);
+            if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
             
-            const textWidth = ctx.measureText(text).width;
-            const size = Math.ceil(textWidth) + 100;
-            c.width = size; c.height = size;
-            
-            ctx.translate(size / 2, size / 2);
-            ctx.rotate(-Math.PI / 4);
-            
-            ctx.font = font;
-            ctx.textBaseline = 'middle';
-            ctx.direction = 'rtl';
-            ctx.textAlign = 'center';
-            
-            ctx.fillStyle = 'rgba(200, 200, 200, 0.4)'; // رمادي شفاف
-            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-            ctx.shadowBlur = 4;
-            
-            ctx.fillText(text, 0, 0);
-            return { data: c.toDataURL('image/png'), size: size };
-        }
-
-        function resolveUrl(url) {
-            let u = (url || '').trim();
-            if (!u.startsWith('http://') && !u.startsWith('https://')) {
-                if (u.startsWith('/')) u = u.substring(1);
-                if (!u.startsWith('./')) u = './' + u;
-                u = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + u.replace('./', '');
-            }
-            return u;
-        }
-
-        // ================= دالة التحميل الذكية للطالب من داخل التطبيق =================
-        window.downloadAsPDF = async function(url, title) {
-            let cleanUrl = resolveUrl(url);
-            
+            // سحب بيانات الطالب تلقائياً من التطبيق
             const sName = localStorage.getItem('studentName') || 'طالب الدحيح';
             const sCode = localStorage.getItem('studentCode') || '000';
-            const watermarkText = `${sName} - ${sCode}`;
-
-            const loader = document.createElement('div');
-            loader.id = 'pdfLoader';
-            loader.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.9);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:sans-serif;direction:rtl;';
-            loader.innerHTML = `
-                <span class="material-icons" style="font-size:60px; color:#60A5FA; animation:pulse 1s infinite;">picture_as_pdf</span>
-                <h3 style="margin-top:20px; font-weight:bold; font-size: 1.4rem;">جاري ختم المحاضرة باسمك...</h3>
-                <p style="color:#94A3B8; font-size:0.9rem; margin-top:10px;">يرجى عدم إغلاق الشاشة حتى تكتمل العملية.</p>
-            `;
-            document.body.appendChild(loader);
-
-            const iframe = document.createElement('iframe');
-            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:900px; height:100vh; border:none; background:#fff;';
-            iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-            document.body.appendChild(iframe);
-
-            const H2C_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-
-            try {
-                await loadScriptOnce(H2C_URL, () => window.html2canvas);
-                await loadScriptOnce(JSPDF_URL, () => window.jspdf && window.jspdf.jsPDF);
-
-                await new Promise((resolve, reject) => {
-                    iframe.onload = resolve;
-                    iframe.onerror = () => reject(new Error('فشل تحميل المحاضرة'));
-                });
-
-                await sleep(3000); 
-
-                const doc = iframe.contentDocument || iframe.contentWindow.document;
-
-                const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], .gradient-text');
-                gradientTitles.forEach(el => {
-                    el.style.background = 'none';
-                    el.style.color = '#2563EB';
-                    el.style.webkitTextFillColor = 'initial';
-                });
-                const shield = doc.getElementById('antiScreenshotShield');
-                if (shield) shield.style.display = 'none';
-
-                const bodyStyles = window.getComputedStyle(doc.body);
-                let bgColor = bodyStyles.backgroundColor;
-                if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') bgColor = '#0F172A';
-                
-                let rgb = [15, 23, 42];
-                const rgbMatch = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-                if (rgbMatch) rgb = [parseInt(rgbMatch[1]), parseInt(rgbMatch[2]), parseInt(rgbMatch[3])];
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                
-                const fillBackground = () => {
-                    pdf.setFillColor(rgb[0], rgb[1], rgb[2]);
-                    pdf.rect(0, 0, pdfWidth, pdfHeight, 'F');
-                };
-
-                const watermarkImg = textToImage(watermarkText);
-                const wmSize = 90;
-
-                const drawWatermark = () => {
-                    for (let x = -30; x < pdfWidth + 30; x += 110) {
-                        for (let y = -30; y < pdfHeight + 30; y += 100) {
-                            pdf.addImage(watermarkImg.data, 'PNG', x, y, wmSize, wmSize);
-                        }
-                    }
-                };
-
-                const pages = doc.querySelectorAll('.a4-page');
-                
-                if (pages.length > 0) {
-                    for (let i = 0; i < pages.length; i++) {
-                        const canvas = await window.html2canvas(pages[i], { scale: 3, useCORS: true, logging: false, backgroundColor: bgColor });
-                        const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                        
-                        if (i > 0) pdf.addPage();
-                        fillBackground();
-                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
-                        drawWatermark();
-                    }
-                } else {
-                    const containerToCapture = doc.getElementById('pagesContainer') || doc.body;
-                    const canvas = await window.html2canvas(containerToCapture, { scale: 3, useCORS: true, logging: false, backgroundColor: bgColor });
-                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                    const imgHeightInMM = (canvas.height * pdfWidth) / canvas.width;
-                    let heightLeft = imgHeightInMM;
-                    let position = 0;
-
-                    fillBackground();
-                    pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
-                    drawWatermark();
-                    heightLeft -= pdfHeight;
-
-                    while (heightLeft > 0) {
-                        position = heightLeft - imgHeightInMM;
-                        pdf.addPage();
-                        fillBackground();
-                        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
-                        drawWatermark();
-                        heightLeft -= pdfHeight;
-                    }
-                }
-
-                const safeTitle = (title || 'المحاضرة').replace(/[\\/:*?"<>| ]/g, '_').trim();
-                const safeName = sName.replace(/[\\/:*?"<>| ]/g, '_').trim();
-                const fileName = `${safeTitle}_${safeName}_${sCode}.pdf`;
-
-                const pdfBlob = pdf.output('blob');
-                const fileToShare = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
-                loader.innerHTML = `
-                    <div style="background:#1E293B; padding:35px 25px; border-radius:24px; text-align:center; max-width:90%; width:350px; box-shadow:0 15px 35px rgba(0,0,0,0.5);">
-                        <span class="material-icons" style="font-size:70px; color:#10B981; margin-bottom:15px;">check_circle</span>
-                        <h3 style="margin:0 0 10px 0; color:#fff; font-weight:900; font-size: 1.5rem;">تم الختم بنجاح!</h3>
-                        <p style="color:#94A3B8; font-size:0.95rem; margin-bottom:25px; line-height:1.6;">الملف جاهز ومحمي باسمك وكودك.</p>
-                        
-                        <button id="sharePdfBtn" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#10B981; color:#fff; border:none; padding:16px; border-radius:14px; font-weight:bold; font-size:1.1rem; margin-bottom:12px; width:100%; cursor:pointer; font-family:inherit;">
-                            <span class="material-icons">share</span> حفظ / مشاركة الملف
-                        </button>
-                        
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:transparent; border:1px solid #475569; color:#94A3B8; padding:12px; border-radius:12px; cursor:pointer; font-weight:bold; width:100%; font-family:inherit;">إغلاق</button>
-                    </div>
-                `;
-
-                document.getElementById('sharePdfBtn').addEventListener('click', async () => {
-                    if (navigator.canShare && navigator.canShare({ files: [fileToShare] })) {
-                        try {
-                            await navigator.share({
-                                files: [fileToShare],
-                                title: fileName,
-                                text: 'ملف المحاضرة الخاص بي.'
-                            });
-                            setTimeout(() => document.body.removeChild(document.getElementById('pdfLoader')), 1500);
-                        } catch (err) {
-                            console.log('تم إلغاء المشاركة', err);
-                        }
-                    } else {
-                        const fallbackUrl = URL.createObjectURL(pdfBlob);
-                        const a = document.createElement('a');
-                        a.href = fallbackUrl;
-                        a.download = fileName;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    }
-                });
-
-            } catch (err) {
-                console.error(err);
-                loader.innerHTML = `
-                    <div style="background:#1E293B; padding:30px; border-radius:24px; text-align:center; max-width:90%; width:350px;">
-                        <span class="material-icons" style="font-size:60px; color:#EF4444; margin-bottom:15px;">error</span>
-                        <h3 style="margin:0 0 10px 0; color:#fff; font-weight:bold;">حدث خطأ!</h3>
-                        <p style="color:#94A3B8; font-size:0.9rem; margin-bottom:20px;">تأكد من قوة الإنترنت الخاص بك.</p>
-                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:#EF4444; border:none; color:#fff; padding:12px 30px; border-radius:12px; font-weight:bold; width:100%; font-family:inherit;">حسناً</button>
-                    </div>
-                `;
-            } finally {
-                if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+            
+            // رابط الأداة الموجودة على جيت هب
+            const targetDomain = 'hiddenworld1999-cloud.github.io/Al-Dahih';
+            const genUrl = `https://${targetDomain}/pdf-generator.html?file=${encodeURIComponent(cleanUrl)}&name=${encodeURIComponent(sName)}&code=${encodeURIComponent(sCode)}`;
+            
+            const isAndroid = /android/i.test(navigator.userAgent.toLowerCase());
+            
+            if (isAndroid) {
+                // إجبار الأندرويد يفتح المتصفح الخارجي (كروم) إجبارياً للتحميل بأمان
+                const intentUrl = `intent://${targetDomain}/pdf-generator.html?file=${encodeURIComponent(cleanUrl)}&name=${encodeURIComponent(sName)}&code=${encodeURIComponent(sCode)}#Intent;scheme=https;end;`;
+                window.location.href = intentUrl;
+            } else {
+                // للآيفون والكمبيوتر يفتح في نافذة جديدة
+                const link = document.createElement('a');
+                link.href = genUrl;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         };
 
