@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- حماية المحاضرات في حال إيقاف الجافاسكريبت -->
-    <noscript>
-        <style>body { display: none !important; }</style>
-        <meta http-equiv="refresh" content="0;url=../login.html">
-    </noscript>
-
     <script>
     // 1. فحص كود الأدمن السري (تفعيل فوري لصلاحيات المطور)
     const adminParam = new URLSearchParams(window.location.search).get('admin');
@@ -954,7 +948,7 @@
         window.rawLecturesList = [];
         let currentVideoLecNum = 1;
         
-        // متغير عالمي لتسجيل نوع الامتحان اللي الطالب فاتحه حالياً (عشان نسمّع فيه النقاط)
+        // متغير عالمي لتسجيل نوع الامتحان اللي الطالب فاتحه حالياً
         window.currentActiveExamType = null;
 
         if(localStorage.getItem('daheehVipMode_Y4') === 'true') {
@@ -985,19 +979,16 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            // 1. إغلاق جميع النوافذ المنبثقة
             document.querySelectorAll('.modal-trackable').forEach(el => el.style.display = 'none');
             
             const vPlayer = document.getElementById('videoIframePlayer');
             if (vPlayer) vPlayer.src = '';
 
-            // تفريغ الميتينج فوراً لقطع الكاميرا والمايك
             const meetingBox = document.getElementById('liveMeetingFrameBox');
             if (meetingBox) meetingBox.innerHTML = '';
 
             if (typeof quizTimerInterval !== 'undefined') clearInterval(quizTimerInterval);
 
-            // 2. معالجة حالة السجل
             if (event.state && event.state.view === 'lecture_detail') {
                 document.getElementById('lecturesListCard').style.display = 'none';
                 document.getElementById('lectureDetailInline').style.display = 'block';
@@ -1007,7 +998,6 @@
             } else if (event.state && event.state.modalOpen) {
                 document.getElementById(event.state.modalOpen).style.display = 'flex';
             } else {
-                // العودة للقوائم الرئيسية في شيت المادة
                 document.getElementById('lectureDetailInline').style.display = 'none';
                 document.getElementById('lecturesListCard').style.display = 'block';
                 document.getElementById('examDetailInline').style.display = 'none';
@@ -1097,7 +1087,6 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
-        // حركة السحب للرجوع بدون طرد للرئيسية
         let touchStartX = 0; let touchStartY = 0;
         document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
         document.addEventListener('touchend', e => {
@@ -1461,7 +1450,6 @@
                 .catch(() => {});
         }
 
-        // دالة الفتح في متصفح خارجي لحل مشاكل WebRTC على الكمبيوتر
         function openMeetingInExternalBrowser() {
             if (!activeMeetingUrl) return;
             const sName = localStorage.getItem('studentName') || 'طالب دحيح';
@@ -1509,7 +1497,6 @@
             }
         }
 
-        // === دالة تحويل رابط الفيديو لـ Embed نظيف ومحترف ===
         function formatEmbedVideoUrl(rawUrl) {
             if (!rawUrl) return "";
             let url = rawUrl.trim();
@@ -1529,7 +1516,6 @@
             return url;
         }
 
-        // === فتح واجهة مشغل الفيديو ===
         function openVideoLectureModal(videoUrl, lectureName, lectureNum, cacheIndex) {
             currentVideoLecNum = lectureNum;
             const embedUrl = formatEmbedVideoUrl(videoUrl);
@@ -1607,7 +1593,6 @@
             }
         }
 
-        // ================= نظام التعليقات =================
         function scrollToCommentsSection() {
             const scrollArea = document.getElementById('videoPlaylistScrollArea');
             const target = document.getElementById('commentsWrapperTarget');
@@ -1717,7 +1702,6 @@
                 });
         }
 
-        // === تبويبات المحاضرة التفاعلية الحديثة ===
         function switchInteractiveTab(tabId, el) {
             document.querySelectorAll('#interactiveLectureModal .tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -1816,7 +1800,6 @@
             openModalWithHistory('interactiveLectureModal');
         }
 
-        // ================= فتح المحاضرات والامتحانات (HTML) بحماية تامة =================
         async function openHtmlLectureInsideApp(htmlUrl, title, examType = null) {
             window.currentActiveExamType = examType;
             
@@ -1922,30 +1905,63 @@
             }
         }
 
-        // ================= دالة التحميل الآمنة (التحويل للمتصفح الخارجي) =================
+        // ================= دالة التحميل الآمنة (كوبري لمتصفح كروم + نسخ الرابط) =================
         window.downloadAsPDF = function(url, title) {
             let cleanUrl = (url || '').trim();
             if (cleanUrl.startsWith('./')) cleanUrl = cleanUrl.substring(2);
             if (cleanUrl.startsWith('/')) cleanUrl = cleanUrl.substring(1);
             
-            // سحب بيانات الطالب تلقائياً من التطبيق
             const sName = localStorage.getItem('studentName') || 'طالب الدحيح';
             const sCode = localStorage.getItem('studentCode') || '000';
             
-            // رابط الأداة الموجودة على جيت هب
             const targetDomain = 'hiddenworld1999-cloud.github.io/Al-Dahih';
             const genUrl = `https://${targetDomain}/pdf-generator.html?file=${encodeURIComponent(cleanUrl)}&name=${encodeURIComponent(sName)}&code=${encodeURIComponent(sCode)}`;
             
-            // إجبار فتح الرابط في نافذة جديدة (المتصفح الخارجي) لجميع الأجهزة والـ Web Views
-            const link = document.createElement('a');
-            link.href = genUrl;
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const isAndroid = /android/i.test(navigator.userAgent.toLowerCase());
+            
+            if (isAndroid) {
+                // شاشة الكوبري عشان ندي الطالب أوبشن فتح كروم أو نسخ اللينك
+                const loader = document.createElement('div');
+                loader.id = 'pdfLoader';
+                loader.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.9);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:sans-serif;direction:rtl;';
+                loader.innerHTML = `
+                    <div style="background:#1E293B; padding:35px 25px; border-radius:24px; text-align:center; max-width:90%; width:350px; box-shadow:0 15px 35px rgba(0,0,0,0.5);">
+                        <span class="material-icons" style="font-size:70px; color:#3B82F6; margin-bottom:15px;">open_in_browser</span>
+                        <h3 style="margin:0 0 10px 0; color:#fff; font-weight:900; font-size: 1.4rem;">استخراج المحاضرة</h3>
+                        <p style="color:#94A3B8; font-size:0.95rem; margin-bottom:25px; line-height:1.6;">لضمان التحميل بنجاح، سيتم توجيهك للمتصفح (جوجل كروم).</p>
+                        
+                        <a href="intent://${targetDomain}/pdf-generator.html?file=${encodeURIComponent(cleanUrl)}&name=${encodeURIComponent(sName)}&code=${encodeURIComponent(sCode)}#Intent;scheme=https;package=com.android.chrome;end;" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#2563EB; color:#fff; border:none; padding:16px; border-radius:14px; font-weight:bold; font-size:1.1rem; margin-bottom:12px; width:100%; text-decoration:none;">
+                            <span class="material-icons">exit_to_app</span> افتح في جوجل كروم
+                        </a>
+                        
+                        <button id="copyUrlBtn" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#10B981; color:#fff; border:none; padding:16px; border-radius:14px; font-weight:bold; font-size:1.1rem; margin-bottom:12px; width:100%; cursor:pointer; font-family:inherit;">
+                            <span class="material-icons">content_copy</span> نسخ الرابط (خطة بديلة)
+                        </button>
+                        
+                        <button onclick="document.body.removeChild(document.getElementById('pdfLoader'))" style="background:transparent; border:1px solid #475569; color:#94A3B8; padding:12px; border-radius:12px; cursor:pointer; font-weight:bold; width:100%; font-family:inherit;">إغلاق</button>
+                    </div>
+                `;
+                document.body.appendChild(loader);
+
+                document.getElementById('copyUrlBtn').addEventListener('click', () => {
+                    const tempInput = document.createElement('input');
+                    tempInput.value = genUrl;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    alert("تم نسخ الرابط بنجاح! افتح جوجل كروم والصقه للتحميل.");
+                });
+            } else {
+                const link = document.createElement('a');
+                link.href = genUrl;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
         };
 
-        // ================= تحميل المحاضرات =================
         function loadLectures() {
             const listCard = document.getElementById('lecturesListCard'); 
             const studentCode = localStorage.getItem('studentCode') || '';
@@ -2193,12 +2209,10 @@
             const quizKey = `completed_quiz_${courseId}_${type}`; 
             const isAlreadyCompleted = localStorage.getItem(quizKey) === 'true';
             
-            // تهيئة نصوص وألوان الزر البنفسجي (زر تحدي الامتحان)
             let btnTxt = currentLang === 'en' ? 'Interactive Exam Challenge' : 'تحدي الامتحان التفاعلي (بدون إجابات)'; 
             let btnIcon = 'bolt'; 
             let btnStyle = 'background:#9c27b0; color:white; border:none; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.25);'; 
             
-            // إذا كان الطالب قد أجرى الامتحان مسبقاً، يتم تحويل الزر البنفسجي ليكون "إعادة الاختبار (بدون نقاط)"
             if(isAlreadyCompleted) { 
                 btnTxt = currentLang === 'en' ? 'Retake Quiz (No XP)' : 'إعادة الاختبار (بدون نقاط)'; 
                 btnIcon = 'replay'; 
@@ -2214,7 +2228,6 @@
                 return clean.endsWith('.html') || clean.endsWith('.htm');
             };
 
-            // 1. زرار الامتحان المحلول (أزرق)
             if(fileName) {
                 if(isHtmlFile(fileName)) {
                     const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${fileName.replace(/'/g, "\\'")}', '${title}')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
@@ -2240,7 +2253,6 @@
                 pdfHtml += `<p style="color:#d32f2f; font-size:0.9rem; margin-bottom:12px; font-weight:bold; text-align:center;">ملف الحل غير متوفر حالياً</p>`; 
             }
 
-            // 2. زرار الامتحان بدون إجابات (البنفسجي أو الرمادي في حال الإعادة)
             if (unsolvedFileName) {
                 if(isHtmlFile(unsolvedFileName)) {
                     const downloadBtnHtml = `<button onclick="event.stopPropagation(); window.downloadAsPDF('${unsolvedFileName.replace(/'/g, "\\'")}', '${title} (تحدي)')" class="btn-icon" style="background:#10B981; color:white; width:auto; padding:0 15px; margin-inline-start:10px; cursor:pointer;" title="تحميل كـ PDF">
