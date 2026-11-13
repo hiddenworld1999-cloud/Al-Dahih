@@ -15,7 +15,7 @@
             user-select: none !important;
             -webkit-touch-callout: none !important;
         }
-        @media print { html, body { display: none !important; } }
+        
         #antiScreenshotShield {
             position: fixed; inset: 0; background: #020202; color: #ffffff;
             display: none; align-items: center; justify-content: center;
@@ -110,14 +110,17 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { overflow-x: hidden !important; width: 100%; }
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
+            background-color: var(--bg-body);
+        }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-body);
             color: var(--text-main);
             line-height: 1.6;
-            padding: 20px 5px;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -127,26 +130,31 @@
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
 
-        /* ============ تصميم ورقة A4 ============ */
-        .page-container {
-            width: 100%; display: flex; justify-content: center;
-            margin-bottom: 20px; max-width: 100vw; overflow: hidden; 
+        /* ============ الحاوية الأساسية للورقة ============ */
+        .page-wrapper {
+            width: 100%;
+            display: flex; 
+            justify-content: center;
+            margin-bottom: 30px; 
+            overflow: hidden;
+            padding: 0 10px; 
         }
         
+        /* ============ تصميم ورقة A4 ============ */
         .a4-page {
             background-color: var(--bg-page);
-            width: 850px; 
-            flex-shrink: 0; 
-            min-height: 1080px; 
-            height: max-content; 
-            padding: 20px 25px 50px 25px;
+            width: 794px; 
+            height: 1123px; 
+            padding: 35px 25px 55px 25px; 
             border: 2px solid var(--gold-primary);
             border-radius: 4px;
             box-shadow: var(--card-shadow);
             position: relative;
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
             transform-origin: top center; 
+            flex-shrink: 0;
         }
 
         .a4-page::before {
@@ -172,28 +180,32 @@
             filter: grayscale(100%);
         }
 
+        /* السر هنا في التوسيط */
         .content-wrapper {
             position: relative;
             z-index: 2;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            width: 100%;
+            margin: 0 auto; /* يضمن إنه في النص */
+            transform-origin: top center; 
         }
 
         .hero-header { text-align: center; padding: 5px 0 15px; margin-bottom: 15px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
         .hero-header h1 {
             font-family: 'Amiri', serif;
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 700; color: var(--heading-main);
             margin-bottom: 5px;
         }
-        .hero-header p { font-size: 1.45rem; color: var(--navy-blue); font-weight: 700; }
+        .hero-header p { font-size: 1.3rem; color: var(--navy-blue); font-weight: 700; }
 
         .glass-card {
             background: #FFFFFF;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px 20px; 
+            padding: 12px 15px; 
             margin-bottom: 15px; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             position: relative;
@@ -208,27 +220,33 @@
         }
 
         h2 {
-            font-size: 1.8rem; color: var(--heading-main); margin-bottom: 12px;
+            font-size: 1.6rem; color: var(--heading-main); margin-bottom: 10px;
             display: flex; align-items: center; gap: 8px; font-weight: 800;
             border-bottom: 2px solid var(--gold-light); padding-bottom: 4px; width: fit-content;
         }
-        h2 span.icon { font-size: 1.5rem; background: rgba(76, 29, 149, 0.1); padding: 3px 8px; border-radius: 6px; }
+        h2 span.icon { font-size: 1.3rem; background: rgba(76, 29, 149, 0.1); padding: 3px 8px; border-radius: 6px; }
 
         h3 {
-            font-size: 1.45rem; color: var(--heading-main); margin: 15px 0 10px;
+            font-size: 1.3rem; color: var(--heading-main); margin: 12px 0 8px;
             font-weight: 700; display: flex; align-items: center; gap: 6px;
         }
-        h3::before { content: '◈'; color: var(--gold-primary); font-size: 1.2rem; }
+        h3::before { content: '◈'; color: var(--gold-primary); font-size: 1.1rem; }
 
-        p, li { font-size: 1.35rem; margin-bottom: 8px; color: var(--text-main); line-height: 1.6; }
-        ul, ol { margin-right: 25px; margin-bottom: 12px; }
+        p, li { 
+            font-size: 1.15rem; 
+            margin-bottom: 6px; 
+            color: var(--text-main); 
+            line-height: 1.5; 
+            text-align: justify; 
+        }
+        ul, ol { margin-right: 20px; margin-bottom: 10px; }
         ul li::marker { color: var(--gold-primary); }
         ol li::marker { color: var(--heading-main); font-weight: bold; }
         
         .boxed-heading {
             color: var(--heading-main);
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             border: 1.5px solid var(--heading-main);
             border-radius: 6px;
             padding: 2px 10px;
@@ -250,79 +268,80 @@
         .summary-box {
             background: rgba(253, 224, 71, 0.15);
             border: 1px dashed var(--gold-primary);
-            padding: 12px 18px;
+            padding: 10px 15px;
             border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-size: 1.15rem;
             color: #78350F;
             font-weight: 700;
-            line-height: 1.6;
+            line-height: 1.5;
+            text-align: justify;
         }
 
-        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 12px 18px; border-radius: 6px; margin: 15px 0; font-size: 1.3rem;}
-        .alert-box h3 { color: var(--red-alert); margin-top: 0; font-size: 1.45rem;}
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 10px 15px; border-radius: 6px; margin: 12px 0; font-size: 1.15rem;}
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; font-size: 1.3rem;}
         .alert-box h3::before { content: '⚠️'; }
 
-        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 12px 18px; border-radius: 6px; margin: 15px 0; font-size: 1.3rem;}
-        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; font-size: 1.45rem;}
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 6px; margin: 12px 0; font-size: 1.15rem;}
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; font-size: 1.3rem;}
         .tip-box h3::before { content: '💡'; }
 
-        .table-wrapper { overflow-x: hidden; margin: 15px 0; border-radius: 6px; border: 1px solid var(--border-color); background: #FFF; }
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1.15rem; }
-        th, td { padding: 10px 8px; border: 1px solid var(--border-color); }
+        .table-wrapper { overflow-x: hidden; margin: 10px 0; border-radius: 6px; border: 1px solid var(--border-color); background: #FFF; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1.05rem; }
+        th, td { padding: 8px; border: 1px solid var(--border-color); }
         th { background: rgba(6, 78, 59, 0.08); color: var(--heading-main); font-weight: 800; }
         tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
         .highlight-row { background: rgba(16, 185, 129, 0.15); font-weight: bold; border: 1px solid var(--emerald-light); }
         
-        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 15px 0; padding: 15px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); flex-direction: column;}
-        .flow-chart { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; direction: rtl; margin-top: 15px;}
-        .flow-box { background: var(--emerald-dark); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 1.2rem; }
-        .flow-box-light { background: var(--emerald-light); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 1.2rem; }
-        .flow-op { font-size: 1.5rem; color: var(--gold-primary); font-weight: bold; }
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 10px 0; padding: 12px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); flex-direction: column;}
+        .flow-chart { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; direction: rtl; margin-top: 10px;}
+        .flow-box { background: var(--emerald-dark); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 1.05rem; }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 1.05rem; }
+        .flow-op { font-size: 1.3rem; color: var(--gold-primary); font-weight: bold; }
 
         /* تصميم الدوائر زي الصورة */
         .circle-box {
             background: white;
-            border: 5px solid var(--emerald-light);
+            border: 4px solid var(--emerald-light);
             border-radius: 50%;
-            width: 160px;
-            height: 160px;
+            width: 130px;
+            height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 10px;
+            padding: 8px;
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #000;
-            line-height: 1.4;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            line-height: 1.3;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .arrow-left {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: var(--emerald-light);
             font-weight: bold;
-            margin: 0 -10px;
+            margin: 0 -8px;
             z-index: 2;
         }
 
         .footer-bar {
-            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            position: absolute; bottom: 15px; left: 25px; right: 25px;
             display: flex; align-items: center; justify-content: space-between;
             border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 8px; z-index: 2;
         }
         .footer-brand { display: flex; align-items: center; gap: 8px; }
         .footer-logo { width: 25px; height: 25px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
         .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
 
     </style>
 </head>
 <body>
 
     <!-- ================= الصفحة 1 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -404,7 +423,7 @@
     </div>
 
     <!-- ================= الصفحة 2 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -467,7 +486,7 @@
     </div>
 
     <!-- ================= الصفحة 3 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -510,7 +529,7 @@
     </div>
 
     <!-- ================= الصفحة 4 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -531,12 +550,12 @@
 
                     <!-- القوانين -->
                     <div class="summary-box" style="background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-dark); margin-top: 20px;">
-                        <h3 style="color: var(--emerald-dark); margin-top: 0; font-size: 1.4rem;">قوانين اختيار المشروعات (مهم جداً):</h3>
-                        <ul style="font-size: 1.4rem; font-weight: 800; color: var(--heading-main); margin-bottom: 5px;">
+                        <h3 style="color: var(--emerald-dark); margin-top: 0; font-size: 1.3rem;">قوانين اختيار المشروعات (مهم جداً):</h3>
+                        <ul style="font-size: 1.3rem; font-weight: 800; color: var(--heading-main); margin-bottom: 5px;">
                             <li><strong>المنفعة النسبية</strong> = المنافع (م) ÷ التكاليف (ت)</li>
                             <li><strong>المنفعة الصافية</strong> = المنافع (م) - التكاليف (ت)</li>
                         </ul>
-                        <p style="margin-bottom: 0; color: var(--red-alert);"><strong>القاعدة الذهبية للاختيار:</strong> بنرتب المشروعات بناءً على <span class="hl-yellow">المنفعة النسبية (م ÷ ت)</span> من الأعلى ترتيباً للأقل. ونختار المشروعات بالأولوية دي لغاية ما نصرف الموازنة بالكامل.</p>
+                        <p style="margin-bottom: 0; color: var(--red-alert); font-size: 1.15rem;"><strong>القاعدة الذهبية للاختيار:</strong> بنرتب المشروعات بناءً على <span class="hl-yellow">المنفعة النسبية (م ÷ ت)</span> من الأعلى ترتيباً للأقل. ونختار المشروعات بالأولوية دي لغاية ما نصرف الموازنة بالكامل.</p>
                     </div>
                     
                     <div class="table-wrapper">
@@ -575,7 +594,7 @@
                             </tr>
                         </table>
                     </div>
-                    <p style="font-size: 1.2rem; color: var(--text-muted); margin-top: 10px;">*(لو الموازنة 700، هنختار الرابع (100) + الأول (400) + الثاني (200) = 700 بالظبط).*</p>
+                    <p style="font-size: 1.1rem; color: var(--text-muted); margin-top: 10px;">*(لو الموازنة 700، هنختار الرابع (100) + الأول (400) + الثاني (200) = 700 بالظبط).*</p>
                 </section>
             </div>
             <div class="footer-bar">
@@ -585,8 +604,8 @@
         </div>
     </div>
 
-    <!-- ================= الصفحة 5 (تم تعديلها) ================= -->
-    <div class="page-container">
+    <!-- ================= الصفحة 5 ================= -->
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -597,16 +616,15 @@
                     <p>هي تلك <span class="hl-yellow">الموارد المالية</span> التي تحصل عليها الدولة من مصادر معينة، والتي تحتاج إليها <span class="hl-green">لتمويل النفقات العامة</span>.</p>
 
                     <h3>ثانياً: مصادر الإيرادات العامة (4 مصادر):</h3>
-                    <!-- تصميم البوكسات والأسهم من اليمين (أملاك الدولة) للشمال (القروض) -->
                     <div class="diagram-container" style="padding: 15px 5px; margin: 10px 0;">
                         <div class="flow-chart" style="flex-wrap: nowrap; gap: 2px; width: 100%; justify-content: center;">
-                            <div class="flow-box-light" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">أملاك الدولة<br>(الدومين)</div>
-                            <div class="flow-op" style="font-size: 1.5rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
-                            <div class="flow-box" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">الإيرادات<br>الإدارية</div>
-                            <div class="flow-op" style="font-size: 1.5rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
-                            <div class="flow-box-light" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">الضرائب</div>
-                            <div class="flow-op" style="font-size: 1.5rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
-                            <div class="flow-box" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">القروض</div>
+                            <div class="flow-box-light" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">أملاك الدولة<br>(الدومين)</div>
+                            <div class="flow-op" style="font-size: 1.3rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">الإيرادات<br>الإدارية</div>
+                            <div class="flow-op" style="font-size: 1.3rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box-light" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">الضرائب</div>
+                            <div class="flow-op" style="font-size: 1.3rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">القروض</div>
                         </div>
                     </div>
 
@@ -660,7 +678,7 @@
     </div>
 
     <!-- ================= الصفحة 6 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -726,7 +744,7 @@
     </div>
 
     <!-- ================= الصفحة 7 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -807,7 +825,7 @@
     </div>
 
     <!-- ================= الصفحة 8 ================= -->
-    <div class="page-container">
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -860,8 +878,8 @@
         </div>
     </div>
 
-    <!-- ================= الصفحة 9 (كبسولة الامتحان) ================= -->
-    <div class="page-container">
+    <!-- ================= الصفحة 9 ================= -->
+    <div class="page-wrapper">
         <div class="a4-page">
             <div class="watermark"></div>
             <div class="content-wrapper">
@@ -910,37 +928,87 @@
     </div>
 
     <script>
-        function resizePages() {
-            const pages = document.querySelectorAll('.a4-page');
-            const maxWidth = 850;
-            const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
-            const availableWidth = viewportWidth - 10; 
+        // 1. تصغير الورقة عشان تبان كأنها ورقة A4 على الشاشة
+        function scalePages() {
+            const wrappers = document.querySelectorAll('.page-wrapper');
+            const viewportWidth = window.innerWidth;
+            const pageWidth = 794; 
+            const pageHeight = 1123; 
             
-            let scale = 1;
-            if (availableWidth < maxWidth) {
-                scale = availableWidth / maxWidth;
-            }
+            const scale = Math.min(1, (viewportWidth - 20) / pageWidth);
 
-            pages.forEach(page => {
-                const wrapper = page.parentElement;
-                page.style.transform = 'none';
-                const actualHeight = page.offsetHeight;
-
+            wrappers.forEach(wrapper => {
+                const page = wrapper.querySelector('.a4-page');
                 if (scale < 1) {
                     page.style.transform = `scale(${scale})`;
-                    page.style.transformOrigin = 'top center';
-                    wrapper.style.width = `${availableWidth}px`;
-                    wrapper.style.height = `${actualHeight * scale}px`;
+                    wrapper.style.height = `${pageHeight * scale}px`; 
                 } else {
                     page.style.transform = 'none';
-                    wrapper.style.width = '100%';
                     wrapper.style.height = 'auto';
                 }
             });
         }
 
-        window.addEventListener('load', resizePages);
-        window.addEventListener('orientationchange', resizePages);
+        // 2. تصغير الكلام اللي جوه الورقة لو كان كتير (عشان ميتقصش) وتوسيعه وتوسيطه
+        function fitContentInsidePage() {
+            const pages = document.querySelectorAll('.a4-page');
+            
+            pages.forEach(page => {
+                const content = page.querySelector('.content-wrapper');
+                
+                // نرجع المحتوى لحجمه الطبيعي الأول عشان نقيس صح
+                content.style.zoom = '1'; // تصفير الزوم
+                content.style.transform = 'none';
+                content.style.width = '100%';
+                content.style.margin = '0 auto';
+                
+                // بنجيب طول الورقة المتاح
+                const pageHeight = page.clientHeight;
+                const style = window.getComputedStyle(page);
+                const paddingTop = parseFloat(style.paddingTop);
+                const paddingBottom = parseFloat(style.paddingBottom);
+                const availableHeight = pageHeight - paddingTop - paddingBottom - 5; 
+                
+                const contentHeight = content.scrollHeight;
+                
+                // لو الكلام أطول من الورقة، بنصغره بـ zoom عشان يفضل في مكانه
+                if (contentHeight > availableHeight) {
+                    const scale = availableHeight / contentHeight;
+                    
+                    // استخدام zoom بدل transform عشان ميفضلش فراغ
+                    // ملاحظة: zoom مش شغال في فايرفوكس، عشان كده ضفنا transform كـ fallback
+                    if (navigator.userAgent.indexOf("Firefox") !== -1) {
+                        // فايرفوكس
+                        content.style.transformOrigin = 'top center';
+                        content.style.transform = `scale(${scale})`;
+                        content.style.width = `${(100 / scale)}%`;
+                    } else {
+                        // كروم وسفاري وموبايل
+                        content.style.zoom = scale; 
+                        // بنوسع الشاشة بتاعت الكلام عشان ياخد مساحة الورقة كلها بالعرض
+                        content.style.width = '100%'; 
+                    }
+                }
+            });
+        }
+
+        // تنفيذ الدوال أول ما الصفحة تحمل
+        window.addEventListener('load', () => {
+            scalePages();
+            fitContentInsidePage();
+        });
+        
+        // تنفيذ الدوال لو المستخدم لف الموبايل أو كبر الشاشة
+        window.addEventListener('resize', () => {
+            scalePages();
+            fitContentInsidePage();
+        });
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                scalePages();
+                fitContentInsidePage();
+            }, 200);
+        });
     </script>
 </body>
 </html>
