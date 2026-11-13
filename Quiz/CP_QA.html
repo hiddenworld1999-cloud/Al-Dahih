@@ -123,7 +123,8 @@
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
             line-height: 1.4;
-            padding: 70px 0 100px 0;
+            /* مساحة للشريط العلوي والسفلي */
+            padding: 60px 0 90px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -564,7 +565,7 @@ const QUIZ = [
     { text: "عند فشل تسجيل الدخول يُفضل عرض رسالة عامة واحدة مثل Invalid username or password.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "حتى لا يعرف المهاجم أسماء المستخدمين الموجودة في النظام." }
 ];
 
-/* ===== إصلاح: حساب isGeneric مرة واحدة لكل سؤال ===== */
+/* حساب isGeneric مرة واحدة */
 QUIZ.forEach(q => {
     q.isGeneric = (
         q.explanation === 'صح.' ||
@@ -589,18 +590,18 @@ let state = {
 function renderPaginatedPages() {
     container.innerHTML = '';
     
-    // 1. حاوية القياس المخفية
+    // حاوية القياس المخفية
     const measureBox = document.createElement('div');
     measureBox.style.position = 'absolute';
     measureBox.style.visibility = 'hidden';
-    measureBox.style.width = '774px';
+    measureBox.style.width = '774px'; 
     document.body.appendChild(measureBox);
     
     const measureWrapper = document.createElement('div');
     measureWrapper.className = 'content-wrapper';
     measureBox.appendChild(measureWrapper);
 
-    // 2. قياس الهيدر والبينر
+    // قياس الهيدر
     measureWrapper.innerHTML = `
         <header class="hero-header">
             <h1>MIDTERM EXAM</h1>
@@ -612,11 +613,11 @@ function renderPaginatedPages() {
     `;
     const headerH = measureWrapper.offsetHeight;
 
-    // 3. قياس الفاصل
+    // قياس الفاصل
     measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
     const dividerH = measureWrapper.offsetHeight + 16; 
 
-    // 4. قياس كل سؤال - استخدام q.isGeneric المحسوب مسبقاً
+    // قياس كل سؤال
     const qHeights = QUIZ.map((q) => {
         measureWrapper.innerHTML = `
             <div class="q-card">
@@ -642,7 +643,7 @@ function renderPaginatedPages() {
 
     document.body.removeChild(measureBox);
 
-    // 5. التوزيع الذكي على الصفحات
+    // التوزيع الذكي
     const availableHeight = 1123 - 10 - 40 - 35;
     const pages = [];
     let currentPage = [];
@@ -655,7 +656,6 @@ function renderPaginatedPages() {
             required += headerH;
         }
 
-        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 33 = index 32)
         let forceBreak = false;
         if (i === 32 && currentPage.length > 0) {
             forceBreak = true;
@@ -688,7 +688,7 @@ function renderPaginatedPages() {
         pages.push(currentPage);
     }
 
-    // 6. بناء HTML في array ثم join (أداء أفضل)
+    // بناء HTML
     const totalPages = pages.length;
 
     const pagesHTML = pages.map((pageIndices, pageIdx) => {
@@ -759,7 +759,6 @@ function renderPaginatedPages() {
         return pageHTML;
     });
 
-    // تعيين كل الصفحات مرة واحدة
     container.innerHTML = pagesHTML.join('');
 
     updateProgress();
@@ -917,7 +916,6 @@ window.submitExam = function() {
             }
         });
 
-        // إظهار زرار التعليل بعد التسليم
         const infoBtn = document.getElementById(`btn-${i}`);
         if (infoBtn) infoBtn.style.display = 'flex';
     });
@@ -945,7 +943,6 @@ window.toggleExplanation = function(index) {
     const expBox = document.getElementById(`exp-${index}`);
     const btn = document.getElementById(`btn-${index}`);
     
-    // فحص أمان: لو العنصر مش موجود (سؤال عام) نخرج بهدوء
     if (!expBox || !btn) return;
     
     const isCurrentlyOpen = expBox.classList.contains('show');
