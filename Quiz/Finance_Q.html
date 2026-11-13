@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>أسئلة الميد - المالية العامة (محلولة)</title>
+    <title>بنك أسئلة محلول ميد ترم - مادة مالية عامة</title>
     
-    <!-- ================= بداية كود الحماية ================= -->
+    <!-- ================= بداية كود الحماية الموحد ================= -->
     <noscript>
         <style>body { display: none !important; }</style>
         <meta http-equiv="refresh" content="0;url=../login.html">
@@ -60,64 +60,289 @@
     
     <style>
         :root {
-            --bg-body: #F3F4F6; --bg-page: #FDFBF7; --text-main: #1F2937; --text-muted: #4B5563;
-            --emerald-dark: #064E3B; --emerald-light: #10B981; --gold-primary: #D4AF37; --gold-light: #FDE047;
-            --navy-blue: #1E3A8A; --red-alert: #B91C1C; --heading-main: #4C1D95; --border-color: #E5E7EB;
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
+            --heading-main: #4C1D95;
+            --border-color: #E5E7EB;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { overflow-x: hidden !important; width: 100%; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; padding: 20px 5px; display: flex; flex-direction: column; align-items: center; }
+        
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
+            background-color: var(--bg-body);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            line-height: 1.5; 
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
 
-        .page-container { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; max-width: 100vw; overflow: hidden; }
-        .a4-page { background-color: var(--bg-page); width: 850px; flex-shrink: 0; min-height: 1080px; height: max-content; padding: 18px 24px 45px 24px; border: 2px solid var(--gold-primary); border-radius: 4px; box-shadow: var(--card-shadow); position: relative; display: flex; flex-direction: column; transform-origin: top center; }
-        .a4-page::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue)); z-index: 10; }
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.04; pointer-events: none; z-index: 0; filter: grayscale(100%); }
-        .content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; flex-grow: 1; }
-
-        .hero-header { text-align: center; padding: 0 0 10px; margin-bottom: 8px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
-        .hero-header h1 { font-family: 'Amiri', serif; font-size: 3rem; font-weight: 700; color: var(--heading-main); margin-bottom: 2px; }
-        .hero-header p { font-size: 1.45rem; color: var(--navy-blue); font-weight: 700; }
+        /* ============ الحاوية الأساسية للورقة ============ */
+        .page-wrapper {
+            width: 100%;
+            display: flex; justify-content: center;
+            margin-bottom: 20px; 
+            overflow: hidden;
+            padding: 0 10px; 
+        }
         
-        .section-divider { background: linear-gradient(90deg, rgba(6, 78, 59, 0.1), rgba(212, 175, 55, 0.1)); border: 1px dashed var(--gold-primary); color: var(--heading-main); text-align: center; padding: 6px; border-radius: 8px; font-weight: 800; margin: 8px 0; font-size: 1.55rem; }
+        /* ============ تصميم ورقة A4 ============ */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 794px; 
+            min-height: 1123px; 
+            height: auto;
+            padding: 10px 10px 40px 10px; 
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transform-origin: top center; 
+            flex-shrink: 0;
+        }
 
-        .q-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 9px 13px; margin-bottom: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: relative; border-right: 4px solid var(--gold-primary); }
-        .q-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 5px; }
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: stretch;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 28px;
+            font-weight: 700; color: var(--heading-main);
+            margin-bottom: 2px;
+        }
+        .hero-header p { font-size: 16px; color: var(--navy-blue); font-weight: 700; }
+
+        .section-divider {
+            background: linear-gradient(90deg, rgba(6, 78, 59, 0.1), rgba(212, 175, 55, 0.1));
+            border: 1px dashed var(--gold-primary);
+            color: var(--heading-main);
+            text-align: center;
+            padding: 6px;
+            border-radius: 8px;
+            font-weight: 800;
+            margin: 10px 0 15px 0;
+            font-size: 18px;
+        }
+
+        /* ============ كارت السؤال ============ */
+        .q-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 15px; 
+            margin-bottom: 12px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+            border-right: 4px solid var(--gold-primary);
+            transition: all 0.3s;
+        }
+
+        .q-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 8px;
+        }
         .q-head-right { display: flex; align-items: center; gap: 10px; }
-        .q-num { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(76, 29, 149, 0.1); color: var(--heading-main); font-weight: 800; font-size: 21px; }
-        
-        .info-btn { width: 32px; height: 32px; border-radius: 50%; background: transparent; border: 2px solid var(--navy-blue); color: var(--navy-blue); font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; }
+        .q-num {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; 
+            background: rgba(76, 29, 149, 0.1);
+            color: var(--heading-main); 
+            font-weight: 800; font-size: 16px;
+        }
+
+        .info-btn {
+            display: flex;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--navy-blue);
+            color: var(--navy-blue);
+            font-size: 14px; font-weight: 800;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s;
+        }
         .info-btn:hover { background: rgba(30, 58, 138, 0.1); }
         .info-btn.active { background: var(--navy-blue); color: #FFF; }
 
-        .q-text { margin: 0 0 8px 0; font-size: 1.45rem; font-weight: 700; line-height: 1.55; color: var(--heading-main); }
+        .q-text {
+            margin: 0 0 10px 0; 
+            font-size: 18px;
+            font-weight: 700; line-height: 1.5;
+            color: var(--heading-main);
+        }
 
-        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .option { position: relative; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px; min-height: 52px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: #F9FAFB; font-size: 1.3rem; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+        /* ============ الخيارات (2x2) ============ */
+        .q-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px; 
+        }
+        
+        .option {
+            position: relative;
+            display: flex;
+            flex-direction: row; 
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            min-height: 40px;
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: #F9FAFB;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+        
+        .option .letter {
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 4px;
+            background: #E5E7EB;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        
         .option .opt-text { flex: 1; }
-        .option.correct { border-color: var(--emerald-light); background: rgba(16, 185, 129, 0.1); box-shadow: 0 0 8px rgba(6, 78, 59, 0.1); }
-        .option.correct .opt-text { color: var(--emerald-dark); font-weight: 800; }
-        .option .mark { margin-inline-start: auto; font-size: 21px; font-weight: bold; color: var(--emerald-light); }
 
-        .q-explanation { display: none; margin-top: 7px; padding: 8px 12px; background: rgba(253, 224, 71, 0.15); border: 1px dashed var(--gold-primary); border-radius: 6px; font-size: 1.3rem; font-weight: 600; color: #78350F; line-height: 1.55; }
+        /* حالة الإجابة الصحيحة */
+        .option.correct { 
+            border-color: var(--emerald-light); 
+            background: rgba(16, 185, 129, 0.1); 
+        }
+        .option.correct .letter { background: var(--emerald-light); color: #FFF; }
+        .option.correct .opt-text { color: var(--emerald-dark); font-weight: 800; }
+        .option.correct .mark { color: var(--emerald-light); font-weight: bold; font-size: 20px; margin-inline-start: auto; }
+
+        /* ============ صندوق التعليل ============ */
+        .q-explanation {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #78350F;
+            line-height: 1.5;
+        }
         .q-explanation strong { color: var(--navy-blue); }
         .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .footer-bar { position: absolute; bottom: 10px; left: 22px; right: 22px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 6px; z-index: 2; }
+        /* ============ فوتر الورقة ============ */
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 25px; right: 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 8px; z-index: 2;
+        }
         .footer-brand { display: flex; align-items: center; gap: 8px; }
         .footer-logo { width: 25px; height: 25px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
-        .footer-brand-name { font-size: 15px; font-weight: 900; color: var(--heading-main); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        /* ============ الطباعة ============ */
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body {
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .page-wrapper {
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                display: block !important;
+                break-after: page;
+                page-break-after: always;
+                break-inside: avoid;
+            }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page {
+                transform: none !important;
+                box-shadow: none !important;
+                height: 1123px !important;
+                min-height: 1123px !important;
+                overflow: hidden !important;
+                margin: 0 auto;
+                border-radius: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
+
     <div id="pagesContainer" style="display: contents;"></div>
+
 <script>
 const QUIZ = [
+    // --- أسئلة الاختيار من متعدد (1 - 30) ---
     { text: "1. ............. هي التي لا تؤدى الى زيادة الانتاج القومى بشكل مباشر ولكنها تؤدى الى اعادة توزيع الدخل القومي وتقدمها الدولة الى الافراد بدون مقابل.", options: ["أ- النفقات الحقيقية", "ب- النفقات الغير عادية", "ج- النفقات الرأسمالية", "د- النفقات التحويلية"], correct: 3, explanation: "النفقات التحويلية لا تزيد الإنتاج مباشرة، بل تعيد توزيع الدخل وتُقدم بدون مقابل مثل الدعم والإعانات." },
     { text: "2. ............. تعنى \"ينبغي ان يهدف الإنفاق العام الى تحقيق اقصى منفعة اجتماعية\".", options: ["أ- قاعدة المنفعة", "ب- قاعدة الاقتصاد", "ج- قاعدة الترخيص", "د- صفة النقدية"], correct: 0, explanation: "قاعدة المنفعة تنص على ضرورة تحقيق الإنفاق العام لأقصى منفعة اجتماعية ممكنة." },
     { text: "3. هي التي يقوم باشباعها الافراد او الهيئات الخاصة.", options: ["أ- الحاجات العامة", "ب- الحاجات الخاصة", "ج- الحاجات شبه العامة", "د- لاشئ مما سبق"], correct: 1, explanation: "الحاجات الخاصة أو الفردية هي التي يقوم الأفراد أو الهيئات الخاصة بإشباعها بناءً على رغبتهم." },
@@ -148,6 +373,8 @@ const QUIZ = [
     { text: "28. الضرائب على المبيعات والانفاق من ............", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 0, explanation: "الضرائب على المبيعات والإنفاق تُصنف كضرائب غير مباشرة." },
     { text: "29. ............ هي التي يتحمل عبئها دافع الضريبة نفسه اى انه لا ينقل عبئها.", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 1, explanation: "الضرائب المباشرة لا تنقل العبء، بل يتحملها دافعها." },
     { text: "30. ............ هي التي تفرض على الدخل عند انفاقه", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 0, explanation: "الضرائب غير المباشرة تفرض عند الإنفاق (الشراء)." },
+
+    // --- أسئلة الصواب والخطأ (31 - 60) ---
     { text: "1. إذا كانت النفقة تتم بانتظام أو بصفة دورية تعتبر نفقة عادية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النفقات العادية هي التي تتكرر بانتظام في كل موازنة." },
     { text: "2. تتم النفقات الحقيقة مقابل تقديم خدمة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النفقات الحقيقية لها مقابل خدمة أو إنتاج (مثل الأجور)." },
     { text: "3. تتميز جميع تنظيمات المالية العامة بخضوعها لسلطة الدولة بصورة مباشرة او غير مباشرة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "المالية العامة تخضع دائماً لسلطة الدولة (مظهر تنظيمي)." },
@@ -179,75 +406,257 @@ const QUIZ = [
     { text: "29. تراعى الضرائب المباشرة مبادئ العدالة الضريبية فكل ممول يدفع بناء على مقدرته التكليفية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "الضرائب المباشرة تراعي العدالة بناءً على المقدرة المالية." },
     { text: "30. الضريبة على الدخل تفرض على مجموع الدخل الصافى الذى يحصل عليه الممول خلال العام ويقدم به اقرار ضريبى واحد الى الادارة الضريبية يوضح فيه كل انواع دخله الذى يحصل عليه خلال العام.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو نظام الضريبة على مجموع الدخل." }
 ];
+
+const LETTERS = ['أ', 'ب', 'ج', 'د'];
 const container = document.getElementById('pagesContainer');
-const QUESTIONS_PER_PAGE = 5;
-function renderPages() {
-    let html = '';
-    const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
-    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-        const start = pageIndex * QUESTIONS_PER_PAGE;
-        const pageQuestions = QUIZ.slice(start, start + QUESTIONS_PER_PAGE);
-        html += `
-        <div class="page-container">
+
+/* =========================================================
+   التقسيم الذكي (Smart Pagination)
+   ========================================================= */
+function renderPaginatedPages() {
+    container.innerHTML = '';
+    
+    // 1. حاوية القياس المخفية
+    const measureBox = document.createElement('div');
+    measureBox.style.position = 'absolute';
+    measureBox.style.visibility = 'hidden';
+    measureBox.style.width = '774px'; // العرض الداخلي الفعلي للورقة
+    document.body.appendChild(measureBox);
+    
+    const measureWrapper = document.createElement('div');
+    measureWrapper.className = 'content-wrapper';
+    measureBox.appendChild(measureWrapper);
+
+    // 2. قياس الهيدر
+    measureWrapper.innerHTML = `
+        <header class="hero-header">
+            <h1>بنك أسئلة محلول ميد ترم</h1>
+            <p>مادة مالية عامة</p>
+        </header>
+    `;
+    const headerH = measureWrapper.offsetHeight;
+
+    // 3. قياس الفاصل
+    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
+    const dividerH = measureWrapper.offsetHeight + 15; // + margin
+
+    // 4. قياس كل سؤال
+    const qHeights = QUIZ.map((q) => {
+        // إخفاء زر التعليل للسؤال إذا كان شرحه قصير جداً أو مطابق للخيار الصحيح
+        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
+                          q.explanation === q.options[q.correct] || 
+                          q.explanation.length <= q.options[q.correct].length + 3;
+        
+        measureWrapper.innerHTML = `
+            <div class="q-card">
+                <div class="q-head">
+                    <div class="q-head-right">
+                        <span class="q-num">1</span>
+                        ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
+                    </div>
+                </div>
+                <p class="q-text">${q.text}</p>
+                <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                    ${q.options.map((opt, j) => {
+                        const isCorrect = (j === q.correct);
+                        return `
+                        <div class="option ${isCorrect ? 'correct' : ''}">
+                            <span class="letter">${LETTERS[j]}</span>
+                            <span class="opt-text">${opt}</span>
+                            ${isCorrect ? '<span class="mark">✓</span>' : ''}
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+        return measureWrapper.offsetHeight + 12; // + margin
+    });
+
+    document.body.removeChild(measureBox);
+
+    // 5. التوزيع الذكي على الصفحات
+    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة (تقريبية بعد الفوتر والبادينج)
+    const pages = [];
+    let currentPage = [];
+    let currentHeight = 0;
+
+    for (let i = 0; i < QUIZ.length; i++) {
+        let required = qHeights[i];
+        
+        // لو دي أول صفحة، بنحسب طول الهيدر
+        if (pages.length === 0 && currentPage.length === 0) {
+            required += headerH;
+        }
+
+        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 31 - Index 30)
+        let forceBreak = false;
+        if (i === 30 && currentPage.length > 0) {
+            forceBreak = true;
+            required += dividerH;
+        }
+
+        // لو الكارت الجديد مش هيدخل في الصفحة الحالية، نقفل الصفحة ونفتح جديدة
+        if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+            
+            if (forceBreak) {
+                required = qHeights[i] + dividerH;
+            } else {
+                required = qHeights[i];
+            }
+        }
+
+        currentPage.push(i);
+        currentHeight += qHeights[i];
+
+        if (pages.length === 0 && currentPage.length === 1) {
+            currentHeight += headerH;
+        }
+        if (i === 30) { // إضافة طول الفاصل لو حطيناه في الصفحة
+            currentHeight += dividerH;
+        }
+    }
+    if (currentPage.length > 0) {
+        pages.push(currentPage);
+    }
+
+    // 6. بناء HTML للصفحات
+    const totalPages = pages.length;
+
+    pages.forEach((pageIndices, pageIdx) => {
+        let pageHTML = `
+        <div class="page-wrapper">
             <div class="a4-page">
                 <div class="watermark"></div>
                 <div class="content-wrapper">
-                    ${pageIndex === 0 ? `<header class="hero-header"><h1>أسئلة الميد - المالية العامة</h1><p>أسئلة محلولة</p></header>` : ''}
-                    ${pageQuestions.map((q, qIndex) => {
-                        const globalIndex = start + qIndex;
-                        let sectionDivider = '';
-                        if (globalIndex === 30) { sectionDivider = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`; }
-                        return `
-                        ${sectionDivider}
-                        <div class="q-card">
-                            <div class="q-head"><div class="q-head-right"><span class="q-num">${globalIndex + 1}</span><button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button></div></div>
-                            <p class="q-text">${q.text}</p>
-                            <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
-                                ${q.options.map((opt, j) => `<div class="option ${j === q.correct ? 'correct' : ''}"><span class="opt-text">${opt}</span>${j === q.correct ? '<span class="mark">✓</span>' : ''}</div>`).join('')}
+        `;
+
+        if (pageIdx === 0) {
+            pageHTML += `
+                <header class="hero-header">
+                    <h1>بنك أسئلة محلول ميد ترم</h1>
+                    <p>مادة مالية عامة</p>
+                </header>
+            `;
+        }
+
+        pageIndices.forEach(globalIndex => {
+            const q = QUIZ[globalIndex];
+            
+            // إضافة الفاصل قبل أسئلة الصح والخطأ
+            if (globalIndex === 30) {
+                pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
+            }
+
+            const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
+                              q.explanation === q.options[q.correct] || 
+                              q.explanation.length <= q.options[q.correct].length + 3;
+
+            pageHTML += `
+                <div class="q-card" data-card="${globalIndex}">
+                    <div class="q-head">
+                        <div class="q-head-right">
+                            <span class="q-num">${globalIndex + 1}</span>
+                            ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        </div>
+                    </div>
+                    <p class="q-text">${q.text}</p>
+                    <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                        ${q.options.map((opt, j) => {
+                            const isCorrect = (j === q.correct);
+                            return `
+                            <div class="option ${isCorrect ? 'correct' : ''}">
+                                <span class="letter">${LETTERS[j]}</span>
+                                <span class="opt-text">${opt}</span>
+                                ${isCorrect ? '<span class="mark">✓</span>' : ''}
                             </div>
-                            <div class="q-explanation" id="exp-${globalIndex}"><strong>التعليل: </strong>${q.explanation}</div>
-                        </div>`;
-                    }).join('')}
+                            `;
+                        }).join('')}
+                    </div>
+                    ${!isGeneric ? `
+                    <div class="q-explanation" id="exp-${globalIndex}">
+                        <strong>التعليل: </strong>${q.explanation}
+                    </div>
+                    ` : ''}
                 </div>
-                <div class="footer-bar"><div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div><div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | مراجعة محلولة</div></div>
+            `;
+        });
+
+        pageHTML += `
+                </div>
+                <div class="footer-bar">
+                    <div class="footer-brand">
+                        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                        <div class="footer-brand-name">الدحيح</div>
+                    </div>
+                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | مادة مالية عامة</div>
+                </div>
             </div>
-        </div>`;
-    }
-    container.innerHTML = html;
-    setTimeout(resizePages, 100);
+        </div>
+        `;
+
+        container.innerHTML += pageHTML;
+    });
+
+    // 7. تصغير الورقة للموبايل بعد الرسم
+    setTimeout(scalePages, 100);
 }
-function resizePages() {
-    const pages = document.querySelectorAll('.a4-page');
-    const maxWidth = 850;
+
+/* =========================================================
+   تصغير الورقة للموبايل وإزالة المساحات السوداء
+   ========================================================= */
+function scalePages() {
+    const pageWidth = 794;
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
-    const availableWidth = viewportWidth - 10; 
-    let scale = 1;
-    if (availableWidth < maxWidth) { scale = availableWidth / maxWidth; }
-    pages.forEach(page => {
-        const wrapper = page.parentElement;
-        page.style.transform = 'none';
-        const actualHeight = page.offsetHeight;
+    const availableWidth = viewportWidth - 20;
+    const scale = Math.min(1, availableWidth / pageWidth);
+
+    document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+        const page = wrapper.querySelector('.a4-page');
         if (scale < 1) {
             page.style.transform = `scale(${scale})`;
             page.style.transformOrigin = 'top center';
-            wrapper.style.width = `${availableWidth}px`;
+            
+            const actualHeight = page.offsetHeight; 
             wrapper.style.height = `${actualHeight * scale}px`;
         } else {
             page.style.transform = 'none';
-            wrapper.style.width = '100%';
             wrapper.style.height = 'auto';
         }
     });
 }
-window.addEventListener('load', resizePages);
-window.addEventListener('orientationchange', resizePages); 
+
+window.addEventListener('load', scalePages);
+window.addEventListener('resize', scalePages);
+window.addEventListener('orientationchange', scalePages);
+
+/* =========================================================
+   فتح تعليل واحد بس وقفل الباقي (Accordion)
+   ========================================================= */
 window.toggleExplanation = function(index) {
     const expBox = document.getElementById(`exp-${index}`);
     const btn = document.getElementById(`btn-${index}`);
-    if (expBox && expBox.classList.contains('show')) { expBox.classList.remove('show'); btn.classList.remove('active'); } 
-    else if (expBox) { expBox.classList.add('show'); btn.classList.add('active'); }
+    const isCurrentlyOpen = expBox.classList.contains('show');
+
+    // قفل كل التعليلات التانية
+    document.querySelectorAll('.q-explanation').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.info-btn').forEach(el => el.classList.remove('active'));
+
+    // لو كان مقفول، نفتحه
+    if (!isCurrentlyOpen) {
+        expBox.classList.add('show');
+        btn.classList.add('active');
+    }
+
+    // إعادة حساب الطول عشان الورقة متتقصش لو التعليل طويل
+    setTimeout(scalePages, 50); 
 };
-renderPages();
+
+/* ===== تشغيل ===== */
+renderPaginatedPages();
 </script>
 </body>
 </html>
