@@ -124,8 +124,8 @@
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            line-height: 1.4; /* تقليل اللاين هايت قليلاً */
-            padding: 20px 0 40px 0;
+            line-height: 1.5; 
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -150,7 +150,7 @@
             width: 794px; 
             min-height: 1123px; 
             height: auto;
-            padding: 10px 10px 40px 10px; /* تقليل البادينج */
+            padding: 10px 10px 40px 10px; 
             border: 1px solid rgba(0, 240, 255, 0.15);
             border-radius: 4px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
@@ -178,12 +178,11 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.03;
+            opacity: 0.04;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* ============ الحاوية الداخلية ============ */
         .content-wrapper {
             position: relative;
             z-index: 2;
@@ -194,26 +193,25 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 2px 0 6px; margin-bottom: 6px; }
+        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-glass); }
         .hero-header h1 {
-            font-size: 24px; /* تصغير العنوان */
-            font-weight: 900;
+            font-size: 28px; font-weight: 900;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
-        .hero-header p { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+        .hero-header p { font-size: 16px; color: var(--text-muted); font-weight: 600; }
 
         .section-divider {
             background: linear-gradient(90deg, rgba(176, 38, 255, 0.2), rgba(0, 240, 255, 0.2));
             border: 1px dashed var(--neon-cyan);
             color: var(--neon-cyan);
             text-align: center;
-            padding: 6px;
-            border-radius: 6px;
+            padding: 8px;
+            border-radius: 8px;
             font-weight: 800;
-            margin: 6px 0 10px 0;
-            font-size: 16px;
+            margin: 8px 0 12px 0;
+            font-size: 18px;
             box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
@@ -223,49 +221,49 @@
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-glass);
             border-radius: 8px;
-            padding: 8px 12px; /* تصغير البادينج */
-            margin-bottom: 8px; /* تصغير المارجن */
+            padding: 12px 15px; 
+            margin-bottom: 10px; 
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
+            border-right: 4px solid var(--neon-purple);
             transition: all 0.3s;
         }
 
         .q-head {
-            display: flex; align-items: center; justify-content: flex-start;
-            gap: 6px; margin-bottom: 6px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 8px;
         }
+        .q-head-right { display: flex; align-items: center; gap: 12px; }
         
         .q-num {
-            width: 28px; height: 28px;
+            width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
             background: rgba(176, 38, 255, 0.15);
             color: var(--neon-purple); 
-            font-weight: 800; font-size: 14px;
-            border: 1px solid rgba(176, 38, 255, 0.3);
+            font-weight: 800; font-size: 17px;
             font-family: 'Fira Code', monospace;
         }
 
         .info-btn {
             display: flex;
-            width: 24px; height: 24px;
+            width: 30px; height: 30px;
             border-radius: 50%;
             background: transparent;
             border: 2px solid var(--neon-cyan);
             color: var(--neon-cyan);
-            font-size: 12px; font-weight: 800;
+            font-size: 15px; font-weight: 800;
             align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s;
-            font-family: 'Fira Code', monospace;
             box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
         }
         .info-btn:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
         .info-btn.active { background: var(--neon-cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(0, 240, 255, 0.8); }
 
         .q-text {
-            margin: 0 0 8px 0; 
-            font-size: 17px; /* تصغير الخط قليلاً */
-            font-weight: 700; line-height: 1.4;
+            margin: 0 0 10px 0; 
+            font-size: 19px; /* خط كبير */
+            font-weight: 700; line-height: 1.5;
             color: #FFFFFF;
         }
 
@@ -273,7 +271,7 @@
         .q-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px; /* تصغير المسافة بين الخيارات */
+            gap: 8px; 
         }
         
         .option {
@@ -283,26 +281,26 @@
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
-            min-height: 38px; /* تصغير الطول */
-            padding: 6px 10px;
+            min-height: 40px;
+            padding: 8px 12px;
             border: 1px solid #333;
             border-radius: 6px;
             background: #111;
-            font-size: 15.5px; /* تصغير الخط قليلاً */
+            font-size: 17px; /* خط كبير */
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.3;
+            line-height: 1.4;
             overflow-wrap: break-word;
             word-break: break-word;
         }
         
         .option .letter {
-            width: 24px; height: 24px;
+            width: 26px; height: 26px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 5px;
+            border-radius: 4px;
             background: rgba(255,255,255,0.05);
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             flex-shrink: 0;
             font-family: 'Fira Code', monospace;
@@ -316,27 +314,22 @@
             background: rgba(0, 255, 65, 0.08); 
             box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
         }
-        .option.correct .letter { 
-            background: var(--neon-green); 
-            color: #000;
-            box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
-        }
+        .option.correct .letter { background: var(--neon-green); color: #000; }
         .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
-        .option.correct .mark { color: var(--neon-green); font-weight: bold; font-size: 18px; margin-inline-start: auto; text-shadow: 0 0 8px var(--neon-green); }
+        .option.correct .mark { color: var(--neon-green); font-weight: bold; font-size: 20px; margin-inline-start: auto; }
 
         /* ============ صندوق التعليل ============ */
         .q-explanation {
             display: none;
-            margin-top: 8px;
-            padding: 8px 12px;
+            margin-top: 10px;
+            padding: 10px 15px;
             background: rgba(0, 240, 255, 0.05);
             border: 1px dashed var(--neon-cyan);
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.5;
-            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
         }
         .q-explanation strong { color: var(--neon-cyan); }
         .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
@@ -344,14 +337,14 @@
 
         /* ============ فوتر الورقة ============ */
         .footer-bar {
-            position: absolute; bottom: 10px; left: 15px; right: 15px;
+            position: absolute; bottom: 12px; left: 25px; right: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; z-index: 2;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
         }
-        .footer-brand { display: flex; align-items: center; gap: 6px; }
-        .footer-logo { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
-        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--neon-cyan); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 800; }
 
         /* ============ الطباعة ============ */
         @page { size: A4; margin: 0; }
@@ -470,7 +463,7 @@ const LETTERS = ['أ', 'ب', 'ج', 'د'];
 const container = document.getElementById('pagesContainer');
 
 /* =========================================================
-   التقسيم الذكي (Smart Pagination)
+   التقسيم الذكي (Smart Pagination) - المطابق للمالية
    ========================================================= */
 function renderPaginatedPages() {
     container.innerHTML = '';
@@ -484,6 +477,7 @@ function renderPaginatedPages() {
     
     const measureWrapper = document.createElement('div');
     measureWrapper.className = 'content-wrapper';
+    measureWrapper.style.padding = '0'; 
     measureBox.appendChild(measureWrapper);
 
     // 2. قياس الهيدر
@@ -497,7 +491,7 @@ function renderPaginatedPages() {
 
     // 3. قياس الفاصل
     measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
-    const dividerH = measureWrapper.offsetHeight + 16;
+    const dividerH = measureWrapper.offsetHeight;
 
     // 4. قياس كل سؤال
     const qHeights = QUIZ.map((q) => {
@@ -508,11 +502,13 @@ function renderPaginatedPages() {
         measureWrapper.innerHTML = `
             <div class="q-card">
                 <div class="q-head">
-                    <span class="q-num">1</span>
-                    ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
+                    <div class="q-head-right">
+                        <span class="q-num">1</span>
+                        ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
+                    </div>
                 </div>
                 <p class="q-text">${q.text}</p>
-                <div class="q-options">
+                <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
                     ${q.options.map((opt, j) => {
                         const isCorrect = (j === q.correct);
                         return `
@@ -526,13 +522,13 @@ function renderPaginatedPages() {
                 </div>
             </div>
         `;
-        return measureWrapper.offsetHeight + 8; // + margin
+        return measureWrapper.offsetHeight;
     });
 
     document.body.removeChild(measureBox);
 
     // 5. التوزيع الذكي على الصفحات
-    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة
+    const availableHeight = 1123 - 10 - 40 - 30; 
     const pages = [];
     let currentPage = [];
     let currentHeight = 0;
@@ -544,7 +540,7 @@ function renderPaginatedPages() {
             required += headerH;
         }
 
-        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 33)
+        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 33 - Index 32)
         let forceBreak = false;
         if (i === 32 && currentPage.length > 0) {
             forceBreak = true;
@@ -569,7 +565,7 @@ function renderPaginatedPages() {
         if (pages.length === 0 && currentPage.length === 1) {
             currentHeight += headerH;
         }
-        if (i === 32) {
+        if (i === 32) { 
             currentHeight += dividerH;
         }
     }
@@ -611,11 +607,13 @@ function renderPaginatedPages() {
             pageHTML += `
                 <div class="q-card" data-card="${globalIndex}">
                     <div class="q-head">
-                        <span class="q-num">${globalIndex + 1}</span>
-                        ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        <div class="q-head-right">
+                            <span class="q-num">${globalIndex + 1}</span>
+                            ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        </div>
                     </div>
                     <p class="q-text">${q.text}</p>
-                    <div class="q-options">
+                    <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
                         ${q.options.map((opt, j) => {
                             const isCorrect = (j === q.correct);
                             return `
@@ -652,12 +650,11 @@ function renderPaginatedPages() {
         container.innerHTML += pageHTML;
     });
 
-    // 7. تصغير الورقة للموبايل
     setTimeout(scalePages, 100);
 }
 
 /* =========================================================
-   تصغير الورقة للموبايل وإزالة المساحات السوداء
+   تصغير الورقة للموبايل
    ========================================================= */
 function scalePages() {
     const pageWidth = 794;
