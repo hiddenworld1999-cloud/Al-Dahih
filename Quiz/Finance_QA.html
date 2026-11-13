@@ -3,36 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>بنك أسئلة محلول ميد ترم - مادة مالية عامة</title>
+    <title>امتحان أنظمة معلومات المؤسسات | منصة الدحيح</title>
     
-    <!-- ================= بداية كود الحماية الموحد ================= -->
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
     <noscript>
         <style>body { display: none !important; }</style>
         <meta http-equiv="refresh" content="0;url=../login.html">
     </noscript>
+
     <style>
-        * { -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important; -webkit-touch-callout: none !important; }
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
         @media print { html, body { display: none !important; } }
-        #antiScreenshotShield { position: fixed; inset: 0; background: #020202; color: #ffffff; display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 999999; font-family: 'Cairo', sans-serif; text-align: center; }
-        #watermarkGrid { position: fixed; inset: 0; pointer-events: none; z-index: 99998; overflow: hidden; display: flex; flex-wrap: wrap; justify-content: space-around; align-content: space-around; opacity: 0.12; }
-        .watermark-item { transform: rotate(-25deg); color: #ffffff; font-size: 15px; font-weight: 800; white-space: nowrap; padding: 35px; font-family: monospace; user-select: none; mix-blend-mode: difference; text-shadow: 0 0 2px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6); }
+        #antiScreenshotShield {
+            position: fixed; inset: 0; background: #020202; color: #fff;
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column; z-index: 999999;
+            font-family: 'Cairo', sans-serif; text-align: center;
+        }
+        #watermarkGrid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 99998;
+            overflow: hidden; display: flex; flex-wrap: wrap;
+            justify-content: space-around; align-content: space-around; opacity: 0.12;
+        }
+        .watermark-item {
+            transform: rotate(-25deg); color: #fff; font-size: 15px;
+            font-weight: 800; white-space: nowrap; padding: 35px;
+            font-family: monospace; user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0,0,0,.8), 1px 1px 2px rgba(0,0,0,.6);
+        }
     </style>
+
     <script>
-        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || localStorage.getItem('daheeh_is_admin') === 'true';
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
         if (!isDev) {
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'PrintScreen' || (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || e.key === 'F12') { e.preventDefault(); }
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
             });
         }
         document.addEventListener("DOMContentLoaded", function () {
             if (isDev) return;
             const shield = document.createElement("div");
             shield.id = "antiScreenshotShield";
-            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة الامتحان.</p>`;
             document.body.appendChild(shield);
+
             let sName = "طالب الدحيح", sCode = "";
-            try { sName = localStorage.getItem('studentName') || "طالب الدحيح"; sCode = localStorage.getItem('studentCode') || "0000"; } catch (e) {}
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
             const wmContainer = document.createElement("div");
             wmContainer.id = "watermarkGrid";
             const watermarkText = `${sName} • ${sCode}`;
@@ -43,6 +76,7 @@
                 wmContainer.appendChild(item);
             }
             document.body.appendChild(wmContainer);
+
             window.addEventListener("blur", () => { shield.style.display = "flex"; });
             window.addEventListener("focus", () => { shield.style.display = "none"; });
             window.addEventListener("keyup", (e) => {
@@ -54,41 +88,45 @@
             });
         });
     </script>
-    <!-- ================= نهاية كود الحماية ================= -->
+    <!-- ================= نهاية كود الحماية الموحد ================= -->
 
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-body: #F3F4F6;
-            --bg-page: #FDFBF7;
-            --text-main: #1F2937;
-            --text-muted: #4B5563;
-            --emerald-dark: #064E3B;
-            --emerald-light: #10B981;
-            --gold-primary: #D4AF37;
-            --gold-light: #FDE047;
-            --navy-blue: #1E3A8A;
-            --red-alert: #B91C1C;
-            --heading-main: #4C1D95;
-            --border-color: #E5E7EB;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --bg-body: #0B1120;
+            --bg-page: #111827;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            
+            --electric-blue: #3B82F6;
+            --cyan: #06B6D4;
+            --neon-green: #10B981;
+            --neon-green-bg: rgba(16, 185, 129, 0.1);
+            --neon-red: #EF4444;
+            --neon-red-bg: rgba(239, 68, 68, 0.1);
+            
+            --border-glass: rgba(59, 130, 246, 0.2);
+            --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        html, body { 
-            overflow-x: hidden !important; 
-            width: 100%; 
-            background-color: var(--bg-body);
-            direction: rtl;
+
+        html, body {
+            overflow-x: hidden !important;
+            width: 100%;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
             color: var(--text-main);
-            line-height: 1.5; 
-            padding: 20px 0;
+            line-height: 1.4;
+            padding: 70px 5px 100px 5px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -96,55 +134,90 @@
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
 
-        /* ============ الحاوية الأساسية للورقة ============ */
-        .page-wrapper {
-            width: 100%;
-            display: flex; justify-content: center;
-            margin-bottom: 20px; 
-            overflow: hidden;
-            padding: 0 10px; 
+        /* ============ الشريط العلوي ============ */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-glass);
         }
-        
-        /* ============ تصميم ورقة A4 ============ */
+        .top-bar-content {
+            width: 100%;
+            max-width: 794px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .top-bar-title {
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--cyan);
+            white-space: nowrap;
+        }
+        .progress-container {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyan));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-muted);
+            min-width: 60px;
+            text-align: left;
+        }
+
+        /* ============ تصميم ورقة A4 (مقاسات الملف الأول) ============ */
+        .page-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 100vw;
+            overflow: hidden; 
+            padding: 0 10px;
+        }
+
         .a4-page {
             background-color: var(--bg-page);
             width: 794px; 
+            flex-shrink: 0; 
             min-height: 1123px; 
-            height: auto;
-            padding: 10px 10px 40px 10px; 
-            border: 2px solid var(--gold-primary);
+            height: auto; 
+            padding: 10px 10px 40px 10px;
             border-radius: 4px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow-paper);
             position: relative;
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--border-glass);
             transform-origin: top center; 
-            flex-shrink: 0;
         }
 
         .a4-page::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
+            opacity: 0.8;
             z-index: 10;
-        }
-
-        .watermark {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px; height: 350px;
-            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 0;
-            filter: grayscale(100%);
         }
 
         .content-wrapper {
@@ -157,65 +230,112 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header { text-align: center; padding: 2px 0 6px; margin-bottom: 6px; }
         .hero-header h1 {
-            font-family: 'Amiri', serif;
-            font-size: 28px;
-            font-weight: 700; color: var(--heading-main);
+            font-size: 24px; 
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 2px;
         }
-        .hero-header p { font-size: 16px; color: var(--navy-blue); font-weight: 700; }
+        .hero-header p { font-size: 14px; color: var(--text-muted); font-weight: 600; }
 
+        /* ============ فاصل الأقسام ============ */
         .section-divider {
-            background: linear-gradient(90deg, rgba(6, 78, 59, 0.1), rgba(212, 175, 55, 0.1));
-            border: 1px dashed var(--gold-primary);
-            color: var(--heading-main);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border: 1px dashed var(--cyan);
+            color: var(--cyan);
             text-align: center;
             padding: 6px;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 800;
-            margin: 10px 0 15px 0;
-            font-size: 18px;
+            margin: 6px 0 10px 0;
+            font-size: 16px;
+            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
         }
 
         /* ============ كارت السؤال ============ */
         .q-card {
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
             border-radius: 8px;
-            padding: 12px 15px; 
-            margin-bottom: 12px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
-            border-right: 4px solid var(--gold-primary);
             transition: all 0.3s;
+        }
+
+        .q-card.missed {
+            border-color: var(--neon-red) !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+        .q-card.missed::after {
+            content: '⚠️ لم يتم الإجابة';
+            position: absolute;
+            top: -10px; left: 50%; transform: translateX(-50%);
+            background: var(--neon-red);
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
+            z-index: 5;
+            white-space: nowrap;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
         }
 
         .q-head {
             display: flex; align-items: center; justify-content: flex-start;
-            gap: 10px; margin-bottom: 8px;
+            gap: 6px; margin-bottom: 6px;
         }
+        
         .q-num {
-            width: 32px; height: 32px;
+            width: 28px; height: 28px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
-            background: rgba(76, 29, 149, 0.1);
-            color: var(--heading-main); 
-            font-weight: 800; font-size: 16px;
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--cyan); 
+            font-weight: 800; font-size: 14px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            font-family: 'Fira Code', monospace;
         }
 
+        .info-btn {
+            display: none;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            font-size: 12px; font-weight: 800;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s;
+            font-family: 'Fira Code', monospace;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
+        }
+        .info-btn:hover { background: rgba(6, 182, 212, 0.1); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
+        .info-btn.active { background: var(--cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); }
+
         .q-text {
-            margin: 0 0 10px 0; 
-            font-size: 18px;
-            font-weight: 700; line-height: 1.5;
-            color: var(--heading-main);
+            margin: 0 0 8px 0; 
+            font-size: 17px; 
+            font-weight: 700; line-height: 1.4;
+            color: #FFFFFF;
         }
 
         /* ============ الخيارات (2x2) ============ */
         .q-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px; 
+            gap: 6px; 
         }
         
         .option {
@@ -225,347 +345,599 @@
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
-            min-height: 40px;
+            min-height: 38px;
             padding: 6px 10px;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 6px;
-            background: #F9FAFB;
-            font-size: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 15.5px;
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.4;
+            line-height: 1.3;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
+        
+        .option:hover { border-color: rgba(6, 182, 212, 0.5); background: rgba(6, 182, 212, 0.05); }
+        .option input { position: absolute; opacity: 0; pointer-events: none; }
         
         .option .letter {
             width: 24px; height: 24px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 4px;
-            background: #E5E7EB;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.05);
             color: var(--text-muted);
             font-size: 13px;
             font-weight: 800;
             flex-shrink: 0;
+            transition: all 0.2s;
+            font-family: 'Fira Code', monospace;
         }
         
         .option .opt-text { flex: 1; }
 
+        .option.selected {
+            border-color: var(--cyan);
+            background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+        .option.selected .letter {
+            background: var(--cyan);
+            color: #000;
+        }
+
+        .option.locked { pointer-events: none; }
+        
+        .option.correct { 
+            border-color: var(--neon-green); 
+            background: var(--neon-green-bg); 
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+        }
+        .option.correct .letter { 
+            background: var(--neon-green); 
+            color: #000;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+        .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
+        
+        .option.wrong { 
+            border-color: var(--neon-red); 
+            background: var(--neon-red-bg); 
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+        }
+        .option.wrong .letter { background: var(--neon-red); color: #fff; }
+        .option.wrong .opt-text { color: var(--neon-red); }
+
+        .option .mark { margin-inline-start: auto; font-size: 18px; font-weight: bold; }
+        .option.correct .mark { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+        .option.wrong .mark { color: var(--neon-red); }
+
+        /* ============ صندوق التعليل ============ */
+        .q-explanation {
+            display: none;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px dashed var(--cyan);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.5;
+            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.05);
+        }
+        .q-explanation strong { color: var(--cyan); }
+        .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
         /* ============ فوتر الورقة ============ */
         .footer-bar {
-            position: absolute; bottom: 15px; left: 25px; right: 25px;
+            position: absolute; 
+            bottom: 10px; left: 15px; right: 15px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 8px; z-index: 2;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; z-index: 2;
         }
-        .footer-brand { display: flex; align-items: center; gap: 8px; }
-        .footer-logo { width: 25px; height: 25px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
-        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+        .footer-brand { display: flex; align-items: center; gap: 6px; }
+        .footer-logo { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
 
-        /* ============ الطباعة ============ */
-        @page { size: A4; margin: 0; }
-        @media print {
-            html, body {
-                background: #fff !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                display: block !important;
-                overflow: visible !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .page-wrapper {
-                height: auto !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                overflow: visible !important;
-                display: block !important;
-                break-after: page;
-                page-break-after: always;
-                break-inside: avoid;
-            }
-            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
-            .a4-page {
-                transform: none !important;
-                box-shadow: none !important;
-                height: 1123px !important;
-                min-height: 1123px !important;
-                overflow: hidden !important;
-                margin: 0 auto;
-                border-radius: 0 !important;
-            }
+        /* ============ الشريط السفلي (تسليم) ============ */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(11, 17, 32, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 12px 15px;
+            border-top: 1px solid var(--border-glass);
         }
+
+        .btn-submit {
+            width: 100%;
+            max-width: 794px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--electric-blue), var(--cyan));
+            color: #fff;
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+        .btn-submit:hover { background: linear-gradient(90deg, var(--cyan), var(--electric-blue)); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5); }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled { background: #374151; color: #9CA3AF; cursor: not-allowed; box-shadow: none; }
+
+        .btn-submit.ready {
+            background: linear-gradient(90deg, var(--neon-green), #059669);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: pulse-green 2s infinite;
+        }
+        .btn-submit.ready:hover { background: linear-gradient(90deg, #059669, var(--neon-green)); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* ============ شاشة التنبيه ============ */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        
+        .modal-content {
+            background: var(--bg-page);
+            border: 2px solid var(--neon-red);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%; max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(239, 68, 68, 0.3);
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0) scale(1); }
+        
+        .modal-icon { font-size: 50px; margin-bottom: 10px; animation: float 2s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .modal-content h2 { color: var(--neon-red); margin-bottom: 10px; font-size: 22px; font-weight: 800; }
+        .modal-content p { color: var(--text-main); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
+        
+        .missed-badges {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px;
+            max-height: 150px; overflow-y: auto; padding: 5px;
+        }
+        .badge-missed {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--neon-red-bg);
+            border: 2px solid var(--neon-red);
+            color: var(--neon-red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 800; font-family: 'Fira Code', monospace;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .badge-missed:hover {
+            background: var(--neon-red); color: #fff;
+            transform: scale(1.1); box-shadow: 0 0 15px var(--neon-red);
+        }
+        
+        .btn-close-modal {
+            background: transparent; border: 2px solid var(--cyan);
+            color: var(--cyan); padding: 12px 25px; border-radius: 10px;
+            font-size: 16px; font-weight: 700; font-family: inherit;
+            cursor: pointer; transition: all 0.2s; width: 100%;
+        }
+        .btn-close-modal:hover { background: var(--cyan); color: #000; }
+
+        /* ============ شاشة النتيجة ============ */
+        .result-card {
+            display: none;
+            background: var(--bg-card);
+            border: 2px solid var(--cyan);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+            width: 100%; max-width: 794px;
+            animation: slideDown 0.5s ease;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .result-card h2 { color: var(--cyan); margin-bottom: 10px; font-size: 24px; font-weight: 800; }
+        .result-score { font-size: 48px; font-weight: 900; color: #fff; margin-bottom: 10px; text-shadow: 0 0 10px var(--cyan); }
+        .result-score small { font-size: 24px; color: var(--text-muted); }
+        .result-msg { color: var(--text-main); font-size: 16px; font-weight: 600; }
     </style>
 </head>
 <body>
 
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-title">EIS Exam</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 0</div>
+        </div>
+    </div>
+
+    <!-- مودال الأسئلة الناقصة -->
+    <div class="modal-overlay" id="missedModal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h2>لسه مجاوبتش على كل الأسئلة!</h2>
+            <p>باقي عليك <strong id="missedCount" style="color: var(--neon-red); font-size: 20px;">0</strong> أسئلة. اضغط على رقم السؤال عشان تروحله:</p>
+            <div class="missed-badges" id="missedBadges"></div>
+            <button class="btn-close-modal" onclick="closeMissedModal()">راجع الأسئلة</button>
+        </div>
+    </div>
+
+    <!-- كارت النتيجة -->
+    <div class="result-card" id="resultCard">
+        <h2>تم تسليم الامتحان!</h2>
+        <div class="result-score" id="resultScore">0 <small>/ 0</small></div>
+        <p class="result-msg" id="resultMsg">جارٍ إرسال الدرجة للمنصة...</p>
+    </div>
+
+    <!-- حاوية الأوراق -->
     <div id="pagesContainer" style="display: contents;"></div>
+
+    <!-- الشريط السفلي -->
+    <div class="bottom-bar">
+        <button class="btn-submit" id="submitBtn" onclick="submitExam()">تسليم الامتحان</button>
+    </div>
 
 <script>
 const QUIZ = [
-    // --- أسئلة الاختيار من متعدد (1 - 30) ---
-    { text: "1. ............. هي التي لا تؤدى الى زيادة الانتاج القومى بشكل مباشر ولكنها تؤدى الى اعادة توزيع الدخل القومي وتقدمها الدولة الى الافراد بدون مقابل.", options: ["أ- النفقات الحقيقية", "ب- النفقات الغير عادية", "ج- النفقات الرأسمالية", "د- النفقات التحويلية"] },
-    { text: "2. ............. تعنى \"ينبغي ان يهدف الإنفاق العام الى تحقيق اقصى منفعة اجتماعية\".", options: ["أ- قاعدة المنفعة", "ب- قاعدة الاقتصاد", "ج- قاعدة الترخيص", "د- صفة النقدية"] },
-    { text: "3. هي التي يقوم باشباعها الافراد او الهيئات الخاصة.", options: ["أ- الحاجات العامة", "ب- الحاجات الخاصة", "ج- الحاجات شبه العامة", "د- لاشئ مما سبق"] },
-    { text: "4. يتم الاعتماد على ............. عند ترتيب المشروعات المناسبة للانفاق عليها.", options: ["أ- المنافع الصافية", "ب- التكاليف", "ج- المنافع الاجمالية", "د- المنافع النسبية"] },
-    { text: "5. ............ هي تلك الحاجات التي تقوم باشباعها الدولة فقط لتحقيق منفعة جماعية مثل الأمن والدفاع والقضاء.", options: ["أ- الحاجات الخاصة", "ب- الحاجات العامة", "ج- الحاجات شبه العامة", "د- لاشئ مما سبق"] },
-    { text: "6. من الأسباب الحقيقيه لتزايد الانفاق العام:", options: ["أ- أسباب اقتصادية", "ب- أسباب مالية", "ج- أسباب اجتماعية", "د- جميع ما سبق"] },
-    { text: "7. من عناصر المالية العامة:", options: ["أ- الموازنة العامة", "ب- النفقات العامة", "ج- الإيرادات العامة", "د- كل ما سبق"] },
-    { text: "8. ............ هي مبلغ من المال تنفقه الدولة او احدى المؤسسات العامة التي تتبعها بقصد إشباع حاجة عامة.", options: ["أ- الإيرادات العامة", "ب- النفقات العامة", "ج- الموازنة العامة", "د- لا شيء مما سبق"] },
-    { text: "9. ظهرت المالية العامة مع ظهور أفكار الاقتصادي............", options: ["أ- ادم سميث", "ب- كينز", "ج- هيوم", "د- فاجنر"] },
-    { text: "10. ............ هي تلك الأسباب التي تؤدي إلى تضخم الرقم الحسابي للنفقات العامة دون أن تقابله زيادة في كمية السلع والخدمات المستخدمة في إشباع الحاجات العامة.", options: ["أ- الأسباب الحقيقية", "ب- الأسباب الاقتصادية", "ج- الأسباب الظاهرية", "د- الأسباب الاجتماعية"] },
-    { text: "11. هي النفقات اللازمة لادارة اجهزة الدولة وتمكينها من الحصول على السلع والخدمات لاشباع حاجات جارية.", options: ["أ- النفقات الجارية", "ب- النفقات الرأسمالية", "ج- النفقات التحويلية", "د- النفقات غير العادية"] },
-    { text: "12. من الأسباب الظاهرية لتزايد الانفاق العام:", options: ["أ- ارتفاع المستوى العام للأسعار", "ب- انخفاض قيمة العملة", "ج- تغير القواعد المالية", "د- جميع ما سبق"] },
-    { text: "13. من أهداف المالية العامة:", options: ["أ- تحقيق الاستقرار الاقتصادي", "ب- توفير الخدمات العامة", "ج- تحقيق العدالة الاجتماعية", "د- كل ما سبق"] },
-    { text: "14. ............ تعني أن \"النفقة العامة يجب أن تُصرف من قبل هيئة عامة بأموال عامة من قبل سلطة مختصة\".", options: ["أ- قاعدة المنفعة", "ب- قاعدة الترخيص", "ج- قاعدة الاقتصاد", "د- صفة النقدية"] },
-    { text: "15. يتم حساب المنافع النسبية عن طريق ........", options: ["أ- (المنافع + التكاليف)", "ب- (المنافع - التكاليف)", "ج- (المنافع ÷ التكاليف)", "د- (المنافع × التكاليف)"] },
-    { text: "16. من محددات حجم النفقات العامة ............", options: ["أ- قدرة الدولة على تحقيق الإيرادات العامة", "ب- النفقات التحويلية", "ج- مستوى النشاط الاقتصادي", "د- أ و ج معا"] },
-    { text: "17. تستطيع الدولة ان تأخذ ثمنها كاملا\" او قد تأخذ اقل من ثمنها وقد لا تأخذ اي مقابل نظير هذه الخدمات.", options: ["أ- الحاجات الخاصة", "ب- الحاجات شبه العامة", "ج- الحاجات العامة", "د- لاشئ مما سبق"] },
-    { text: "18. بمقتضاه تتم النفقات الحقيقة مقابل تقديم خدمة، مثل الخدمات التعليمية أما النفقات التحويلية لا يوجد لها مقابل كالإعانات.", options: ["أ- معيار المقابل", "ب- معيار الزيادة المباشرة في الإنتاج", "ج- معيار الانتظام والدورية", "د- معيار القائم بالاستهلاك المباشر للموارد"] },
-    { text: "19. هي التي تؤدى مباشرة الى زيادة الانتاج القومى الجارى اى هي نفقات منتجة وهى نفقات بمقابل.", options: ["أ- النفقات التحويلية", "ب- النفقات الحقيقية", "ج- الموازنة العامة", "د- معيار الترخيص"] },
-    { text: "20. تتمثل في الإعانات الحكومية الممنوحة للمشروعات إنتاجية معينة بهدف زيادة الإنتاج والبيع بأسعار منخفضة كما هو الحال في السلع والخدمات الضرورية أو التصديرية.", options: ["أ- النفقات التحويلية الاجتماعية", "ب- النفقات التحويلية الاقتصادية", "ج- النفقات التحويلية المالية", "د- النفقات الإدارية"] },
-    { text: "21. هي مبلغ من النقود تجبيه الدولة جبرا\" من الأفراد دون مقابل وذلك لغرض تمويل نفقاتها العامة.", options: ["أ- النفقات العامة", "ب- الضريبة", "ج- الرسوم", "د- الدومين"] },
-    { text: "22. من خصائص الضرائب:", options: ["أ- تدفع جبرا", "ب- ليس لها مقابل معين", "ج- تدفع بصفة نهائية", "د- كل ما سبق"] },
-    { text: "23. الوعاء الذي يختاره المشرع المالى ويفرض عليها الضريبة هذا الوعاء اما ان تكون شخصا\" او مالا\"", options: ["أ- التهرب الضريبي", "ب- الوعاء الضريبي", "ج- الازدواج الضريبي", "د- نقل عبء الضريبة"] },
-    { text: "24. نسبة ما يدفعه المكلف كضريبة الى مقدار الوعاء الضريبى او المادة الخاضعة لها", options: ["أ- نسبة الضريبة", "ب- الوعاء الضريبى", "ج- الازدواج الضريبى", "د- نقل عبء الضريبة"] },
-    { text: "25. الظاهرة التي يحاول بواسطتها الشخص المكلف بدفع الضريبة التهرب من دفعها كلها او بعضها.", options: ["أ- التهرب الضريبي", "ب- الوعاء الضريبى", "ج- الازدواج الضريبى", "د- نقل عبء الضريبة"] },
-    { text: "26. تفرض على مجموع الدخل الصافي الذي يحصل عليه الممول خلال العام ويقدم به اقرار ضريبي واحد الى الادارة الضريبية يوضح فيه كل انواع دخله الذي يحصل عليه خلال العام", options: ["أ- الضريبة على الثروة", "ب- الضريبة العقارية", "ج- الضريبة على المبيعات", "د- الضريبة على الدخل"] },
-    { text: "27. الضرائب على الدخل والثروة من الضرائب ............", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"] },
-    { text: "28. الضرائب على المبيعات والانفاق من ............", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"] },
-    { text: "29. ............ هي التي يتحمل عبئها دافع الضريبة نفسه اى انه لا ينقل عبئها.", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"] },
-    { text: "30. ............ هي التي تفرض على الدخل عند انفاقه", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"] },
-
-    // --- أسئلة الصواب والخطأ (31 - 60) ---
-    { text: "1. إذا كانت النفقة تتم بانتظام أو بصفة دورية تعتبر نفقة عادية.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "2. تتم النفقات الحقيقة مقابل تقديم خدمة.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "3. تتميز جميع تنظيمات المالية العامة بخضوعها لسلطة الدولة بصورة مباشرة او غير مباشرة.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "4. تعتبر المالية الخاصة الوسيلة الرئيسية لتمويل الخدمات العامة التي يحتاجها المجتمع.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "5. تكون الحاجة فردية اذ قام الافراد بمهمة اشباعها وجماعية اذا قامت الدولة باشباعها.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "6. تؤثر النفقات العامة في الناتج القومي عن طريق تأثيرها في حجم الطلب الكلي الفعال.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "7. الحاجات العامة هي تلك الحاجات التى يتم توزيع اشباعها بين القطاع الخاص والحكومة ومن أمثلة هذه السلع التعليم والصحة والاسكان والمواصلات.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "8. الحاجات العامة يتميز بعدم امكان تجزئتها وبالتالى فهي ليس للبيع وتقدمها الدولة مجانا\" لكافة الافراد مثل خدمات الدفاع الخارجي.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "9. ظهرت المالية العامة مع انخفاض دور الدولة في النشاط الاقتصادي.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "10. في الفكر التقليدى للمالية العامة كان يجب التقيد بمبدأ تساوى النفقات العامة مع الايرادات وضغط النفقات العامة الى اقصى حد وعدم اللجوء الى مصادر استثنائية في الحصول على الايرادات مثل القروض او الاصدار النقدى الجديد.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "11. لا تُعد من النفقات العامة تلك التي يقوم بها القطاع الخاص او المختلط تنفيذاً لسلطات الدولة الآمرة.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "12. من الأسباب الحقيقية لتزايد الإنفاق العام ارتفاع مستوى الأسعار.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "13. من الأهداف الرئيسية للمالية العامة هو تحقيق الاستقرار الاقتصادي.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "14. منذ ظهور أفكار أدم سميث، أصبح علم المالية العامة من أهم الأدوات التى تستخدم فى مواجهة الأزمات الاقتصادية والاجتماعية.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "15. النفقات غير العادية تتعدى الفترة المالية التي أنفقت خلالها.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "16. يتم إشباع الحاجات الخاصة أو الفردية من خلال نشاط الدولة.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "17. يتمثل التوزيع الأولى للدخل فى النفقات التحويلية.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "18. يعتبر صدور النفقة من أحد اشخاص القانون العام شرطا ضروريا وكافيا لاعتبار النفقة عامة.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "19. الضريبة هي مبلغ من النقود تجبيه الدولة جبرا\" من الأفراد دون مقابل وذلك لغرض تمويل نفقاتها العامة.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "20. من خصائص الضريبة أنها تدفع بصفة اختيارية وليست جبرية.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "21. أهم ما يميز الضرائب بأنها ليس لها مقابل معين.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "22. تُدفع الضريبة بصفة نهائية.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "23. الضريبة فريضة جبرية بمعنى ان الخاضعين لها ليس لديهم خيار في دفعها من عدمه بل انهم ملزمين بادائها.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "24. الضرائب لا تهدف الى تحقيق نفع عام.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "25. يقصد بالازدواج الضريبى هو فرض الضريبة نفسها اكثر من مرة على الشخص ذاته وعن المال نفسه وفى المدة ذاتها.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "26. يقصد بالتهرب الضريبى هى الظاهرة التى يحاول بواسطتها الشخص المكلف بدفع الضريبة التهرب من دفعها كلها او بعضها.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "27. الضرائب المباشرة هى التى يتمكن دافعها من نقل عبئها الى غيره من الاشخاص.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "28. الضرائب غير المباشرة هى التى يتحمل عبئها دافع الضريبة نفسه اى انه لا ينقل عبئها.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "29. تراعى الضرائب المباشرة مبادئ العدالة الضريبية فكل ممول يدفع بناء على مقدرته التكليفية.", options: ["صح (√)", "خطأ (×)"] },
-    { text: "30. الضريبة على الدخل تفرض على مجموع الدخل الصافى الذى يحصل عليه الممول خلال العام ويقدم به اقرار ضريبى واحد الى الادارة الضريبية يوضح فيه كل انواع دخله الذى يحصل عليه خلال العام.", options: ["صح (√)", "خطأ (×)"] }
+    { text: "أي من التالي يُعد هدفًا رئيسيًا لأنظمة معلومات المؤسسات؟", options: ["زيادة التعقيد في العمليات", "تقليل التواصل بين الأقسام", "تحسين كفاءة وتكامل العمليات داخل المؤسسة", "تقليل تبادل المعلومات"], correct: 2, explanation: "تحسين كفاءة وتكامل العمليات داخل المؤسسة." },
+    { text: "العمليات البينية cross-functional processes هي:", options: ["العمليات التي تعبر أكثر من قسم أو وظيفة داخل المؤسسة", "العملية الواحدة داخل المؤسسة", "العملية الواحدة داخل قسم محدد", "العملية التي تتم خارج المؤسسة"], correct: 0, explanation: "العمليات التي تعبر أكثر من قسم أو وظيفة داخل المؤسسة." },
+    { text: "من أشهر أنظمة ERP:", options: ["Excel, Word", "Trello, Asana", "PowerPoint", "SAP, Oracle"], correct: 3, explanation: "SAP, Oracle." },
+    { text: "وظيفة نظام CRM تدار عبر:", options: ["ادارة العلاقات مع العملاء", "ادارة المخزون", "إدارة الرواتب", "ادارة الانتاج"], correct: 0, explanation: "ادارة العلاقات مع العملاء." },
+    { text: "من تحديات تطبيق أنظمة ERP:", options: ["التكلفة العالية", "عدم الحاجة للتدريب", "سهولة التثبيت", "توافق فوري مع الأنظمة القديمة"], correct: 0, explanation: "التكلفة العالية للتنفيذ." },
+    { text: "أي من الأنظمة التالية يُستخدم لإدارة علاقات الشركة مع عملائها؟", options: ["ERP", "SCM", "CRM", "DSS"], correct: 2, explanation: "نظام CRM." },
+    { text: "نظام ERP السحابي (Cloud ERP) يتميز بـ:", options: ["تثبيت محلي إلزامي", "لا حاجة للصيانة المحلية", "تكلفة أعلى", "أداء أبطأ"], correct: 1, explanation: "سحابي بالكامل لا يحتاج لخوادم داخلية." },
+    { text: "أهم خاصية لـ ERP هي:", options: ["التخزين السحابي", "الذكاء الاصطناعي", "التكامل بين الوظائف", "الواجهة المحمولة"], correct: 2, explanation: "التكامل بين الوظائف." },
+    { text: "تتبع الإيرادات والمصروفات من أنشطة نظام ......", options: ["SCM system", "ERP system", "Database system", "CRM system"], correct: 1, explanation: "ERP system." },
+    { text: "نظام ERP هو اختصار لـ:", options: ["Enterprise Resource Planning", "Enterprise Report Processing", "Electronic Resource Program", "Enterprise Relationship Plan"], correct: 0, explanation: "Enterprise Resource Planning." },
+    { text: "من وظائف الأعمال Business functions الأساسية:", options: ["التدريس، الرياضة", "التصميم، السفر", "التعبئة", "المالية، الموارد البشرية، المبيعات"], correct: 3, explanation: "المالية، الموارد البشرية، المبيعات." },
+    { text: "يجمع ERP كل البيانات من مختلف الأقسام (المالية، المبيعات، الموارد البشرية) في:", options: ["نفس المعلومات في وقت متاخر", "معلومات مختلفة", "نفس المعلومات في وقت الفعلي", "معلومات متغيرة"], correct: 2, explanation: "نفس المعلومات في وقت الفعلي." },
+    { text: "وظائف الأعمال (Business Functions) هي:", options: ["سلسلة من الخطوات", "اقسام المنظمة مالية، مبيعات....)", "تقارير يومية", "اجتماعات"], correct: 1, explanation: "اقسام المنظمة مالية، مبيعات....)" },
+    { text: "أي من الأنظمة التالية يهتم بإدارة سلسلة التوريد من المورد إلى العميل ؟", options: ["CRM", "SCM", "TPS", "ERP"], correct: 1, explanation: "SCM." },
+    { text: "تحسين خدمة العملاء من أنشطة نظام.", options: ["SCM system", "CRM system", "Database system", "ERP system"], correct: 1, explanation: "CRM system." },
+    { text: "نظام ERP يدعم العمليات البيئية من خلال:", options: ["التكامل بين الأقسام", "الفصل التام بين الأقسام", "البريد الإلكتروني", "التقارير اليدوية"], correct: 0, explanation: "التكامل بين الأقسام." },
+    { text: "الرد على الإستفسارات والشكاوى ومتابعة رضا العملاء من أنشطة نظام .....", options: ["SCM system", "ERP system", "Database system", "CRM system"], correct: 3, explanation: "CRM system." },
+    { text: "نظام ERP يدعم:", options: ["قواعد بيانات منفصلة لكل قسم", "قاعدة بيانات واحدة مركزية", "تخزين محلي فقط", "لا يدعم قواعد البيانات"], correct: 1, explanation: "قاعدة بيانات واحدة مركزية." },
+    { text: "من تحديات ERP system:", options: ["تقليل التدريب", "مقاومة التغيير من الموظفين", "لا حاجة لتغيير العمليات", "قبول فوري من الجميع"], correct: 1, explanation: "مقاومة التغيير من الموظفين." },
+    { text: "SAP R/3 يُستخدم بشكل أساسي في:", options: ["المؤسسات الكبيرة والمتوسطة", "الشركات الصغيرة فقط", "الأفراد", "المدارس"], correct: 0, explanation: "المؤسسات الكبيرة والمتوسطة." },
+    { text: "تحديد كيفية نقل المواد والبضائع وتخزينها من أنشطة نظام ......", options: ["SCM system", "ERP system", "Database system", "CRM system"], correct: 0, explanation: "SCM system." },
+    { text: "نظام Salesforce CRM هو ------", options: ["نظام شبكي", "نظام سحابي", "نظام محلي", "نظام عشوائي"], correct: 1, explanation: "نظام سحابي (Cloud-Based)." },
+    { text: "أهم مهام وظيفة المشتريات:", options: ["الموارد البشرية", "التسويق", "المحاسبة", "تحديد احتياجات الأقسام من المواد والخدمات"], correct: 3, explanation: "تحديد احتياجات الأقسام من المواد والخدمات." },
+    { text: "أي من الأنظمة التالية يُستخدم للتخطيط الطلب والإنتاج والتوزيع؟", options: ["SCM", "ERP", "CRM", "HRM"], correct: 0, explanation: "SCM." },
+    { text: "من المشاكل الشائعة في المبيعات:", options: ["معرفة دائمة بالمخزون", "عدم معرفة المخزون المتاح", "لا تأخير في الطلبات", "الطلبات الفورية"], correct: 1, explanation: "عدم معرفة المخزون المتاح." },
+    { text: "العمليات التجارية (Business Processes) هي:", options: ["أسماء الأقسام", "تقارير", "مجموعة من الأنشطة أو الخطوات المترابطة التي تقوم بها المؤسسة لتحقيق هدف محدد", "اجتماعات"], correct: 2, explanation: "مجموعة من الأنشطة أو الخطوات المترابطة التي تقوم بها المؤسسة لتحقيق هدف محدد." },
+    { text: "عملية \"من الشراء إلى الدفع Order-to-Cash \" تُسمى:", options: ["هي عملية اصدار فواتير فقط", "هي تقرير يقدم للإدارة", "هي إحدى العمليات البينية (Cross-Functional Processes) التي يدعمها نظام ERP", "هي عملية منفصلة تتم في قسم واحد فقط"], correct: 2, explanation: "إحدى العمليات البينية (Cross-Functional Processes)." },
+    { text: "فشل نسبة كبيرة من مشاريع ERP بسبب:", options: ["نقص الميزانية", "جودة البرمجيات", "سوء إدارة التغيير", "كل ما سبق"], correct: 3, explanation: "كل ما سبق." },
+    { text: "...... هي نهج أو نمط تصميم لتطوير أنظمة البرمجيات يعتمد على تقسيم التطبيقات إلى خدمات مستقلة Services ومتفاعلة يمكن إعادة استخدامها.", options: ["تحديث تلقائي", "هندسة الخدمات المتجهة SOA", "لا أخطاء في الرواتب", "تدريب فوري"], correct: 1, explanation: "هندسة الخدمات المتجهة SOA." },
+    { text: "عملية \"من الطلب إلى الدفع\" تُسمى:", options: ["Hire-to-Retire", "Order-to-Cash", "Plan-to-Produce", "Procure-to-Pay"], correct: 1, explanation: "Order-to-Cash." },
+    { text: "نظام Odoo هو ....", options: ["نظام شبكي", "نظام محلي", "نظام مفتوح المصدر", "نظام مغلق"], correct: 2, explanation: "نظام مفتوح المصدر." },
+    { text: "أنظمة معلومات المؤسسات تهدف إلى دمج العمليات والبيانات عبر جميع أقسام المنظمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "يقتصر استخدام أنظمة معلومات المؤسسات على المؤسسات الصناعية فقط.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تستخدم في مجالات متنوعة." },
+    { text: "من أمثلة أنظمة معلومات المؤسسات: ERP و CRM و SCM.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "نظام ERP يستخدم فقط في المحاسبة ولا يمكنه دعم الموارد البشرية أو المشتريات.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، يدعم الموارد البشرية والمشتريات." },
+    { text: "نظام إدارة علاقات العملاء (CRM) يساعد المؤسسة على فهم العملاء وتحسين رضاهم.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "يصعب تخصيص أنظمة ERP لتناسب طبيعة كل مؤسسة.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، قابل للتخصيص حسب احتياجات كل شركة." },
+    { text: "تطبيق نظام معلومات مؤسسي جديد يحتاج إلى تدريب المستخدمين وتغيير في الإجراءات الإدارية.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "أنظمة معلومات المؤسسات لا تؤثر على الإنتاجية.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تزيد الإنتاجية والكفاءة." },
+    { text: "الأنظمة المتكاملة ضرورية للتركيز على احتياجات العملاء، تحسين كفاءة العمليات، وتعزيز التعاون بين الفرق متعددة الوظائف.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "في وظائف الأعمال Business functions ، كل وظيفة تركز على مهام محددة، مثل إدارة الحسابات المالية أو توظيف الموظفين، وتعمل بشكل مستقل نسبيًا ضمن نطاقها.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "كل عملية تجارية Business process تعمل بمعزل عن العمليات الأخرى داخل المنظمة.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تتطلب التعاون والتنسيق." },
+    { text: "نظام معلومات المؤسسات (EIS) يُعتبر تطبيقًا متخصصًا ومتكاملًا لنظم المعلومات في إطار المنظمات الصغيرة.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، في إطار المنظمات الكبيرة." },
+    { text: "تشمل العملية التجارية عناصر الإدخال (Inputs) والمخرجات (Outputs) والموارد المستخدمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "عملية من الشراء إلى الدفع Procure-to-Pay - P2P تنطوي على قسم المشتريات الذي يطلب المواد عبر SCM", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "نظام Odoo لا يحتوي على وحدات لإدارة الموارد البشرية أو الحسابات", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، يحتوي على HR و Accounting." },
+    { text: "العملية التجارية Business process هي مجموعة من الأنشطة المترابطة التي تهدف إلى تحقيق هدف معين تخدم المؤسسة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." }
 ];
 
 const LETTERS = ['أ', 'ب', 'ج', 'د'];
 const container = document.getElementById('pagesContainer');
+const QUESTIONS_PER_PAGE = 5;
 
-/* =========================================================
-   التقسيم الذكي (Smart Pagination) بدون إجابات
-   ========================================================= */
-function renderPaginatedPages() {
-    container.innerHTML = '';
-    
-    // 1. حاوية القياس المخفية
-    const measureBox = document.createElement('div');
-    measureBox.style.position = 'absolute';
-    measureBox.style.visibility = 'hidden';
-    measureBox.style.width = '774px'; // العرض الداخلي الفعلي للورقة
-    document.body.appendChild(measureBox);
-    
-    const measureWrapper = document.createElement('div');
-    measureWrapper.className = 'content-wrapper';
-    measureBox.appendChild(measureWrapper);
+let state = {
+    answers: new Array(QUIZ.length).fill(null),
+    submitted: false,
+    scoreSent: false
+};
 
-    // 2. قياس الهيدر
-    measureWrapper.innerHTML = `
-        <header class="hero-header">
-            <h1>بنك أسئلة محلول ميد ترم</h1>
-            <p>مادة مالية عامة</p>
-        </header>
-    `;
-    const headerH = measureWrapper.offsetHeight;
+function renderPages() {
+    let html = '';
+    const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
 
-    // 3. قياس الفاصل
-    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
-    const dividerH = measureWrapper.offsetHeight + 15; // + margin
+    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+        const start = pageIndex * QUESTIONS_PER_PAGE;
+        const pageQuestions = QUIZ.slice(start, start + QUESTIONS_PER_PAGE);
 
-    // 4. قياس كل سؤال بدون إجابات أو تعليل
-    const qHeights = QUIZ.map((q) => {
-        measureWrapper.innerHTML = `
-            <div class="q-card">
-                <div class="q-head">
-                    <span class="q-num">1</span>
-                </div>
-                <p class="q-text">${q.text}</p>
-                <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
-                    ${q.options.map((opt, j) => `
-                        <div class="option">
-                            <span class="letter">${LETTERS[j]}</span>
-                            <span class="opt-text">${opt}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-        return measureWrapper.offsetHeight + 12; // + margin
-    });
-
-    document.body.removeChild(measureBox);
-
-    // 5. التوزيع الذكي على الصفحات
-    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة
-    const pages = [];
-    let currentPage = [];
-    let currentHeight = 0;
-
-    for (let i = 0; i < QUIZ.length; i++) {
-        let required = qHeights[i];
-        
-        // لو دي أول صفحة، بنحسب طول الهيدر
-        if (pages.length === 0 && currentPage.length === 0) {
-            required += headerH;
-        }
-
-        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 31 - Index 30)
-        let forceBreak = false;
-        if (i === 30 && currentPage.length > 0) {
-            forceBreak = true;
-            required += dividerH;
-        }
-
-        // لو الكارت الجديد مش هيدخل في الصفحة الحالية، نقفل الصفحة ونفتح جديدة
-        if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
-            pages.push(currentPage);
-            currentPage = [];
-            currentHeight = 0;
-            
-            if (forceBreak) {
-                required = qHeights[i] + dividerH;
-            } else {
-                required = qHeights[i];
-            }
-        }
-
-        currentPage.push(i);
-        currentHeight += qHeights[i];
-
-        if (pages.length === 0 && currentPage.length === 1) {
-            currentHeight += headerH;
-        }
-        if (i === 30) { // إضافة طول الفاصل لو حطيناه في الصفحة
-            currentHeight += dividerH;
-        }
-    }
-    if (currentPage.length > 0) {
-        pages.push(currentPage);
-    }
-
-    // 6. بناء HTML للصفحات
-    const totalPages = pages.length;
-
-    pages.forEach((pageIndices, pageIdx) => {
-        let pageHTML = `
-        <div class="page-wrapper">
+        html += `
+        <div class="page-container">
             <div class="a4-page">
-                <div class="watermark"></div>
                 <div class="content-wrapper">
-        `;
+                    ${pageIndex === 0 ? `
+                        <header class="hero-header">
+                            <h1>أنظمة معلومات المؤسسات</h1>
+                            <p>اسئلة انظمه معلومات المؤسسات الميد ترم</p>
+                        </header>
+                    ` : ''}
 
-        if (pageIdx === 0) {
-            pageHTML += `
-                <header class="hero-header">
-                    <h1>بنك أسئلة محلول ميد ترم</h1>
-                    <p>مادة مالية عامة</p>
-                </header>
-            `;
-        }
-
-        pageIndices.forEach(globalIndex => {
-            const q = QUIZ[globalIndex];
-            
-            // إضافة الفاصل قبل أسئلة الصح والخطأ
-            if (globalIndex === 30) {
-                pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
-            }
-
-            pageHTML += `
-                <div class="q-card" data-card="${globalIndex}">
-                    <div class="q-head">
-                        <span class="q-num">${globalIndex + 1}</span>
-                    </div>
-                    <p class="q-text">${q.text}</p>
-                    <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
-                        ${q.options.map((opt, j) => `
-                            <div class="option">
-                                <span class="letter">${LETTERS[j]}</span>
-                                <span class="opt-text">${opt}</span>
+                    ${pageQuestions.map((q, qIndex) => {
+                        const globalIndex = start + qIndex;
+                        
+                        let sectionDivider = '';
+                        if (globalIndex === 31) {
+                            sectionDivider = `
+                            <div class="section-divider">
+                                القسم الثاني: أسئلة الصواب والخطأ (True / False)
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        });
+                            `;
+                        }
 
-        pageHTML += `
+                        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
+                                          q.explanation === q.options[q.correct] || 
+                                          q.explanation.length <= q.options[q.correct].length + 3;
+
+                        return `
+                        ${sectionDivider}
+                        <div class="q-card" data-card="${globalIndex}">
+                            <div class="q-head">
+                                <span class="q-num">${globalIndex + 1}</span>
+                                ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                            </div>
+                            <p class="q-text">${q.text}</p>
+                            <div class="q-options">
+                                ${q.options.map((opt, j) => `
+                                    <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
+                                        <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
+                                        <span class="letter">${LETTERS[j]}</span>
+                                        <span class="opt-text">${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                            ${!isGeneric ? `
+                            <div class="q-explanation" id="exp-${globalIndex}">
+                                <strong>التعليل: </strong>${q.explanation}
+                            </div>
+                            ` : ''}
+                        </div>
+                        `;
+                    }).join('')}
                 </div>
+                
                 <div class="footer-bar">
                     <div class="footer-brand">
                         <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
                         <div class="footer-brand-name">الدحيح</div>
                     </div>
-                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | مادة مالية عامة</div>
+                    <div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | أنظمة معلومات المؤسسات</div>
                 </div>
             </div>
         </div>
         `;
-
-        container.innerHTML += pageHTML;
-    });
-
-    // 7. تصغير الورقة للموبايل بعد الرسم
-    setTimeout(scalePages, 100);
+    }
+    container.innerHTML = html;
+    updateProgress();
+    updateSubmitBtn();
+    
+    setTimeout(resizePages, 100);
 }
 
-/* =========================================================
-   تصغير الورقة للموبايل
-   ========================================================= */
-function scalePages() {
-    const pageWidth = 794;
+function resizePages() {
+    const pages = document.querySelectorAll('.a4-page');
+    const maxWidth = 794;
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
-    const availableWidth = viewportWidth - 20;
-    const scale = Math.min(1, availableWidth / pageWidth);
+    const availableWidth = viewportWidth - 20; 
+    
+    let scale = 1;
+    if (availableWidth < maxWidth) {
+        scale = availableWidth / maxWidth;
+    }
 
-    document.querySelectorAll('.page-wrapper').forEach(wrapper => {
-        const page = wrapper.querySelector('.a4-page');
+    pages.forEach(page => {
+        const wrapper = page.parentElement;
+        
+        page.style.transform = 'none';
+        const actualHeight = page.offsetHeight;
+
         if (scale < 1) {
             page.style.transform = `scale(${scale})`;
             page.style.transformOrigin = 'top center';
             
-            const actualHeight = page.offsetHeight; 
+            wrapper.style.width = `${availableWidth}px`;
             wrapper.style.height = `${actualHeight * scale}px`;
         } else {
             page.style.transform = 'none';
+            wrapper.style.width = '100%';
             wrapper.style.height = 'auto';
         }
     });
 }
 
-window.addEventListener('load', scalePages);
-window.addEventListener('resize', scalePages);
-window.addEventListener('orientationchange', scalePages);
+window.addEventListener('load', resizePages);
+window.addEventListener('orientationchange', resizePages); 
 
-/* ===== تشغيل ===== */
-renderPaginatedPages();
+function updateProgress() {
+    const answered = state.answers.filter(a => a !== null).length;
+    const percent = (answered / QUIZ.length) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').innerText = `${answered} / ${QUIZ.length}`;
+}
+
+function updateSubmitBtn() {
+    if (state.submitted) return;
+    const missing = state.answers.filter(a => a === null).length;
+    const btn = document.getElementById('submitBtn');
+    
+    if (missing === 0) {
+        btn.innerHTML = 'تسليم الامتحان 🚀';
+        btn.classList.add('ready');
+    } else {
+        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 20px; font-size: 12px;">باقي ${missing}</span>`;
+        btn.classList.remove('ready');
+    }
+}
+
+window.selectOption = function(qIndex, oIndex) {
+    if (state.submitted) return;
+    state.answers[qIndex] = oIndex;
+    
+    document.querySelectorAll(`.option[data-q="${qIndex}"]`).forEach(el => el.classList.remove('selected'));
+    document.getElementById(`opt-${qIndex}-${oIndex}`).classList.add('selected');
+    
+    const card = document.querySelector(`.q-card[data-card="${qIndex}"]`);
+    if (card) card.classList.remove('missed');
+
+    updateProgress();
+    updateSubmitBtn();
+};
+
+window.goToQuestion = function(index) {
+    closeMissedModal();
+    const card = document.querySelector(`.q-card[data-card="${index}"]`);
+    if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.transition = "box-shadow 0.3s";
+        card.style.boxShadow = "0 0 20px rgba(6, 182, 212, 0.6)";
+        setTimeout(() => { card.style.boxShadow = ""; }, 1500);
+    }
+};
+
+window.closeMissedModal = function() {
+    document.getElementById('missedModal').classList.remove('show');
+};
+
+function sendScoreToPlatform(score, total) {
+    try {
+        if (window.parent && window.parent !== window && typeof window.parent.saveInteractiveExamScore === 'function') {
+            window.parent.saveInteractiveExamScore(score, total);
+            return true;
+        } else {
+            console.log(`الدرجة: ${score} من ${total}`);
+            return false;
+        }
+    } catch (e) {
+        console.log("Error sending score: ", e);
+        return false;
+    }
+}
+
+window.submitExam = function() {
+    if (state.submitted) return;
+
+    const missingIndices = [];
+    state.answers.forEach((ans, i) => {
+        if (ans === null) missingIndices.push(i);
+    });
+
+    if (missingIndices.length > 0) {
+        missingIndices.forEach(i => {
+            const card = document.querySelector(`.q-card[data-card="${i}"]`);
+            if (card) card.classList.add('missed');
+        });
+
+        const modal = document.getElementById('missedModal');
+        const badgesContainer = document.getElementById('missedBadges');
+        document.getElementById('missedCount').innerText = missingIndices.length;
+        
+        badgesContainer.innerHTML = missingIndices.map(i => 
+            `<div class="badge-missed" onclick="goToQuestion(${i})">${i + 1}</div>`
+        ).join('');
+
+        modal.classList.add('show');
+        return;
+    }
+
+    state.submitted = true;
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.classList.remove('ready');
+    submitBtn.innerText = 'تم التسليم ✅';
+
+    let score = 0;
+
+    QUIZ.forEach((q, i) => {
+        const chosen = state.answers[i];
+        const isCorrect = (chosen === q.correct);
+        if (isCorrect) score++;
+
+        const options = document.querySelectorAll(`.option[data-q="${i}"]`);
+        options.forEach(opt => {
+            opt.classList.add('locked');
+            opt.classList.remove('selected');
+            const oIndex = parseInt(opt.dataset.o);
+            
+            if (oIndex === q.correct) {
+                opt.classList.add('correct');
+                opt.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
+            }
+            if (oIndex === chosen && !isCorrect) {
+                opt.classList.add('wrong');
+                opt.insertAdjacentHTML('beforeend', '<span class="mark">✗</span>');
+            }
+        });
+
+        const infoBtn = document.getElementById(`btn-${i}`);
+        if (infoBtn) infoBtn.style.display = 'flex';
+    });
+
+    const sent = sendScoreToPlatform(score, QUIZ.length);
+
+    const resultCard = document.getElementById('resultCard');
+    const resultScore = document.getElementById('resultScore');
+    const resultMsg = document.getElementById('resultMsg');
+    
+    const percent = Math.round((score / QUIZ.length) * 100);
+    let msg = percent >= 80 ? "ممتاز! أداء رائع 🎉" : (percent >= 50 ? "جيد جداً، واصل التقدم 👍" : "لا بأس، حاول مرة أخرى 💪");
+    
+    resultScore.innerHTML = `${score} <small>/ ${QUIZ.length}</small>`;
+    resultMsg.innerText = msg + (sent ? " (تم إرسال الدرجة للمنصة)" : "");
+    resultCard.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.toggleExplanation = function(index) {
+    const expBox = document.getElementById(`exp-${index}`);
+    const btn = document.getElementById(`btn-${index}`);
+    if (expBox && expBox.classList.contains('show')) {
+        expBox.classList.remove('show');
+        btn.classList.remove('active');
+    } else if (expBox) {
+        expBox.classList.add('show');
+        btn.classList.add('active');
+    }
+};
+
+renderPages();
 </script>
 </body>
 </html>
