@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>بنك أسئلة محلول ميد ترم - مادة مالية عامة</title>
+    <title>بنك أسئلة ميد ترم - مادة مالية عامة</title>
     
     <!-- ================= بداية كود الحماية الموحد ================= -->
     <noscript>
@@ -157,15 +157,17 @@
             flex-grow: 1;
         }
 
+        /* تكبير الهيدر */
         .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
         .hero-header h1 {
             font-family: 'Amiri', serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700; color: var(--heading-main);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
-        .hero-header p { font-size: 16px; color: var(--navy-blue); font-weight: 700; }
+        .hero-header p { font-size: 18px; color: var(--navy-blue); font-weight: 700; }
 
+        /* تكبير الفاصل */
         .section-divider {
             background: linear-gradient(90deg, rgba(6, 78, 59, 0.1), rgba(212, 175, 55, 0.1));
             border: 1px dashed var(--gold-primary);
@@ -174,8 +176,8 @@
             padding: 6px;
             border-radius: 8px;
             font-weight: 800;
-            margin: 10px 0 15px 0;
-            font-size: 18px;
+            margin: 8px 0 12px 0;
+            font-size: 20px;
         }
 
         /* ============ كارت السؤال ============ */
@@ -184,7 +186,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px 15px; 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             position: relative;
             border-right: 4px solid var(--gold-primary);
@@ -195,18 +197,21 @@
             display: flex; align-items: center; justify-content: flex-start;
             gap: 10px; margin-bottom: 8px;
         }
+        
+        /* تكبير رقم السؤال */
         .q-num {
             width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
             background: rgba(76, 29, 149, 0.1);
             color: var(--heading-main); 
-            font-weight: 800; font-size: 16px;
+            font-weight: 800; font-size: 17px;
         }
 
+        /* تكبير نص السؤال */
         .q-text {
             margin: 0 0 10px 0; 
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700; line-height: 1.5;
             color: var(--heading-main);
         }
@@ -218,6 +223,7 @@
             gap: 8px; 
         }
         
+        /* تكبير الخيارات */
         .option {
             position: relative;
             display: flex;
@@ -230,19 +236,19 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background: #F9FAFB;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.4;
         }
         
         .option .letter {
-            width: 24px; height: 24px;
+            width: 26px; height: 26px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 4px;
             background: #E5E7EB;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             flex-shrink: 0;
         }
@@ -370,7 +376,7 @@ const LETTERS = ['أ', 'ب', 'ج', 'د'];
 const container = document.getElementById('pagesContainer');
 
 /* =========================================================
-   التقسيم الذكي (Smart Pagination) بدون إجابات
+   التقسيم الذكي (Smart Pagination)
    ========================================================= */
 function renderPaginatedPages() {
     container.innerHTML = '';
@@ -384,22 +390,18 @@ function renderPaginatedPages() {
     
     const measureWrapper = document.createElement('div');
     measureWrapper.className = 'content-wrapper';
+    measureWrapper.style.padding = '0'; // إزالة أي بادينج افتراضي أثناء القياس
     measureBox.appendChild(measureWrapper);
 
     // 2. قياس الهيدر
-    measureWrapper.innerHTML = `
-        <header class="hero-header">
-            <h1>بنك أسئلة محلول ميد ترم</h1>
-            <p>مادة مالية عامة</p>
-        </header>
-    `;
+    measureWrapper.innerHTML = `<header class="hero-header"><h1>عنوان</h1><p>وصف</p></header>`;
     const headerH = measureWrapper.offsetHeight;
 
     // 3. قياس الفاصل
-    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
-    const dividerH = measureWrapper.offsetHeight + 15; // + margin
+    measureWrapper.innerHTML = `<div class="section-divider">فاصل</div>`;
+    const dividerH = measureWrapper.offsetHeight;
 
-    // 4. قياس كل سؤال بدون إجابات أو تعليل
+    // 4. قياس كل سؤال
     const qHeights = QUIZ.map((q) => {
         measureWrapper.innerHTML = `
             <div class="q-card">
@@ -417,13 +419,13 @@ function renderPaginatedPages() {
                 </div>
             </div>
         `;
-        return measureWrapper.offsetHeight + 12; // + margin
+        return measureWrapper.offsetHeight;
     });
 
     document.body.removeChild(measureBox);
 
     // 5. التوزيع الذكي على الصفحات
-    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة
+    const availableHeight = 1123 - 10 - 40 - 30; 
     const pages = [];
     let currentPage = [];
     let currentHeight = 0;
@@ -431,19 +433,16 @@ function renderPaginatedPages() {
     for (let i = 0; i < QUIZ.length; i++) {
         let required = qHeights[i];
         
-        // لو دي أول صفحة، بنحسب طول الهيدر
         if (pages.length === 0 && currentPage.length === 0) {
             required += headerH;
         }
 
-        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 31 - Index 30)
         let forceBreak = false;
         if (i === 30 && currentPage.length > 0) {
             forceBreak = true;
             required += dividerH;
         }
 
-        // لو الكارت الجديد مش هيدخل في الصفحة الحالية، نقفل الصفحة ونفتح جديدة
         if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
             pages.push(currentPage);
             currentPage = [];
@@ -462,7 +461,7 @@ function renderPaginatedPages() {
         if (pages.length === 0 && currentPage.length === 1) {
             currentHeight += headerH;
         }
-        if (i === 30) { // إضافة طول الفاصل لو حطيناه في الصفحة
+        if (i === 30) { 
             currentHeight += dividerH;
         }
     }
@@ -484,7 +483,7 @@ function renderPaginatedPages() {
         if (pageIdx === 0) {
             pageHTML += `
                 <header class="hero-header">
-                    <h1>بنك أسئلة محلول ميد ترم</h1>
+                    <h1>بنك أسئلة ميد ترم</h1>
                     <p>مادة مالية عامة</p>
                 </header>
             `;
@@ -493,7 +492,6 @@ function renderPaginatedPages() {
         pageIndices.forEach(globalIndex => {
             const q = QUIZ[globalIndex];
             
-            // إضافة الفاصل قبل أسئلة الصح والخطأ
             if (globalIndex === 30) {
                 pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
             }
