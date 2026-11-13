@@ -927,7 +927,7 @@
         </div>
     </div>
 
-    <script>
+        <script>
         // 1. تصغير الورقة عشان تبان كأنها ورقة A4 على الشاشة
         function scalePages() {
             const wrappers = document.querySelectorAll('.page-wrapper');
@@ -949,45 +949,38 @@
             });
         }
 
-        // 2. تصغير الكلام اللي جوه الورقة لو كان كتير (عشان ميتقصش) وتوسيعه وتوسيطه
+        // 2. تصغير الكلام اللي جوه الورقة لو كان كتير (باستخدام Scale الآمن بدلاً من Zoom)
         function fitContentInsidePage() {
             const pages = document.querySelectorAll('.a4-page');
             
             pages.forEach(page => {
                 const content = page.querySelector('.content-wrapper');
                 
-                // نرجع المحتوى لحجمه الطبيعي الأول عشان نقيس صح
-                content.style.zoom = '1'; // تصفير الزوم
+                // تصفير أي إعدادات سابقة عشان الحسابات تكون صح
                 content.style.transform = 'none';
                 content.style.width = '100%';
                 content.style.margin = '0 auto';
                 
-                // بنجيب طول الورقة المتاح
+                // حساب الطول المتاح جوه الورقة (بعد خصم الهوامش)
                 const pageHeight = page.clientHeight;
                 const style = window.getComputedStyle(page);
                 const paddingTop = parseFloat(style.paddingTop);
                 const paddingBottom = parseFloat(style.paddingBottom);
                 const availableHeight = pageHeight - paddingTop - paddingBottom - 5; 
                 
+                // الارتفاع الفعلي للمحتوى
                 const contentHeight = content.scrollHeight;
                 
-                // لو الكلام أطول من الورقة، بنصغره بـ zoom عشان يفضل في مكانه
+                // لو الكلام أطول من الورقة، نصغره بـ scale 
                 if (contentHeight > availableHeight) {
-                    const scale = availableHeight / contentHeight;
+                    const scaleFactor = availableHeight / contentHeight;
                     
-                    // استخدام zoom بدل transform عشان ميفضلش فراغ
-                    // ملاحظة: zoom مش شغال في فايرفوكس، عشان كده ضفنا transform كـ fallback
-                    if (navigator.userAgent.indexOf("Firefox") !== -1) {
-                        // فايرفوكس
-                        content.style.transformOrigin = 'top center';
-                        content.style.transform = `scale(${scale})`;
-                        content.style.width = `${(100 / scale)}%`;
-                    } else {
-                        // كروم وسفاري وموبايل
-                        content.style.zoom = scale; 
-                        // بنوسع الشاشة بتاعت الكلام عشان ياخد مساحة الورقة كلها بالعرض
-                        content.style.width = '100%'; 
-                    }
+                    // استخدام transform: scale فقط (آمن جداً للنصوص العربية)
+                    content.style.transformOrigin = 'top center';
+                    content.style.transform = `scale(${scaleFactor})`;
+                    
+                    // زيادة العرض بنسبة عكسية عشان المحتوى ميبقاش رفيع في النص
+                    content.style.width = `${(100 / scaleFactor)}%`;
                 }
             });
         }
@@ -1010,5 +1003,6 @@
             }, 200);
         });
     </script>
+
 </body>
 </html>
