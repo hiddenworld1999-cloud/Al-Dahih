@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>النسخة المحلولة | أنظمة معلومات المؤسسات</title>
+    <title>بنك الأسئلة المحلول | أنظمة معلومات المؤسسات</title>
     
     <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
     <noscript>
@@ -94,21 +94,19 @@
     
     <style>
         :root {
-            --bg-body: #0B1120;
-            --bg-page: #111827;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #F3F4F6;
-            --text-muted: #9CA3AF;
+            --bg-body: #020202;
+            --bg-page: #0A0A0F;
+            --bg-card: rgba(20, 20, 25, 0.6);
+            --text-main: #E2E8F0;
+            --text-muted: #94A3B8;
             
-            --electric-blue: #3B82F6;
-            --cyan: #06B6D4;
-            --neon-green: #10B981;
-            --neon-green-bg: rgba(16, 185, 129, 0.1);
-            --neon-red: #EF4444;
-            --neon-red-bg: rgba(239, 68, 68, 0.1);
-            
-            --border-glass: rgba(59, 130, 246, 0.2);
-            --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
+            --neon-cyan: #00F0FF;
+            --neon-purple: #B026FF;
+            --neon-green: #00FF41;
+            --neon-red: #FF003C;
+            --neon-yellow: #FFD700;
+
+            --border-glass: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -118,16 +116,16 @@
             width: 100%; 
             background-color: var(--bg-body);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.05), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 30%);
             direction: rtl;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            line-height: 1.4;
-            padding: 20px 0 40px 0;
+            line-height: 1.5; 
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -135,7 +133,7 @@
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
 
         /* ============ الحاوية الأساسية للورقة ============ */
         .page-wrapper {
@@ -153,9 +151,9 @@
             min-height: 1123px; 
             height: auto;
             padding: 10px 10px 40px 10px; 
-            border: 1px solid var(--border-glass);
+            border: 1px solid rgba(0, 240, 255, 0.15);
             border-radius: 4px;
-            box-shadow: var(--shadow-paper);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -167,7 +165,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
             opacity: 0.8; z-index: 10;
         }
 
@@ -180,12 +178,11 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.03;
+            opacity: 0.04;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* ============ الحاوية الداخلية ============ */
         .content-wrapper {
             position: relative;
             z-index: 2;
@@ -196,27 +193,26 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 2px 0 6px; margin-bottom: 6px; }
+        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-glass); }
         .hero-header h1 {
-            font-size: 24px; 
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            font-size: 28px; font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
-        .hero-header p { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+        .hero-header p { font-size: 16px; color: var(--text-muted); font-weight: 600; }
 
         .section-divider {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
-            border: 1px dashed var(--cyan);
-            color: var(--cyan);
+            background: linear-gradient(90deg, rgba(176, 38, 255, 0.2), rgba(0, 240, 255, 0.2));
+            border: 1px dashed var(--neon-cyan);
+            color: var(--neon-cyan);
             text-align: center;
-            padding: 6px;
-            border-radius: 6px;
+            padding: 8px;
+            border-radius: 8px;
             font-weight: 800;
-            margin: 6px 0 10px 0;
-            font-size: 16px;
-            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
+            margin: 8px 0 12px 0;
+            font-size: 18px;
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
         /* ============ كارت السؤال ============ */
@@ -225,49 +221,49 @@
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-glass);
             border-radius: 8px;
-            padding: 8px 12px; 
-            margin-bottom: 8px; 
+            padding: 12px 15px; 
+            margin-bottom: 10px; 
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
+            border-right: 4px solid var(--neon-purple);
             transition: all 0.3s;
         }
 
         .q-head {
-            display: flex; align-items: center; justify-content: flex-start;
-            gap: 6px; margin-bottom: 6px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 8px;
         }
+        .q-head-right { display: flex; align-items: center; gap: 12px; }
         
         .q-num {
-            width: 28px; height: 28px;
+            width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--cyan); 
-            font-weight: 800; font-size: 14px;
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            background: rgba(176, 38, 255, 0.15);
+            color: var(--neon-purple); 
+            font-weight: 800; font-size: 17px;
             font-family: 'Fira Code', monospace;
         }
 
         .info-btn {
             display: flex;
-            width: 24px; height: 24px;
+            width: 30px; height: 30px;
             border-radius: 50%;
             background: transparent;
-            border: 2px solid var(--cyan);
-            color: var(--cyan);
-            font-size: 12px; font-weight: 800;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-size: 15px; font-weight: 800;
             align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s;
-            font-family: 'Fira Code', monospace;
-            box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
         }
-        .info-btn:hover { background: rgba(6, 182, 212, 0.1); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
-        .info-btn.active { background: var(--cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); }
+        .info-btn:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
+        .info-btn.active { background: var(--neon-cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(0, 240, 255, 0.8); }
 
         .q-text {
-            margin: 0 0 8px 0; 
-            font-size: 17px; 
-            font-weight: 700; line-height: 1.4;
+            margin: 0 0 10px 0; 
+            font-size: 19px;
+            font-weight: 700; line-height: 1.5;
             color: #FFFFFF;
         }
 
@@ -275,7 +271,7 @@
         .q-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px; 
+            gap: 8px; 
         }
         
         .option {
@@ -285,26 +281,26 @@
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
-            min-height: 38px; 
-            padding: 6px 10px;
-            border: 1px solid rgba(255,255,255,0.1);
+            min-height: 40px;
+            padding: 8px 12px;
+            border: 1px solid #333;
             border-radius: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            font-size: 15.5px; 
+            background: #111;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.3;
+            line-height: 1.4;
             overflow-wrap: break-word;
             word-break: break-word;
         }
         
         .option .letter {
-            width: 24px; height: 24px;
+            width: 26px; height: 26px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 5px;
+            border-radius: 4px;
             background: rgba(255,255,255,0.05);
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             flex-shrink: 0;
             font-family: 'Fira Code', monospace;
@@ -312,48 +308,42 @@
         
         .option .opt-text { flex: 1; }
 
-        /* حالة الإجابة الصحيحة */
         .option.correct { 
             border-color: var(--neon-green); 
-            background: var(--neon-green-bg); 
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+            background: rgba(0, 255, 65, 0.08); 
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
         }
-        .option.correct .letter { 
-            background: var(--neon-green); 
-            color: #000;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-        }
+        .option.correct .letter { background: var(--neon-green); color: #000; }
         .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
-        .option.correct .mark { color: var(--neon-green); font-weight: bold; font-size: 18px; margin-inline-start: auto; text-shadow: 0 0 8px var(--neon-green); }
+        .option.correct .mark { color: var(--neon-green); font-weight: bold; font-size: 20px; margin-inline-start: auto; }
 
         /* ============ صندوق التعليل ============ */
         .q-explanation {
             display: none;
-            margin-top: 8px;
-            padding: 8px 12px;
-            background: rgba(6, 182, 212, 0.05);
-            border: 1px dashed var(--cyan);
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px dashed var(--neon-cyan);
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.5;
-            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.05);
         }
-        .q-explanation strong { color: var(--cyan); }
+        .q-explanation strong { color: var(--neon-cyan); }
         .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ============ فوتر الورقة ============ */
         .footer-bar {
-            position: absolute; bottom: 10px; left: 15px; right: 15px;
+            position: absolute; bottom: 12px; left: 25px; right: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; z-index: 2;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
         }
-        .footer-brand { display: flex; align-items: center; gap: 6px; }
-        .footer-logo { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
-        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--cyan); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 800; }
 
         /* ============ الطباعة ============ */
         @page { size: A4; margin: 0; }
@@ -428,7 +418,7 @@ const QUIZ = [
     { text: "عملية \"من الطلب إلى الدفع\" تُسمى:", options: ["Hire-to-Retire", "Order-to-Cash", "Plan-to-Produce", "Procure-to-Pay"], correct: 1, explanation: "Order-to-Cash." },
     { text: "نظام Odoo هو ....", options: ["نظام شبكي", "نظام محلي", "نظام مفتوح المصدر", "نظام مغلق"], correct: 2, explanation: "نظام مفتوح المصدر." },
     
-    // --- أسئلة صح أم خطأ ---
+    // --- أسئلة صح أم خطأ (تبدأ من Index 31) ---
     { text: "أنظمة معلومات المؤسسات تهدف إلى دمج العمليات والبيانات عبر جميع أقسام المنظمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
     { text: "يقتصر استخدام أنظمة معلومات المؤسسات على المؤسسات الصناعية فقط.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تستخدم في مجالات متنوعة." },
     { text: "من أمثلة أنظمة معلومات المؤسسات: ERP و CRM و SCM.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
@@ -490,25 +480,26 @@ function renderPaginatedPages() {
     const measureBox = document.createElement('div');
     measureBox.style.position = 'absolute';
     measureBox.style.visibility = 'hidden';
-    measureBox.style.width = '774px'; // العرض الداخلي الفعلي للورقة
+    measureBox.style.width = '774px';
     document.body.appendChild(measureBox);
     
     const measureWrapper = document.createElement('div');
     measureWrapper.className = 'content-wrapper';
+    measureWrapper.style.padding = '0'; 
     measureBox.appendChild(measureWrapper);
 
     // 2. قياس الهيدر
     measureWrapper.innerHTML = `
         <header class="hero-header">
-            <h1>أنظمة معلومات المؤسسات</h1>
-            <p>النسخة المحلولة - اسئلة الميد ترم</p>
+            <h1>MIDTERM SOLVED QUIZ</h1>
+            <p>بنك أسئلة أنظمة معلومات المؤسسات - مراجعة نهائية</p>
         </header>
     `;
     const headerH = measureWrapper.offsetHeight;
 
     // 3. قياس الفاصل
     measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
-    const dividerH = measureWrapper.offsetHeight + 16;
+    const dividerH = measureWrapper.offsetHeight;
 
     // 4. قياس كل سؤال
     const qHeights = QUIZ.map((q) => {
@@ -519,11 +510,13 @@ function renderPaginatedPages() {
         measureWrapper.innerHTML = `
             <div class="q-card">
                 <div class="q-head">
-                    <span class="q-num">1</span>
-                    ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
+                    <div class="q-head-right">
+                        <span class="q-num">1</span>
+                        ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
+                    </div>
                 </div>
                 <p class="q-text">${q.text}</p>
-                <div class="q-options">
+                <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
                     ${q.options.map((opt, j) => {
                         const isCorrect = (j === q.correct);
                         return `
@@ -537,13 +530,13 @@ function renderPaginatedPages() {
                 </div>
             </div>
         `;
-        return measureWrapper.offsetHeight + 8; // + margin
+        return measureWrapper.offsetHeight;
     });
 
     document.body.removeChild(measureBox);
 
     // 5. التوزيع الذكي على الصفحات
-    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة
+    const availableHeight = 1123 - 10 - 40 - 30; 
     const pages = [];
     let currentPage = [];
     let currentHeight = 0;
@@ -555,7 +548,7 @@ function renderPaginatedPages() {
             required += headerH;
         }
 
-        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 31)
+        // إجبار صفحة جديدة لأسئلة الصح والخطأ (Index 31 = سؤال 32)
         let forceBreak = false;
         if (i === 31 && currentPage.length > 0) {
             forceBreak = true;
@@ -580,7 +573,7 @@ function renderPaginatedPages() {
         if (pages.length === 0 && currentPage.length === 1) {
             currentHeight += headerH;
         }
-        if (i === 31) {
+        if (i === 31) { 
             currentHeight += dividerH;
         }
     }
@@ -602,8 +595,8 @@ function renderPaginatedPages() {
         if (pageIdx === 0) {
             pageHTML += `
                 <header class="hero-header">
-                    <h1>أنظمة معلومات المؤسسات</h1>
-                    <p>النسخة المحلولة - اسئلة الميد ترم</p>
+                    <h1>MIDTERM SOLVED QUIZ</h1>
+                    <p>بنك أسئلة أنظمة معلومات المؤسسات - مراجعة نهائية</p>
                 </header>
             `;
         }
@@ -622,11 +615,13 @@ function renderPaginatedPages() {
             pageHTML += `
                 <div class="q-card" data-card="${globalIndex}">
                     <div class="q-head">
-                        <span class="q-num">${globalIndex + 1}</span>
-                        ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        <div class="q-head-right">
+                            <span class="q-num">${globalIndex + 1}</span>
+                            ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        </div>
                     </div>
                     <p class="q-text">${q.text}</p>
-                    <div class="q-options">
+                    <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
                         ${q.options.map((opt, j) => {
                             const isCorrect = (j === q.correct);
                             return `
@@ -654,7 +649,7 @@ function renderPaginatedPages() {
                         <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
                         <div class="footer-brand-name">الدحيح</div>
                     </div>
-                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | أنظمة معلومات المؤسسات</div>
+                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | بنك أسئلة أنظمة معلومات المؤسسات</div>
                 </div>
             </div>
         </div>
@@ -663,12 +658,11 @@ function renderPaginatedPages() {
         container.innerHTML += pageHTML;
     });
 
-    // 7. تصغير الورقة للموبايل
     setTimeout(scalePages, 100);
 }
 
 /* =========================================================
-   تصغير الورقة للموبايل وإزالة المساحات السوداء
+   تصغير الورقة للموبايل
    ========================================================= */
 function scalePages() {
     const pageWidth = 794;
