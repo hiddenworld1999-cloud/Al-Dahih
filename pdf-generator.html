@@ -7,9 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- استخدام مكتبة html2pdf الذكية لمنع قص الأسئلة من المنتصف -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'IBM Plex Sans Arabic', sans-serif; }
@@ -30,7 +29,7 @@
     <div class="loader-box" id="loaderBox">
         <span class="material-icons">auto_mode</span>
         <h3>جاري تجهيز المحاضرة...</h3>
-        <p>يتم الآن ختم الملف باسمك وضبط الصفحات لمنع القص. يرجى الانتظار.</p>
+        <p>يتم الآن ختم الملف باسمك ورفعه بجودة عالية. يرجى الانتظار.</p>
     </div>
     
     <div class="success-box" id="successBox"></div>
@@ -102,112 +101,113 @@
             const watermarkText = `${name} - ${code}`;
 
             const iframe = document.createElement('iframe');
-            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:1000px; height:100vh; border:none; background:#fff;';
+            // عرض ثابت 1024 بكسل لضمان تصميم الكمبيوتر المستقر، وطول كبير جداً
+            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:1024px; height:15000px; border:none; background:#fff;';
             
             iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 'admin=daheeh&t=' + Date.now();
             document.body.appendChild(iframe);
 
             iframe.onload = async () => {
                 try {
-                    await sleep(3500); 
+                    await sleep(4000); 
 
                     const doc = iframe.contentDocument || iframe.contentWindow.document;
                     const shield = doc.getElementById('antiScreenshotShield');
                     if (shield) shield.style.display = 'none';
 
-                    // 🔥 السر هنا: وضع قواعد صارمة تمنع المتصفح من قص الأسئلة أو النصوص من المنتصف
+                    // تنظيف التصميم وإصلاح المسافات (بدون التدخل في الهيكل عشان ميبوظش)
                     const style = doc.createElement('style');
                     style.innerHTML = `
-                        /* منع قص العناصر من المنتصف وتوجيهها للصفحة التالية */
-                        p, h1, h2, h3, h4, h5, h6, img, ul, li, table, tr, td, fieldset, .question, .quiz-opt, .card {
-                            page-break-inside: avoid !important;
-                            break-inside: avoid !important;
+                        /* حل مشكلة تباعد الحروف */
+                        * { letter-spacing: normal !important; word-spacing: normal !important; }
+                        
+                        /* تحويل الضبط الكلي ليمين لمنع المسافات الغريبة في العربي */
+                        p, div, span, h1, h2, h3, h4, li, td { text-align: right !important; }
+                        
+                        /* منع الألوان الداكنة وفرض مقاس ثابت */
+                        body, html { 
+                            background-color: #ffffff !important; 
+                            color: #000000 !important; 
+                            width: 1024px !important; 
+                            margin: 0 auto !important; 
                         }
-                        /* الديفات الداخلية لا يتم قصها */
-                        div {
-                            page-break-inside: avoid;
-                            break-inside: avoid;
-                        }
-                        /* السماح بكسر الصفحة للحاويات الأساسية الكبيرة فقط */
-                        body, html, main, section, #pagesContainer, .container {
-                            page-break-inside: auto !important;
-                            break-inside: auto !important;
-                            height: auto !important;
-                            overflow: visible !important;
-                        }
-                        /* إصلاح مشكلة المسافات الغريبة في الكلمات */
-                        * {
-                            letter-spacing: normal !important;
-                            word-spacing: normal !important;
-                        }
+                        
+                        /* إخفاء السكرول بار */
+                        ::-webkit-scrollbar { display: none; }
+                        
+                        /* منع قص الصور */
+                        img { max-width: 100% !important; height: auto !important; }
                     `;
                     doc.head.appendChild(style);
 
-                    // تحويل النصوص اللي مضبوطة من الجانبين لليمين فقط لمنع التباعد الغريب
-                    const allTextElements = doc.querySelectorAll('*');
-                    allTextElements.forEach(el => {
-                        const computed = window.getComputedStyle(el);
-                        if (computed.textAlign === 'justify') {
-                            el.style.setProperty('text-align', 'right', 'important');
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    
+                    const watermarkImg = textToImage(watermarkText);
+                    const wmSize = 90; 
+
+                    const drawWatermark = () => {
+                        for (let x = -30; x < pdfWidth + 30; x += 110) {
+                            for (let y = -30; y < pdfHeight + 30; y += 100) {
+                                pdf.addImage(watermarkImg.data, 'PNG', x, y, wmSize, wmSize);
+                            }
                         }
-                    });
+                    };
 
-                    const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], .gradient-text');
-                    gradientTitles.forEach(el => {
-                        el.style.background = 'none';
-                        el.style.color = '#2563EB';
-                        el.style.webkitTextFillColor = 'initial';
-                    });
+                    const pages = doc.querySelectorAll('.a4-page');
+                    if (pages.length > 0) {
+                        for (let i = 0; i < pages.length; i++) {
+                            // التصوير بـ scale 2 لضمان الجودة وعدم سقوط الرامات
+                            const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1024 });
+                            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                            if (i > 0) pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
+                            drawWatermark();
+                        }
+                    } else {
+                        const targetEl = doc.getElementById('pagesContainer') || doc.body;
+                        const canvas = await html2canvas(targetEl, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1024, windowHeight: targetEl.scrollHeight });
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                        const imgHeightInMM = (canvas.height * pdfWidth) / canvas.width;
+                        let heightLeft = imgHeightInMM;
+                        let position = 0;
 
-                    const bodyStyles = window.getComputedStyle(doc.body);
-                    let bgColor = bodyStyles.backgroundColor;
-                    if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') bgColor = '#ffffff';
+                        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
+                        drawWatermark();
+                        heightLeft -= pdfHeight;
 
-                    // إعدادات html2pdf الاحترافية مع هوامش 15 مم من كل الجوانب
+                        while (heightLeft > 0) {
+                            position = heightLeft - imgHeightInMM;
+                            pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightInMM);
+                            drawWatermark();
+                            heightLeft -= pdfHeight;
+                        }
+                    }
+
+                    // تسمية الملف
                     const safeTitle = (file.split('/').pop().split('.')[0] || 'Lecture').replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const safeName = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const fileName = `محاضرة_${safeTitle}_${safeName}_${code}.pdf`;
+                    
+                    // 🔥 التحميل المباشر للـ PDF أوتوماتيكياً
+                    pdf.save(fileName);
 
-                    const opt = {
-                        margin:       [15, 10, 15, 10], // هوامش أعلى، يمين، أسفل، يسار
-                        filename:     fileName,
-                        image:        { type: 'jpeg', quality: 0.98 },
-                        html2canvas:  { scale: 2, useCORS: true, logging: false, backgroundColor: bgColor, windowWidth: 1000 },
-                        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                        pagebreak:    { mode: ['css', 'legacy'] } // تفعيل نظام الفواصل الذكي
-                    };
-
-                    const watermarkImg = textToImage(watermarkText);
-                    const wmSize = 90;
-                    const element = doc.getElementById('pagesContainer') || doc.body;
-
-                    // توليد الـ PDF وطباعة العلامة المائية على كل الصفحات
-                    html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
-                        const totalPages = pdf.internal.getNumberOfPages();
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const pdfHeight = pdf.internal.pageSize.getHeight();
+                    document.getElementById('loaderBox').style.display = 'none';
+                    const successBox = document.getElementById('successBox');
+                    successBox.style.display = 'block';
+                    
+                    successBox.innerHTML = `
+                        <span class="material-icons" style="font-size:70px; color:#10B981; animation:none;">check_circle</span>
+                        <h3 style="font-weight:900; font-size:1.6rem; color:#F8FAFC; margin-bottom:15px;">تم التحميل بنجاح! 🚀</h3>
+                        <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">تم تنزيل المحاضرة في مجلد التنزيلات (Downloads) بجهازك بنجاح.</p>
                         
-                        for (let i = 1; i <= totalPages; i++) {
-                            pdf.setPage(i);
-                            for (let x = -30; x < pdfWidth + 30; x += 110) {
-                                for (let y = -30; y < pdfHeight + 30; y += 100) {
-                                    pdf.addImage(watermarkImg.data, 'PNG', x, y, wmSize, wmSize);
-                                }
-                            }
-                        }
-                    }).save().then(() => {
-                        document.getElementById('loaderBox').style.display = 'none';
-                        const successBox = document.getElementById('successBox');
-                        successBox.style.display = 'block';
-                        successBox.innerHTML = `
-                            <span class="material-icons" style="font-size:70px; color:#10B981; animation:none;">check_circle</span>
-                            <h3 style="font-weight:900; font-size:1.6rem; color:#F8FAFC; margin-bottom:15px;">تم التحميل بنجاح! 🚀</h3>
-                            <p style="color:#94A3B8; margin-bottom:20px; font-size:1rem; line-height:1.6;">تم تنزيل المحاضرة في مجلد التنزيلات (Downloads) بجهازك بنجاح.</p>
-                            <button onclick="window.close()" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2563EB; color:white; border:none; padding:16px 20px; border-radius:14px; font-weight:900; font-size:1.1rem; cursor:pointer; width:100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); margin-bottom:12px; font-family:inherit;">
-                                <span class="material-icons">close</span> إغلاق الصفحة
-                            </button>
-                        `;
-                    });
+                        <button onclick="window.close()" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2563EB; color:white; border:none; padding:16px 20px; border-radius:14px; font-weight:900; font-size:1.1rem; cursor:pointer; width:100%; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); margin-bottom:12px; font-family:inherit;">
+                            <span class="material-icons">close</span> إغلاق الصفحة
+                        </button>
+                    `;
 
                 } catch (err) {
                     console.error("Error:", err);
