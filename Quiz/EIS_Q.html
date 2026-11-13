@@ -2,9 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- إعدادات دقيقة للشاشة تمنع المتصفح من تكبير الصفحة وهمياً -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>المراجعة النهائية | أنظمة معلومات المؤسسات</title>
+    <title>النسخة المحلولة | أنظمة معلومات المؤسسات</title>
     
     <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
     <noscript>
@@ -105,29 +104,30 @@
             --cyan: #06B6D4;
             --neon-green: #10B981;
             --neon-green-bg: rgba(16, 185, 129, 0.1);
-            --yellow: #F59E0B;
+            --neon-red: #EF4444;
+            --neon-red-bg: rgba(239, 68, 68, 0.1);
             
             --border-glass: rgba(59, 130, 246, 0.2);
             --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        /* 👇 منع أي Scroll أفقي */
-        html, body {
-            overflow-x: hidden !important;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
+        
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
             background-color: var(--bg-body);
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            line-height: 1.6;
-            padding: 20px 5px; /* تقليل البادينج */
+            line-height: 1.4;
+            padding: 20px 0 40px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -137,119 +137,137 @@
         ::-webkit-scrollbar-track { background: var(--bg-body); }
         ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
 
-        /* ============ تصميم ورقة A4 ============ */
-        .page-container {
+        /* ============ الحاوية الأساسية للورقة ============ */
+        .page-wrapper {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            /* 👇 ضمان عدم تجاوز الحاوية لعرض الشاشة */
-            max-width: 100vw;
-            overflow: hidden; 
+            display: flex; justify-content: center;
+            margin-bottom: 20px; 
+            overflow: hidden;
+            padding: 0 10px; 
         }
-
+        
+        /* ============ تصميم ورقة A4 ============ */
         .a4-page {
             background-color: var(--bg-page);
-            width: 820px; 
-            flex-shrink: 0; 
-            min-height: 1050px; 
-            height: max-content; 
-            padding: 25px 20px 60px 20px;
-            border-radius: 12px;
+            width: 794px; 
+            min-height: 1123px; 
+            height: auto;
+            padding: 10px 10px 40px 10px; 
+            border: 1px solid var(--border-glass);
+            border-radius: 4px;
             box-shadow: var(--shadow-paper);
             position: relative;
             display: flex;
             flex-direction: column;
-            border: 1px solid var(--border-glass);
             transform-origin: top center; 
+            flex-shrink: 0;
         }
 
         .a4-page::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
+            top: 0; left: 0; width: 100%; height: 3px;
             background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
-            z-index: 10;
+            opacity: 0.8; z-index: 10;
         }
 
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ============ الحاوية الداخلية ============ */
         .content-wrapper {
             position: relative;
             z-index: 2;
             display: flex;
             flex-direction: column;
+            width: 100%;
+            align-items: stretch;
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 10px 0 20px; margin-bottom: 15px; border-bottom: 1px solid var(--border-glass); }
+        .hero-header { text-align: center; padding: 2px 0 6px; margin-bottom: 6px; }
         .hero-header h1 {
-            font-size: 2rem; font-weight: 900;
+            font-size: 24px; 
+            font-weight: 900;
             background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
-        .hero-header p { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
+        .hero-header p { font-size: 14px; color: var(--text-muted); font-weight: 600; }
 
-        /* ============ فاصل الأقسام ============ */
         .section-divider {
-            background: rgba(59, 130, 246, 0.1);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
             border: 1px dashed var(--cyan);
             color: var(--cyan);
             text-align: center;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 6px;
+            border-radius: 6px;
             font-weight: 800;
-            margin: 12px 0;
-            font-size: 18px;
+            margin: 6px 0 10px 0;
+            font-size: 16px;
+            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
         }
 
         /* ============ كارت السؤال ============ */
         .q-card {
             background: var(--bg-card);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border-glass);
-            border-radius: 10px;
-            padding: 15px 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px; 
+            margin-bottom: 8px; 
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
+            transition: all 0.3s;
         }
 
         .q-head {
             display: flex; align-items: center; justify-content: flex-start;
-            gap: 10px; margin-bottom: 10px;
+            gap: 6px; margin-bottom: 6px;
         }
         
         .q-num {
-            width: 32px; height: 32px;
+            width: 28px; height: 28px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
             background: rgba(59, 130, 246, 0.15);
             color: var(--cyan); 
-            font-weight: 800; font-size: 15px;
+            font-weight: 800; font-size: 14px;
             border: 1px solid rgba(6, 182, 212, 0.3);
             font-family: 'Fira Code', monospace;
         }
 
-        /* زر التعليل (!) */
         .info-btn {
             display: flex;
-            width: 28px; height: 28px;
+            width: 24px; height: 24px;
             border-radius: 50%;
             background: transparent;
             border: 2px solid var(--cyan);
             color: var(--cyan);
-            font-size: 14px; font-weight: 800;
+            font-size: 12px; font-weight: 800;
             align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s;
             font-family: 'Fira Code', monospace;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
         }
-        .info-btn:hover { background: rgba(6, 182, 212, 0.2); }
-        .info-btn.active { background: var(--cyan); color: #000; }
+        .info-btn:hover { background: rgba(6, 182, 212, 0.1); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
+        .info-btn.active { background: var(--cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); }
 
         .q-text {
-            margin: 0 0 15px 0; 
-            font-size: 18px;
-            font-weight: 700; line-height: 1.6;
+            margin: 0 0 8px 0; 
+            font-size: 17px; 
+            font-weight: 700; line-height: 1.4;
             color: #FFFFFF;
         }
 
@@ -257,7 +275,7 @@
         .q-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px; 
+            gap: 6px; 
         }
         
         .option {
@@ -266,55 +284,61 @@
             flex-direction: row; 
             align-items: center;
             justify-content: flex-start;
-            gap: 10px;
-            min-height: 50px;
-            padding: 10px 12px;
+            gap: 8px;
+            min-height: 38px; 
+            padding: 6px 10px;
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             background: rgba(0, 0, 0, 0.2);
-            font-size: 16px;
+            font-size: 15.5px; 
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.4;
+            line-height: 1.3;
             overflow-wrap: break-word;
             word-break: break-word;
         }
         
         .option .letter {
-            width: 28px; height: 28px;
+            width: 24px; height: 24px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 6px;
+            border-radius: 5px;
             background: rgba(255,255,255,0.05);
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             flex-shrink: 0;
+            font-family: 'Fira Code', monospace;
         }
         
         .option .opt-text { flex: 1; }
 
-        /* --- حالة الإجابة الصحيحة (نيون أخضر) --- */
+        /* حالة الإجابة الصحيحة */
         .option.correct { 
             border-color: var(--neon-green); 
             background: var(--neon-green-bg); 
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
         }
-        .option.correct .letter { background: var(--neon-green); color: #000; }
+        .option.correct .letter { 
+            background: var(--neon-green); 
+            color: #000;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
         .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
-        .option.correct .mark { color: var(--neon-green); font-weight: 900; font-size: 20px; margin-inline-start: auto; }
+        .option.correct .mark { color: var(--neon-green); font-weight: bold; font-size: 18px; margin-inline-start: auto; text-shadow: 0 0 8px var(--neon-green); }
 
         /* ============ صندوق التعليل ============ */
         .q-explanation {
             display: none;
-            margin-top: 12px;
-            padding: 12px 15px;
+            margin-top: 8px;
+            padding: 8px 12px;
             background: rgba(6, 182, 212, 0.05);
             border: 1px dashed var(--cyan);
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 15px;
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.5;
+            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.05);
         }
         .q-explanation strong { color: var(--cyan); }
         .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
@@ -322,15 +346,48 @@
 
         /* ============ فوتر الورقة ============ */
         .footer-bar {
-            position: absolute;
-            bottom: 15px; left: 20px; right: 20px;
+            position: absolute; bottom: 10px; left: 15px; right: 15px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px; z-index: 2;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; z-index: 2;
         }
         .footer-brand { display: flex; align-items: center; gap: 6px; }
-        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
-        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--cyan); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 600; }
+        .footer-logo { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+
+        /* ============ الطباعة ============ */
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body {
+                background: var(--bg-page) !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .page-wrapper {
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                display: block !important;
+                break-after: page;
+                page-break-after: always;
+                break-inside: avoid;
+            }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page {
+                transform: none !important;
+                box-shadow: none !important;
+                height: 1123px !important;
+                min-height: 1123px !important;
+                overflow: hidden !important;
+                margin: 0 auto;
+                border-radius: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -422,149 +479,243 @@ const QUIZ = [
 
 const LETTERS = ['أ', 'ب', 'ج', 'د'];
 const container = document.getElementById('pagesContainer');
-const QUESTIONS_PER_PAGE = 5; 
 
-function renderSolvedPages() {
-    let html = '';
-    const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
+/* =========================================================
+   التقسيم الذكي (Smart Pagination)
+   ========================================================= */
+function renderPaginatedPages() {
+    container.innerHTML = '';
+    
+    // 1. حاوية القياس المخفية
+    const measureBox = document.createElement('div');
+    measureBox.style.position = 'absolute';
+    measureBox.style.visibility = 'hidden';
+    measureBox.style.width = '774px'; // العرض الداخلي الفعلي للورقة
+    document.body.appendChild(measureBox);
+    
+    const measureWrapper = document.createElement('div');
+    measureWrapper.className = 'content-wrapper';
+    measureBox.appendChild(measureWrapper);
 
-    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-        const start = pageIndex * QUESTIONS_PER_PAGE;
-        const pageQuestions = QUIZ.slice(start, start + QUESTIONS_PER_PAGE);
+    // 2. قياس الهيدر
+    measureWrapper.innerHTML = `
+        <header class="hero-header">
+            <h1>أنظمة معلومات المؤسسات</h1>
+            <p>النسخة المحلولة - اسئلة الميد ترم</p>
+        </header>
+    `;
+    const headerH = measureWrapper.offsetHeight;
 
-        html += `
-        <div class="page-container">
-            <div class="a4-page">
-                <div class="content-wrapper">
-                    ${pageIndex === 0 ? `
-                        <header class="hero-header">
-                            <h1>أنظمة معلومات المؤسسات</h1>
-                            <p>النسخة المحلولة - اسئلة الميد ترم</p>
-                        </header>
-                    ` : ''}
+    // 3. قياس الفاصل
+    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
+    const dividerH = measureWrapper.offsetHeight + 16;
 
-                    ${pageQuestions.map((q, qIndex) => {
-                        const globalIndex = start + qIndex;
-                        
-                        let sectionDivider = '';
-                        if (globalIndex === 31) {
-                            sectionDivider = `
-                            <div class="section-divider">
-                                القسم الثاني: أسئلة الصواب والخطأ (True / False)
-                            </div>
-                            `;
-                        }
-
-                        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
-                                          q.explanation === q.options[q.correct] || 
-                                          q.explanation.length <= q.options[q.correct].length + 3;
-
+    // 4. قياس كل سؤال
+    const qHeights = QUIZ.map((q) => {
+        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
+                          q.explanation === q.options[q.correct] || 
+                          q.explanation.length <= q.options[q.correct].length + 3;
+        
+        measureWrapper.innerHTML = `
+            <div class="q-card">
+                <div class="q-head">
+                    <span class="q-num">1</span>
+                    ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
+                </div>
+                <p class="q-text">${q.text}</p>
+                <div class="q-options">
+                    ${q.options.map((opt, j) => {
+                        const isCorrect = (j === q.correct);
                         return `
-                        ${sectionDivider}
-                        <div class="q-card">
-                            <div class="q-head">
-                                <span class="q-num">${globalIndex + 1}</span>
-                                ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
-                            </div>
-                            <p class="q-text">${q.text}</p>
-                            <div class="q-options">
-                                ${q.options.map((opt, j) => {
-                                    const isCorrect = (j === q.correct);
-                                    return `
-                                    <div class="option ${isCorrect ? 'correct' : ''}">
-                                        <span class="letter">${LETTERS[j]}</span>
-                                        <span class="opt-text">${opt}</span>
-                                        ${isCorrect ? '<span class="mark">✓</span>' : ''}
-                                    </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                            ${!isGeneric ? `
-                            <div class="q-explanation" id="exp-${globalIndex}">
-                                <strong>التعليل: </strong>${q.explanation}
-                            </div>
-                            ` : ''}
+                        <div class="option ${isCorrect ? 'correct' : ''}">
+                            <span class="letter">${LETTERS[j]}</span>
+                            <span class="opt-text">${opt}</span>
+                            ${isCorrect ? '<span class="mark">✓</span>' : ''}
                         </div>
                         `;
                     }).join('')}
                 </div>
-                
+            </div>
+        `;
+        return measureWrapper.offsetHeight + 8; // + margin
+    });
+
+    document.body.removeChild(measureBox);
+
+    // 5. التوزيع الذكي على الصفحات
+    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة
+    const pages = [];
+    let currentPage = [];
+    let currentHeight = 0;
+
+    for (let i = 0; i < QUIZ.length; i++) {
+        let required = qHeights[i];
+        
+        if (pages.length === 0 && currentPage.length === 0) {
+            required += headerH;
+        }
+
+        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 31)
+        let forceBreak = false;
+        if (i === 31 && currentPage.length > 0) {
+            forceBreak = true;
+            required += dividerH;
+        }
+
+        if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+            
+            if (forceBreak) {
+                required = qHeights[i] + dividerH;
+            } else {
+                required = qHeights[i];
+            }
+        }
+
+        currentPage.push(i);
+        currentHeight += qHeights[i];
+
+        if (pages.length === 0 && currentPage.length === 1) {
+            currentHeight += headerH;
+        }
+        if (i === 31) {
+            currentHeight += dividerH;
+        }
+    }
+    if (currentPage.length > 0) {
+        pages.push(currentPage);
+    }
+
+    // 6. بناء HTML للصفحات
+    const totalPages = pages.length;
+
+    pages.forEach((pageIndices, pageIdx) => {
+        let pageHTML = `
+        <div class="page-wrapper">
+            <div class="a4-page">
+                <div class="watermark"></div>
+                <div class="content-wrapper">
+        `;
+
+        if (pageIdx === 0) {
+            pageHTML += `
+                <header class="hero-header">
+                    <h1>أنظمة معلومات المؤسسات</h1>
+                    <p>النسخة المحلولة - اسئلة الميد ترم</p>
+                </header>
+            `;
+        }
+
+        pageIndices.forEach(globalIndex => {
+            const q = QUIZ[globalIndex];
+            
+            if (globalIndex === 31) {
+                pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
+            }
+
+            const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
+                              q.explanation === q.options[q.correct] || 
+                              q.explanation.length <= q.options[q.correct].length + 3;
+
+            pageHTML += `
+                <div class="q-card" data-card="${globalIndex}">
+                    <div class="q-head">
+                        <span class="q-num">${globalIndex + 1}</span>
+                        ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                    </div>
+                    <p class="q-text">${q.text}</p>
+                    <div class="q-options">
+                        ${q.options.map((opt, j) => {
+                            const isCorrect = (j === q.correct);
+                            return `
+                            <div class="option ${isCorrect ? 'correct' : ''}">
+                                <span class="letter">${LETTERS[j]}</span>
+                                <span class="opt-text">${opt}</span>
+                                ${isCorrect ? '<span class="mark">✓</span>' : ''}
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    ${!isGeneric ? `
+                    <div class="q-explanation" id="exp-${globalIndex}">
+                        <strong>التعليل: </strong>${q.explanation}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        pageHTML += `
+                </div>
                 <div class="footer-bar">
                     <div class="footer-brand">
                         <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
                         <div class="footer-brand-name">الدحيح</div>
                     </div>
-                    <div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | أنظمة معلومات المؤسسات</div>
+                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | أنظمة معلومات المؤسسات</div>
                 </div>
             </div>
         </div>
         `;
-    }
 
-    container.innerHTML = html;
-    
-    // استدعاء دالة التصغير بعد رسم الصفحات
-    setTimeout(resizePages, 100);
+        container.innerHTML += pageHTML;
+    });
+
+    // 7. تصغير الورقة للموبايل
+    setTimeout(scalePages, 100);
 }
 
 /* =========================================================
-   دالة تصغير ورق الـ A4 عشان تناسب شاشة الموبايل (زي عرض سطح المكتب)
+   تصغير الورقة للموبايل وإزالة المساحات السوداء
    ========================================================= */
-function resizePages() {
-    const pages = document.querySelectorAll('.a4-page');
-    const maxWidth = 820;
-    // 👇 قراءة دقيقة لعرض الشاشة
+function scalePages() {
+    const pageWidth = 794;
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
-    
-    // 👇 مسافة بسيطة عشان مفيش حاجة تتقص (10 بكسل بس)
-    const availableWidth = viewportWidth - 10; 
-    
-    let scale = 1;
-    if (availableWidth < maxWidth) {
-        scale = availableWidth / maxWidth;
-    }
+    const availableWidth = viewportWidth - 20;
+    const scale = Math.min(1, availableWidth / pageWidth);
 
-    pages.forEach(page => {
-        const wrapper = page.parentElement;
-        
-        // إزالة الترانسفورم مؤقتاً للحصول على الطول الحقيقي للورقة
-        page.style.transform = 'none';
-        const actualHeight = page.offsetHeight;
-
+    document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+        const page = wrapper.querySelector('.a4-page');
         if (scale < 1) {
             page.style.transform = `scale(${scale})`;
             page.style.transformOrigin = 'top center';
             
-            wrapper.style.width = `${availableWidth}px`;
+            const actualHeight = page.offsetHeight; 
             wrapper.style.height = `${actualHeight * scale}px`;
         } else {
             page.style.transform = 'none';
-            wrapper.style.width = '100%';
             wrapper.style.height = 'auto';
         }
     });
 }
 
-// تحديث الحسابات فقط عند تحميل الصفحة أو تغيير اتجاه الشاشة (عشان الزووم ميتلغيش)
-window.addEventListener('load', resizePages);
-window.addEventListener('orientationchange', resizePages); 
+window.addEventListener('load', scalePages);
+window.addEventListener('resize', scalePages);
+window.addEventListener('orientationchange', scalePages);
 
-/* ===== فتح وإغلاق التعليل ===== */
+/* =========================================================
+   فتح تعليل واحد بس وقفل الباقي (Accordion)
+   ========================================================= */
 window.toggleExplanation = function(index) {
     const expBox = document.getElementById(`exp-${index}`);
     const btn = document.getElementById(`btn-${index}`);
-    
-    if (expBox && expBox.classList.contains('show')) {
-        expBox.classList.remove('show');
-        btn.classList.remove('active');
-    } else if (expBox) {
+    const isCurrentlyOpen = expBox.classList.contains('show');
+
+    document.querySelectorAll('.q-explanation').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.info-btn').forEach(el => el.classList.remove('active'));
+
+    if (!isCurrentlyOpen) {
         expBox.classList.add('show');
         btn.classList.add('active');
     }
+
+    setTimeout(scalePages, 50); 
 };
 
 /* ===== تشغيل ===== */
-renderSolvedPages();
+renderPaginatedPages();
 </script>
 </body>
 </html>
