@@ -644,6 +644,8 @@ const QUIZ = [
     { text: "...... هي نهج أو نمط تصميم لتطوير أنظمة البرمجيات يعتمد على تقسيم التطبيقات إلى خدمات مستقلة Services ومتفاعلة يمكن إعادة استخدامها.", options: ["تحديث تلقائي", "هندسة الخدمات المتجهة SOA", "لا أخطاء في الرواتب", "تدريب فوري"], correct: 1, explanation: "هندسة الخدمات المتجهة SOA." },
     { text: "عملية \"من الطلب إلى الدفع\" تُسمى:", options: ["Hire-to-Retire", "Order-to-Cash", "Plan-to-Produce", "Procure-to-Pay"], correct: 1, explanation: "Order-to-Cash." },
     { text: "نظام Odoo هو ....", options: ["نظام شبكي", "نظام محلي", "نظام مفتوح المصدر", "نظام مغلق"], correct: 2, explanation: "نظام مفتوح المصدر." },
+    
+    // --- أسئلة صح أم خطأ (تبدأ من Index 31) ---
     { text: "أنظمة معلومات المؤسسات تهدف إلى دمج العمليات والبيانات عبر جميع أقسام المنظمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
     { text: "يقتصر استخدام أنظمة معلومات المؤسسات على المؤسسات الصناعية فقط.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تستخدم في مجالات متنوعة." },
     { text: "من أمثلة أنظمة معلومات المؤسسات: ERP و CRM و SCM.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
@@ -659,7 +661,37 @@ const QUIZ = [
     { text: "تشمل العملية التجارية عناصر الإدخال (Inputs) والمخرجات (Outputs) والموارد المستخدمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
     { text: "عملية من الشراء إلى الدفع Procure-to-Pay - P2P تنطوي على قسم المشتريات الذي يطلب المواد عبر SCM", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
     { text: "نظام Odoo لا يحتوي على وحدات لإدارة الموارد البشرية أو الحسابات", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، يحتوي على HR و Accounting." },
-    { text: "العملية التجارية Business process هي مجموعة من الأنشطة المترابطة التي تهدف إلى تحقيق هدف معين تخدم المؤسسة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." }
+    { text: "العملية التجارية Business process هي مجموعة من الأنشطة المترابطة التي تهدف إلى تحقيق هدف معين تخدم المؤسسة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "العمليات التجارية تحدث فقط في الأقسام الإدارية دون الأقسام الإنتاجية.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تحدث في كل الأقسام." },
+    { text: "تمكن الحوسبة السحابية المستخدمين من الوصول إلى الموارد في أي وقت ومن أي مكان.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "من التحديات الشائعة في تطبيق أنظمة المؤسسات: التكلفة العالية ومقاومة التغيير من الموظفين.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "لا يمكن دمج أنظمة المؤسسات مع أدوات الذكاء الاصطناعي أو التحليل البياني.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تدعم الذكاء الاصطناعي." },
+    { text: "تساعد أنظمة ERP على تقليل تكرار البيانات وتحسين دقتها.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "لا يمكن استخدام نظام ERP في المؤسسات الصغيرة والمتوسطة.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، يمكن استخدامه مثل NetSuite." },
+    { text: "نظام CRM يساهم في زيادة المبيعات من خلال تحليل سلوك العملاء وتوقع احتياجاتهم.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "نظام SCM مسؤول عن العلاقات مع العملاء فقط.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، مسؤول عن سلسلة التوريد." },
+    { text: "أنظمة EIS تتعامل مع كميات هائلة من البيانات الحساسة (مثل بيانات العملاء والمالية)، مما يجعلها عرضة للتهديدات السيبرانية.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "مع تزايد حجم البيانات في الأعمال الإلكترونية، تواجه EIS تحديات في معالجة وتخزين البيانات الكبيرة Big Data بكفاءة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "SaaS هو نموذج يقدم البرمجيات كخدمة عبر الإنترنت", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "أنظمة SCM تهتم بإدارة سلسلة التوريد والموردين", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "لتبقى المنظمات مرنة وقابلة للتكيف، تحتاج إلى أنظمة معلومات متكاملة توحد البيانات والتطبيقات والموارد عبر الأقسام.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "غياب التكامل بين الوظائف Silo Mentality حيث أن كل إدارة تعمل بشكل مستقل، مما يؤدي إلى نقص التواصل والتنسيق.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "نظام معلومات المؤسسات (EIS) يدعم التواصل بين الأقسام، تحسين الكفاءة، وتحقيق الأهداف الإستراتيجية للمؤسسة", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "من أدوات تحليل البيانات في مستودع البيانات: OLAP", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "من خصائص أنظمة المؤسسات أنها توفر تقارير تحليلية للإدارة العليا وبيانات تفصيلية للتشغيليين.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "في أنظمة المؤسسات: يتم تحسين سير العمل، مما يقلل من الأخطاء البشرية ويسرع العمليات.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "الهدف من مستودع البيانات هو دعم القرارات الإدارية والتحليلية", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "تُعرف العملية التجارية Business process بأنها مجموعة من الأنشطة المنسقة التي تحول مدخلًا أو أكثر إلى مخرج يقدم قيمة للعميل", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "قد يعيق نقص التدريب الاستفادة الكاملة من الأنظمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "أنظمة تخطيط موارد المؤسسة (ERP) تعمل فقط على الحواسيب المحلية ولا يمكن تشغيلها عبر الإنترنت.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، يوجد Cloud ERP." },
+    { text: "من أهداف إعادة هندسة العمليات (Business Process Reengineering) تقليل الوقت والتكلفة وتحسين الجودة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "الذكاء الاصطناعي يُستخدم لأتمتة المهام الروتينية، مثل تحليل الطلبات في SCM", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "من عيوب الحوسبة السحابية زيادة تكاليف شراء وصيانة الأجهزة", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تقلل التكاليف." },
+    { text: "يتم تمكين التكامل بين العمليات البينية بالمنشاة من خلال تقنيات مثل: قاعدة بيانات مركزية", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "لا يمكن قياس أداء العملية التجارية.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، يمكن قياسه بمؤشرات KPI." },
+    { text: "أنظمة معلومات المؤسسات قادرة على التكيف مع نمو المنظمة وتغيرات السوق", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "تحسين العمليات التجارية (Business Process Improvement) يهدف إلى تقليل التكلفة وزيادة الكفاءة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
+    { text: "يساعد ERP الإدارة على متابعة سير العمليات البينية من البداية إلى النهاية من خلال تقارير لحظية ولوحات تحكم (Dashboards).", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." }
 ];
 
 const LETTERS = ['أ', 'ب', 'ج', 'د'];
