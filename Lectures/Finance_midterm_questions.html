@@ -114,6 +114,7 @@
             overflow-x: hidden !important; 
             width: 100%; 
             background-color: var(--bg-body);
+            direction: rtl;
         }
 
         body {
@@ -180,26 +181,29 @@
             filter: grayscale(100%);
         }
 
-        /* السر هنا في التوسيط */
+        /* ============ الحاوية الداخلية: التحكم في الحجم عن طريق --fit ============ */
         .content-wrapper {
+            --u: calc(16px * var(--fit, 1));
             position: relative;
             z-index: 2;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
             width: 100%;
-            margin: 0 auto; /* يضمن إنه في النص */
+            margin: 0 auto;
+            font-size: var(--u);
+            align-items: stretch; /* مهم جداً عشان الكروت تاخد العرض كله */
             transform-origin: top center; 
         }
 
         .hero-header { text-align: center; padding: 5px 0 15px; margin-bottom: 15px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
         .hero-header h1 {
             font-family: 'Amiri', serif;
-            font-size: 2.8rem;
+            font-size: calc(2.8 * var(--u));
             font-weight: 700; color: var(--heading-main);
             margin-bottom: 5px;
         }
-        .hero-header p { font-size: 1.3rem; color: var(--navy-blue); font-weight: 700; }
+        .hero-header p { font-size: calc(1.3 * var(--u)); color: var(--navy-blue); font-weight: 700; }
 
         .glass-card {
             background: #FFFFFF;
@@ -209,6 +213,7 @@
             margin-bottom: 15px; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             position: relative;
+            width: 100%; /* توسيع الكارت */
         }
         
         .glass-card::before {
@@ -220,24 +225,26 @@
         }
 
         h2 {
-            font-size: 1.6rem; color: var(--heading-main); margin-bottom: 10px;
+            font-size: calc(1.6 * var(--u)); color: var(--heading-main); margin-bottom: 10px;
             display: flex; align-items: center; gap: 8px; font-weight: 800;
             border-bottom: 2px solid var(--gold-light); padding-bottom: 4px; width: fit-content;
         }
-        h2 span.icon { font-size: 1.3rem; background: rgba(76, 29, 149, 0.1); padding: 3px 8px; border-radius: 6px; }
+        h2 span.icon { font-size: calc(1.3 * var(--u)); background: rgba(76, 29, 149, 0.1); padding: 3px 8px; border-radius: 6px; }
 
         h3 {
-            font-size: 1.3rem; color: var(--heading-main); margin: 12px 0 8px;
+            font-size: calc(1.3 * var(--u)); color: var(--heading-main); margin: 12px 0 8px;
             font-weight: 700; display: flex; align-items: center; gap: 6px;
         }
-        h3::before { content: '◈'; color: var(--gold-primary); font-size: 1.1rem; }
+        h3::before { content: '◈'; color: var(--gold-primary); font-size: calc(1.1 * var(--u)); }
 
         p, li { 
-            font-size: 1.15rem; 
+            font-size: calc(1.15 * var(--u)); 
             margin-bottom: 6px; 
             color: var(--text-main); 
             line-height: 1.5; 
             text-align: justify; 
+            width: 100%; /* توسيع النص */
+            word-break: break-word; /* منع خروج الكلمات الطويلة */
         }
         ul, ol { margin-right: 20px; margin-bottom: 10px; }
         ul li::marker { color: var(--gold-primary); }
@@ -246,7 +253,7 @@
         .boxed-heading {
             color: var(--heading-main);
             font-weight: 800;
-            font-size: 1.2rem;
+            font-size: calc(1.2 * var(--u));
             border: 1.5px solid var(--heading-main);
             border-radius: 6px;
             padding: 2px 10px;
@@ -271,35 +278,36 @@
             padding: 10px 15px;
             border-radius: 6px;
             margin-bottom: 12px;
-            font-size: 1.15rem;
+            font-size: calc(1.15 * var(--u));
             color: #78350F;
             font-weight: 700;
             line-height: 1.5;
             text-align: justify;
+            width: 100%;
         }
 
-        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 10px 15px; border-radius: 6px; margin: 12px 0; font-size: 1.15rem;}
-        .alert-box h3 { color: var(--red-alert); margin-top: 0; font-size: 1.3rem;}
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 10px 15px; border-radius: 6px; margin: 12px 0; font-size: calc(1.15 * var(--u)); width: 100%;}
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; font-size: calc(1.3 * var(--u));}
         .alert-box h3::before { content: '⚠️'; }
 
-        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 6px; margin: 12px 0; font-size: 1.15rem;}
-        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; font-size: 1.3rem;}
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 10px 15px; border-radius: 6px; margin: 12px 0; font-size: calc(1.15 * var(--u)); width: 100%;}
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; font-size: calc(1.3 * var(--u));}
         .tip-box h3::before { content: '💡'; }
 
-        .table-wrapper { overflow-x: hidden; margin: 10px 0; border-radius: 6px; border: 1px solid var(--border-color); background: #FFF; }
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1.05rem; }
+        .table-wrapper { overflow-x: hidden; margin: 10px 0; border-radius: 6px; border: 1px solid var(--border-color); background: #FFF; width: 100%; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: calc(1.05 * var(--u)); }
         th, td { padding: 8px; border: 1px solid var(--border-color); }
         th { background: rgba(6, 78, 59, 0.08); color: var(--heading-main); font-weight: 800; }
         tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
         .highlight-row { background: rgba(16, 185, 129, 0.15); font-weight: bold; border: 1px solid var(--emerald-light); }
         
-        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 10px 0; padding: 12px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); flex-direction: column;}
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 10px 0; padding: 12px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); flex-direction: column; width: 100%;}
         .flow-chart { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; direction: rtl; margin-top: 10px;}
-        .flow-box { background: var(--emerald-dark); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 1.05rem; }
-        .flow-box-light { background: var(--emerald-light); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 1.05rem; }
-        .flow-op { font-size: 1.3rem; color: var(--gold-primary); font-weight: bold; }
+        .flow-box { background: var(--emerald-dark); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: calc(1.05 * var(--u)); }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: calc(1.05 * var(--u)); }
+        .flow-op { font-size: calc(1.3 * var(--u)); color: var(--gold-primary); font-weight: bold; }
 
-        /* تصميم الدوائر زي الصورة */
+        /* تصميم الدوائر */
         .circle-box {
             background: white;
             border: 4px solid var(--emerald-light);
@@ -312,14 +320,14 @@
             text-align: center;
             padding: 8px;
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: calc(0.95 * var(--u));
             color: #000;
             line-height: 1.3;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .arrow-left {
-            font-size: 2.5rem;
+            font-size: calc(2.5 * var(--u));
             color: var(--emerald-light);
             font-weight: bold;
             margin: 0 -8px;
@@ -336,6 +344,35 @@
         .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
         .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
 
+        /* ============ الطباعة / PDF ============ */
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body {
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+            .page-wrapper {
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                display: block !important;
+                break-after: page;
+                page-break-after: always;
+                break-inside: avoid;
+            }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page {
+                transform: none !important;
+                box-shadow: none !important;
+                height: 1122px !important;
+                margin: 0 auto;
+            }
+            #antiScreenshotShield { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -536,7 +573,6 @@
                 <section class="glass-card">
                     <h2><span class="icon">3️⃣</span> المحاضرة الثالثة: الآثار الاقتصادية واختيار المشروعات</h2>
                     
-                    <!-- الدوائر الثلاثة زي الصورة -->
                     <h3 style="justify-content: center; margin-bottom: 0;">الآثار الاقتصادية للنفقات العامة</h3>
                     <div class="diagram-container">
                         <div class="flow-chart">
@@ -548,14 +584,13 @@
                         </div>
                     </div>
 
-                    <!-- القوانين -->
                     <div class="summary-box" style="background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-dark); margin-top: 20px;">
-                        <h3 style="color: var(--emerald-dark); margin-top: 0; font-size: 1.3rem;">قوانين اختيار المشروعات (مهم جداً):</h3>
-                        <ul style="font-size: 1.3rem; font-weight: 800; color: var(--heading-main); margin-bottom: 5px;">
-                            <li><strong>المنفعة النسبية</strong> = المنافع (م) ÷ التكاليف (ت)</li>
-                            <li><strong>المنفعة الصافية</strong> = المنافع (م) - التكاليف (ت)</li>
+                        <h3 style="color: var(--emerald-dark); margin-top: 0;">قوانين اختيار المشروعات (مهم جداً):</h3>
+                        <ul style="font-size: calc(1.3 * var(--u)); font-weight: 800; color: var(--heading-main); margin-bottom: 5px;">
+                            <li style="font-size: inherit;"><strong>المنفعة النسبية</strong> = المنافع (م) ÷ التكاليف (ت)</li>
+                            <li style="font-size: inherit;"><strong>المنفعة الصافية</strong> = المنافع (م) - التكاليف (ت)</li>
                         </ul>
-                        <p style="margin-bottom: 0; color: var(--red-alert); font-size: 1.15rem;"><strong>القاعدة الذهبية للاختيار:</strong> بنرتب المشروعات بناءً على <span class="hl-yellow">المنفعة النسبية (م ÷ ت)</span> من الأعلى ترتيباً للأقل. ونختار المشروعات بالأولوية دي لغاية ما نصرف الموازنة بالكامل.</p>
+                        <p style="margin-bottom: 0; color: var(--red-alert);"><strong>القاعدة الذهبية للاختيار:</strong> بنرتب المشروعات بناءً على <span class="hl-yellow">المنفعة النسبية (م ÷ ت)</span> من الأعلى ترتيباً للأقل. ونختار المشروعات بالأولوية دي لغاية ما نصرف الموازنة بالكامل.</p>
                     </div>
                     
                     <div class="table-wrapper">
@@ -594,7 +629,7 @@
                             </tr>
                         </table>
                     </div>
-                    <p style="font-size: 1.1rem; color: var(--text-muted); margin-top: 10px;">*(لو الموازنة 700، هنختار الرابع (100) + الأول (400) + الثاني (200) = 700 بالظبط).*</p>
+                    <p style="color: var(--text-muted); margin-top: 10px;">*(لو الموازنة 700، هنختار الرابع (100) + الأول (400) + الثاني (200) = 700 بالظبط).*</p>
                 </section>
             </div>
             <div class="footer-bar">
@@ -618,13 +653,13 @@
                     <h3>ثانياً: مصادر الإيرادات العامة (4 مصادر):</h3>
                     <div class="diagram-container" style="padding: 15px 5px; margin: 10px 0;">
                         <div class="flow-chart" style="flex-wrap: nowrap; gap: 2px; width: 100%; justify-content: center;">
-                            <div class="flow-box-light" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">أملاك الدولة<br>(الدومين)</div>
-                            <div class="flow-op" style="font-size: 1.3rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
-                            <div class="flow-box" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">الإيرادات<br>الإدارية</div>
-                            <div class="flow-op" style="font-size: 1.3rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
-                            <div class="flow-box-light" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">الضرائب</div>
-                            <div class="flow-op" style="font-size: 1.3rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
-                            <div class="flow-box" style="font-size: 0.9rem; padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">القروض</div>
+                            <div class="flow-box-light" style="font-size: calc(0.9 * var(--u)); padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">أملاك الدولة<br>(الدومين)</div>
+                            <div class="flow-op" style="font-size: calc(1.3 * var(--u)); flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box" style="font-size: calc(0.9 * var(--u)); padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">الإيرادات<br>الإدارية</div>
+                            <div class="flow-op" style="font-size: calc(1.3 * var(--u)); flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box-light" style="font-size: calc(0.9 * var(--u)); padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">الضرائب</div>
+                            <div class="flow-op" style="font-size: calc(1.3 * var(--u)); flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box" style="font-size: calc(0.9 * var(--u)); padding: 8px 6px; flex-shrink: 1; text-align: center; width: 90px;">القروض</div>
                         </div>
                     </div>
 
@@ -884,8 +919,8 @@
             <div class="watermark"></div>
             <div class="content-wrapper">
                 <header class="hero-header" style="border-bottom: none; padding-bottom: 5px;">
-                    <h1 style="font-size: 2.4rem; color: var(--emerald-dark);">كبسولة الامتحان (إجابات سريعة)</h1>
-                    <p style="font-size: 1.3rem;">أهم النقاط التي تتحول لأسئلة صح/خطأ أو اختيار من متعدد (من الـ 60 سؤال)</p>
+                    <h1 style="font-size: calc(2.4 * var(--u)); color: var(--emerald-dark);">كبسولة الامتحان (إجابات سريعة)</h1>
+                    <p style="font-size: calc(1.3 * var(--u));">أهم النقاط التي تتحول لأسئلة صح/خطأ أو اختيار من متعدد (من الـ 60 سؤال)</p>
                 </header>
 
                 <div class="summary-box" style="background: #fff; border-color: var(--emerald-dark);">
@@ -927,21 +962,17 @@
         </div>
     </div>
 
-        <script>
-        // 1. تصغير الورقة عشان تبان كأنها ورقة A4 على الشاشة
+    <script>
+        // 1) تصغير الورقة كلها على الشاشة (للعرض فقط، بيتلغي في الطباعة بالـ CSS)
         function scalePages() {
-            const wrappers = document.querySelectorAll('.page-wrapper');
-            const viewportWidth = window.innerWidth;
-            const pageWidth = 794; 
-            const pageHeight = 1123; 
-            
-            const scale = Math.min(1, (viewportWidth - 20) / pageWidth);
+            const pageWidth = 794, pageHeight = 1123;
+            const scale = Math.min(1, (window.innerWidth - 20) / pageWidth);
 
-            wrappers.forEach(wrapper => {
+            document.querySelectorAll('.page-wrapper').forEach(wrapper => {
                 const page = wrapper.querySelector('.a4-page');
                 if (scale < 1) {
                     page.style.transform = `scale(${scale})`;
-                    wrapper.style.height = `${pageHeight * scale}px`; 
+                    wrapper.style.height = `${pageHeight * scale}px`;
                 } else {
                     page.style.transform = 'none';
                     wrapper.style.height = 'auto';
@@ -949,60 +980,59 @@
             });
         }
 
-        // 2. تصغير الكلام اللي جوه الورقة لو كان كتير (باستخدام Scale الآمن بدلاً من Zoom)
+        // 2) خوارزمية البحث الثنائي عشان نلاقي أحسن حجم خط يدخل الورقة بدون قص
         function fitContentInsidePage() {
-            const pages = document.querySelectorAll('.a4-page');
-            
-            pages.forEach(page => {
+            document.querySelectorAll('.a4-page').forEach(page => {
                 const content = page.querySelector('.content-wrapper');
+                const cs = getComputedStyle(page);
                 
-                // تصفير أي إعدادات سابقة عشان الحسابات تكون صح
-                content.style.transform = 'none';
-                content.style.width = '100%';
-                content.style.margin = '0 auto';
-                
-                // حساب الطول المتاح جوه الورقة (بعد خصم الهوامش)
-                const pageHeight = page.clientHeight;
-                const style = window.getComputedStyle(page);
-                const paddingTop = parseFloat(style.paddingTop);
-                const paddingBottom = parseFloat(style.paddingBottom);
-                const availableHeight = pageHeight - paddingTop - paddingBottom - 5; 
-                
-                // الارتفاع الفعلي للمحتوى
-                const contentHeight = content.scrollHeight;
-                
-                // لو الكلام أطول من الورقة، نصغره بـ scale 
-                if (contentHeight > availableHeight) {
-                    const scaleFactor = availableHeight / contentHeight;
-                    
-                    // استخدام transform: scale فقط (آمن جداً للنصوص العربية)
-                    content.style.transformOrigin = 'top center';
-                    content.style.transform = `scale(${scaleFactor})`;
-                    
-                    // زيادة العرض بنسبة عكسية عشان المحتوى ميبقاش رفيع في النص
-                    content.style.width = `${(100 / scaleFactor)}%`;
+                // المساحة المتاحة (خصمنا مساحة الفوتر)
+                const available = page.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 30;
+
+                // نرجع الحجم الأصلي ونمنع التمدد عشان نقيس صح
+                content.style.flexGrow = '0';
+                content.style.setProperty('--fit', 1);
+                void content.offsetHeight; // إجبار المتصفح يحسب الأبعاد
+
+                let contentHeight = content.scrollHeight;
+
+                // لو الكلام أطول من الورقة، نبدأ نصغر بالبحث الثنائي
+                if (contentHeight > available) {
+                    let low = 0.4;
+                    let high = 1.0;
+                    let bestFit = 0.4;
+
+                    for (let i = 0; i < 15; i++) {
+                        let mid = (low + high) / 2;
+                        content.style.setProperty('--fit', mid);
+                        void content.offsetHeight; // إجبار المتصفح يحسب تاني
+
+                        if (content.scrollHeight <= available) {
+                            bestFit = mid;
+                            low = mid + 0.01; // بنجرب نكبر شوية
+                        } else {
+                            high = mid - 0.01; // بنصغر
+                        }
+                    }
+                    content.style.setProperty('--fit', bestFit);
                 }
+
+                // نرجع التمدد تاني عشان ياخد المساحة الفاضية
+                content.style.flexGrow = '1';
             });
         }
 
-        // تنفيذ الدوال أول ما الصفحة تحمل
-        window.addEventListener('load', () => {
+        function runAll() {
             scalePages();
             fitContentInsidePage();
-        });
-        
-        // تنفيذ الدوال لو المستخدم لف الموبايل أو كبر الشاشة
-        window.addEventListener('resize', () => {
-            scalePages();
-            fitContentInsidePage();
-        });
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-                scalePages();
-                fitContentInsidePage();
-            }, 200);
-        });
-    </script>
+        }
 
+        window.addEventListener('load', () => {
+            (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(runAll, 100));
+        });
+        window.addEventListener('resize', runAll);
+        window.addEventListener('orientationchange', () => setTimeout(runAll, 200));
+        window.addEventListener('beforeprint', fitContentInsidePage);
+    </script>
 </body>
 </html>
