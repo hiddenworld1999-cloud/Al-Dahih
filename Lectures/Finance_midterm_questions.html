@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+        @media print { html, body { display: none !important; } }
+        #antiScreenshotShield {
+            position: fixed; inset: 0; background: #020202; color: #ffffff;
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column; z-index: 999999; font-family: 'Cairo', sans-serif; text-align: center;
+        }
+        #watermarkGrid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 99998;
+            overflow: hidden; display: flex; flex-wrap: wrap;
+            justify-content: space-around; align-content: space-around; opacity: 0.12;
+        }
+        .watermark-item {
+            transform: rotate(-25deg); color: #ffffff; font-size: 15px; font-weight: 800;
+            white-space: nowrap; padding: 35px; font-family: monospace; user-select: none;
+            mix-blend-mode: difference; text-shadow: 0 0 2px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6);
+        }
+    </style>
+
+    <script>
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح", sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>مراجعة الميد ترم - مبادئ المالية العامة</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-page: #FDFBF7;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            --emerald-dark: #064E3B;
+            --emerald-light: #10B981;
+            --gold-primary: #D4AF37;
+            --gold-light: #FDE047;
+            --navy-blue: #1E3A8A;
+            --red-alert: #B91C1C;
+            --heading-main: #4C1D95;
+            --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden !important; width: 100%; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
+
+        /* ============ تصميم ورقة A4 ============ */
+        .page-container {
+            width: 100%; display: flex; justify-content: center;
+            margin-bottom: 20px; max-width: 100vw; overflow: hidden; 
+        }
+        
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 850px; 
+            flex-shrink: 0; 
+            min-height: 1080px; 
+            height: max-content; 
+            padding: 20px 25px 50px 25px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transform-origin: top center; 
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 5px 0 15px; margin-bottom: 15px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 3rem;
+            font-weight: 700; color: var(--heading-main);
+            margin-bottom: 5px;
+        }
+        .hero-header p { font-size: 1.45rem; color: var(--navy-blue); font-weight: 700; }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 4px;
+            background-color: var(--gold-primary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        h2 {
+            font-size: 1.8rem; color: var(--heading-main); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px; font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); padding-bottom: 4px; width: fit-content;
+        }
+        h2 span.icon { font-size: 1.5rem; background: rgba(76, 29, 149, 0.1); padding: 3px 8px; border-radius: 6px; }
+
+        h3 {
+            font-size: 1.45rem; color: var(--heading-main); margin: 15px 0 10px;
+            font-weight: 700; display: flex; align-items: center; gap: 6px;
+        }
+        h3::before { content: '◈'; color: var(--gold-primary); font-size: 1.2rem; }
+
+        p, li { font-size: 1.35rem; margin-bottom: 8px; color: var(--text-main); line-height: 1.6; }
+        ul, ol { margin-right: 25px; margin-bottom: 12px; }
+        ul li::marker { color: var(--gold-primary); }
+        ol li::marker { color: var(--heading-main); font-weight: bold; }
+        
+        .boxed-heading {
+            color: var(--heading-main);
+            font-weight: 800;
+            font-size: 1.3rem;
+            border: 1.5px solid var(--heading-main);
+            border-radius: 6px;
+            padding: 2px 10px;
+            background-color: rgba(76, 29, 149, 0.05);
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .text-red { color: var(--red-alert); font-weight: 800; }
+        .text-green { color: var(--emerald-dark); font-weight: 800; }
+        strong { color: var(--navy-blue); font-weight: 800; }
+        
+        /* ألوان التظليل */
+        .hl-yellow { background-color: rgba(253, 224, 71, 0.6); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: #000; }
+        .hl-green { background-color: rgba(16, 185, 129, 0.2); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--emerald-dark); }
+        .hl-red { background-color: rgba(185, 28, 28, 0.2); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--red-alert); }
+        .hl-blue { background-color: rgba(30, 58, 138, 0.15); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--navy-blue); }
+
+        .summary-box {
+            background: rgba(253, 224, 71, 0.15);
+            border: 1px dashed var(--gold-primary);
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            color: #78350F;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        .alert-box { background: rgba(185, 28, 28, 0.05); border-right: 4px solid var(--red-alert); padding: 12px 18px; border-radius: 6px; margin: 15px 0; font-size: 1.3rem;}
+        .alert-box h3 { color: var(--red-alert); margin-top: 0; font-size: 1.45rem;}
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box { background: rgba(16, 185, 129, 0.05); border-right: 4px solid var(--emerald-light); padding: 12px 18px; border-radius: 6px; margin: 15px 0; font-size: 1.3rem;}
+        .tip-box h3 { color: var(--emerald-dark); margin-top: 0; font-size: 1.45rem;}
+        .tip-box h3::before { content: '💡'; }
+
+        .table-wrapper { overflow-x: hidden; margin: 15px 0; border-radius: 6px; border: 1px solid var(--border-color); background: #FFF; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1.15rem; }
+        th, td { padding: 10px 8px; border: 1px solid var(--border-color); }
+        th { background: rgba(6, 78, 59, 0.08); color: var(--heading-main); font-weight: 800; }
+        tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
+        .highlight-row { background: rgba(16, 185, 129, 0.15); font-weight: bold; border: 1px solid var(--emerald-light); }
+        
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 15px 0; padding: 15px; background: #FFF; border-radius: 8px; border: 1px dashed var(--gold-primary); flex-direction: column;}
+        .flow-chart { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; direction: rtl; margin-top: 15px;}
+        .flow-box { background: var(--emerald-dark); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 1.2rem; }
+        .flow-box-light { background: var(--emerald-light); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 1.2rem; }
+        .flow-op { font-size: 1.5rem; color: var(--gold-primary); font-weight: bold; }
+
+        /* تصميم الدوائر زي الصورة */
+        .circle-box {
+            background: white;
+            border: 5px solid var(--emerald-light);
+            border-radius: 50%;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #000;
+            line-height: 1.4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .arrow-left {
+            font-size: 3rem;
+            color: var(--emerald-light);
+            font-weight: bold;
+            margin: 0 -10px;
+            z-index: 2;
+        }
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 30px; right: 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 8px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 25px; height: 25px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
+
+    </style>
+</head>
+<body>
+
+    <!-- ================= الصفحة 1 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <header class="hero-header">
+                    <h1>مراجعة الميد ترم</h1>
+                    <p>مبادئ المالية العامة</p>
+                </header>
+
+                <section class="glass-card">
+                    <h2><span class="icon">1️⃣</span> المحاضرة الأولى: المفاهيم الأساسية</h2>
+                    
+                    <h3>أولاً: نشأة وتطور المالية العامة</h3>
+                    <ul>
+                        <li>ظهرت المالية العامة مع <span class="hl-yellow">تزايد دور الدولة</span> في النشاط الاقتصادي.</li>
+                        <li>ظهرت أفكار الاقتصادي <span class="hl-green">كينز</span> في عام <span class="hl-blue">1936م</span> في كتابه المعروف "النظرية العامة للتوظف والفائدة والنقود".</li>
+                    </ul>
+
+                    <h3>ثانياً: تعريف المالية العامة (الفكرين):</h3>
+                    <ul>
+                        <li><strong>الفكر التقليدي (الضيق):</strong> دراسة النفقات العامة والإيرادات العامة اللازمة لتغطية هذه النفقات، مع التقيد بـ <span class="hl-yellow">تساوي الإيرادات مع النفقات</span> وعدم اللجوء للقروض.</li>
+                        <li><strong>الفكر المعاصر (الحديث):</strong> القواعد المنظمة للنشاط المالي للهيئات العامة من أجل إشباع الحاجات العامة وتحقيق أغراض <span class="hl-yellow">اقتصادية واجتماعية وسياسية</span>. (لا يشترط التساوي، بل قد نلجأ للعجز في حالات الكساد).</li>
+                    </ul>
+
+                    <h3>ثالثاً: الفرق بين المالية العامة والخاصة:</h3>
+                    <ul>
+                        <li><strong>الهدف:</strong> العامة تهدف لـ <span class="hl-green">الصالح العام</span>، والخاصة تهدف لـ <span class="hl-red">المنفعة الشخصية (الربح)</span>.</li>
+                        <li><strong>التخطيط المالي:</strong> الدولة تقرر <span class="hl-yellow">أوجه الإنفاق أولاً</span> ثم تدبر الإيرادات. بينما الأفراد يقدرون <span class="hl-yellow">الإيرادات أولاً</span> ثم يحددون الإنفاق في حدودها.</li>
+                        <li><strong>السلطة:</strong> العامة تعتمد على <span class="hl-blue">سلطة الإجبار</span> (فرض الضرائب)، بعكس الخاصة.</li>
+                        <li><strong>المظهر التنظيمي:</strong> تتميز جميع تنظيمات المالية العامة بخضوعها <span class="hl-yellow">لسلطة الدولة</span> بصورة مباشرة أو غير مباشرة.</li>
+                    </ul>
+
+                    <h3>رابعاً: الحاجات (السلع):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>النوع</th>
+                                <th>التعريف</th>
+                                <th>أمثلة</th>
+                            </tr>
+                            <tr>
+                                <td><strong>حاجات عامة (جماعية)</strong></td>
+                                <td>تقوم الدولة بإشباعها فقط لتحقيق منفعة جماعية. <span class="hl-red">غير قابلة للتجزئة</span>.</td>
+                                <td>الأمن، الدفاع، القضاء.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>حاجات شبه عامة</strong></td>
+                                <td>يتم توزيع إشباعها بين القطاع الخاص والحكومة. <span class="hl-green">قابلة للتجزئة</span> (قد تقدم مجاناً أو بمقابل).</td>
+                                <td>التعليم، الصحة، الإسكان، المواصلات.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>حاجات خاصة</strong></td>
+                                <td>يقوم بإشباعها الأفراد أو الهيئات الخاصة.</td>
+                                <td>الملابس، الطعام.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>خامساً: عناصر المالية العامة:</h3>
+                    <div class="diagram-container">
+                        <div class="flow-chart">
+                            <div class="flow-box">النفقات العامة</div>
+                            <div class="flow-op">+</div>
+                            <div class="flow-box-light">الإيرادات العامة</div>
+                            <div class="flow-op">=</div>
+                            <div class="flow-box" style="background: var(--navy-blue);">الموازنة العامة</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-box">
+                        <strong>أهداف المالية العامة:</strong> تحقيق الاستقرار الاقتصادي، توفير الخدمات العامة، تحقيق العدالة الاجتماعية، دعم السياسات الاقتصادية، مواجهة الأزمات، تعزيز الشفافية والمساءلة.
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 1</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 2 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">2️⃣</span> المحاضرة الثانية: النفقات العامة (التعريف والأنواع)</h2>
+                    
+                    <h3>التعريف والعناصر:</h3>
+                    <p><strong>النفقة العامة:</strong> مبلغ من المال تنفقه الدولة أو إحدى المؤسسات العامة بقصد إشباع حاجة عامة. (عناصرها: مبلغ نقدي + صادرة من الدولة/الشخص العام + تحقق نفع عام).</p>
+                    <p><em>* ملاحظة: صدور النفقة من شخص عام شرط ضروري ولكن ليس كافياً، بل يجب أن تحقق نفعاً عاماً.</em></p>
+                    <p><strong>قواعد النفقات:</strong> <span class="hl-yellow">المنفعة</span> (تحقيق أقصى منفعة اجتماعية) - <span class="hl-yellow">الاقتصاد</span> (البعد عن الإسراف) - <span class="hl-yellow">الترخيص</span> (تصرف من سلطة مختصة).</p>
+
+                    <h3>تقسيمات النفقات (مهمة جداً):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>التقسيم</th>
+                                <th>النوع الأول</th>
+                                <th>النوع الثاني</th>
+                            </tr>
+                            <tr>
+                                <td><strong>حسب الزيادة في الإنتاج</strong></td>
+                                <td><strong>حقيقية (منتجة):</strong> تؤدي مباشرة لزيادة الإنتاج (أجور، استثمار). لها مقابل خدمة.</td>
+                                <td><strong>تحويلية:</strong> لا تزيد الإنتاج بل تعيد توزيع الدخل (دعم، معاشات). بدون مقابل.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>حسب التكرار</strong></td>
+                                <td><strong>عادية:</strong> تتكرر كل موازنة (أجور وصيانة).</td>
+                                <td><strong>غير عادية:</strong> لا تتكرر (كوبري، سدود) ويمتد أثرها لموازنات لاحقة.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>حسب الطبيعة</strong></td>
+                                <td><strong>جارية:</strong> لإدارة أجهزة الدولة (مرتبات).</td>
+                                <td><strong>رأسمالية:</strong> زيادة النمو الاقتصادي (مصانع، مترو).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>حسب التمويل</strong></td>
+                                <td><strong>عادية:</strong> تمول من إيرادات عادية (ضرائب).</td>
+                                <td><strong>غير عادية:</strong> تمول من قروض وإصدار نقدي.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>الأنواع التحويلية (3 أقسام):</h3>
+                    <ul>
+                        <li><strong>اجتماعية:</strong> إعانات بطالة وتأمينات (ترفع مستوى حياة الأفراد).</li>
+                        <li><strong>اقتصادية:</strong> إعانات للمنشآت لتحقيق التوازن الاقتصادي.</li>
+                        <li><strong>مالية:</strong> فوائد القروض العامة.</li>
+                    </ul>
+                    <div class="tip-box">
+                        <h3>ملاحظة هامة</h3>
+                        <p>النفقات التحويلية حالياً تحتل أهمية أكبر من الحقيقية نتيجة زيادة حجم الإعانات الاجتماعية.</p>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 3 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">📈</span> محددات وأسباب زيادة النفقات العامة</h2>
+                    
+                    <h3>محددات حجم النفقات:</h3>
+                    <ul>
+                        <li><strong>دور الدولة:</strong> (حارسة = نفقات قليلة، متدخلة = متنوعة، منتجة = متسعة جداً).</li>
+                        <li><strong>قدرة الدولة على الإيرادات:</strong> الحجم الأمثل هو الذي يحقق الاستغلال الأمثل للإيرادات.</li>
+                        <li><strong>مستوى النشاط الاقتصادي:</strong> الدول المتقدمة نفقاتها أعلى من النامية.</li>
+                    </ul>
+
+                    <h3>ظاهرة ازدياد النفقات العامة:</h3>
+                    <div class="alert-box">
+                        <h3>أولاً: الأسباب الظاهرية (تضخم رقمي فقط دون زيادة حقيقية في السلع)</h3>
+                        <ol style="margin-bottom:0;">
+                            <li><strong>انخفاض قيمة النقود وارتفاع الأسعار:</strong> (التضخم) يتطلب دفع أموال أكثر لنفس السلعة.</li>
+                            <li><strong>تغير القواعد المالية:</strong> الانتقال من الموازنة الصافية إلى <span class="hl-yellow">الموازنة الإجمالية</span> (إدراج الإيرادات والمصروفات معاً).</li>
+                            <li><strong>توسع مساحة الدولة أو زيادة السكان:</strong> يتطلب زيادة الخدمات.</li>
+                        </ol>
+                    </div>
+
+                    <div class="tip-box">
+                        <h3>ثانياً: الأسباب الحقيقية (زيادة فعلية في الحاجات الملباة)</h3>
+                        <ol style="margin-bottom:0;">
+                            <li><strong>اقتصادية:</strong> بناء مصانع وبنية أساسية + التدخل لحل الأزمات والكساد.</li>
+                            <li><strong>اجتماعية:</strong> إعادة توزيع الدخل + الصحة والتعليم والإسكان.</li>
+                            <li><strong>سياسية وعسكرية:</strong> التسليح وحماية الحدود والنزاعات.</li>
+                            <li><strong>إدارية ومالية:</strong> زيادة الجهاز الإداري للدولة.</li>
+                        </ol>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 4 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">3️⃣</span> المحاضرة الثالثة: الآثار الاقتصادية واختيار المشروعات</h2>
+                    
+                    <!-- الدوائر الثلاثة زي الصورة -->
+                    <h3 style="justify-content: center; margin-bottom: 0;">الآثار الاقتصادية للنفقات العامة</h3>
+                    <div class="diagram-container">
+                        <div class="flow-chart">
+                            <div class="circle-box">ثالثاً: الآثار المباشرة على إعادة توزيع الدخل</div>
+                            <div class="arrow-left">➔</div>
+                            <div class="circle-box">ثانياً: الآثار المباشرة على الاستهلاك القومي</div>
+                            <div class="arrow-left">➔</div>
+                            <div class="circle-box">أولاً: الآثار المباشرة على الإنتاج القومي</div>
+                        </div>
+                    </div>
+
+                    <!-- القوانين -->
+                    <div class="summary-box" style="background: rgba(16, 185, 129, 0.1); border-color: var(--emerald-dark); margin-top: 20px;">
+                        <h3 style="color: var(--emerald-dark); margin-top: 0; font-size: 1.4rem;">قوانين اختيار المشروعات (مهم جداً):</h3>
+                        <ul style="font-size: 1.4rem; font-weight: 800; color: var(--heading-main); margin-bottom: 5px;">
+                            <li><strong>المنفعة النسبية</strong> = المنافع (م) ÷ التكاليف (ت)</li>
+                            <li><strong>المنفعة الصافية</strong> = المنافع (م) - التكاليف (ت)</li>
+                        </ul>
+                        <p style="margin-bottom: 0; color: var(--red-alert);"><strong>القاعدة الذهبية للاختيار:</strong> بنرتب المشروعات بناءً على <span class="hl-yellow">المنفعة النسبية (م ÷ ت)</span> من الأعلى ترتيباً للأقل. ونختار المشروعات بالأولوية دي لغاية ما نصرف الموازنة بالكامل.</p>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>المشروع</th>
+                                <th>التكلفة (ت)</th>
+                                <th>المنفعة (م)</th>
+                                <th>المنفعة الصافية (م-ت)</th>
+                                <th>المنفعة النسبية (م ÷ ت)</th>
+                                <th>الترتيب</th>
+                            </tr>
+                            <tr>
+                                <td>الأول (مثال سابق)</td>
+                                <td>400</td>
+                                <td>700</td>
+                                <td>300</td>
+                                <td>1.75</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>الثاني</td>
+                                <td>200</td>
+                                <td>300</td>
+                                <td>100</td>
+                                <td>1.50</td>
+                                <td>4</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td>الرابع (الأعلى)</td>
+                                <td>100</td>
+                                <td>250</td>
+                                <td>150</td>
+                                <td>2.50</td>
+                                <td>1</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p style="font-size: 1.2rem; color: var(--text-muted); margin-top: 10px;">*(لو الموازنة 700، هنختار الرابع (100) + الأول (400) + الثاني (200) = 700 بالظبط).*</p>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 4</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 5 (تم تعديلها) ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">4️⃣</span> المحاضرة الرابعة: الإيرادات العامة وأملاك الدولة</h2>
+                    
+                    <h3>أولاً: تعريف الإيرادات العامة:</h3>
+                    <p>هي تلك <span class="hl-yellow">الموارد المالية</span> التي تحصل عليها الدولة من مصادر معينة، والتي تحتاج إليها <span class="hl-green">لتمويل النفقات العامة</span>.</p>
+
+                    <h3>ثانياً: مصادر الإيرادات العامة (4 مصادر):</h3>
+                    <!-- تصميم البوكسات والأسهم من اليمين (أملاك الدولة) للشمال (القروض) -->
+                    <div class="diagram-container" style="padding: 15px 5px; margin: 10px 0;">
+                        <div class="flow-chart" style="flex-wrap: nowrap; gap: 2px; width: 100%; justify-content: center;">
+                            <div class="flow-box-light" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">أملاك الدولة<br>(الدومين)</div>
+                            <div class="flow-op" style="font-size: 1.5rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">الإيرادات<br>الإدارية</div>
+                            <div class="flow-op" style="font-size: 1.5rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box-light" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">الضرائب</div>
+                            <div class="flow-op" style="font-size: 1.5rem; flex-shrink: 0; color: var(--emerald-light);">←</div>
+                            <div class="flow-box" style="font-size: 1rem; padding: 10px 8px; flex-shrink: 1; text-align: center; width: 110px;">القروض</div>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>التقسيم</th>
+                                <th>النوع</th>
+                                <th>أمثلة</th>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>من حيث الإلزام</strong></td>
+                                <td>اختيارية</td>
+                                <td>القروض وإيرادات الدولة.</td>
+                            </tr>
+                            <tr>
+                                <td>جبرية</td>
+                                <td>الضرائب وبعض الرسوم.</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>من حيث التكرار</strong></td>
+                                <td>غير عادية (لا تتكرر)</td>
+                                <td>القروض.</td>
+                            </tr>
+                            <tr>
+                                <td>عادية (تتكرر)</td>
+                                <td>الضرائب والرسوم وإيرادات الممتلكات.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>ثالثاً: أملاك الدولة (الدومين):</h3>
+                    <ul>
+                        <li><strong>الدومين العام:</strong> مخصص للاستعمال العام (طرق، كباري). <span class="hl-red">لا يدر عائداً</span>.</li>
+                        <li><strong>الدومين الخاص:</strong> منشآت إنتاجية وتجارية. <span class="hl-green">يدر عائداً</span> (يهدف للربح).</li>
+                    </ul>
+                    <p><strong>أنواع الدومين الخاص:</strong> (1) عقاري: أراضي وعقارات. (2) صناعي وتجاري: مشروعات تنتج وتبيع بالثمن العام. (3) مالي: أسهم وسندات.</p>
+
+                    <h3>رابعاً: الإيرادات الإدارية (الرسوم والإتاوة):</h3>
+                    <ul>
+                        <li><strong>الرسوم:</strong> مبلغ نقدي يدفعه الفرد <span class="hl-yellow">جبراً</span> مقابل خدمة تقدم نفعاً <span class="hl-yellow">خاصاً وعاماً</span>. (عناصرها: نقدية، إجبار، مقابل، نفع عام وخاص). <br> <em>القاعدة: قيمة الرسم <span class="hl-red">أقل</span> من تكلفة الخدمة (إن زادت أصبحت ضريبة مستترة).</em></li>
+                        <li><strong>الإتاوة (مقابل التحسين):</strong> يدفعها <span class="hl-yellow">ملاك العقارات</span> مقابل نفع خاص (زيادة قيمة العقار) بسبب عمل عام (كوبري). تدفع <span class="hl-red">مرة واحدة فقط</span>.</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 5</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 6 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">5️⃣</span> المحاضرة الخامسة: الضرائب (المفاهيم والقواعد)</h2>
+                    
+                    <h3>تعريف الضريبة:</h3>
+                    <p>فريضة مالية جبرية يلتزم الممول بدفعها <span class="hl-red">دون مقابل خاص</span> لتمويل النفقات العامة وتحقيق مصالح المجتمع، وتكون في شكل نقود.</p>
+                    <p><strong>خصائصها:</strong> مبلغ نقدي - جبرية - بدون مقابل معين - نهائية.</p>
+
+                    <h3>أركان الضريبة (4 أركان):</h3>
+                    <ol>
+                        <li>فريضة جبرية من السلطة التقديرية للدولة.</li>
+                        <li>بدون مقابل خاص (تُفرض حسب <span class="hl-yellow">المقدرة التمويلية</span>).</li>
+                        <li>الغرض منها تحقيق أهداف عامة (اقتصادية واجتماعية).</li>
+                        <li>حصيلتها مبلغ من النقود.</li>
+                    </ol>
+
+                    <h3>المفاهيم الأساسية:</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>المفهوم</th>
+                                <th>الشرح المختصر</th>
+                            </tr>
+                            <tr>
+                                <td><strong>وعاء الضريبة</strong></td>
+                                <td>المادة التي يفرض عليها الضريبة (شخص أو مال).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>سعر الضريبة</strong></td>
+                                <td>النسبة المئوية التي تدفع من الوعاء.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الازدواج الضريبي</strong></td>
+                                <td>فرض نفس الضريبة أكثر من مرة على نفس الشخص والمال وفي نفس المدة.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>التهرب الضريبي</strong></td>
+                                <td>محاولة المكلف التخلص من دفع الضريبة كلها أو بعضها.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>نقل عبء الضريبة</strong></td>
+                                <td>دافع الضريبة لا يتحملها نهائياً بل ينقلها لغيره (كلي أو جزئي).</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>قواعد الضريبة (شروط نجاحها):</h3>
+                    <ul>
+                        <li><strong>العدالة:</strong> <span class="hl-blue">أفقية</span> (نفس الظروف = نفس المعاملة) و<span class="hl-blue">رأسية</span> (اختلاف الدخل = اختلاف المعاملة).</li>
+                        <li><strong>الملاءمة للممول:</strong> تراعي ظروف الممول (الفلاح موسمي، الموظف شهري).</li>
+                        <li><strong>الملاءمة للإدارة:</strong> سهولة التحصيل بأقل تكلفة.</li>
+                        <li><strong>التوزيع المناسب:</strong> تحقيق الغرض من الضريبة (مالي/اقتصادي/اجتماعي).</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 6</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 7 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">⚖️</span> الضرائب المباشرة وغير المباشرة</h2>
+                    
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>وجه المقارنة</th>
+                                <th>المباشرة</th>
+                                <th>غير المباشرة</th>
+                            </tr>
+                            <tr>
+                                <td><strong>المثال</strong></td>
+                                <td>على الدخل والثروة.</td>
+                                <td>على الإنفاق والمبيعات.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>من يتحمل العبء؟</strong></td>
+                                <td>دافع الضريبة نفسه لا ينقل عبئها.</td>
+                                <td>يمكن لدافعها نقل العبء لغيره.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>طريقة الجباية</strong></td>
+                                <td>بناء على أوراق وجداول اسمية.</td>
+                                <td>لا تحتاج بيانات أو جداول أسماء.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الاستمرارية</strong></td>
+                                <td>المادة ثابتة ودائمة (دخل/ثروة).</td>
+                                <td>المادة طارئة (استهلاك).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>علاقتها بالدخل</strong></td>
+                                <td>تفرض على الدخل عند <span class="hl-green">الحصول عليه/تحقيقه</span>.</td>
+                                <td>تفرض على الدخل عند <span class="hl-red">إنفاقه</span>.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <div class="tip-box" style="flex: 1; min-width: 250px;">
+                            <h3>مزايا المباشرة</h3>
+                            <ul>
+                                <li>تحقق العدالة (حسب المقدرة).</li>
+                                <li>حصيلتها ثابتة (مصادر ثابتة).</li>
+                                <li>تناسب قواعد الملاءمة.</li>
+                            </ul>
+                            <h3 style="color: var(--red-alert);">عيوب المباشرة</h3>
+                            <ul>
+                                <li>ثقل نفسي (تدفع للتهرب).</li>
+                                <li>تأخر الحصيلة لنهاية السنة المالية.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="tip-box" style="flex: 1; min-width: 250px; border-right-color: var(--navy-blue); background: rgba(30, 58, 138, 0.05);">
+                            <h3 style="color: var(--navy-blue);">مزايا غير المباشرة</h3>
+                            <ul>
+                                <li>سهولة الدفع (داخل سعر السلعة).</li>
+                                <li>صعوبة التهرب وضخامة الحصيلة.</li>
+                                <li>اتساع النطاق (تناسب الدول النامية).</li>
+                            </ul>
+                            <h3 style="color: var(--red-alert);">عيوب غير المباشرة</h3>
+                            <ul>
+                                <li>لا تحقق العدالة (الغني والفقير يدفعان نفس الشيء).</li>
+                                <li>حصيلتها غير ثابتة (تقل في الكساد).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 7</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 8 ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">💎</span> الضرائب على الثروة والدخل</h2>
+                    
+                    <h3>أولاً: الضرائب على الثروة (3 أنواع):</h3>
+                    <ol>
+                        <li><strong>تقليدية (على رأس المال):</strong> سعرها رمزي جداً، هدفها معلوماتي (معرفة ثروات الناس). مثال: العقارات، الحلي.</li>
+                        <li><strong>على الزيادة الطارئة:</strong> تفرض عند زيادة الثروة دون مجهود (ارتفاع أسعار الأراضي). تفرض عند <span class="hl-yellow">التصرف/البيع</span>.</li>
+                        <li><strong>على التصرف في الثروة (انتقال الملكية):</strong>
+                            <ul>
+                                <li><em>بين الأحياء:</em> غالباً على المشتري، بسعر معتدل (لتشجيع التسجيل).</li>
+                                <li><em>التركات (بعد الوفاة):</em> على الورثة، بسعر <span class="hl-red">مرتفع وتصاعدي</span> (لتقليل التفاوت الطبقي).</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h3>ثانياً: الضرائب على الدخل (نوعان):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>وجه المقارنة</th>
+                                <th>على مجموع الدخل</th>
+                                <th>النوعية على الدخل</th>
+                            </tr>
+                            <tr>
+                                <td><strong>الفكرة</strong></td>
+                                <td>إقرار واحد لكل مصادر الدخل.</td>
+                                <td>ضريبة منفصلة لكل نوع دخل (مرتبات، أرباح، مهن).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>المزايا</strong></td>
+                                <td>أسهل للممول، وأسهل للإدارة (إجراءات موحدة).</td>
+                                <td>تميز بين المصادر (تحقق أهداف اجتماعية)، ويصعب التهرب الكلي.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>العيوب</strong></td>
+                                <td>لا تميز بين المصادر (لا تحقق أهداف اجتماعية)، ويمكن التهرب الكلي.</td>
+                                <td>تؤدي للـ <span class="hl-red">ازدواج الضريبي</span>، وتضاعف نفقات التحصيل.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 8</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 9 (كبسولة الامتحان) ================= -->
+    <div class="page-container">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <header class="hero-header" style="border-bottom: none; padding-bottom: 5px;">
+                    <h1 style="font-size: 2.4rem; color: var(--emerald-dark);">كبسولة الامتحان (إجابات سريعة)</h1>
+                    <p style="font-size: 1.3rem;">أهم النقاط التي تتحول لأسئلة صح/خطأ أو اختيار من متعدد (من الـ 60 سؤال)</p>
+                </header>
+
+                <div class="summary-box" style="background: #fff; border-color: var(--emerald-dark);">
+                    <h3>أهم الإجابات الخاطئة (احفظ تصحيحها):</h3>
+                    <ul>
+                        <li><strong>خطأ:</strong> المالية العامة ظهرت مع <span class="hl-red">انخفاض</span> دور الدولة. <br> <strong>الصح:</strong> ظهرت مع <span class="hl-green">تزايد</span> دور الدولة (أفكار كينز).</li>
+                        <li><strong>خطأ:</strong> الفكر التقليدي يسمح بـ <span class="hl-red">القروض</span>. <br> <strong>الصح:</strong> التقليدي يمنع القروض ويشترط التساوي، <span class="hl-green">الحديث</span> يسمح بها.</li>
+                        <li><strong>خطأ:</strong> الحاجات العامة <span class="hl-red">قابلة</span> للتجزئة. <br> <strong>الصح:</strong> <span class="hl-green">غير قابلة</span> للتجزئة (الدفاع مثلاً).</li>
+                        <li><strong>خطأ:</strong> الضرائب المباشرة تفرض على الدخل عند <span class="hl-red">إنفاقه</span>. <br> <strong>الصح:</strong> عند <span class="hl-green">الحصول عليه</span> (الإنفاق ده لغير المباشرة).</li>
+                        <li><strong>خطأ:</strong> قيمة الرسم <span class="hl-red">أكبر</span> من تكلفة الخدمة. <br> <strong>الصح:</strong> <span class="hl-green">أقل</span> (لو زادت بتبقى ضريبة مستترة).</li>
+                        <li><strong>خطأ:</strong> العدالة <span class="hl-red">الأفقية</span> تعني اختلاف المعاملة باختلاف الدخل. <br> <strong>الصح:</strong> دي <span class="hl-green">الرأسية</span>، والأفقية هي المساواة في نفس الظروف.</li>
+                        <li><strong>خطأ:</strong> التهرب الضريبي هو نقل عبء الضريبة. <br> <strong>الصح:</strong> التهرب هو التخلص منها، <span class="hl-green">نقل العبء</span> هو تحميلها لشخص آخر.</li>
+                        <li><strong>خطأ:</strong> الدومين الخاص لا يدر عائداً. <br> <strong>الصح:</strong> <span class="hl-green">يدر عائداً</span> (الدومين العام هو اللي لا يدر).</li>
+                        <li><strong>خطأ:</strong> يعتبر صدور النفقة من شخص عام شرطا <span class="hl-red">كافياً</span>. <br> <strong>الصح:</strong> شرط <span class="hl-green">ضروري وليس كافياً</span> (لازم تحقق نفع عام كمان).</li>
+                        <li><strong>خطأ:</strong> النفقات التحويلية تؤدي لزيادة الإنتاج. <br> <strong>الصح:</strong> دي وظيفة النفقات <span class="hl-green">الحقيقية</span>، التحويلية بتعيد توزيع الدخل.</li>
+                    </ul>
+                </div>
+
+                <div class="summary-box" style="background: #fff; border-color: var(--navy-blue); margin-top: 15px;">
+                    <h3>إجابات الاختيار من متعدد (MCQ):</h3>
+                    <ul>
+                        <li>تعريف "مبلغ يدفعه الفرد جبراً مقابل نفع خاص وعام" = <span class="hl-yellow">الرسوم</span>.</li>
+                        <li>تعريف "مبلغ يدفع مقابل منفعة خاصة نتيجة عمل هدفه نفع عام" = <span class="hl-yellow">الإتاوة</span>.</li>
+                        <li>على ماذا يطلق "دراسة النفقات والإيرادات" في الفكر الضيق = <span class="hl-yellow">المالية العامة</span>.</li>
+                        <li>الضرائب على المبيعات والإنفاق من = <span class="hl-yellow">غير المباشرة</span>.</li>
+                        <li>الضرائب على الدخل والثروة من = <span class="hl-yellow">المباشرة</span>.</li>
+                        <li>النسبة المئوية للمبلغ المدفوع إلى الوعاء = <span class="hl-yellow">سعر الضريبة</span>.</li>
+                        <li>من الأسباب الحقيقية لزيادة النفقات = <span class="hl-yellow">اقتصادية، اجتماعية، سياسية، إدارية</span> (جميع ما سبق).</li>
+                        <li>من الأسباب الظاهرية لزيادة النفقات = <span class="hl-yellow">ارتفاع الأسعار، انخفاض قيمة العملة، تغير القواعد المالية</span> (جميع ما سبق).</li>
+                        <li>معيار "تتم النفقات الحقيقية مقابل خدمة أما التحويلية بلا مقابل" = <span class="hl-yellow">معيار المقابل</span>.</li>
+                        <li>مبلغ تجبيه الدولة جبراً لغرض تمويل نفقاتها = <span class="hl-yellow">الضريبة</span>.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة سريعة - صفحة 9</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function resizePages() {
+            const pages = document.querySelectorAll('.a4-page');
+            const maxWidth = 850;
+            const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+            const availableWidth = viewportWidth - 10; 
+            
+            let scale = 1;
+            if (availableWidth < maxWidth) {
+                scale = availableWidth / maxWidth;
+            }
+
+            pages.forEach(page => {
+                const wrapper = page.parentElement;
+                page.style.transform = 'none';
+                const actualHeight = page.offsetHeight;
+
+                if (scale < 1) {
+                    page.style.transform = `scale(${scale})`;
+                    page.style.transformOrigin = 'top center';
+                    wrapper.style.width = `${availableWidth}px`;
+                    wrapper.style.height = `${actualHeight * scale}px`;
+                } else {
+                    page.style.transform = 'none';
+                    wrapper.style.width = '100%';
+                    wrapper.style.height = 'auto';
+                }
+            });
+        }
+
+        window.addEventListener('load', resizePages);
+        window.addEventListener('orientationchange', resizePages);
+    </script>
+</body>
+</html>
