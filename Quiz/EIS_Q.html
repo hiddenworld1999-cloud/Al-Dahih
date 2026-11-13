@@ -262,7 +262,7 @@
 
         .q-text {
             margin: 0 0 10px 0; 
-            font-size: 19px;
+            font-size: 19px; /* خط كبير */
             font-weight: 700; line-height: 1.5;
             color: #FFFFFF;
         }
@@ -286,7 +286,7 @@
             border: 1px solid #333;
             border-radius: 6px;
             background: #111;
-            font-size: 17px;
+            font-size: 17px; /* خط كبير */
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.4;
@@ -308,6 +308,7 @@
         
         .option .opt-text { flex: 1; }
 
+        /* حالة الإجابة الصحيحة */
         .option.correct { 
             border-color: var(--neon-green); 
             background: rgba(0, 255, 65, 0.08); 
@@ -548,7 +549,7 @@ function renderPaginatedPages() {
             required += headerH;
         }
 
-        // إجبار صفحة جديدة لأسئلة الصح والخطأ (Index 31 = سؤال 32)
+        // إجبار صفحة جديدة لأسئلة الصح والخطأ (السؤال 32 - Index 31)
         let forceBreak = false;
         if (i === 31 && currentPage.length > 0) {
             forceBreak = true;
