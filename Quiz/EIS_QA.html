@@ -93,6 +93,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
+        /* ============ تصميم الأنظمة: أزرق + سماوي على خلفية داكنة ============ */
         :root {
             --bg-body: #0B1120;
             --bg-page: #111827;
@@ -100,13 +101,12 @@
             --text-main: #F3F4F6;
             --text-muted: #9CA3AF;
             
-            --electric-blue: #3B82F6;
-            --cyan: #06B6D4;
-            --neon-green: #10B981;
-            --neon-green-bg: rgba(16, 185, 129, 0.1);
-            --neon-red: #EF4444;
-            --neon-red-bg: rgba(239, 68, 68, 0.1);
-            --yellow: #F59E0B;
+            /* المسميات زي ما هي عشان الكود يشتغل */
+            --neon-cyan: #06B6D4;    /* سماوي الأنظمة */
+            --neon-purple: #3B82F6;  /* أزرق الأنظمة */
+            --neon-green: #10B981;   /* أخضر الأنظمة */
+            --neon-red: #EF4444;     /* أحمر الأنظمة */
+            --neon-yellow: #F59E0B;
             
             --border-glass: rgba(59, 130, 246, 0.2);
             --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.05);
@@ -114,20 +114,21 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html, body {
-            overflow-x: hidden !important;
-            width: 100%;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
             background-color: var(--bg-body);
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            line-height: 1.4;
-            padding: 70px 5px 100px 5px; 
+            line-height: 1.5;
+            padding: 60px 0 90px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -135,7 +136,22 @@
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
+
+        /* ============ شاشة التحميل ============ */
+        .loading-state {
+            width: 100%; display: flex; justify-content: center;
+            align-items: center; padding: 80px 20px;
+            flex-direction: column; gap: 20px;
+        }
+        .loading-spinner {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 4px solid rgba(6, 182, 212, 0.15);
+            border-top-color: var(--neon-cyan);
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: var(--neon-cyan); font-weight: 700; font-size: 16px; }
 
         /* ============ الشريط العلوي ============ */
         .top-bar {
@@ -147,78 +163,50 @@
             z-index: 1000;
             display: flex;
             justify-content: center;
-            padding: 12px 15px;
+            padding: 12px 20px;
             border-bottom: 1px solid var(--border-glass);
         }
         .top-bar-content {
+            width: 100%; max-width: 794px;
+            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+        }
+        .top-bar-title { font-weight: 800; font-size: 15px; color: var(--neon-cyan); white-space: nowrap; }
+        .progress-container { flex: 1; background: rgba(255,255,255,0.1); height: 8px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); width: 0%; transition: width 0.4s ease; }
+        .progress-text { font-weight: 700; font-size: 13px; color: var(--text-muted); min-width: 60px; text-align: left; }
+
+        /* ============ الحاوية الأساسية ============ */
+        .page-wrapper {
             width: 100%;
-            max-width: 794px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-        .top-bar-title {
-            font-weight: 800;
-            font-size: 16px;
-            color: var(--cyan);
-            white-space: nowrap;
-        }
-        .progress-container {
-            flex: 1;
-            background: rgba(255,255,255,0.1);
-            height: 8px;
-            border-radius: 10px;
+            display: flex; justify-content: center;
+            margin-bottom: 20px; 
             overflow: hidden;
+            padding: 0 10px; 
         }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--electric-blue), var(--cyan));
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-        .progress-text {
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-muted);
-            min-width: 60px;
-            text-align: left;
-        }
-
-        /* ============ تصميم ورقة A4 (مقاسات الملف الأول) ============ */
-        .page-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            max-width: 100vw;
-            overflow: hidden; 
-            padding: 0 10px;
-        }
-
+        
+        /* ============ ورقة A4 ============ */
         .a4-page {
             background-color: var(--bg-page);
             width: 794px; 
-            flex-shrink: 0; 
             min-height: 1123px; 
-            height: auto; 
-            padding: 10px 10px 40px 10px;
+            height: auto;
+            padding: 10px 10px 40px 10px; 
+            border: 1px solid var(--border-glass);
             border-radius: 4px;
             box-shadow: var(--shadow-paper);
             position: relative;
             display: flex;
             flex-direction: column;
-            border: 1px solid var(--border-glass);
             transform-origin: top center; 
+            flex-shrink: 0;
         }
 
         .a4-page::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyan), transparent);
-            opacity: 0.8;
-            z-index: 10;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
+            opacity: 0.8; z-index: 10;
         }
 
         .content-wrapper {
@@ -231,38 +219,38 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 2px 0 6px; margin-bottom: 6px; }
+        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-glass); }
         .hero-header h1 {
-            font-size: 24px; 
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--cyan), var(--electric-blue));
+            font-size: 28px; font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
-        .hero-header p { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+        .hero-header p { font-size: 16px; color: var(--text-muted); font-weight: 600; }
 
-        /* ============ فاصل الأقسام ============ */
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-right: 4px solid var(--neon-cyan); border-radius: 6px;
+            padding: 8px 15px; font-size: 16px; font-weight: 800; color: var(--neon-cyan);
+            margin: 5px 0 15px 0; display: flex; align-items: center; gap: 10px;
+        }
+
         .section-divider {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
-            border: 1px dashed var(--cyan);
-            color: var(--cyan);
-            text-align: center;
-            padding: 6px;
-            border-radius: 6px;
-            font-weight: 800;
-            margin: 6px 0 10px 0;
-            font-size: 16px;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px dashed var(--neon-cyan); color: var(--neon-cyan);
+            text-align: center; padding: 8px; border-radius: 8px;
+            font-weight: 800; margin: 8px 0 12px 0; font-size: 18px;
             box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
         }
 
-        /* ============ كارت السؤال ============ */
+        /* ============ كارت السؤال (مقاسات برمجة الحاسب) ============ */
         .q-card {
             background: var(--bg-card);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-glass);
             border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
+            padding: 12px 15px; 
+            margin-bottom: 10px; 
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
             transition: all 0.3s;
@@ -270,22 +258,15 @@
 
         .q-card.missed {
             border-color: var(--neon-red) !important;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3) !important;
             animation: shake 0.5s ease-in-out;
         }
         .q-card.missed::after {
             content: '⚠️ لم يتم الإجابة';
-            position: absolute;
-            top: -10px; left: 50%; transform: translateX(-50%);
-            background: var(--neon-red);
-            color: #fff;
-            padding: 2px 12px;
-            border-radius: 15px;
-            font-size: 10px;
-            font-weight: 700;
-            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
-            z-index: 5;
-            white-space: nowrap;
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            background: var(--neon-red); color: #fff; padding: 2px 10px;
+            border-radius: 10px; font-size: 10px; font-weight: 800;
+            box-shadow: 0 0 10px var(--neon-red); z-index: 5; white-space: nowrap;
         }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -294,282 +275,180 @@
         }
 
         .q-head {
-            display: flex; align-items: center; justify-content: flex-start;
-            gap: 6px; margin-bottom: 6px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px; margin-bottom: 8px;
         }
+        .q-head-right { display: flex; align-items: center; gap: 12px; }
         
         .q-num {
-            width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; 
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--cyan); 
-            font-weight: 800; font-size: 14px;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; background: rgba(59, 130, 246, 0.15); color: var(--neon-cyan);
+            font-weight: 800; font-size: 17px; font-family: 'Fira Code', monospace;
             border: 1px solid rgba(6, 182, 212, 0.3);
-            font-family: 'Fira Code', monospace;
         }
 
         .info-btn {
-            display: none;
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            background: transparent;
-            border: 2px solid var(--cyan);
-            color: var(--cyan);
-            font-size: 12px; font-weight: 800;
-            align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s;
+            display: none; width: 30px; height: 30px; border-radius: 50%;
+            background: transparent; border: 2px solid var(--neon-cyan); color: var(--neon-cyan);
+            font-size: 15px; font-weight: 800; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
             font-family: 'Fira Code', monospace;
-            box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
         }
         .info-btn:hover { background: rgba(6, 182, 212, 0.1); box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
-        .info-btn.active { background: var(--cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); }
+        .info-btn.active { background: var(--neon-cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); }
 
         .q-text {
-            margin: 0 0 8px 0; 
-            font-size: 17px; 
-            font-weight: 700; line-height: 1.4;
-            color: #FFFFFF;
+            margin: 0 0 10px 0; font-size: 19px; font-weight: 700; line-height: 1.5; color: #FFFFFF;
         }
 
         /* ============ الخيارات (2x2) ============ */
         .q-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px; 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
         }
         
         .option {
-            position: relative;
-            display: flex;
-            flex-direction: row; 
-            align-items: center;
-            justify-content: flex-start;
-            gap: 8px;
-            min-height: 38px;
-            padding: 6px 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            font-size: 15.5px;
-            font-weight: 600;
-            color: var(--text-main);
-            line-height: 1.3;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            overflow-wrap: break-word;
-            word-break: break-word;
+            position: relative; display: flex; flex-direction: row; align-items: center;
+            justify-content: flex-start; gap: 8px; min-height: 40px; padding: 8px 12px;
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; background: rgba(0, 0, 0, 0.2);
+            font-size: 17px; font-weight: 600; color: var(--text-main);
+            line-height: 1.4; cursor: pointer; transition: all 0.2s;
+            overflow-wrap: break-word; word-break: break-word;
         }
         
         .option:hover { border-color: rgba(6, 182, 212, 0.5); background: rgba(6, 182, 212, 0.05); }
         .option input { position: absolute; opacity: 0; pointer-events: none; }
         
         .option .letter {
-            width: 24px; height: 24px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 5px;
-            background: rgba(255,255,255,0.05);
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 800;
-            flex-shrink: 0;
-            transition: all 0.2s;
-            font-family: 'Fira Code', monospace;
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted);
+            font-size: 14px; font-weight: 800; flex-shrink: 0;
+            font-family: 'Fira Code', monospace; transition: all 0.2s;
         }
         
         .option .opt-text { flex: 1; }
 
         .option.selected {
-            border-color: var(--cyan);
-            background: rgba(6, 182, 212, 0.1);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+            border-color: var(--neon-cyan); background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
         }
-        .option.selected .letter {
-            background: var(--cyan);
-            color: #000;
-        }
+        .option.selected .letter { background: var(--neon-cyan); color: #000; }
 
         .option.locked { pointer-events: none; }
         
         .option.correct { 
-            border-color: var(--neon-green); 
-            background: var(--neon-green-bg); 
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+            border-color: var(--neon-green); background: rgba(16, 185, 129, 0.1); 
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
         }
-        .option.correct .letter { 
-            background: var(--neon-green); 
-            color: #000;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-        }
+        .option.correct .letter { background: var(--neon-green); color: #000; }
         .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
         
         .option.wrong { 
-            border-color: var(--neon-red); 
-            background: var(--neon-red-bg); 
+            border-color: var(--neon-red); background: rgba(239, 68, 68, 0.1); 
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
         }
         .option.wrong .letter { background: var(--neon-red); color: #fff; }
         .option.wrong .opt-text { color: var(--neon-red); }
 
-        .option .mark { margin-inline-start: auto; font-size: 18px; font-weight: bold; }
-        .option.correct .mark { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
-        .option.wrong .mark { color: var(--neon-red); }
+        .option .mark { margin-inline-start: auto; font-size: 20px; font-weight: bold; }
 
-        /* ============ صندوق التعليل ============ */
         .q-explanation {
-            display: none;
-            margin-top: 8px;
-            padding: 8px 12px;
-            background: rgba(6, 182, 212, 0.05);
-            border: 1px dashed var(--cyan);
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-main);
-            line-height: 1.5;
-            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.05);
+            display: none; margin-top: 10px; padding: 10px 15px;
+            background: rgba(6, 182, 212, 0.05); border: 1px dashed var(--neon-cyan);
+            border-radius: 6px; font-size: 17px; font-weight: 600;
+            color: var(--text-main); line-height: 1.5;
         }
-        .q-explanation strong { color: var(--cyan); }
+        .q-explanation strong { color: var(--neon-cyan); }
         .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ============ فوتر الورقة ============ */
         .footer-bar {
-            position: absolute; 
-            bottom: 10px; left: 15px; right: 15px;
+            position: absolute; bottom: 12px; left: 25px; right: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; z-index: 2;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
         }
-        .footer-brand { display: flex; align-items: center; gap: 6px; }
-        .footer-logo { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--electric-blue); object-fit: cover; filter: grayscale(100%); }
-        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--cyan); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 800; }
 
-        /* ============ الشريط السفلي (تسليم) ============ */
+        /* ============ الشريط السفلي ============ */
         .bottom-bar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(11, 17, 32, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            padding: 12px 15px;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(11, 17, 32, 0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.5); z-index: 1000;
+            display: flex; justify-content: center; padding: 12px 20px;
             border-top: 1px solid var(--border-glass);
         }
 
         .btn-submit {
-            width: 100%;
-            max-width: 794px;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--electric-blue), var(--cyan));
-            color: #fff;
-            font-size: 18px;
-            font-weight: 800;
-            font-family: 'Cairo', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+            width: 100%; max-width: 794px; padding: 14px; border: none; border-radius: 10px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            color: #fff; font-size: 17px; font-weight: 800; font-family: 'Cairo', sans-serif;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center;
+            justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
         }
-        .btn-submit:hover { background: linear-gradient(90deg, var(--cyan), var(--electric-blue)); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5); }
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { background: #374151; color: #9CA3AF; cursor: not-allowed; box-shadow: none; }
 
         .btn-submit.ready {
             background: linear-gradient(90deg, var(--neon-green), #059669);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-            animation: pulse-green 2s infinite;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); animation: pulseReady 2s infinite;
         }
-        .btn-submit.ready:hover { background: linear-gradient(90deg, #059669, var(--neon-green)); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
-        
-        @keyframes pulse-green {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        @keyframes pulseReady {
+            0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         }
 
-        /* ============ شاشة التنبيه ============ */
+        .result-card {
+            display: none; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid var(--neon-cyan); border-radius: 15px; padding: 20px;
+            text-align: center; margin-bottom: 20px; box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
+            width: 100%; max-width: 794px; margin-top: 20px;
+        }
+        .result-card h2 { color: var(--neon-cyan); margin-bottom: 10px; font-size: 24px; }
+        .result-score { font-size: 40px; font-weight: 900; color: #fff; margin-bottom: 5px; text-shadow: 0 0 10px var(--neon-cyan); }
+        .result-msg { color: var(--text-muted); font-size: 14px; }
+
+        /* ============ شاشة التنبيه (Modal) ============ */
         .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        
         .modal-content {
-            background: var(--bg-page);
-            border: 2px solid var(--neon-red);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%; max-width: 450px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(239, 68, 68, 0.3);
-            transform: translateY(20px) scale(0.95);
+            background: var(--bg-page); border: 2px solid var(--neon-red); border-radius: 15px;
+            padding: 25px 30px; width: 90%; max-width: 450px; text-align: center;
+            box-shadow: 0 0 50px rgba(239, 68, 68, 0.4); transform: translateY(20px) scale(0.95);
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
         }
         .modal-overlay.show .modal-content { transform: translateY(0) scale(1); }
-        
         .modal-icon { font-size: 50px; margin-bottom: 10px; animation: float 2s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
-        .modal-content h2 { color: var(--neon-red); margin-bottom: 10px; font-size: 22px; font-weight: 800; }
+        .modal-content h2 { color: var(--neon-red); margin-bottom: 10px; font-size: 22px; }
         .modal-content p { color: var(--text-main); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
-        
         .missed-badges {
             display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 25px;
             max-height: 150px; overflow-y: auto; padding: 5px;
         }
         .badge-missed {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: var(--neon-red-bg);
-            border: 2px solid var(--neon-red);
-            color: var(--neon-red);
+            width: 40px; height: 40px; border-radius: 50%; background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--neon-red); color: var(--neon-red);
             display: flex; align-items: center; justify-content: center;
             font-size: 16px; font-weight: 800; font-family: 'Fira Code', monospace;
             cursor: pointer; transition: all 0.2s;
         }
         .badge-missed:hover {
-            background: var(--neon-red); color: #fff;
-            transform: scale(1.1); box-shadow: 0 0 15px var(--neon-red);
+            background: var(--neon-red); color: #fff; transform: scale(1.1); box-shadow: 0 0 15px var(--neon-red);
         }
-        
         .btn-close-modal {
-            background: transparent; border: 2px solid var(--cyan);
-            color: var(--cyan); padding: 12px 25px; border-radius: 10px;
-            font-size: 16px; font-weight: 700; font-family: inherit;
-            cursor: pointer; transition: all 0.2s; width: 100%;
+            background: transparent; border: 2px solid var(--neon-cyan); color: var(--neon-cyan);
+            padding: 10px 25px; border-radius: 8px; font-size: 16px; font-weight: 700;
+            font-family: inherit; cursor: pointer; transition: all 0.2s; width: 100%;
         }
-        .btn-close-modal:hover { background: var(--cyan); color: #000; }
-
-        /* ============ شاشة النتيجة ============ */
-        .result-card {
-            display: none;
-            background: var(--bg-card);
-            border: 2px solid var(--cyan);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
-            width: 100%; max-width: 794px;
-            animation: slideDown 0.5s ease;
-        }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .result-card h2 { color: var(--cyan); margin-bottom: 10px; font-size: 24px; font-weight: 800; }
-        .result-score { font-size: 48px; font-weight: 900; color: #fff; margin-bottom: 10px; text-shadow: 0 0 10px var(--cyan); }
-        .result-score small { font-size: 24px; color: var(--text-muted); }
-        .result-msg { color: var(--text-main); font-size: 16px; font-weight: 600; }
+        .btn-close-modal:hover { background: var(--neon-cyan); color: #000; }
     </style>
 </head>
 <body>
@@ -596,15 +475,20 @@
         </div>
     </div>
 
-    <!-- كارت النتيجة -->
+    <!-- شريط النتيجة -->
     <div class="result-card" id="resultCard">
         <h2>تم تسليم الامتحان!</h2>
-        <div class="result-score" id="resultScore">0 <small>/ 0</small></div>
+        <div class="result-score" id="resultScore">0 / 0</div>
         <p class="result-msg" id="resultMsg">جارٍ إرسال الدرجة للمنصة...</p>
     </div>
 
     <!-- حاوية الأوراق -->
-    <div id="pagesContainer" style="display: contents;"></div>
+    <div id="pagesContainer" style="display: contents;">
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">جارٍ تحميل الامتحان...</div>
+        </div>
+    </div>
 
     <!-- الشريط السفلي -->
     <div class="bottom-bar">
@@ -613,6 +497,7 @@
 
 <script>
 const QUIZ = [
+    // --- MCQs (1-31) ---
     { text: "أي من التالي يُعد هدفًا رئيسيًا لأنظمة معلومات المؤسسات؟", options: ["زيادة التعقيد في العمليات", "تقليل التواصل بين الأقسام", "تحسين كفاءة وتكامل العمليات داخل المؤسسة", "تقليل تبادل المعلومات"], correct: 2, explanation: "تحسين كفاءة وتكامل العمليات داخل المؤسسة." },
     { text: "العمليات البينية cross-functional processes هي:", options: ["العمليات التي تعبر أكثر من قسم أو وظيفة داخل المؤسسة", "العملية الواحدة داخل المؤسسة", "العملية الواحدة داخل قسم محدد", "العملية التي تتم خارج المؤسسة"], correct: 0, explanation: "العمليات التي تعبر أكثر من قسم أو وظيفة داخل المؤسسة." },
     { text: "من أشهر أنظمة ERP:", options: ["Excel, Word", "Trello, Asana", "PowerPoint", "SAP, Oracle"], correct: 3, explanation: "SAP, Oracle." },
@@ -645,7 +530,7 @@ const QUIZ = [
     { text: "عملية \"من الطلب إلى الدفع\" تُسمى:", options: ["Hire-to-Retire", "Order-to-Cash", "Plan-to-Produce", "Procure-to-Pay"], correct: 1, explanation: "Order-to-Cash." },
     { text: "نظام Odoo هو ....", options: ["نظام شبكي", "نظام محلي", "نظام مفتوح المصدر", "نظام مغلق"], correct: 2, explanation: "نظام مفتوح المصدر." },
     
-    // --- أسئلة صح أم خطأ (تبدأ من Index 31) ---
+    // --- T/F (32-77) ---
     { text: "أنظمة معلومات المؤسسات تهدف إلى دمج العمليات والبيانات عبر جميع أقسام المنظمة.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
     { text: "يقتصر استخدام أنظمة معلومات المؤسسات على المؤسسات الصناعية فقط.", options: ["صح (True)", "خطأ (False)"], correct: 1, explanation: "خطأ، تستخدم في مجالات متنوعة." },
     { text: "من أمثلة أنظمة معلومات المؤسسات: ERP و CRM و SCM.", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." },
@@ -694,9 +579,18 @@ const QUIZ = [
     { text: "يساعد ERP الإدارة على متابعة سير العمليات البينية من البداية إلى النهاية من خلال تقارير لحظية ولوحات تحكم (Dashboards).", options: ["صح (True)", "خطأ (False)"], correct: 0, explanation: "صح." }
 ];
 
+/* حساب isGeneric مرة واحدة */
+QUIZ.forEach(q => {
+    q.isGeneric = (
+        q.explanation === 'صح.' ||
+        q.explanation === 'خطأ.' ||
+        q.explanation === q.options[q.correct] ||
+        q.explanation.length <= q.options[q.correct].length + 3
+    );
+});
+
 const LETTERS = ['أ', 'ب', 'ج', 'د'];
 const container = document.getElementById('pagesContainer');
-const QUESTIONS_PER_PAGE = 5;
 
 let state = {
     answers: new Array(QUIZ.length).fill(null),
@@ -704,120 +598,218 @@ let state = {
     scoreSent: false
 };
 
-function renderPages() {
-    let html = '';
-    const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
+/* =========================================================
+   التقسيم الذكي (Smart Pagination)
+   ========================================================= */
+function renderPaginatedPages() {
+    container.innerHTML = '';
+    
+    // حاوية القياس المخفية
+    const measureBox = document.createElement('div');
+    measureBox.style.position = 'absolute';
+    measureBox.style.visibility = 'hidden';
+    measureBox.style.width = '774px'; 
+    document.body.appendChild(measureBox);
+    
+    const measureWrapper = document.createElement('div');
+    measureWrapper.className = 'content-wrapper';
+    measureBox.appendChild(measureWrapper);
 
-    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-        const start = pageIndex * QUESTIONS_PER_PAGE;
-        const pageQuestions = QUIZ.slice(start, start + QUESTIONS_PER_PAGE);
+    // قياس الهيدر والبينر
+    measureWrapper.innerHTML = `
+        <header class="hero-header">
+            <h1>MIDTERM EXAM</h1>
+            <p>امتحان أنظمة معلومات المؤسسات - أجب عن جميع الأسئلة</p>
+        </header>
+        <div class="main-title-banner">
+            <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
+        </div>
+    `;
+    const headerH = measureWrapper.offsetHeight;
 
-        html += `
-        <div class="page-container">
+    // قياس الفاصل
+    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
+    const dividerH = measureWrapper.offsetHeight + 16; 
+
+    // قياس كل سؤال
+    const qHeights = QUIZ.map((q) => {
+        measureWrapper.innerHTML = `
+            <div class="q-card">
+                <div class="q-head">
+                    <div class="q-head-right">
+                        <span class="q-num">1</span>
+                        ${!q.isGeneric ? `<button class="info-btn">!</button>` : ''}
+                    </div>
+                </div>
+                <p class="q-text">${q.text}</p>
+                <div class="q-options">
+                    ${q.options.map((opt, j) => `
+                        <label class="option">
+                            <span class="letter">${LETTERS[j]}</span>
+                            <span class="opt-text">${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        return measureWrapper.offsetHeight + 10;
+    });
+
+    document.body.removeChild(measureBox);
+
+    // التوزيع الذكي
+    const availableHeight = 1123 - 10 - 40 - 35;
+    const pages = [];
+    let currentPage = [];
+    let currentHeight = 0;
+
+    for (let i = 0; i < QUIZ.length; i++) {
+        let required = qHeights[i];
+        
+        if (pages.length === 0 && currentPage.length === 0) {
+            required += headerH;
+        }
+
+        let forceBreak = false;
+        if (i === 31 && currentPage.length > 0) {
+            forceBreak = true;
+            required += dividerH;
+        }
+
+        if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+            
+            if (forceBreak) {
+                required = qHeights[i] + dividerH;
+            } else {
+                required = qHeights[i];
+            }
+        }
+
+        currentPage.push(i);
+        currentHeight += qHeights[i];
+
+        if (pages.length === 0 && currentPage.length === 1) {
+            currentHeight += headerH;
+        }
+        if (i === 31) {
+            currentHeight += dividerH;
+        }
+    }
+    if (currentPage.length > 0) {
+        pages.push(currentPage);
+    }
+
+    // بناء HTML
+    const totalPages = pages.length;
+
+    const pagesHTML = pages.map((pageIndices, pageIdx) => {
+        let pageHTML = `
+        <div class="page-wrapper">
             <div class="a4-page">
                 <div class="content-wrapper">
-                    ${pageIndex === 0 ? `
-                        <header class="hero-header">
-                            <h1>أنظمة معلومات المؤسسات</h1>
-                            <p>اسئلة انظمه معلومات المؤسسات الميد ترم</p>
-                        </header>
-                    ` : ''}
+        `;
 
-                    ${pageQuestions.map((q, qIndex) => {
-                        const globalIndex = start + qIndex;
-                        
-                        let sectionDivider = '';
-                        if (globalIndex === 31) {
-                            sectionDivider = `
-                            <div class="section-divider">
-                                القسم الثاني: أسئلة الصواب والخطأ (True / False)
-                            </div>
-                            `;
-                        }
-
-                        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
-                                          q.explanation === q.options[q.correct] || 
-                                          q.explanation.length <= q.options[q.correct].length + 3;
-
-                        return `
-                        ${sectionDivider}
-                        <div class="q-card" data-card="${globalIndex}">
-                            <div class="q-head">
-                                <span class="q-num">${globalIndex + 1}</span>
-                                ${!isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
-                            </div>
-                            <p class="q-text">${q.text}</p>
-                            <div class="q-options">
-                                ${q.options.map((opt, j) => `
-                                    <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
-                                        <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
-                                        <span class="letter">${LETTERS[j]}</span>
-                                        <span class="opt-text">${opt}</span>
-                                    </label>
-                                `).join('')}
-                            </div>
-                            ${!isGeneric ? `
-                            <div class="q-explanation" id="exp-${globalIndex}">
-                                <strong>التعليل: </strong>${q.explanation}
-                            </div>
-                            ` : ''}
-                        </div>
-                        `;
-                    }).join('')}
+        if (pageIdx === 0) {
+            pageHTML += `
+                <header class="hero-header">
+                    <h1>MIDTERM EXAM</h1>
+                    <p>امتحان أنظمة معلومات المؤسسات - أجب عن جميع الأسئلة</p>
+                </header>
+                <div class="main-title-banner">
+                    <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
                 </div>
-                
+            `;
+        }
+
+        pageIndices.forEach(globalIndex => {
+            const q = QUIZ[globalIndex];
+            
+            if (globalIndex === 31) {
+                pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (True / False)</div>`;
+            }
+
+            pageHTML += `
+                <div class="q-card" data-card="${globalIndex}">
+                    <div class="q-head">
+                        <div class="q-head-right">
+                            <span class="q-num">${globalIndex + 1}</span>
+                            ${!q.isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        </div>
+                    </div>
+                    <p class="q-text">${q.text}</p>
+                    <div class="q-options">
+                        ${q.options.map((opt, j) => `
+                            <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}" onclick="selectOption(${globalIndex}, ${j})">
+                                <input type="radio" name="q${globalIndex}" value="${j}">
+                                <span class="letter">${LETTERS[j]}</span>
+                                <span class="opt-text">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    ${!q.isGeneric ? `
+                    <div class="q-explanation" id="exp-${globalIndex}">
+                        <strong>التعليل: </strong>${q.explanation}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        pageHTML += `
+                </div>
                 <div class="footer-bar">
                     <div class="footer-brand">
                         <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
                         <div class="footer-brand-name">الدحيح</div>
                     </div>
-                    <div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | أنظمة معلومات المؤسسات</div>
+                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | امتحان أنظمة معلومات المؤسسات</div>
                 </div>
             </div>
         </div>
         `;
-    }
-    container.innerHTML = html;
+        return pageHTML;
+    });
+
+    container.innerHTML = pagesHTML.join('');
+
     updateProgress();
     updateSubmitBtn();
-    
-    setTimeout(resizePages, 100);
+    setTimeout(scalePages, 100);
 }
 
-function resizePages() {
-    const pages = document.querySelectorAll('.a4-page');
-    const maxWidth = 794;
+/* =========================================================
+   تصغير الورقة للموبايل
+   ========================================================= */
+function scalePages() {
+    const pageWidth = 794;
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
-    const availableWidth = viewportWidth - 20; 
-    
-    let scale = 1;
-    if (availableWidth < maxWidth) {
-        scale = availableWidth / maxWidth;
-    }
+    const availableWidth = viewportWidth - 20;
+    const scale = Math.min(1, availableWidth / pageWidth);
 
-    pages.forEach(page => {
-        const wrapper = page.parentElement;
-        
-        page.style.transform = 'none';
-        const actualHeight = page.offsetHeight;
-
+    document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+        const page = wrapper.querySelector('.a4-page');
         if (scale < 1) {
             page.style.transform = `scale(${scale})`;
             page.style.transformOrigin = 'top center';
             
-            wrapper.style.width = `${availableWidth}px`;
+            const actualHeight = page.offsetHeight; 
             wrapper.style.height = `${actualHeight * scale}px`;
         } else {
             page.style.transform = 'none';
-            wrapper.style.width = '100%';
             wrapper.style.height = 'auto';
         }
     });
 }
 
-window.addEventListener('load', resizePages);
-window.addEventListener('orientationchange', resizePages); 
+window.addEventListener('resize', scalePages);
+window.addEventListener('orientationchange', scalePages);
 
+/* =========================================================
+   التحديثات والدوال
+   ========================================================= */
 function updateProgress() {
     const answered = state.answers.filter(a => a !== null).length;
     const percent = (answered / QUIZ.length) * 100;
@@ -834,7 +826,7 @@ function updateSubmitBtn() {
         btn.innerHTML = 'تسليم الامتحان 🚀';
         btn.classList.add('ready');
     } else {
-        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 20px; font-size: 12px;">باقي ${missing}</span>`;
+        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(239,68,68,0.2); color: var(--neon-red); padding: 2px 10px; border-radius: 20px; font-size: 14px; border: 1px solid var(--neon-red);">باقي ${missing}</span>`;
         btn.classList.remove('ready');
     }
 }
@@ -859,7 +851,7 @@ window.goToQuestion = function(index) {
     if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         card.style.transition = "box-shadow 0.3s";
-        card.style.boxShadow = "0 0 20px rgba(6, 182, 212, 0.6)";
+        card.style.boxShadow = "0 0 30px var(--neon-yellow)";
         setTimeout(() => { card.style.boxShadow = ""; }, 1500);
     }
 };
@@ -938,6 +930,7 @@ window.submitExam = function() {
             }
         });
 
+        // إظهار زرار التعليل بعد التسليم
         const infoBtn = document.getElementById(`btn-${i}`);
         if (infoBtn) infoBtn.style.display = 'flex';
     });
@@ -951,26 +944,49 @@ window.submitExam = function() {
     const percent = Math.round((score / QUIZ.length) * 100);
     let msg = percent >= 80 ? "ممتاز! أداء رائع 🎉" : (percent >= 50 ? "جيد جداً، واصل التقدم 👍" : "لا بأس، حاول مرة أخرى 💪");
     
-    resultScore.innerHTML = `${score} <small>/ ${QUIZ.length}</small>`;
+    resultScore.innerText = `${score} / ${QUIZ.length}`;
     resultMsg.innerText = msg + (sent ? " (تم إرسال الدرجة للمنصة)" : "");
     resultCard.style.display = 'block';
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+/* =========================================================
+   فتح تعليل واحد بس (Accordion) مع فحص أمان
+   ========================================================= */
 window.toggleExplanation = function(index) {
     const expBox = document.getElementById(`exp-${index}`);
     const btn = document.getElementById(`btn-${index}`);
-    if (expBox && expBox.classList.contains('show')) {
-        expBox.classList.remove('show');
-        btn.classList.remove('active');
-    } else if (expBox) {
+    
+    if (!expBox || !btn) return;
+    
+    const isCurrentlyOpen = expBox.classList.contains('show');
+
+    document.querySelectorAll('.q-explanation').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.info-btn').forEach(el => el.classList.remove('active'));
+
+    if (!isCurrentlyOpen) {
         expBox.classList.add('show');
         btn.classList.add('active');
     }
+
+    setTimeout(scalePages, 50); 
 };
 
-renderPages();
+/* =========================================================
+   انتظار تحميل الخطوط قبل القياس والرسم
+   ========================================================= */
+function startRendering() {
+    renderPaginatedPages();
+}
+
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(startRendering).catch(startRendering);
+} else if (document.readyState === 'complete') {
+    startRendering();
+} else {
+    window.addEventListener('load', startRendering);
+}
 </script>
 </body>
 </html>
