@@ -101,7 +101,8 @@
             const watermarkText = `${name} - ${code}`;
 
             const iframe = document.createElement('iframe');
-            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:900px; height:100vh; border:none; background:#fff;';
+            // إعطاء طول كبير جداً للـ iframe لمنع أي قص في الصفحات الطويلة
+            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:900px; height:20000px; border:none; background:#fff;';
             
             iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 'admin=daheeh&t=' + Date.now();
             document.body.appendChild(iframe);
@@ -114,6 +115,23 @@
                     const shield = doc.getElementById('antiScreenshotShield');
                     if (shield) shield.style.display = 'none';
 
+                    // 1. إصلاح مشكلة المسافات الغريبة في اللغة العربية (إلغاء Justify)
+                    const allTextElements = doc.querySelectorAll('p, div, span, h1, h2, h3, h4, h5, h6, li, td');
+                    allTextElements.forEach(el => {
+                        const style = window.getComputedStyle(el);
+                        if (style.textAlign === 'justify') {
+                            el.style.setProperty('text-align', 'right', 'important');
+                        }
+                        el.style.setProperty('letter-spacing', 'normal', 'important');
+                        el.style.setProperty('word-spacing', 'normal', 'important');
+                    });
+
+                    // السماح بظهور كل المحتوى (إلغاء الإخفاء)
+                    doc.body.style.overflow = 'visible';
+                    doc.documentElement.style.overflow = 'visible';
+                    doc.body.style.height = 'auto';
+                    doc.documentElement.style.height = 'auto';
+
                     const gradientTitles = doc.querySelectorAll('*[style*="background-clip: text"], .gradient-text');
                     gradientTitles.forEach(el => {
                         el.style.background = 'none';
@@ -123,9 +141,9 @@
 
                     const bodyStyles = window.getComputedStyle(doc.body);
                     let bgColor = bodyStyles.backgroundColor;
-                    if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') bgColor = '#0F172A';
+                    if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') bgColor = '#ffffff';
                     
-                    let rgb = [15, 23, 42];
+                    let rgb = [255, 255, 255];
                     const rgbMatch = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
                     if (rgbMatch) rgb = [parseInt(rgbMatch[1]), parseInt(rgbMatch[2]), parseInt(rgbMatch[3])];
 
@@ -153,8 +171,12 @@
                     const pages = doc.querySelectorAll('.a4-page');
                     if (pages.length > 0) {
                         for (let i = 0; i < pages.length; i++) {
-                            const canvas = await html2canvas(pages[i], { scale: 3, useCORS: true, logging: false, backgroundColor: bgColor });
-                            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                            pages[i].style.overflow = 'visible';
+                            pages[i].style.height = 'auto';
+                            
+                            // التصوير بـ scale 2 عشان الرامات متسقطش ويقص الصفحة
+                            const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, logging: false, backgroundColor: bgColor });
+                            const imgData = canvas.toDataURL('image/jpeg', 0.95);
                             if (i > 0) pdf.addPage();
                             fillBackground();
                             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
@@ -162,8 +184,11 @@
                         }
                     } else {
                         const containerToCapture = doc.getElementById('pagesContainer') || doc.body;
-                        const canvas = await html2canvas(containerToCapture, { scale: 3, useCORS: true, logging: false, backgroundColor: bgColor });
-                        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                        containerToCapture.style.overflow = 'visible';
+                        containerToCapture.style.height = 'auto';
+
+                        const canvas = await html2canvas(containerToCapture, { scale: 2, useCORS: true, logging: false, backgroundColor: bgColor, windowHeight: containerToCapture.scrollHeight });
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
                         const imgHeightInMM = (canvas.height * pdfWidth) / canvas.width;
                         let heightLeft = imgHeightInMM;
                         let position = 0;
