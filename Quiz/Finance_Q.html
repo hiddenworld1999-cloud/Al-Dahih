@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>أسئلة الميد - المالية العامة (محلولة)</title>
+    
+    <!-- ================= بداية كود الحماية ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+    <style>
+        * { -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important; -webkit-touch-callout: none !important; }
+        @media print { html, body { display: none !important; } }
+        #antiScreenshotShield { position: fixed; inset: 0; background: #020202; color: #ffffff; display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 999999; font-family: 'Cairo', sans-serif; text-align: center; }
+        #watermarkGrid { position: fixed; inset: 0; pointer-events: none; z-index: 99998; overflow: hidden; display: flex; flex-wrap: wrap; justify-content: space-around; align-content: space-around; opacity: 0.12; }
+        .watermark-item { transform: rotate(-25deg); color: #ffffff; font-size: 15px; font-weight: 800; white-space: nowrap; padding: 35px; font-family: monospace; user-select: none; mix-blend-mode: difference; text-shadow: 0 0 2px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6); }
+    </style>
+    <script>
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || localStorage.getItem('daheeh_is_admin') === 'true';
+        if (!isDev) {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || e.key === 'F12') { e.preventDefault(); }
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+            let sName = "طالب الدحيح", sCode = "";
+            try { sName = localStorage.getItem('studentName') || "طالب الدحيح"; sCode = localStorage.getItem('studentCode') || "0000"; } catch (e) {}
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية ================= -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #F3F4F6; --bg-page: #FDFBF7; --text-main: #1F2937; --text-muted: #4B5563;
+            --emerald-dark: #064E3B; --emerald-light: #10B981; --gold-primary: #D4AF37; --gold-light: #FDE047;
+            --navy-blue: #1E3A8A; --red-alert: #B91C1C; --heading-main: #4C1D95; --border-color: #E5E7EB;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden !important; width: 100%; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; padding: 20px 5px; display: flex; flex-direction: column; align-items: center; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 8px; }
+
+        .page-container { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; max-width: 100vw; overflow: hidden; }
+        .a4-page { background-color: var(--bg-page); width: 850px; flex-shrink: 0; min-height: 1080px; height: max-content; padding: 18px 24px 45px 24px; border: 2px solid var(--gold-primary); border-radius: 4px; box-shadow: var(--card-shadow); position: relative; display: flex; flex-direction: column; transform-origin: top center; }
+        .a4-page::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--emerald-dark), var(--gold-primary), var(--navy-blue)); z-index: 10; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg'); background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.04; pointer-events: none; z-index: 0; filter: grayscale(100%); }
+        .content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; flex-grow: 1; }
+
+        .hero-header { text-align: center; padding: 0 0 10px; margin-bottom: 8px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
+        .hero-header h1 { font-family: 'Amiri', serif; font-size: 3rem; font-weight: 700; color: var(--heading-main); margin-bottom: 2px; }
+        .hero-header p { font-size: 1.45rem; color: var(--navy-blue); font-weight: 700; }
+        
+        .section-divider { background: linear-gradient(90deg, rgba(6, 78, 59, 0.1), rgba(212, 175, 55, 0.1)); border: 1px dashed var(--gold-primary); color: var(--heading-main); text-align: center; padding: 6px; border-radius: 8px; font-weight: 800; margin: 8px 0; font-size: 1.55rem; }
+
+        .q-card { background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 9px 13px; margin-bottom: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: relative; border-right: 4px solid var(--gold-primary); }
+        .q-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 5px; }
+        .q-head-right { display: flex; align-items: center; gap: 10px; }
+        .q-num { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 6px; background: rgba(76, 29, 149, 0.1); color: var(--heading-main); font-weight: 800; font-size: 21px; }
+        
+        .info-btn { width: 32px; height: 32px; border-radius: 50%; background: transparent; border: 2px solid var(--navy-blue); color: var(--navy-blue); font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; }
+        .info-btn:hover { background: rgba(30, 58, 138, 0.1); }
+        .info-btn.active { background: var(--navy-blue); color: #FFF; }
+
+        .q-text { margin: 0 0 8px 0; font-size: 1.45rem; font-weight: 700; line-height: 1.55; color: var(--heading-main); }
+
+        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .option { position: relative; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px; min-height: 52px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: #F9FAFB; font-size: 1.3rem; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+        .option .opt-text { flex: 1; }
+        .option.correct { border-color: var(--emerald-light); background: rgba(16, 185, 129, 0.1); box-shadow: 0 0 8px rgba(6, 78, 59, 0.1); }
+        .option.correct .opt-text { color: var(--emerald-dark); font-weight: 800; }
+        .option .mark { margin-inline-start: auto; font-size: 21px; font-weight: bold; color: var(--emerald-light); }
+
+        .q-explanation { display: none; margin-top: 7px; padding: 8px 12px; background: rgba(253, 224, 71, 0.15); border: 1px dashed var(--gold-primary); border-radius: 6px; font-size: 1.3rem; font-weight: 600; color: #78350F; line-height: 1.55; }
+        .q-explanation strong { color: var(--navy-blue); }
+        .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .footer-bar { position: absolute; bottom: 10px; left: 22px; right: 22px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 6px; z-index: 2; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 25px; height: 25px; border-radius: 50%; border: 1.5px solid var(--gold-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 15px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div id="pagesContainer" style="display: contents;"></div>
+<script>
+const QUIZ = [
+    { text: "1. ............. هي التي لا تؤدى الى زيادة الانتاج القومى بشكل مباشر ولكنها تؤدى الى اعادة توزيع الدخل القومي وتقدمها الدولة الى الافراد بدون مقابل.", options: ["أ- النفقات الحقيقية", "ب- النفقات الغير عادية", "ج- النفقات الرأسمالية", "د- النفقات التحويلية"], correct: 3, explanation: "النفقات التحويلية لا تزيد الإنتاج مباشرة، بل تعيد توزيع الدخل وتُقدم بدون مقابل مثل الدعم والإعانات." },
+    { text: "2. ............. تعنى \"ينبغي ان يهدف الإنفاق العام الى تحقيق اقصى منفعة اجتماعية\".", options: ["أ- قاعدة المنفعة", "ب- قاعدة الاقتصاد", "ج- قاعدة الترخيص", "د- صفة النقدية"], correct: 0, explanation: "قاعدة المنفعة تنص على ضرورة تحقيق الإنفاق العام لأقصى منفعة اجتماعية ممكنة." },
+    { text: "3. هي التي يقوم باشباعها الافراد او الهيئات الخاصة.", options: ["أ- الحاجات العامة", "ب- الحاجات الخاصة", "ج- الحاجات شبه العامة", "د- لاشئ مما سبق"], correct: 1, explanation: "الحاجات الخاصة أو الفردية هي التي يقوم الأفراد أو الهيئات الخاصة بإشباعها بناءً على رغبتهم." },
+    { text: "4. يتم الاعتماد على ............. عند ترتيب المشروعات المناسبة للانفاق عليها.", options: ["أ- المنافع الصافية", "ب- التكاليف", "ج- المنافع الاجمالية", "د- المنافع النسبية"], correct: 3, explanation: "نرتب المشروعات بناءً على نسبة المنافع إلى التكاليف (المنافع النسبية) وليس المنافع الصافية." },
+    { text: "5. ............ هي تلك الحاجات التي تقوم باشباعها الدولة فقط لتحقيق منفعة جماعية مثل الأمن والدفاع والقضاء.", options: ["أ- الحاجات الخاصة", "ب- الحاجات العامة", "ج- الحاجات شبه العامة", "د- لاشئ مما سبق"], correct: 1, explanation: "الحاجات العامة (الجماعية) تقدمها الدولة فقط لتحقيق منفعة جماعية غير قابلة للتجزئة." },
+    { text: "6. من الأسباب الحقيقيه لتزايد الانفاق العام:", options: ["أ- أسباب اقتصادية", "ب- أسباب مالية", "ج- أسباب اجتماعية", "د- جميع ما سبق"], correct: 3, explanation: "الأسباب الحقيقية تشمل الاقتصادية والاجتماعية والسياسية والإدارية، وكلها تؤدي لزيادة فعلية في الخدمات." },
+    { text: "7. من عناصر المالية العامة:", options: ["أ- الموازنة العامة", "ب- النفقات العامة", "ج- الإيرادات العامة", "د- كل ما سبق"], correct: 3, explanation: "المالية العامة تتكون من ثلاثة عناصر: النفقات العامة + الإيرادات العامة + الموازنة العامة." },
+    { text: "8. ............ هي مبلغ من المال تنفقه الدولة او احدى المؤسسات العامة التي تتبعها بقصد إشباع حاجة عامة.", options: ["أ- الإيرادات العامة", "ب- النفقات العامة", "ج- الموازنة العامة", "د- لا شيء مما سبق"], correct: 1, explanation: "هذا هو التعريف الدقيق للنفقات العامة." },
+    { text: "9. ظهرت المالية العامة مع ظهور أفكار الاقتصادي............", options: ["أ- ادم سميث", "ب- كينز", "ج- هيوم", "د- فاجنر"], correct: 1, explanation: "ظهرت مع أفكار جون ماينارد كينز عام 1936 في كتابه 'النظرية العامة'." },
+    { text: "10. ............ هي تلك الأسباب التي تؤدي إلى تضخم الرقم الحسابي للنفقات العامة دون أن تقابله زيادة في كمية السلع والخدمات المستخدمة في إشباع الحاجات العامة.", options: ["أ- الأسباب الحقيقية", "ب- الأسباب الاقتصادية", "ج- الأسباب الظاهرية", "د- الأسباب الاجتماعية"], correct: 2, explanation: "الأسباب الظاهرية هي مجرد تضخم رقمي (مثل التضخم وارتفاع الأسعار) دون زيادة فعلية في الخدمات." },
+    { text: "11. هي النفقات اللازمة لادارة اجهزة الدولة وتمكينها من الحصول على السلع والخدمات لاشباع حاجات جارية.", options: ["أ- النفقات الجارية", "ب- النفقات الرأسمالية", "ج- النفقات التحويلية", "د- النفقات غير العادية"], correct: 0, explanation: "النفقات الجارية مخصصة لتسيير العمل اليومي للدولة مثل المرتبات والصيانة." },
+    { text: "12. من الأسباب الظاهرية لتزايد الانفاق العام:", options: ["أ- ارتفاع المستوى العام للأسعار", "ب- انخفاض قيمة العملة", "ج- تغير القواعد المالية", "د- جميع ما سبق"], correct: 3, explanation: "كل هذه عوامل تؤدي إلى ارتفاع الرقم الحسابي للنفقات دون زيادة حقيقية." },
+    { text: "13. من أهداف المالية العامة:", options: ["أ- تحقيق الاستقرار الاقتصادي", "ب- توفير الخدمات العامة", "ج- تحقيق العدالة الاجتماعية", "د- كل ما سبق"], correct: 3, explanation: "المالية العامة تهدف لتحقيق الاستقرار وتوفير الخدمات والعدالة الاجتماعية." },
+    { text: "14. ............ تعني أن \"النفقة العامة يجب أن تُصرف من قبل هيئة عامة بأموال عامة من قبل سلطة مختصة\".", options: ["أ- قاعدة المنفعة", "ب- قاعدة الترخيص", "ج- قاعدة الاقتصاد", "د- صفة النقدية"], correct: 1, explanation: "قاعدة الترخيص تعني أن الإنفاق يجب أن يكون من سلطة مختصة قانوناً." },
+    { text: "15. يتم حساب المنافع النسبية عن طريق ........", options: ["أ- (المنافع + التكاليف)", "ب- (المنافع - التكاليف)", "ج- (المنافع ÷ التكاليف)", "د- (المنافع × التكاليف)"], correct: 2, explanation: "المنفعة النسبية = إجمالي المنافع ÷ إجمالي التكاليف." },
+    { text: "16. من محددات حجم النفقات العامة ............", options: ["أ- قدرة الدولة على تحقيق الإيرادات العامة", "ب- النفقات التحويلية", "ج- مستوى النشاط الاقتصادي", "د- أ و ج معا"], correct: 3, explanation: "محددات حجم النفقات تشمل دور الدولة، قدرتها على الإيرادات (أ)، ومستوى النشاط الاقتصادي (ج)." },
+    { text: "17. تستطيع الدولة ان تأخذ ثمنها كاملا\" او قد تأخذ اقل من ثمنها وقد لا تأخذ اي مقابل نظير هذه الخدمات.", options: ["أ- الحاجات الخاصة", "ب- الحاجات شبه العامة", "ج- الحاجات العامة", "د- لاشئ مما سبق"], correct: 1, explanation: "الحاجات شبه العامة (كالتعليم والصحة) قابلة للتجزئة وممكن تقدم مجاناً أو بمقابل." },
+    { text: "18. بمقتضاه تتم النفقات الحقيقة مقابل تقديم خدمة، مثل الخدمات التعليمية أما النفقات التحويلية لا يوجد لها مقابل كالإعانات.", options: ["أ- معيار المقابل", "ب- معيار الزيادة المباشرة في الإنتاج", "ج- معيار الانتظام والدورية", "د- معيار القائم بالاستهلاك المباشر للموارد"], correct: 0, explanation: "معيار المقابل يفرق بين النفقات الحقيقية (لها مقابل) والتحويلية (بدون مقابل)." },
+    { text: "19. هي التي تؤدى مباشرة الى زيادة الانتاج القومى الجارى اى هي نفقات منتجة وهى نفقات بمقابل.", options: ["أ- النفقات التحويلية", "ب- النفقات الحقيقية", "ج- الموازنة العامة", "د- معيار الترخيص"], correct: 1, explanation: "النفقات الحقيقية تؤدي لزيادة مباشرة في الإنتاج." },
+    { text: "20. تتمثل في الإعانات الحكومية الممنوحة للمشروعات إنتاجية معينة بهدف زيادة الإنتاج والبيع بأسعار منخفضة كما هو الحال في السلع والخدمات الضرورية أو التصديرية.", options: ["أ- النفقات التحويلية الاجتماعية", "ب- النفقات التحويلية الاقتصادية", "ج- النفقات التحويلية المالية", "د- النفقات الإدارية"], correct: 1, explanation: "النفقات التحويلية الاقتصادية تهدف لتحقيق التوازن الاقتصادي ودعم الإنتاج." },
+    { text: "21. هي مبلغ من النقود تجبيه الدولة جبرا\" من الأفراد دون مقابل وذلك لغرض تمويل نفقاتها العامة.", options: ["أ- النفقات العامة", "ب- الضريبة", "ج- الرسوم", "د- الدومين"], correct: 1, explanation: "هذا تعريف الضريبة." },
+    { text: "22. من خصائص الضرائب:", options: ["أ- تدفع جبرا", "ب- ليس لها مقابل معين", "ج- تدفع بصفة نهائية", "د- كل ما سبق"], correct: 3, explanation: "الضريبة تتميز بالجبرية، وبدون مقابل، والدفع النهائي، وتكون في صورة نقدية." },
+    { text: "23. الوعاء الذي يختاره المشرع المالى ويفرض عليها الضريبة هذا الوعاء اما ان تكون شخصا\" او مالا\"", options: ["أ- التهرب الضريبي", "ب- الوعاء الضريبي", "ج- الازدواج الضريبي", "د- نقل عبء الضريبة"], correct: 1, explanation: "الوعاء الضريبي هو المادة (شخص أو مال) التي تفرض عليها الضريبة." },
+    { text: "24. نسبة ما يدفعه المكلف كضريبة الى مقدار الوعاء الضريبى او المادة الخاضعة لها", options: ["أ- نسبة الضريبة", "ب- الوعاء الضريبى", "ج- الازدواج الضريبى", "د- نقل عبء الضريبة"], correct: 0, explanation: "هذا هو تعريف سعر (نسبة) الضريبة." },
+    { text: "25. الظاهرة التي يحاول بواسطتها الشخص المكلف بدفع الضريبة التهرب من دفعها كلها او بعضها.", options: ["أ- التهرب الضريبي", "ب- الوعاء الضريبى", "ج- الازدواج الضريبى", "د- نقل عبء الضريبة"], correct: 0, explanation: "التهرب الضريبي هو محاولة التخلص من الضريبة." },
+    { text: "26. تفرض على مجموع الدخل الصافي الذي يحصل عليه الممول خلال العام ويقدم به اقرار ضريبي واحد الى الادارة الضريبية يوضح فيه كل انواع دخله الذي يحصل عليه خلال العام", options: ["أ- الضريبة على الثروة", "ب- الضريبة العقارية", "ج- الضريبة على المبيعات", "د- الضريبة على الدخل"], correct: 3, explanation: "هذا هو نظام الضريبة على مجموع الدخل." },
+    { text: "27. الضرائب على الدخل والثروة من الضرائب ............", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 1, explanation: "الضرائب على الدخل والثروة تُصنف كضرائب مباشرة." },
+    { text: "28. الضرائب على المبيعات والانفاق من ............", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 0, explanation: "الضرائب على المبيعات والإنفاق تُصنف كضرائب غير مباشرة." },
+    { text: "29. ............ هي التي يتحمل عبئها دافع الضريبة نفسه اى انه لا ينقل عبئها.", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 1, explanation: "الضرائب المباشرة لا تنقل العبء، بل يتحملها دافعها." },
+    { text: "30. ............ هي التي تفرض على الدخل عند انفاقه", options: ["أ- الضرائب غير المباشرة", "ب- الضرائب المباشرة", "ج- وعاء الضريبة", "د- الازدواج الضريبية"], correct: 0, explanation: "الضرائب غير المباشرة تفرض عند الإنفاق (الشراء)." },
+    { text: "1. إذا كانت النفقة تتم بانتظام أو بصفة دورية تعتبر نفقة عادية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النفقات العادية هي التي تتكرر بانتظام في كل موازنة." },
+    { text: "2. تتم النفقات الحقيقة مقابل تقديم خدمة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النفقات الحقيقية لها مقابل خدمة أو إنتاج (مثل الأجور)." },
+    { text: "3. تتميز جميع تنظيمات المالية العامة بخضوعها لسلطة الدولة بصورة مباشرة او غير مباشرة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "المالية العامة تخضع دائماً لسلطة الدولة (مظهر تنظيمي)." },
+    { text: "4. تعتبر المالية الخاصة الوسيلة الرئيسية لتمويل الخدمات العامة التي يحتاجها المجتمع.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: المالية العامة هي الوسيلة الرئيسية لتمويل الخدمات العامة، وليست الخاصة." },
+    { text: "5. تكون الحاجة فردية اذ قام الافراد بمهمة اشباعها وجماعية اذا قامت الدولة باشباعها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو معيار طبيعة من يقوم بالإشباع." },
+    { text: "6. تؤثر النفقات العامة في الناتج القومي عن طريق تأثيرها في حجم الطلب الكلي الفعال.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النفقات العامة تؤثر على الطلب الكلي ومن ثم الناتج." },
+    { text: "7. الحاجات العامة هي تلك الحاجات التى يتم توزيع اشباعها بين القطاع الخاص والحكومة ومن أمثلة هذه السلع التعليم والصحة والاسكان والمواصلات.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هذا تعريف الحاجات (شبه العامة) وليست العامة." },
+    { text: "8. الحاجات العامة يتميز بعدم امكان تجزئتها وبالتالى فهي ليس للبيع وتقدمها الدولة مجانا\" لكافة الافراد مثل خدمات الدفاع الخارجي.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "الحاجات العامة غير قابلة للتجزئة وتقدم مجاناً." },
+    { text: "9. ظهرت المالية العامة مع انخفاض دور الدولة في النشاط الاقتصادي.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: ظهرت مع (تزايد) دور الدولة في النشاط الاقتصادي." },
+    { text: "10. في الفكر التقليدى للمالية العامة كان يجب التقيد بمبدأ تساوى النفقات العامة مع الايرادات وضغط النفقات العامة الى اقصى حد وعدم اللجوء الى مصادر استثنائية في الحصول على الايرادات مثل القروض او الاصدار النقدى الجديد.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذه هي سمات الفكر التقليدي (المفهوم الضيق)." },
+    { text: "11. لا تُعد من النفقات العامة تلك التي يقوم بها القطاع الخاص او المختلط تنفيذاً لسلطات الدولة الآمرة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النفقة العامة يجب أن تصدر من الدولة أو هيئاتها العامة." },
+    { text: "12. من الأسباب الحقيقية لتزايد الإنفاق العام ارتفاع مستوى الأسعار.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: ارتفاع الأسعار هو من الأسباب (الظاهرية) وليس الحقيقية." },
+    { text: "13. من الأهداف الرئيسية للمالية العامة هو تحقيق الاستقرار الاقتصادي.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "تحقيق الاستقرار الاقتصادي من أهم الأهداف." },
+    { text: "14. منذ ظهور أفكار أدم سميث، أصبح علم المالية العامة من أهم الأدوات التى تستخدم فى مواجهة الأزمات الاقتصادية والاجتماعية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: أفكار (كينز) هي التي جعلت المالية العامة أداة لمواجهة الأزمات." },
+    { text: "15. النفقات غير العادية تتعدى الفترة المالية التي أنفقت خلالها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "صحيح، النفقات غير العادية (كبناء السدود) يمتد أثرها لموازنات لاحقة." },
+    { text: "16. يتم إشباع الحاجات الخاصة أو الفردية من خلال نشاط الدولة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: الحاجات الخاصة يشبعها الأفراد أو الهيئات الخاصة." },
+    { text: "17. يتمثل التوزيع الأولى للدخل فى النفقات التحويلية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: التوزيع الأول يتم عن طريق النفقات (الحقيقية)، والتحويلية للتوزيع الثاني." },
+    { text: "18. يعتبر صدور النفقة من أحد اشخاص القانون العام شرطا ضروريا وكافيا لاعتبار النفقة عامة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: شرط ضروري ولكن ليس كافياً، يجب أيضاً تحقيق نفع عام." },
+    { text: "19. الضريبة هي مبلغ من النقود تجبيه الدولة جبرا\" من الأفراد دون مقابل وذلك لغرض تمويل نفقاتها العامة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو التعريف الصحيح للضريبة." },
+    { text: "20. من خصائص الضريبة أنها تدفع بصفة اختيارية وليست جبرية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: الضريبة تدفع (جبراً) وليس اختيارياً." },
+    { text: "21. أهم ما يميز الضرائب بأنها ليس لها مقابل معين.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "الضريبة لا ترتبط بخدمة معينة كالرسوم." },
+    { text: "22. تُدفع الضريبة بصفة نهائية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "من خصائص الضريبة أنها تدفع بصفة نهائية." },
+    { text: "23. الضريبة فريضة جبرية بمعنى ان الخاضعين لها ليس لديهم خيار في دفعها من عدمه بل انهم ملزمين بادائها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "الجبرية تعني الإلزام دون خيار." },
+    { text: "24. الضرائب لا تهدف الى تحقيق نفع عام.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: الضرائب تهدف لتحقيق نفع عام وأهداف اقتصادية واجتماعية." },
+    { text: "25. يقصد بالازدواج الضريبى هو فرض الضريبة نفسها اكثر من مرة على الشخص ذاته وعن المال نفسه وفى المدة ذاتها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو التعريف الدقيق للازدواج الضريبي." },
+    { text: "26. يقصد بالتهرب الضريبى هى الظاهرة التى يحاول بواسطتها الشخص المكلف بدفع الضريبة التهرب من دفعها كلها او بعضها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو تعريف التهرب الضريبي." },
+    { text: "27. الضرائب المباشرة هى التى يتمكن دافعها من نقل عبئها الى غيره من الاشخاص.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: الضرائب (المباشرة) لا تنقل العبء، بل يتحملها دافعها." },
+    { text: "28. الضرائب غير المباشرة هى التى يتحمل عبئها دافع الضريبة نفسه اى انه لا ينقل عبئها.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: الضرائب (غير المباشرة) يمكن نقل عبئها للغير." },
+    { text: "29. تراعى الضرائب المباشرة مبادئ العدالة الضريبية فكل ممول يدفع بناء على مقدرته التكليفية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "الضرائب المباشرة تراعي العدالة بناءً على المقدرة المالية." },
+    { text: "30. الضريبة على الدخل تفرض على مجموع الدخل الصافى الذى يحصل عليه الممول خلال العام ويقدم به اقرار ضريبى واحد الى الادارة الضريبية يوضح فيه كل انواع دخله الذى يحصل عليه خلال العام.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو نظام الضريبة على مجموع الدخل." }
+];
+const container = document.getElementById('pagesContainer');
+const QUESTIONS_PER_PAGE = 5;
+function renderPages() {
+    let html = '';
+    const totalPages = Math.ceil(QUIZ.length / QUESTIONS_PER_PAGE);
+    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+        const start = pageIndex * QUESTIONS_PER_PAGE;
+        const pageQuestions = QUIZ.slice(start, start + QUESTIONS_PER_PAGE);
+        html += `
+        <div class="page-container">
+            <div class="a4-page">
+                <div class="watermark"></div>
+                <div class="content-wrapper">
+                    ${pageIndex === 0 ? `<header class="hero-header"><h1>أسئلة الميد - المالية العامة</h1><p>أسئلة محلولة</p></header>` : ''}
+                    ${pageQuestions.map((q, qIndex) => {
+                        const globalIndex = start + qIndex;
+                        let sectionDivider = '';
+                        if (globalIndex === 30) { sectionDivider = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`; }
+                        return `
+                        ${sectionDivider}
+                        <div class="q-card">
+                            <div class="q-head"><div class="q-head-right"><span class="q-num">${globalIndex + 1}</span><button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button></div></div>
+                            <p class="q-text">${q.text}</p>
+                            <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                                ${q.options.map((opt, j) => `<div class="option ${j === q.correct ? 'correct' : ''}"><span class="opt-text">${opt}</span>${j === q.correct ? '<span class="mark">✓</span>' : ''}</div>`).join('')}
+                            </div>
+                            <div class="q-explanation" id="exp-${globalIndex}"><strong>التعليل: </strong>${q.explanation}</div>
+                        </div>`;
+                    }).join('')}
+                </div>
+                <div class="footer-bar"><div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div><div class="footer-center-text">صفحة ${pageIndex + 1} من ${totalPages} | مراجعة محلولة</div></div>
+            </div>
+        </div>`;
+    }
+    container.innerHTML = html;
+    setTimeout(resizePages, 100);
+}
+function resizePages() {
+    const pages = document.querySelectorAll('.a4-page');
+    const maxWidth = 850;
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const availableWidth = viewportWidth - 10; 
+    let scale = 1;
+    if (availableWidth < maxWidth) { scale = availableWidth / maxWidth; }
+    pages.forEach(page => {
+        const wrapper = page.parentElement;
+        page.style.transform = 'none';
+        const actualHeight = page.offsetHeight;
+        if (scale < 1) {
+            page.style.transform = `scale(${scale})`;
+            page.style.transformOrigin = 'top center';
+            wrapper.style.width = `${availableWidth}px`;
+            wrapper.style.height = `${actualHeight * scale}px`;
+        } else {
+            page.style.transform = 'none';
+            wrapper.style.width = '100%';
+            wrapper.style.height = 'auto';
+        }
+    });
+}
+window.addEventListener('load', resizePages);
+window.addEventListener('orientationchange', resizePages); 
+window.toggleExplanation = function(index) {
+    const expBox = document.getElementById(`exp-${index}`);
+    const btn = document.getElementById(`btn-${index}`);
+    if (expBox && expBox.classList.contains('show')) { expBox.classList.remove('show'); btn.classList.remove('active'); } 
+    else if (expBox) { expBox.classList.add('show'); btn.classList.add('active'); }
+};
+renderPages();
+</script>
+</body>
+</html>
