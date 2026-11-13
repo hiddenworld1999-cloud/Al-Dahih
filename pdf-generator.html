@@ -101,8 +101,8 @@
             const watermarkText = `${name} - ${code}`;
 
             const iframe = document.createElement('iframe');
-            // عرض ثابت 1024 بكسل لضمان التنسيق، وطول تلقائي
-            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:1024px; border:none; background:#fff;';
+            // عرض ثابت 1024 بكسل لضمان تصميم الكمبيوتر المستقر، وطول كبير جداً
+            iframe.style.cssText = 'position:fixed; left:-9999px; top:0; width:1024px; height:15000px; border:none; background:#fff;';
             
             iframe.src = cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 'admin=daheeh&t=' + Date.now();
             document.body.appendChild(iframe);
@@ -115,18 +115,27 @@
                     const shield = doc.getElementById('antiScreenshotShield');
                     if (shield) shield.style.display = 'none';
 
-                    // تنظيف التصميم وإصلاح المسافات
+                    // تنظيف التصميم وإصلاح المسافات (بدون التدخل في الهيكل عشان ميبوظش)
                     const style = doc.createElement('style');
                     style.innerHTML = `
+                        /* حل مشكلة تباعد الحروف */
                         * { letter-spacing: normal !important; word-spacing: normal !important; }
+                        
+                        /* تحويل الضبط الكلي ليمين لمنع المسافات الغريبة في العربي */
                         p, div, span, h1, h2, h3, h4, li, td { text-align: right !important; }
+                        
+                        /* منع الألوان الداكنة وفرض مقاس ثابت */
                         body, html { 
                             background-color: #ffffff !important; 
                             color: #000000 !important; 
                             width: 1024px !important; 
                             margin: 0 auto !important; 
                         }
+                        
+                        /* إخفاء السكرول بار */
                         ::-webkit-scrollbar { display: none; }
+                        
+                        /* منع قص الصور */
                         img { max-width: 100% !important; height: auto !important; }
                     `;
                     doc.head.appendChild(style);
@@ -147,43 +156,17 @@
                         }
                     };
 
-                    // 🔥 السر هنا: جمع كل العناصر اللي مفروض متتقصش (كروت الأسئلة أو العناوين)
-                    // افترضنا هنا إن كروت الأسئلة واخده كلاسات معينة، تقدر تعدلهم لو مختلفين عندك
-                    const elementsToCapture = doc.querySelectorAll('.quiz-opt, [id^="question_block_"], .card, section, .a4-page, h1, h2, h3');
-                    
-                    let yPosition = 10; // الهامش العلوي في ملف الـ PDF
-
-                    if (elementsToCapture.length > 0) {
-                        for (let i = 0; i < elementsToCapture.length; i++) {
-                            const el = elementsToCapture[i];
-                            const canvas = await html2canvas(el, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' });
+                    const pages = doc.querySelectorAll('.a4-page');
+                    if (pages.length > 0) {
+                        for (let i = 0; i < pages.length; i++) {
+                            // التصوير بـ scale 2 لضمان الجودة وعدم سقوط الرامات
+                            const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1024 });
                             const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                            
-                            // حساب طول الصورة (العنصر) بالمقاس الجديد جوه الـ PDF
-                            const imgHeightInMM = (canvas.height * pdfWidth) / canvas.width;
-
-                            // لو العنصر ده هيتخطى مساحة الصفحة الحالية (هيتقص) -> افتح صفحة جديدة
-                            if (yPosition + imgHeightInMM > pdfHeight - 10) {
-                                pdf.addPage();
-                                yPosition = 10; // تصفير الهامش العلوي للصفحة الجديدة
-                            }
-                            
-                            // رسم الصورة (العنصر) في مكانها المظبوط
-                            pdf.addImage(imgData, 'JPEG', 0, yPosition, pdfWidth, imgHeightInMM);
-                            
-                            // تحديث موقع Y للعنصر اللي بعده
-                            yPosition += imgHeightInMM + 5; // +5 كمسافة صغيرة بين العناصر
-                        }
-                        
-                        // بعد ما نخلص كل الصفحات، نرسم العلامة المائية عليها كلها
-                        const totalPages = pdf.internal.getNumberOfPages();
-                        for (let p = 1; p <= totalPages; p++) {
-                            pdf.setPage(p);
+                            if (i > 0) pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, (canvas.height * pdfWidth) / canvas.width);
                             drawWatermark();
                         }
-
                     } else {
-                        // لو مفيش عناصر منفصلة (المحاضرة حتة واحدة)، هيطبق الطريقة العادية
                         const targetEl = doc.getElementById('pagesContainer') || doc.body;
                         const canvas = await html2canvas(targetEl, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1024, windowHeight: targetEl.scrollHeight });
                         const imgData = canvas.toDataURL('image/jpeg', 0.95);
@@ -209,7 +192,7 @@
                     const safeName = name.replace(/[\\/:*?"<>| ]/g, '_').trim();
                     const fileName = `محاضرة_${safeTitle}_${safeName}_${code}.pdf`;
                     
-                    // التحميل المباشر للـ PDF أوتوماتيكياً
+                    // 🔥 التحميل المباشر للـ PDF أوتوماتيكياً
                     pdf.save(fileName);
 
                     document.getElementById('loaderBox').style.display = 'none';
