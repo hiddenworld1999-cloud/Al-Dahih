@@ -157,15 +157,17 @@
             flex-grow: 1;
         }
 
+        /* تكبير الهيدر */
         .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); }
         .hero-header h1 {
             font-family: 'Amiri', serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700; color: var(--heading-main);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
-        .hero-header p { font-size: 16px; color: var(--navy-blue); font-weight: 700; }
+        .hero-header p { font-size: 18px; color: var(--navy-blue); font-weight: 700; }
 
+        /* تكبير الفاصل */
         .section-divider {
             background: linear-gradient(90deg, rgba(6, 78, 59, 0.1), rgba(212, 175, 55, 0.1));
             border: 1px dashed var(--gold-primary);
@@ -174,8 +176,8 @@
             padding: 6px;
             border-radius: 8px;
             font-weight: 800;
-            margin: 10px 0 15px 0;
-            font-size: 18px;
+            margin: 8px 0 12px 0;
+            font-size: 20px;
         }
 
         /* ============ كارت السؤال ============ */
@@ -184,7 +186,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px 15px; 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; /* تقليل المسافة بين الكروت */
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             position: relative;
             border-right: 4px solid var(--gold-primary);
@@ -195,33 +197,36 @@
             display: flex; align-items: center; justify-content: space-between;
             gap: 10px; margin-bottom: 8px;
         }
-        .q-head-right { display: flex; align-items: center; gap: 10px; }
+        .q-head-right { display: flex; align-items: center; gap: 12px; }
+        
+        /* تكبير رقم السؤال */
         .q-num {
             width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
             background: rgba(76, 29, 149, 0.1);
             color: var(--heading-main); 
-            font-weight: 800; font-size: 16px;
+            font-weight: 800; font-size: 17px;
         }
 
         .info-btn {
             display: flex;
-            width: 28px; height: 28px;
+            width: 30px; height: 30px;
             border-radius: 50%;
             background: transparent;
             border: 2px solid var(--navy-blue);
             color: var(--navy-blue);
-            font-size: 14px; font-weight: 800;
+            font-size: 15px; font-weight: 800;
             align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s;
         }
         .info-btn:hover { background: rgba(30, 58, 138, 0.1); }
         .info-btn.active { background: var(--navy-blue); color: #FFF; }
 
+        /* تكبير نص السؤال */
         .q-text {
             margin: 0 0 10px 0; 
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700; line-height: 1.5;
             color: var(--heading-main);
         }
@@ -233,6 +238,7 @@
             gap: 8px; 
         }
         
+        /* تكبير الخيارات */
         .option {
             position: relative;
             display: flex;
@@ -245,19 +251,19 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background: #F9FAFB;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.4;
         }
         
         .option .letter {
-            width: 24px; height: 24px;
+            width: 26px; height: 26px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 4px;
             background: #E5E7EB;
             color: var(--text-muted);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             flex-shrink: 0;
         }
@@ -281,7 +287,7 @@
             background: rgba(253, 224, 71, 0.15);
             border: 1px dashed var(--gold-primary);
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
             color: #78350F;
             line-height: 1.5;
@@ -425,58 +431,44 @@ function renderPaginatedPages() {
     
     const measureWrapper = document.createElement('div');
     measureWrapper.className = 'content-wrapper';
+    measureWrapper.style.padding = '0'; // إزالة أي بادينج افتراضي أثناء القياس
     measureBox.appendChild(measureWrapper);
 
     // 2. قياس الهيدر
-    measureWrapper.innerHTML = `
-        <header class="hero-header">
-            <h1>بنك أسئلة محلول ميد ترم</h1>
-            <p>مادة مالية عامة</p>
-        </header>
-    `;
+    measureWrapper.innerHTML = `<header class="hero-header"><h1>عنوان</h1><p>وصف</p></header>`;
     const headerH = measureWrapper.offsetHeight;
 
     // 3. قياس الفاصل
-    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
-    const dividerH = measureWrapper.offsetHeight + 15; // + margin
+    measureWrapper.innerHTML = `<div class="section-divider">فاصل</div>`;
+    const dividerH = measureWrapper.offsetHeight;
 
-    // 4. قياس كل سؤال
+    // 4. قياس كل سؤال (بدون أي إضافات وهمية)
     const qHeights = QUIZ.map((q) => {
-        // إخفاء زر التعليل للسؤال إذا كان شرحه قصير جداً أو مطابق للخيار الصحيح
-        const isGeneric = q.explanation === 'صح.' || q.explanation === 'خطأ.' || 
-                          q.explanation === q.options[q.correct] || 
-                          q.explanation.length <= q.options[q.correct].length + 3;
-        
         measureWrapper.innerHTML = `
             <div class="q-card">
                 <div class="q-head">
-                    <div class="q-head-right">
-                        <span class="q-num">1</span>
-                        ${!isGeneric ? `<button class="info-btn" style="display:flex;">!</button>` : ''}
-                    </div>
+                    <span class="q-num">1</span>
                 </div>
                 <p class="q-text">${q.text}</p>
                 <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
-                    ${q.options.map((opt, j) => {
-                        const isCorrect = (j === q.correct);
-                        return `
-                        <div class="option ${isCorrect ? 'correct' : ''}">
+                    ${q.options.map((opt, j) => `
+                        <div class="option">
                             <span class="letter">${LETTERS[j]}</span>
                             <span class="opt-text">${opt}</span>
-                            ${isCorrect ? '<span class="mark">✓</span>' : ''}
                         </div>
-                        `;
-                    }).join('')}
+                    `).join('')}
                 </div>
             </div>
         `;
-        return measureWrapper.offsetHeight + 12; // + margin
+        // offsetHeight هنا بيشمل الـ margin-bottom بتاع الكارت لأننا في flex container
+        return measureWrapper.offsetHeight;
     });
 
     document.body.removeChild(measureBox);
 
     // 5. التوزيع الذكي على الصفحات
-    const availableHeight = 1123 - 10 - 40 - 35; // مساحة الورقة (تقريبية بعد الفوتر والبادينج)
+    // طول الورقة 1123 - البادينج (10 فوق + 40 تحت) - مساحة الفوتر (تقريباً 30) = 1043
+    const availableHeight = 1123 - 10 - 40 - 30; 
     const pages = [];
     let currentPage = [];
     let currentHeight = 0;
@@ -515,7 +507,7 @@ function renderPaginatedPages() {
         if (pages.length === 0 && currentPage.length === 1) {
             currentHeight += headerH;
         }
-        if (i === 30) { // إضافة طول الفاصل لو حطيناه في الصفحة
+        if (i === 30) { 
             currentHeight += dividerH;
         }
     }
@@ -606,7 +598,7 @@ function renderPaginatedPages() {
 }
 
 /* =========================================================
-   تصغير الورقة للموبايل وإزالة المساحات السوداء
+   تصغير الورقة للموبايل
    ========================================================= */
 function scalePages() {
     const pageWidth = 794;
