@@ -122,7 +122,7 @@
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            line-height: 1.4;
+            line-height: 1.5;
             /* مساحة للشريط العلوي والسفلي */
             padding: 60px 0 90px 0;
             display: flex;
@@ -180,13 +180,13 @@
             padding: 0 10px; 
         }
         
-        /* ============ تصميم ورقة A4 ============ */
+        /* ============ تصميم ورقة A4 (مقاسات المحلول) ============ */
         .a4-page {
             background-color: var(--bg-page);
             width: 794px; 
             min-height: 1123px; 
             height: auto;
-            padding: 10px 10px 40px 10px;
+            padding: 10px 10px 40px 10px; 
             border: 1px solid rgba(0, 240, 255, 0.15);
             border-radius: 4px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
@@ -215,40 +215,41 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 2px 0 6px; margin-bottom: 6px; }
+        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
         .hero-header h1 {
-            font-size: 24px; font-weight: 900;
+            font-size: 28px; font-weight: 900;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
-        .hero-header p { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+        .hero-header p { font-size: 16px; color: var(--text-muted); font-weight: 600; }
 
         .main-title-banner {
             background: linear-gradient(90deg, rgba(176, 38, 255, 0.15), rgba(0, 240, 255, 0.15));
             border-right: 4px solid var(--neon-cyan); border-radius: 6px;
-            padding: 6px 12px; font-size: 15px; font-weight: 800; color: var(--neon-cyan);
-            margin: 4px 0 10px 0; display: flex; align-items: center; gap: 8px;
+            padding: 8px 15px; font-size: 16px; font-weight: 800; color: var(--neon-cyan);
+            margin: 5px 0 15px 0; display: flex; align-items: center; gap: 10px;
         }
 
         .section-divider {
             background: linear-gradient(90deg, rgba(176, 38, 255, 0.2), rgba(0, 240, 255, 0.2));
             border: 1px dashed var(--neon-cyan); color: var(--neon-cyan);
-            text-align: center; padding: 6px; border-radius: 6px;
-            font-weight: 800; margin: 6px 0 10px 0; font-size: 16px;
+            text-align: center; padding: 8px; border-radius: 8px;
+            font-weight: 800; margin: 8px 0 12px 0; font-size: 18px;
             box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
-        /* ============ كارت السؤال ============ */
+        /* ============ كارت السؤال (مقاسات المحلول) ============ */
         .q-card {
             background: var(--bg-card);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
+            padding: 12px 15px; 
+            margin-bottom: 10px; 
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
             position: relative;
+            border-right: 4px solid var(--neon-purple);
             transition: all 0.3s;
         }
 
@@ -272,42 +273,40 @@
 
         .q-head {
             display: flex; align-items: center; justify-content: space-between;
-            gap: 8px; margin-bottom: 6px;
+            gap: 10px; margin-bottom: 8px;
         }
-        .q-head-right { display: flex; align-items: center; gap: 8px; }
+        .q-head-right { display: flex; align-items: center; gap: 12px; }
         
         .q-num {
-            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
             border-radius: 6px; background: rgba(176, 38, 255, 0.15); color: var(--neon-purple);
-            font-weight: 800; font-size: 14px; border: 1px solid rgba(176, 38, 255, 0.3);
-            font-family: 'Fira Code', monospace;
+            font-weight: 800; font-size: 17px; font-family: 'Fira Code', monospace;
         }
 
         .info-btn {
-            display: none; width: 24px; height: 24px; border-radius: 50%;
+            display: none; width: 30px; height: 30px; border-radius: 50%;
             background: transparent; border: 2px solid var(--neon-cyan); color: var(--neon-cyan);
-            font-size: 12px; font-weight: 800; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s; font-family: 'Fira Code', monospace;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+            font-size: 15px; font-weight: 800; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
         }
         .info-btn:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
         .info-btn.active { background: var(--neon-cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(0, 240, 255, 0.8); }
 
         .q-text {
-            margin: 0 0 8px 0; font-size: 17px; font-weight: 700; line-height: 1.4; color: #FFFFFF;
+            margin: 0 0 10px 0; font-size: 19px; font-weight: 700; line-height: 1.5; color: #FFFFFF;
         }
 
-        /* ============ الخيارات (2x2) ============ */
+        /* ============ الخيارات (2x2) (مقاسات المحلول) ============ */
         .q-options {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
         }
         
         .option {
             position: relative; display: flex; flex-direction: row; align-items: center;
-            justify-content: flex-start; gap: 8px; min-height: 38px; padding: 6px 10px;
+            justify-content: flex-start; gap: 8px; min-height: 40px; padding: 8px 12px;
             border: 1px solid #333; border-radius: 6px; background: #111;
-            font-size: 15.5px; font-weight: 600; color: var(--text-main);
-            line-height: 1.3; cursor: pointer; transition: all 0.2s;
+            font-size: 17px; font-weight: 600; color: var(--text-main);
+            line-height: 1.4; cursor: pointer; transition: all 0.2s;
             overflow-wrap: break-word; word-break: break-word;
         }
         
@@ -315,9 +314,9 @@
         .option input { position: absolute; opacity: 0; pointer-events: none; }
         
         .option .letter {
-            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-            border-radius: 5px; background: rgba(255,255,255,0.05); color: var(--text-muted);
-            font-size: 13px; font-weight: 800; flex-shrink: 0;
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted);
+            font-size: 14px; font-weight: 800; flex-shrink: 0;
             font-family: 'Fira Code', monospace; transition: all 0.2s;
         }
         
@@ -333,24 +332,24 @@
         
         .option.correct { 
             border-color: var(--neon-green); background: rgba(0, 255, 65, 0.08); 
-            box-shadow: 0 0 12px rgba(0, 255, 65, 0.15);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
         }
         .option.correct .letter { background: var(--neon-green); color: #000; }
         .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
         
         .option.wrong { 
             border-color: var(--neon-red); background: rgba(255, 0, 60, 0.08); 
-            box-shadow: 0 0 12px rgba(255, 0, 60, 0.15);
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.15);
         }
         .option.wrong .letter { background: var(--neon-red); color: #fff; }
         .option.wrong .opt-text { color: var(--neon-red); }
 
-        .option .mark { margin-inline-start: auto; font-size: 18px; font-weight: bold; }
+        .option .mark { margin-inline-start: auto; font-size: 20px; font-weight: bold; }
 
         .q-explanation {
-            display: none; margin-top: 8px; padding: 8px 12px;
+            display: none; margin-top: 10px; padding: 10px 15px;
             background: rgba(0, 240, 255, 0.05); border: 1px dashed var(--neon-cyan);
-            border-radius: 6px; font-size: 15px; font-weight: 600;
+            border-radius: 6px; font-size: 17px; font-weight: 600;
             color: var(--text-main); line-height: 1.5;
         }
         .q-explanation strong { color: var(--neon-cyan); }
@@ -358,14 +357,14 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         .footer-bar {
-            position: absolute; bottom: 10px; left: 15px; right: 15px;
+            position: absolute; bottom: 12px; left: 25px; right: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; z-index: 2;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
         }
-        .footer-brand { display: flex; align-items: center; gap: 6px; }
-        .footer-logo { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
-        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--neon-cyan); }
-        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 800; }
 
         /* ============ الشريط السفلي (تسليم) ============ */
         .bottom-bar {
@@ -601,7 +600,7 @@ function renderPaginatedPages() {
     measureWrapper.className = 'content-wrapper';
     measureBox.appendChild(measureWrapper);
 
-    // قياس الهيدر
+    // قياس الهيدر والبينر
     measureWrapper.innerHTML = `
         <header class="hero-header">
             <h1>MIDTERM EXAM</h1>
@@ -638,7 +637,7 @@ function renderPaginatedPages() {
                 </div>
             </div>
         `;
-        return measureWrapper.offsetHeight + 8;
+        return measureWrapper.offsetHeight + 10; // + margin
     });
 
     document.body.removeChild(measureBox);
@@ -728,8 +727,8 @@ function renderPaginatedPages() {
                     <p class="q-text">${q.text}</p>
                     <div class="q-options">
                         ${q.options.map((opt, j) => `
-                            <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
-                                <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
+                            <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}" onclick="selectOption(${globalIndex}, ${j})">
+                                <input type="radio" name="q${globalIndex}" value="${j}">
                                 <span class="letter">${LETTERS[j]}</span>
                                 <span class="opt-text">${opt}</span>
                             </label>
@@ -916,6 +915,7 @@ window.submitExam = function() {
             }
         });
 
+        // إظهار زرار التعليل بعد التسليم
         const infoBtn = document.getElementById(`btn-${i}`);
         if (infoBtn) infoBtn.style.display = 'flex';
     });
