@@ -88,7 +88,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بنك أسئلة نظم المعلومات المحاسبية - الميد ترم</title>
+    <title>ملخص نظم المعلومات المحاسبية - الميد ترم</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -99,7 +99,6 @@
             --bg-light: #f8f9fa;
             --text-dark: #2c3e50;
             --border-color: #bdc3c7;
-            --success-color: #27ae60;
         }
 
         /* ======== إعدادات الشاشة (الموبايل والـ iframe) ======== */
@@ -111,7 +110,7 @@
             width: 100%;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* منع السكرول الأفقي */
+            overflow-x: hidden; /* منع أي سكرول أفقي */
         }
 
         body {
@@ -119,104 +118,147 @@
             background-color: #e0e0e0;
             color: var(--text-dark);
             line-height: 1.6;
-            display: block; /* إلغاء الفليكس عشان ميعملش مشاكل في الـ iframe */
         }
 
         .page {
-            width: 100%; /* ياخد عرض الشاشة */
-            max-width: 210mm; /* أقصى عرض لورقة A4 */
+            width: 100%; /* العرض كامل للشاشات الصغيرة */
+            max-width: 210mm; /* أقصى عرض لورقة A4 في الشاشات الكبيرة */
             background: white;
-            margin: 0 auto 15px auto;
-            padding: 15px; /* مساحة أمان للموبايل */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 10px auto;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: relative;
+            border-radius: 8px;
         }
 
-        /* إعدادات النصوص */
+        /* الغلاف */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 80vh;
+            border: 6px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .cover h1 {
+            font-size: clamp(24px, 6vw, 40px);
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        .cover h2 {
+            font-size: clamp(20px, 5vw, 30px);
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            background: none;
+            border: none;
+            font-weight: 900;
+        }
+        .cover .highlight {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: clamp(14px, 3.5vw, 18px);
+            margin-top: 20px;
+            font-weight: 700;
+        }
+
+        /* النصوص */
         h1, h2, h3, h4 { margin-top: 0; }
         h2 {
             color: var(--primary-color);
             border-bottom: 3px solid var(--secondary-color);
             padding-bottom: 5px;
-            font-size: 22px;
+            font-size: clamp(18px, 4vw, 22px);
             margin-bottom: 15px;
         }
         h3 {
             color: var(--secondary-color);
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             margin-top: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             background-color: var(--bg-light);
             padding: 5px 10px;
             border-right: 5px solid var(--primary-color);
         }
-        p, li { font-size: 15px; text-align: justify; margin-bottom: 8px; }
-        
-        /* التنسيقات الخاصة بالأسئلة */
-        .question-box {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed #e0e0e0;
+        h4 {
+            color: var(--text-dark);
+            font-size: clamp(14px, 3vw, 16px);
+            margin-bottom: 10px;
         }
-        .question-text {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 5px;
+        p, li { 
+            font-size: clamp(13px, 3vw, 15px); 
+            text-align: justify; 
+            margin-bottom: 8px;
         }
-        .options {
-            font-size: 14px;
-            margin-bottom: 5px;
-            color: #34495e;
-        }
-        .answer-box {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--success-color);
-            background-color: #e8f8f5;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-top: 5px;
-            display: inline-block;
-        }
-        .note-box {
-            font-size: 13px;
-            color: var(--accent-color);
-            font-weight: bold;
-            margin-top: 5px;
-        }
+        ul, ol { padding-right: 20px; margin-bottom: 15px; }
 
-        /* ======== الجداول (مهم جداً عشان متبوظش الشاشة) ======== */
+        /* الجداول (مهم جداً عشان متبوظش الشاشة) */
         .table-responsive {
             width: 100%;
-            overflow-x: auto;
+            overflow-x: auto; /* لو الجدول كبير، هيبقى فيه سكرول جواه */
             -webkit-overflow-scrolling: touch;
             margin-bottom: 15px;
+            border-radius: 4px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed; /* يخلي الجدول يلم نفسه في الشاشة */
-            word-wrap: break-word; /* يكسر الكلمات الطويلة */
+            word-wrap: break-word;
         }
         th, td {
             border: 1px solid var(--border-color);
             padding: 8px 5px;
             text-align: right;
             vertical-align: top;
-            font-size: 13px; /* تصغير خط الجدول شوية في الموبايل */
+            font-size: clamp(12px, 2.5vw, 14px);
         }
         th {
             background-color: var(--primary-color);
             color: white;
-            text-align: center;
             font-weight: 700;
+            text-align: center;
         }
         tr:nth-child(even) { background-color: #f2f4f6; }
 
+        /* الصناديق التنبيهية */
+        .exam-trap {
+            background-color: #fce8e6;
+            border-right: 5px solid var(--accent-color);
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-size: clamp(13px, 3vw, 15px);
+        }
+        .exam-trap strong { color: var(--accent-color); }
+        
+        .rule-box {
+            background-color: #e8f8f5;
+            border-right: 5px solid #1abc9c;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .formula {
+            background-color: #eaf2f8;
+            border: 2px dashed var(--secondary-color);
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: clamp(14px, 3.5vw, 16px);
+            margin: 15px 0;
+            border-radius: 8px;
+            color: var(--primary-color);
+        }
+
         /* الفوتر */
         .footer {
-            position: relative;
             margin-top: 20px;
             padding-top: 10px;
             display: flex;
@@ -234,12 +276,11 @@
         }
         .footer-name { color: var(--accent-color); font-size: 18px; font-weight: 900; }
 
-        /* ======== إعدادات الطباعة (A4) ======== */
+        /* ======== إعدادات الطباعة A4 ======== */
         @page {
             size: A4;
             margin: 0;
         }
-
         @media print {
             body { background-color: white; }
             .page { 
@@ -247,13 +288,16 @@
                 padding: 15mm 15mm 25mm 15mm; 
                 box-shadow: none; 
                 width: 210mm; 
-                min-height: 297mm; 
+                height: 297mm; 
                 max-width: 210mm;
-                page-break-after: always;
+                page-break-after: always; 
+                overflow: hidden;
+                border-radius: 0;
             }
-            .question-box { page-break-inside: avoid; }
-            table { table-layout: auto; } /* في الطباعة الجدول ياخد راحته */
+            .table-responsive { overflow: visible; }
+            table { table-layout: auto; }
             th, td { font-size: 15px; padding: 10px; }
+            .cover { height: 100%; min-height: 100%; border: 10px solid var(--primary-color); }
             #antiScreenshotShield { display: none !important; }
         }
     </style>
@@ -262,10 +306,10 @@
 
     <!-- صفحة الغلاف -->
     <div class="page">
-        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 60vh; padding: 20px 0;">
-            <h1 style="font-size: 32px; color: var(--primary-color); margin-bottom: 15px; line-height: 1.3;">بنك أسئلة نظم المعلومات المحاسبية</h1>
-            <h2 style="font-size: 26px; color: var(--accent-color); margin-bottom: 30px; background: none; border: none; font-weight: 900;">للميد ترم</h2>
-            <div style="background-color: var(--primary-color); color: white; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: 700;">شامل المحلول + أسئلة التدريب + بنك الأسئلة المصحح</div>
+        <div class="cover">
+            <h1>ملخص نظم المعلومات المحاسبية</h1>
+            <h2>للميد ترم</h2>
+            <div class="highlight">الملخص الشامل + قواعد حل الأسئلة</div>
         </div>
         <div class="footer">
             <div class="footer-logo">
@@ -276,1113 +320,564 @@
         </div>
     </div>
 
-    <!-- القسم الأول: بنك الأسئلة المصحح (ملف الوورد) -->
+    <!-- قواعد الحل -->
     <div class="page">
-        <h2>القسم الأول: بنك الأسئلة المصحح (ملف الوورد)</h2>
+        <h2>قواعد حل أي سؤال (ابدأ من هنا)</h2>
         
-        <h3>أولاً: أسئلة الاختيار من متعدد</h3>
+        <div class="rule-box">
+            <h3>أولاً: كلمات تقلب السؤال (غالباً تكون الإجابة خطأ)</h3>
+            <ul>
+                <li><strong>فقط / لا يوجد / لا يشترط / دائماً:</strong> غالباً الجملة خطأ، لأن العلم فيه أكثر من اختيار (مثال: التحول بالتوازي فقط، لا يوجد فرق بين البيانات والمعلومات).</li>
+                <li><strong>ثلاثة عناصر فقط:</strong> اقرأ العدد بدقة (النظام اليدوي 3، والإلكتروني 4).</li>
+                <li><strong>جميع ما سبق:</strong> غالباً هي الإجابة لو الاختيارات من نفس الموضوع.</li>
+                <li><strong>أ و ب معاً:</strong> لو واحد منهم غلط سقطت الإجابة.</li>
+            </ul>
+        </div>
+
+        <h3>ثانياً: أزواج متشابهة (أكثر مكان بتصيد فيه الدكتورة)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>لو السؤال بيقول...</th><th>الصح...</th></tr>
+                <tr><td>النظام المحاسبي رئيسي</td><td>نظام فرعي من نظام المنشأة</td></tr>
+                <tr><td>مجلس الإدارة مستخدم خارجي</td><td>داخلي. الخارجيون: عملاء، موردون، مساهمون، نقابات، مقرضون، جهات حكومية</td></tr>
+                <tr><td>دفاتر الأستاذ من المجموعة المستندية</td><td>من المجموعة الدفترية. المستندية: فواتير، أذون، إيصالات</td></tr>
+                <tr><td>الفصل بين الواجبات مقوم محاسبي</td><td>مقوم إداري للرقابة الداخلية</td></tr>
+                <tr><td>جداول القرارات من تحليل العمليات</td><td>من تصميم عمليات التشغيل (حسب إجابة الدكتورة)</td></tr>
+                <tr><td>خرائط تدفق البرامج تصميم عمليات التشغيل</td><td>صح</td></tr>
+                <tr><td>من عيوب خرائط المستندات: صورة واضحة عن خطوط الاتصال</td><td>ده من مميزاتها</td></tr>
+                <tr><td>قيمة المعلومة في عدم التأكد = العائد - التكلفة</td><td>ده قانون حالة التأكد</td></tr>
+                <tr><td>قيمة المعلومة = بعد - قبل (في التأكد)</td><td>ده قانون عدم التأكد</td></tr>
+                <tr><td>KWS من مكونات النظام اليدوي</td><td>KWS نوع من أنواع النظم (أنظمة العمل المعرفية)</td></tr>
+                <tr><td>حساب الأرباح والخسائر من القوائم الرئيسية</td><td>القوائم: الدخل، المركز المالي، التدفقات النقدية، حقوق الملكية</td></tr>
+                <tr><td>النظم الطبيعية = أداء عملية معينة</td><td>ده تعريف النظم التشغيلية (المصنوعة)</td></tr>
+                <tr><td>إمكانية التحقق من الخصائص الأساسية (حسب الإطار الدولي)</td><td>من الخصائص المعززة</td></tr>
+                <tr><td>وضع عناوين خارجية من ضوابط المدخلات</td><td>من ضوابط الرقابة على التشغيل الإلكتروني (حسب الكتاب)</td></tr>
+            </table>
+        </div>
+
+        <h3>ثالثاً: خطوات الحل السريعة</h3>
+        <ul>
+            <li><strong>صح وخطأ:</strong> دور على كلمة مطلقة، ثم على أي تبديل بين أزواج الجدول السابق.</li>
+            <li><strong>اختر من متعدد:</strong> استبعاد الاختيار الغلط واحد واحد، وعند أ و ب معاً تأكد من كل واحد.</li>
+            <li><strong>مسائل قيمة المعلومات:</strong> حدد حالة التأكد أو عدم التأكد من أول جملة (انظر الفصل الثاني).</li>
+        </ul>
+
+        <div class="footer">
+            <div class="footer-logo">
+                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
+                <span class="footer-name">الدحيح</span>
+            </div>
+            <div>قواعد الحل</div>
+        </div>
+    </div>
+
+    <!-- الفصل الأول -->
+    <div class="page">
+        <h2>الفصل الأول: المفاهيم الأساسية للنظم</h2>
         
-        <div class="question-box">
-            <div class="question-text">1. تعريف النظم التشغيلية:</div>
-            <div class="options">أ) نظم طبيعية لا يتدخل فيها الإنسان &nbsp;|&nbsp; ب) وسيلة يتحقق من خلالها أداء عملية معينة &nbsp;|&nbsp; ج) نظم تقاس بمعدلات افتراضية &nbsp;|&nbsp; د) نظم لا ترتبط بأهداف</div>
-            <div class="answer-box">الإجابة: ب</div>
-            <div class="note-box">ملاحظة: الطبيعية = من صنع الله، التشغيلية = مصنوعة.</div>
+        <h3>1. تعريف النظام والمنشأة كنظام</h3>
+        <p><strong>النظام:</strong> مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل مع بعضها لتحقيق هدف محدد. يكون من نظم فرعية، والتفاعل بينها يتحقق بتوصيل المعلومات المناسبة. أمثلة: النظام التعليمي، النظام الصحي، نظام المعلومات المحاسبي.</p>
+        <p><strong>المنشأة كنظام:</strong> المنشأة تتكون من نظم فرعية (الأقسام)، وكل نظام فرعي يساهم في الهدف الكلي (مستوى كاف من الربح مثلاً). الهدف الجزئي لازم يكون في إطار الهدف الكلي، ولازم تفاعل بين النظم الفرعية والبيئة الخارجية. نظام المعلومات بالمنشأة أحد النظم الفرعية (نظام تشغيل البيانات).</p>
+
+        <h3>2. خصائص وعناصر النظام (9 خصائص)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>#</th><th>الخاصة</th><th>المعنى المختصر</th></tr>
+                <tr><td>1</td><td>يتضمن موارد</td><td>مالية (رأس المال، اقتراض) مادية (مهمات، أجهزة) بشرية (محاسبون، محللون)</td></tr>
+                <tr><td>2</td><td>أهداف مترابطة وعلاقات متبادلة</td><td>كل نظام له هدف، والأهداف تحدد طريقة العمل وإدارة الموارد</td></tr>
+                <tr><td>3</td><td>التكامل: بيئة وحدود</td><td>البيئة المجال المحيط، والحدود تفصل النظام عن بيئته. يصعب تحديد حد فاصل بينهما</td></tr>
+                <tr><td>4</td><td>مراحل وعناصر</td><td>المراحل: أعمال منظمة يمر بها العمل. العناصر: الأدوات التي تنفذها</td></tr>
+                <tr><td>5</td><td>القيود</td><td>عوامل تحد من تحقيق الأهداف: داخلية (ندرة الموارد) أو خارجية (الطلب)</td></tr>
+                <tr><td>6</td><td>الترتيب الهرمي</td><td>نظام يتكون من نظم فرعية تتقسم لأدنى (أكاديمية MCI ثم المعهد ثم الأقسام)</td></tr>
+                <tr><td>7</td><td>التغذية العكسية</td><td>استعادة جزء من البيانات المشغلة وإعادتها مدخلات لجولة تشغيل جديدة</td></tr>
+                <tr><td>8</td><td>المدخلات والمخرجات</td><td>أي نظام يستقبل مدخلات وينتج مخرجات</td></tr>
+                <tr><td>9</td><td>التحويل</td><td>تحويل المدخلات إلى مخرجات (الإنتاج يحول المواد الخام لمنتجات)</td></tr>
+            </table>
         </div>
 
-        <div class="question-box">
-            <div class="question-text">2. جمع البيانات وتسجيلها وتصنيفها وتحويلها وتلخيصها تعتبر من:</div>
-            <div class="options">أ) الخصائص الأساسية &nbsp;|&nbsp; ب) الوظائف الأساسية &nbsp;|&nbsp; ج) المكونات الأساسية &nbsp;|&nbsp; د) لا شيء</div>
-            <div class="answer-box">الإجابة: ب</div>
-            <div class="note-box">ملاحظة: وظائف نظام المعلومات المحاسبي.</div>
+        <h3>3. أنواع (تصنيف) النظم: 7 تصنيفات</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>التصنيف</th><th>الأنواع والتعريف</th></tr>
+                <tr><td>1. من حيث النشأة</td><td><strong>طبيعية:</strong> لا يتدخل الإنسان في وجودها (الكون، جسم الإنسان). <br><strong>تشغيلية (مصنوعة):</strong> وسيلة يتحقق بها أداء عملية معينة (النظام المحاسبي، التعليم).</td></tr>
+                <tr><td>2. من حيث ظروف الإعداد</td><td><strong>محددة:</strong> نتائجها تقاس وتنتبأ بمخرجاتها بتأكيد (الحاسب الآلي). <br><strong>محتملة:</strong> تنتبأ بالاحتمالات (القرارات في ظل المخاطرة). <br><strong>مستقرة:</strong> علاقاتها محددة وأي اضطراب مؤقت.</td></tr>
+                <tr><td>3. من حيث العلاقة بالبيئة</td><td><strong>مفتوحة:</strong> تتأثر وتؤثر في البيئة (المنشآت الصناعية). <br><strong>مغلقة:</strong> لا تفاعل مع البيئة (التجارب الكيميائية، الساعة).</td></tr>
+                <tr><td>4. النشاط والمجال</td><td><strong>النشاط:</strong> زراعية، صناعية، تجارية، خدمية. <br><strong>المجال:</strong> كيميائية، فيزيائية، طبية.</td></tr>
+                <tr><td>5. التعديل للتكيف</td><td><strong>معدلة:</strong> تعدل نفسها ذاتياً عند تغير البيئة (بنك ينتقل للحاسبات). <br><strong>غير معدلة:</strong> لا تستطيع.</td></tr>
+                <tr><td>6. مدى التعقد</td><td><strong>معقدة:</strong> عدد كبير من النظم الفرعية وعلاقات. <br><strong>بسيطة:</strong> عدد قليل.</td></tr>
+                <tr><td>7. المستوى</td><td><strong>رئيسية:</strong> شاملة تضم عناصر. <br><strong>فرعية:</strong> جزء أصغر يتبع الرئيسي.</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> في سؤال التصنيف دور على الكلمة المفتاحية: يتدخل الإنسان = تشغيل، تلقائي = طبيعي. يتفاعل مع البيئة = مفتوح.
         </div>
 
-        <div class="question-box">
-            <div class="question-text">3. من ضوابط المكونات المادية للحاسب:</div>
-            <div class="options">أ) المراجعة العكسية بين الحاسب المركزي والوحدات المساعدة &nbsp;|&nbsp; ب) التأكد من شرعية التعامل مع الجهاز &nbsp;|&nbsp; ج) المراجعة بطريقة الأداء المزدوج &nbsp;|&nbsp; د) جميع ما سبق</div>
-            <div class="answer-box">الإجابة: د</div>
-            <div class="note-box">ملاحظة: تصحيح أ هي "العكسية" مش "اللحظية".</div>
+        <h3>4. النموذج العام للنظام (5 مكونات)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المكون</th><th>المعنى</th></tr>
+                <tr><td>المدخلات</td><td>العناصر التي تخضع للتحويل. مدخلات النظام هي البيانات (المادة الخام).</td></tr>
+                <tr><td>المخرجات</td><td>النتائج التي يسعى النظام لتحقيقها: المعلومات (مالية أو عينية، نسب، تقارير).</td></tr>
+                <tr><td>عمليات التشغيل</td><td>الجانب الفني: تحويل البيانات إلى معلومات بالمعالجة المنطقية.</td></tr>
+                <tr><td>التغذية العكسية</td><td>مطابقة المخرجات بالأهداف للتأكد من الفعالية، وتعمل معلومات مرتدة توجه الأنشطة.</td></tr>
+                <tr><td>الرقابة</td><td>متابعة وتقييم المعلومات المرتدة وتحديد الانحرافات واتخاذ إجراءات تعديل.</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> التغذية العكسية والرقابة مرتبطان لكن مختلفان: التغذية العكسية رقابة مبنية على معلومات مرتبطة بالمخرجات، والرقابة هي محصلة المعرفة السابقة عن كيفية عمل النظام.
         </div>
 
-        <div class="question-box">
-            <div class="question-text">4. من ضوابط حماية النظام الإلكتروني:</div>
-            <div class="options">أ) الرقابة على التعديلات &nbsp;|&nbsp; ب) اختبار النظام &nbsp;|&nbsp; ج) التأكد من الموافقة على التطوير &nbsp;|&nbsp; د) لا شيء مما سبق</div>
-            <div class="answer-box">الإجابة: د</div>
-            <div class="note-box">ملاحظة: أ، ب، ج ضوابط تطوير وتوثيق النظام.</div>
+        <h3>5. قالب تحليل أي منشأة كنظام (مثال الشركة الصناعية)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>العنصر</th><th>المثال: شركة أدوات كهربائية</th></tr>
+                <tr><td>الهدف العام</td><td>ربحية مناسبة واستمرارية مع رضا العملاء</td></tr>
+                <tr><td>النظم الفرعية</td><td>الإنتاج، التسويق والمبيعات، الموارد البشرية، التمويل والمحاسبة، المعلومات</td></tr>
+                <tr><td>المدخلات</td><td>مواد خام، عمالة، بيانات مالية، بيانات سوقية، طاقة</td></tr>
+                <tr><td>عمليات التحويل</td><td>تحويل المواد لمنتجات، تشغيل البيانات المالية، جدولة الإنتاج</td></tr>
+                <tr><td>المخرجات</td><td>منتجات نهائية، تقارير مالية، معلومات إدارية، قرارات</td></tr>
+                <tr><td>البيئة الخارجية</td><td>الموردون، العملاء، القوانين، المنافسون، الظروف الاقتصادية</td></tr>
+                <tr><td>التغذية العكسية</td><td>تقارير الأداء، شكاوى العملاء، مقارنة الفعلي بالمخطط</td></tr>
+                <tr><td>التصنيف</td><td>مفتوح، معقد، تشغيلي (مصنوع)، قابل للتعديل</td></tr>
+            </table>
         </div>
-
-        <div class="question-box">
-            <div class="question-text">5. من ضوابط الرقابة على المخرجات:</div>
-            <div class="options">أ) مقارنة بيانات الفترة &nbsp;|&nbsp; ب) مراجعة توزيع المخرجات &nbsp;|&nbsp; ج) وضع عناوين خارجية &nbsp;|&nbsp; د) أ، ب معاً</div>
-            <div class="answer-box">الإجابة: د</div>
-            <div class="note-box">ملاحظة: تصحيح ب "توزيع" المخرجات. العناوين الخارجية من ضوابط المدخلات والملفات.</div>
-        </div>
-
-        <div class="question-box">
-            <div class="question-text">6. من مصادر المعلومات المتاحة لمحلل النظم:</div>
-            <div class="options">أ) المستندات &nbsp;|&nbsp; ب) وسائط هيكل النظام &nbsp;|&nbsp; ج) استطلاع الرأي &nbsp;|&nbsp; د) أ، ج معاً</div>
-            <div class="answer-box">الإجابة: د</div>
-            <div class="note-box">ملاحظة: تصحيح ب "وسائط" مش "بساطة".</div>
-        </div>
-
-        <div class="question-box">
-            <div class="question-text">7. خطوات تصميم نظم المعلومات المحاسبية:</div>
-            <div class="options">أ) المسح الميداني الشامل &nbsp;|&nbsp; ب) تصميم النظام الجديد &nbsp;|&nbsp; ج) تطبيق النظام الجديد &nbsp;|&nbsp; د) جميع ما سبق</div>
-            <div class="answer-box">الإجابة: د</div>
-        </div>
-
-        <div class="question-box">
-            <div class="question-text">8. دورة تحليل وتصميم نظم المعلومات المحاسبية:</div>
-            <div class="options">أ) تحليل وتصميم النظام &nbsp;|&nbsp; ب) تنفيذ النظام المقترح &nbsp;|&nbsp; ج) تقييم النظام الجديد &nbsp;|&nbsp; د) أ، ب معاً</div>
-            <div class="answer-box">الإجابة: د</div>
-            <div class="note-box">ملاحظة: إجابة البنك. التقييم (ج) منطقياً جزء من الدورة، اسأل الدكتورة.</div>
-        </div>
-
-        <div class="question-box">
-            <div class="question-text">9. عملية تدفق الإجراءات والمستندات تتمثل في:</div>
-            <div class="options">أ) بدء العملية &nbsp;|&nbsp; ب) إدارة المشتريات &nbsp;|&nbsp; ج) المستندات النهائية &nbsp;|&nbsp; د) جميع ما سبق</div>
-            <div class="answer-box">الإجابة: د</div>
-        </div>
-
         <div class="footer">
             <div class="footer-logo">
                 <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
                 <span class="footer-name">الدحيح</span>
             </div>
-            <div>بنك الأسئلة المصحح - صفحة 2</div>
+            <div>الفصل الأول</div>
         </div>
     </div>
 
-    <!-- بنك الأسئلة المصحح: صح وخطأ -->
+    <!-- الفصل الثاني -->
     <div class="page">
-        <h3>ثانياً: أسئلة الصواب والخطأ (بنك الأسئلة المصحح)</h3>
+        <h2>الفصل الثاني: طبيعة نظم المعلومات المحاسبية</h2>
 
-        <div class="question-box">
-            <div class="question-text">1. النظام مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل لتحقيق هدف محدد</div>
-            <div class="answer-box">الإجابة: صح</div>
-            <div class="note-box">ملاحظة: لو السؤال اتصاغ بـ"غير متداخلة" يبقى خطأ.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">2. من خصائص النظام وعناصره الموارد (بشرية، مادية، مالية) والتفاعل بين الأجزاء</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">3. لا يوجد خصائص للنظام المحاسبي</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: للنظام خصائص مميزة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">4. النظم الطبيعية لا يتدخل الإنسان في وجودها</div>
-            <div class="answer-box">الإجابة: صح</div>
-            <div class="note-box">ملاحظة: الكون، الكواكب، جسم الإنسان.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">5. لا يوجد فرق بين البيانات والمعلومات</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: البيانات مادة خام، المعلومات بيانات معالجة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. تعتبر المرونة من الخصائص الأساسية للمعلومات</div>
-            <div class="answer-box">الإجابة: صح</div>
-            <div class="note-box">ملاحظة: ضمن قائمة الـ10 خصائص بالمحاضرة. مش من خصائص الإطار الدولي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. لا يشترط توافر المعلومات في توقيت محدد</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: التوقيت المناسب شرط.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. لا يوجد اختلاف بين الخصائص الأساسية للمعلومات وفقاً للإطار المفاهيمي الدولي</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: أساسية (الملاءمة والتعبير الصادق) ومعززة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. نظام المعلومات المحاسبي هو النظام الرئيسي الذي يحول البيانات المحاسبية إلى معلومات</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: نظام فرعي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. لا تعتبر زيادة قنوات الاتصال في المنشأة من أهمية نظم المعلومات المحاسبية</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: من الأسباب الخمسة للأهمية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. يعتبر مجلس الإدارة من المستخدمين الخارجيين</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: مستخدم داخلي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. يتكون نظام المعلومات المحاسبي الإلكتروني من ثلاثة عناصر فقط</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: 4 عناصر بالمحاضرة (البنك قال 5). اليدوي هو اللي 3.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. تعتبر أنظمة العمل المعرفية (KWS) من مكونات النظام اليدوي</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: نوع/تصنيف من أنواع النظم.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. قيمة المعلومات في حالة عدم التأكد = عائد المعلومات − تكلفتها</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: ده قانون حالة التأكد.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. قيمة المعلومات = العائد بعد − العائد قبل الحصول عليها، في حالة التأكد</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: دي صيغة عدم التأكد، وفي التأكد: العائد − التكلفة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. تنقسم المجموعة المستندية إلى مستندات خارجية وداخلية</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. وفقاً لخريطة تدفق المستندات يمكن لإدارة المشتريات جمع الطلبات والتأكد من عدم توافرها بالمخازن</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">18. دفاتر الأستاذ المساعد والأستاذ العام من المجموعة المستندية</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: المجموعة الدفترية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">19. حساب الأرباح والخسائر من القوائم والتقارير المالية المنتهية في العام المالي</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: القوائم: الدخل، المركز المالي، التدفقات، حقوق الملكية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">20. الفصل بين الواجبات من المقومات المحاسبية</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: مقوم إداري. المحاسبية: دليل الحسابات، المستندية، الدفترية، دورة التقارير.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">21. تعتبر خرائط تدفق البرامج من تصميم عمليات التشغيل</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">22. تعتبر جداول القرارات من تحليل عمليات التشغيل</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: تصميم مش تحليل.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">23. يمكن اتخاذ قرار التحول للنظام الجديد بمدخل التحول المتوازي فقط</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: مباشر، متوازي، تدريجي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">24. لا توجد رموز نمطية لعمليات المدخلات والمخرجات والتشغيل</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: توجد رموز نمطية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">25. من عيوب خرائط تدفق المستندات إعطاء صورة واضحة عن خطوط الاتصال الرسمية</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: ده من مميزاتها.</div>
+        <h3>1. البيانات والمعلومات والمعرفة</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المصطلح</th><th>التعريف</th></tr>
+                <tr><td>البيانات (Data)</td><td>حقائق أو مشاهدات أو قياسات (أرقام أو رموز) مسجلة ولم تعالج بعد (شكل خام). مثال: اسم المورد، الكمية، أوامر البيع.</td></tr>
+                <tr><td>المعلومات (Information)</td><td>بيانات بعد تصنيفها وترتيبها وتلخيصها وعرضها (قوائم وتقارير) لتفيد في القرارات. زيادتها عن اللازم تسبب "عبء معلومات".</td></tr>
+                <tr><td>المعرفة (Knowledge)</td><td>تراكم رصيد من الحقائق والقواعد والمعلومات والخبرات في مجال ما.</td></tr>
+            </table>
         </div>
 
+        <h3>2. خصائص المعلومات العشرة الأساسية</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>الخاصة</th><th>المعنى</th><th>قابلة للقياس؟</th></tr>
+                <tr><td>السرعة والسهولة</td><td>سرعة وسهولة الحصول عليها</td><td>نعم</td></tr>
+                <tr><td>الدقة</td><td>خلوها من الأخطاء، وتزيد الثقة كلما قلت الأخطاء</td><td>—</td></tr>
+                <tr><td>الشمول</td><td>كاملة بدرجة توضح الرؤية لمتخذ القرار</td><td>لا، يصعب قياسها</td></tr>
+                <tr><td>الملاءمة</td><td>تناسب احتياجات المستخدمين والمشكلة</td><td>لا، يصعب قياسها</td></tr>
+                <tr><td>الوضوح</td><td>خلوها من الغموض والتناقض</td><td>—</td></tr>
+                <tr><td>المرونة</td><td>استخدامها لتلبية احتياجات أكثر من مستخدم</td><td>—</td></tr>
+                <tr><td>إمكانية التحقق</td><td>توافر الأدلة المستندية للرجوع إليها</td><td>—</td></tr>
+                <tr><td>الموضوعية</td><td>تحررها من التحيز: الحياد، صدق التعبير، إمكانية التحقق</td><td>—</td></tr>
+                <tr><td>القابلية للقياس</td><td>إمكانية القياس الكمي للمعلومات المنهجية</td><td>—</td></tr>
+                <tr><td>التوقيت المناسب</td><td>تتوافر لمتخذ القرار في الوقت المناسب</td><td>—</td></tr>
+            </table>
+        </div>
+
+        <h3>3. الخصائص حسب الإطار المفاهيمي للمعايير الدولية</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>النوع</th><th>الخصائص</th></tr>
+                <tr><td>نوعية أساسية</td><td><strong>الملاءمة (Relevance):</strong> القدرة على التأثير في القرارات.<br><strong>التعبير الصادق:</strong> يتحقق بثلاث خصائص: الاكتمال، الموضوعية، الدقة.</td></tr>
+                <tr><td>معززة أو مكملة</td><td>القابلية للفهم (الوضوح)، القابلية للمقارنة، القابلية للتحقق، التوقيت المناسب.</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> الأساسيتان بالإطار: الملاءمة والتعبير الصادق فقط. والتحقق والتوقيت معززة. (المحاضرة الأولى بتعد الاكتمال والموضوعية والدقة مع الملاءمة والتعبير الصادق، والنسخة الثانية بتجمعهم تحت التعبير الصادق).
+        </div>
+
+        <h3>4. مفهوم نظام المعلومات المحاسبية وأهميته</h3>
+        <p><strong>التعريف:</strong> هو النظام الفرعي الذي يحول البيانات المحاسبية إلى معلومات محاسبية ضرورية لتدعيم عملية صنع القرار. إطار يضم عناصر مادية وبشرية تعمل وفقاً لمفاهيم ومبادئ وقواعد محاسبية.</p>
+        <p><strong>أسباب الأهمية الخمسة:</strong> 1. النمو في حجم المنشأة. 2. ازدياد قنوات الاتصال. 3. تعدد أهداف المنشأة. 4. التأثر بالبيئة الخارجية. 5. التطورات التقنية.</p>
+
+        <h3>5. مستخدم المعلومات المحاسبية</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>النوع</th><th>من هم واحتياجهم</th></tr>
+                <tr><td>خارجيون</td><td>العملاء (الأسعار والمديونيات)، الموردون، المساهمون (تقييم الأداء)، النقابات العمالية (الأجور والأرباح)، المقرضون (المركز المالي)، الجهات الحكومية (الضرائب).</td></tr>
+                <tr><td>داخليون</td><td>كل المستويات الإدارية من الإدارة العليا (السياسات) إلى الدنيا (تنفيذ أهداف الأقسام). <strong>مجلس الإدارة منهم.</strong></td></tr>
+            </table>
+        </div>
+
+        <h3>6. الوظائف الأساسية (3 مجموعات)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المجموعة</th><th>الأنشطة</th></tr>
+                <tr><td>1. جمع البيانات</td><td>جمع وتسجيل، ترميز (حروف أو أرقام أو الاثنين)، تصنيف، فحص أو تدقيق، تحويل البيانات من وسيلة تخزين لأخرى.</td></tr>
+                <tr><td>2. تشغيل البيانات</td><td>فرز، إجراء العمليات المحاسبية، تلخيص.</td></tr>
+                <tr><td>3. إدارة البيانات</td><td>تخزين، تحديث وصيانة، استرجاع، رقابة البيانات، إنتاج المعلومات (تجميع، نقل، إعداد تقارير).</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> الفرز تشغيل، والتصنيف جمع. الرقابة على البيانات حماية لها كأصل وتأكد من صحتها، وهي من إدارة البيانات.
+        </div>
+
+        <h3>7. المكونات الأساسية</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>النظام</th><th>العناصر</th></tr>
+                <tr><td>اليدوي (3)</td><td>1) الموارد البشرية (الكفاءات).<br>2) مخزون البيانات.<br>3) الإجراءات (القواعد والتعليمات واللوائح).</td></tr>
+                <tr><td>الإلكتروني (4)</td><td>1) الأجهزة والمعدات المادية.<br>2) برامج الحاسب.<br>3) نظام إدارة قاعدة البيانات.<br>4) تكنولوجيا الاتصالات.</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> المحاضرة والكتاب: الإلكتروني 4 عناصر. "ثلاثة عناصر فقط" خطأ في الحالتين.
+        </div>
+
+        <h3>8. أنواع نظم المعلومات المحاسبية (من حيث المعالجة)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>الاختصار</th><th>الاسم</th><th>فكرته</th></tr>
+                <tr><td>TPS</td><td>معالجة العمليات</td><td>حجم كبير من البيانات والأعمال الروتينية.</td></tr>
+                <tr><td>OAS</td><td>ميكانة المكاتب</td><td>Word و Excel والبريد الإلكتروني.</td></tr>
+                <tr><td>KWS</td><td>العمل المعرفية</td><td>تساعد المهنيين في تطوير معلومات جديدة.</td></tr>
+                <tr><td>MIS</td><td>معلومات إدارية</td><td>تدعم وظائف أعمال أوسع من معالجة البيانات.</td></tr>
+                <tr><td>DSS</td><td>دعم القرارات</td><td>قواعد بيانات ونماذج إحصائية لقرارات شبه مهيكلة.</td></tr>
+                <tr><td>ES</td><td>النظم الخبيرة</td><td>خبرة متخذ القرار لتقديم المشورة في القرارات الصعبة.</td></tr>
+                <tr><td>GDSS</td><td>دعم القرارات الجماعية</td><td>قرارات كفريق عمل.</td></tr>
+                <tr><td>ESS</td><td>دعم التنفيذيين</td><td>للإدارة العليا، قرارات غير مهيكلة (استراتيجية).</td></tr>
+                <tr><td>ERP</td><td>التقنيات الحديثة</td><td>التجارة الإلكترونية، تخطيط موارد المنشأة.</td></tr>
+            </table>
+        </div>
+
+        <h3>9. قيمة المعلومات المحاسبية (أهم جزء للمسائل)</h3>
+        <p>للمعلومات تكلفة وقيمة، ولازم القيمة تزيد عن التكلفة. دور المعلومات الأساسي تقليل عدم التأكد عند متخذ القرار.</p>
+        
+        <div class="formula">
+            <strong>1. حالة التأكد التام (المعلومة تؤكد الحدث 100%):</strong><br>
+            قيمة المعلومة = (عائد البديل - تكلفته) - ثمن المعلومة
+        </div>
+
+        <div class="formula">
+            <strong>2. حالة عدم التأكد التام (المعلومة تغير الاحتمال فقط):</strong><br>
+            قيمة المعلومة = العائد بعد - العائد قبل<br>
+            العائد قبل = (قيمة البديل × الاحتمال القديم) - التكلفة<br>
+            العائد بعد = (قيمة البديل × الاحتمال الجديد) - (التكلفة + ثمن المعلومة)
+        </div>
+
+        <div class="formula">
+            <strong>3. المعلومات الكاملة (جدول بدائل وظروف):</strong><br>
+            قيمة المعلومة = المتوسط المتوقع مع المعلومات الكاملة - المتوسط المتوقع لأفضل بديل قبلها
+        </div>
+
+        <h4>مثال محلول 1: حالة التأكد (تمرين 1)</h4>
+        <p>احتمال البترول 30%، القيمة 180000، تكلفة الاستخراج 25000، والمعلومة تؤكد الوجود بنسبة 100% وثمنها 30000.</p>
+        <p><strong>الحل:</strong> قيمة المعلومة = (180000 - 25000) - 30000 = 125000 جنيه.</p>
+
+        <h4>مثال محلول 2: حالة عدم التأكد (تمرين 2)</h4>
+        <p>نفس البيانات لكن المعلومة ترفع الاحتمال إلى 55% وثمنها 60000.</p>
+        <p><strong>الحل:</strong> العائد قبل = (30% × 180000) - 25000 = 54000 - 25000 = 29000 جنيه.</p>
+        <p>العائد بعد = (55% × 180000) - (25000 + 60000) = 99000 - 85000 = 14000 جنيه.</p>
+        <p>قيمة المعلومة = 14000 - 29000 = -15000 جنيه. (المعلومة غير مجدية لأن ثمنها أعلى من فايدتها).</p>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> سلايد المحاضرة كتب 29000 - 14000 = 15000 (قلب الإشارة). في الامتحان اكتب حل الدكتور، لكن افهم إن الصح -15000 (خسارة). 
+        </div>
+
+        <h4>مثال محلول 3: المعلومات الكاملة (من الكتاب)</h4>
+        <p>ثلاثة بدائل عوائدها 400,000 و 700,000 و 500,000. المعلومات الإضافية تقول إن العوائد الفعلية 600,000 و 700,000 و 800,000، وتكلفتها 60,000.</p>
+        <p><strong>الحل:</strong> أفضل بديل قبل المعلومات = 700,000. أفضل بديل بعدها = 800,000. الزيادة = 100,000.</p>
+        <p>قيمة المعلومة = 100,000 - 60,000 = 40,000 جنيه. (ننصح بشرائها).</p>
         <div class="footer">
             <div class="footer-logo">
                 <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
                 <span class="footer-name">الدحيح</span>
             </div>
-            <div>بنك الأسئلة المصحح - صفحة 3</div>
+            <div>الفصل الثاني</div>
         </div>
     </div>
 
-    <!-- بنك الأسئلة المصحح: أسئلة جديدة -->
+    <!-- الفصل الثالث -->
     <div class="page">
-        <h3>ثالثاً: أسئلة جديدة (اختر من متعدد) - بنك الأسئلة المصحح</h3>
+        <h2>الفصل الثالث: مقومات نظم المعلومات المحاسبية</h2>
+        <p><strong>احفظ:</strong> المقومات السبعة: 1. المجموعة المستندية. 2. الدليل المحاسبي. 3. المجموعة الدفترية. 4. الأجهزة والبرامج. 5. قواعد وإجراءات التشغيل. 6. العناصر البشرية. 7. نظم الرقابة والمتابعة.</p>
 
-        <div class="question-box">
-            <div class="question-text">1. البيانات المحاسبية هي:</div>
-            <div class="options">أ) حقائق خام لم تُعالج &nbsp;|&nbsp; ب) تقارير جاهزة للقرار &nbsp;|&nbsp; ج) رصيد خبرات &nbsp;|&nbsp; د) قوائم مالية</div>
-            <div class="answer-box">الإجابة: أ</div>
+        <h3>1. المجموعة المستندية</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>النوع</th><th>التعريف</th><th>أمثلة</th></tr>
+                <tr><td>مستندات خارجية</td><td>تعد خارج المنشأة</td><td>فاتورة المشتريات، كشف حساب البنك، إيصالات السداد</td></tr>
+                <tr><td>مستندات داخلية</td><td>تعد داخل المنشأة</td><td>طلبات الشراء، أذون استلام النقدية، أوامر التوريد، أذون الصرف</td></tr>
+            </table>
         </div>
-        <div class="question-box">
-            <div class="question-text">2. الخصائص النوعية الأساسية حسب الإطار المفاهيمي:</div>
-            <div class="options">أ) المقارنة والتحقق &nbsp;|&nbsp; ب) الملاءمة والتعبير الصادق &nbsp;|&nbsp; ج) الفهم والتوقيت &nbsp;|&nbsp; د) السرعة والمرونة</div>
-            <div class="answer-box">الإجابة: ب</div>
+        <p><strong>أهمية المستندات:</strong> وسيلة اتصال بين الإدارات والجهات الخارجية، أداة إثبات ودليل موضوعي، أداة رقابة وتحقق من المسؤول، وسيلة لتحديد الدفاتر التي تسجل فيها.</p>
+        <p><strong>اعتبارات تصميم المستند:</strong> بيان الجهة التي حررته، كل البيانات بدون إيجاز مخل أو تفصيل ممل، التعبير عن الغرض، البساطة والوضوح، تحديد الدورات ومن له الحق في استلامه، توقيع المسئول.</p>
+        <p><strong>خرائط التدفق:</strong> أشكال نمطية وأسهم لرسم توزيع صور المستندات وخط سيرها وخطوط الاتصال بين الإدارات.</p>
+
+        <h4>دورة مستندات الشراء</h4>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المستند</th><th>من يحرره؟</th><th>عدد النسخ وتوزيعها</th></tr>
+                <tr><td>طلب شراء</td><td>الإدارة أو القسم المحتاج</td><td>أصل وصورة: الأصل للمشتريات والصورة تبقى لدى الطالب</td></tr>
+                <tr><td>أمر شراء (توريد)</td><td>إدارة المشتريات</td><td>أصل وثلاث صور: الأصل للمورد، صورة للحسابات، صورة للاستلام والفحص</td></tr>
+                <tr><td>محضر استلام</td><td>قسم الاستلام والفحص</td><td>أصل وأربع صور: الأصل للاستلام، وصور للمشتريات والحسابات والقسم الطالب وأمين المخزن</td></tr>
+                <tr><td>إذن وارد</td><td>أمين المخزن</td><td>أصل وصورة: صورة لإدارة التكاليف والأصل بالدفتر</td></tr>
+                <tr><td>إذن صرف</td><td>المخازن</td><td>أصل وصورتان: الأصل بالمخازن، صورة للطالب وصورة لإدارة التكاليف</td></tr>
+            </table>
         </div>
-        <div class="question-box">
-            <div class="question-text">3. من الخصائص التي تحقق التعبير الصادق:</div>
-            <div class="options">أ) الاكتمال &nbsp;|&nbsp; ب) المقارنة &nbsp;|&nbsp; ج) التوقيت &nbsp;|&nbsp; د) الفهم</div>
-            <div class="answer-box">الإجابة: أ</div>
-            <div class="note-box">ملاحظة: الاكتمال، الموضوعية، الدقة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">4. ليست من الخصائص المعززة:</div>
-            <div class="options">أ) المقارنة &nbsp;|&nbsp; ب) الفهم &nbsp;|&nbsp; ج) الموضوعية &nbsp;|&nbsp; د) التوقيت المناسب</div>
-            <div class="answer-box">الإجابة: ج</div>
-            <div class="note-box">ملاحظة: المعززة: فهم، مقارنة، تحقق، توقيت.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">5. تعتبر المعلومة ملائمة إذا كان لها قيمة:</div>
-            <div class="options">أ) توكيدية أو تنبؤية &nbsp;|&nbsp; ب) مالية فقط &nbsp;|&nbsp; ج) تاريخية فقط &nbsp;|&nbsp; د) لا شيء</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. من المستخدمين الخارجيين:</div>
-            <div class="options">أ) الإدارة العليا &nbsp;|&nbsp; ب) المساهمون &nbsp;|&nbsp; ج) مدير القسم &nbsp;|&nbsp; د) رئيس الحسابات</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. ليس من أسباب أهمية نظم المعلومات المحاسبية:</div>
-            <div class="options">أ) النمو في الحجم &nbsp;|&nbsp; ب) تعدد الأهداف &nbsp;|&nbsp; ج) انخفاض حجم المنشأة &nbsp;|&nbsp; د) التطورات التقنية</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. ترميز البيانات وتصنيفها وفحصها من وظائف:</div>
-            <div class="options">أ) جمع البيانات &nbsp;|&nbsp; ب) تشغيل البيانات &nbsp;|&nbsp; ج) إدارة البيانات &nbsp;|&nbsp; د) الرقابة</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. تخزين البيانات واسترجاعها وصيانتها من وظائف:</div>
-            <div class="options">أ) جمع البيانات &nbsp;|&nbsp; ب) تشغيل البيانات &nbsp;|&nbsp; ج) إدارة البيانات &nbsp;|&nbsp; د) لا شيء</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. ليس من مكونات النظام اليدوي:</div>
-            <div class="options">أ) الموارد البشرية &nbsp;|&nbsp; ب) مخزون البيانات &nbsp;|&nbsp; ج) الإجراءات &nbsp;|&nbsp; د) برامج الحاسب</div>
-            <div class="answer-box">الإجابة: د</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. النظام الذي لا يتفاعل مع بيئته ولا يتأثر بها:</div>
-            <div class="options">أ) مفتوح &nbsp;|&nbsp; ب) مغلق &nbsp;|&nbsp; ج) معدل &nbsp;|&nbsp; د) محتمل</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. النظم التي يتنبأ بنتائجها بالاحتمالات وليس بتأكيد:</div>
-            <div class="options">أ) محددة &nbsp;|&nbsp; ب) محتملة &nbsp;|&nbsp; ج) مستقرة &nbsp;|&nbsp; د) بسيطة</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. مطابقة المخرجات بالأهداف المحددة مقدماً:</div>
-            <div class="options">أ) الرقابة &nbsp;|&nbsp; ب) التغذية العكسية &nbsp;|&nbsp; ج) المدخلات &nbsp;|&nbsp; د) التحويل</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. TPS هي:</div>
-            <div class="options">أ) أنظمة معالجة العمليات &nbsp;|&nbsp; ب) أنظمة دعم القرارات &nbsp;|&nbsp; ج) النظم الخبيرة &nbsp;|&nbsp; د) نظم دعم التنفيذيين</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. عائد البديل 300000 وتكلفته 50000 وثمن المعلومة المؤكدة 40000. قيمة المعلومة (حالة التأكد):</div>
-            <div class="options">أ) 250000 &nbsp;|&nbsp; ب) 210000 &nbsp;|&nbsp; ج) 260000 &nbsp;|&nbsp; د) 90000</div>
-            <div class="answer-box">الإجابة: ب</div>
-            <div class="note-box">ملاحظة: 250000 − 40000.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. وضع عناوين خارجية من ضوابط:</div>
-            <div class="options">أ) المدخلات والملفات &nbsp;|&nbsp; ب) المخرجات &nbsp;|&nbsp; ج) المكونات المادية &nbsp;|&nbsp; د) التطوير</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. مداخل التحول للنظام الجديد:</div>
-            <div class="options">أ) المباشر فقط &nbsp;|&nbsp; ب) المتوازي فقط &nbsp;|&nbsp; ج) المباشر والمتوازي والتدريجي &nbsp;|&nbsp; د) لا شيء</div>
-            <div class="answer-box">الإجابة: ج</div>
+        <p><strong>خطوات سداد الموردين:</strong> طلب شراء ⬅️ تجمع المشتريات الطلبات ⬅️ أمر شراء ⬅️ استلام وفحص ⬅️ محضر استلام ⬅️ إذن وارد للمخازن ⬅️ الحسابات تحرر الشيكات وترسلها ⬅️ متابعة صرف الشيكات وقيدها.</p>
+
+        <h3>2. الدليل المحاسبي</h3>
+        <p>قائمة بأسماء الحسابات الأساسية والفرعية والتحليلية ورقم كل حساب.</p>
+        <p><strong>خطوات الإعداد:</strong> تحديد الحسابات المستخدمة، تقسيمها لمجموعات رئيسية (أصول، خصوم، مصروفات، إيرادات) ثم تفصيلية، ثم إعداد القائمة بإحدى طرق الترميز.</p>
+        <p><strong>فوائد الترميز:</strong> سهولة تمييز الحسابات وقيدها، اختصار البيانات وتوفير الوقت، سهولة التشغيل آلياً.</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>طريقة الترميز</th><th>التوضيح</th></tr>
+                <tr><td>بالحروف الأبجدية</td><td>الأصول ص، الأصول الثابتة ص/ت. تناسب المنشآت الصغيرة فقط.</td></tr>
+                <tr><td>بالأرقام</td><td>أرقام متتابعة (1 أصول، 2 خصوم)، أو كتل رقمية، أو أرقام عشرية (1,1 للأصول الثابتة)، أو مجموعات مترابطة (1 ثم 11 ثم 111).</td></tr>
+            </table>
         </div>
 
+        <h3>3. المجموعة الدفترية</h3>
+        <p>الدفاتر التي تسجل فيها عمليات المنشأة. أقل ما يشترطه القانون دفتر اليومية (مرقم وموثق ومختوم، بدون شطب)، ثم دفتر الأستاذ، ثم دفتر الجرد.</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>الطريقة</th><th>الدفتر</th><th>تناسب</th></tr>
+                <tr><td>الأمريكية</td><td>دفتر واحد تسجل فيه كل العمليات وترحل للحسابات</td><td>المشاريع الفردية الصغيرة</td></tr>
+                <tr><td>الإيطالية</td><td>يومية عامة + أستاذ عام (دفتران)</td><td>المنشآت صغيرة الحجم</td></tr>
+                <tr><td>الإنجليزية</td><td>يوميات مساعدة + أستاذ مساعد + أستاذ عام (3 أنواع)</td><td>المنشآت كبيرة الحجم</td></tr>
+                <tr><td>الفرنسية</td><td>يوميات مساعدة + يومية عامة (مركزية) + أستاذ مساعد + أستاذ عام (4 أنواع)</td><td>المنشآت كبيرة الحجم (الأكثر ملاءمة).</td></tr>
+            </table>
+        </div>
+        <p><strong>خطوات الطريقة الفرنسية:</strong> تسجل العمليات في اليوميات المساعدة من المستندات ⬅️ ترحيلها للأستاذ المساعد ⬅️ تجميع المساعدة آخر الفترة وقيد إجمالي بالمركزية ⬅️ ترحيل للأستاذ العام ⬅️ الترصيد وميزان المراجعة.</p>
+
+        <h3>4. قواعد وإجراءات التشغيل و 5. القوائم والتقارير</h3>
+        <ul>
+            <li><strong>القواعد:</strong> المبادئ والمعايير الدولية، تحديد المسؤولين عن القيد، الدورات المستندية، سياسات الجرد والتسويات.</li>
+            <li><strong>القوائم المالية الأربع:</strong> الدخل، المركز المالي، التدفقات النقدية، حقوق الملكية.</li>
+            <li><strong>خصائص التقارير:</strong> المنفعة، الشكل الملائم، التحديد (الموضوع والمسئول والجهة والتاريخ)، الثبات.</li>
+        </ul>
+
+        <h3>6. العناصر المادية والبشرية</h3>
+        <p><strong>المادية:</strong> الآلات والمعدات. <strong>البشرية:</strong> في اليدوي المحاسبون ومساكو الدفاتر، وفي الآلي المبرمجون ومحللو ومصمم النظم.</p>
+
+        <h3>7. الرقابة الداخلية</h3>
+        <p><strong>التعريف:</strong> الخطة التنظيمية وكل الطرق والمقاييس التي تتبناها المنشأة لحماية موجوداتها وضمان دقة البيانات المحاسبية وزيادة الكفاية الإنتاجية وضمان الالتزام بالسياسات. (لجنة COSO عرفتها بأنها عملية تتأثر بمجلس الإدارة).</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المقومات الإدارية (11)</th><th>المقومات المحاسبية (6)</th></tr>
+                <tr><td>1. خطة تنظيمية سليمة</td><td>1. تحديد المفاهيم والمبادئ بوضوح والثبات عليها</td></tr>
+                <tr><td>2. موارد بشرية مؤهلة (أهم مقوم)</td><td>2. مجموعة مستندية ودورات مستندية</td></tr>
+                <tr><td>3. معايير سليمة للأداء</td><td>3. مجموعة دفاتر وسجلات ودليل حسابات</td></tr>
+                <tr><td>4. الفصل بين الواجبات</td><td>4. دليل للإجراءات والسياسات المحاسبية</td></tr>
+                <tr><td>5. التنظيم الداخلي للإدارات والأقسام</td><td>5. موازنات تخطيطية ومتابعة تنفيذها</td></tr>
+                <tr><td>6. تنقلات بين العاملين</td><td>6. نظام تكاليف فعال</td></tr>
+                <tr><td>7. إجازات إجبارية</td><td></td></tr>
+                <tr><td>8. التأمين ضد المخاطر</td><td></td></tr>
+                <tr><td>9. نظام لاعتماد العمليات (رقابة حدية ومزدوجة)</td><td></td></tr>
+                <tr><td>10. إدارة للمراجعة الداخلية</td><td></td></tr>
+                <tr><td>11. وسائل حماية الأصول</td><td></td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> الفصل بين الواجبات إداري مش محاسبي. الرقابة الحدية = تحديد حد أقصى لسلطة المدير في الاعتماد، والمزدوجة = أداء العمل بشخصين.
+        </div>
+
+        <h3>ضوابط استخدام الحاسب (مهمة جداً في الامتحان)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>النوع</th><th>الضوابط</th><th>محتواه</th></tr>
+                <tr><td rowspan="5">عامة (نظرية)</td><td>1. تنظيم العمل</td><td>تقسيم السلطة، عدم اتصال المبرمجين بالتشغيل، تغيير المشغلين، شخصان على الأقل في حجرة الحاسب، نسخ احتياطية.</td></tr>
+                <tr><td>2. المكونات المادية</td><td>المراجعة بالأداء المزدوج (Dual Process Check)، المراجعة العكسية بين المركزي والمساعدة، مراجعة تلقائية من الجهاز.</td></tr>
+                <tr><td>3. منع الوصول المباشر</td><td>تمييز الملفات المحفوظة، الرقابة على دخول وخروج البيانات، كلمة سر.</td></tr>
+                <tr><td>4. تطوير وتوثيق النظام</td><td>إشراك المستخدمين، الرقابة على التعديلات، الموافقة على التطوير، اختبار النظام، توثيق النظام.</td></tr>
+                <tr><td>5. حماية النظام الإلكتروني</td><td>نسخ احتياطية، التأمين، اختيار فني لموقع الحاسبات، مولدات احتياطية، التخلص الآمن من المخلفات.</td></tr>
+                <tr><td rowspan="3">تطبيقية</td><td>1. الرقابة على المدخلات</td><td>ضوابط التسجيل وتجهيز البيانات: تصميم جيد للمستندات، موافقة، تحديد المصرح لهم، سجل بالعمليات.</td></tr>
+                <tr><td>2. الرقابة على التشغيل</td><td>سجل بتفاصيل وأزمنة التشغيل، <strong>عناوين خارجية على وسائط التخزين</strong>، عناوين داخلية للملفات.</td></tr>
+                <tr><td>3. الرقابة على المخرجات</td><td>مراجعة المخرجات يدوياً ومقارنتها بالآلي، مطابقة الإجماليات، مقارنة بيانات الفترة بالفترات السابقة.</td></tr>
+            </table>
+        </div>
         <div class="footer">
             <div class="footer-logo">
                 <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
                 <span class="footer-name">الدحيح</span>
             </div>
-            <div>بنك الأسئلة المصحح - صفحة 4</div>
+            <div>الفصل الثالث</div>
         </div>
     </div>
 
-    <!-- بنك الأسئلة المصحح: أسئلة جديدة صح وخطأ -->
+    <!-- الفصل الرابع -->
     <div class="page">
-        <h3>رابعاً: أسئلة جديدة (صح وخطأ) - بنك الأسئلة المصحح</h3>
+        <h2>الفصل الرابع: تحليل وتصميم نظم المعلومات المحاسبية</h2>
 
-        <div class="question-box">
-            <div class="question-text">1. البيانات هي المادة الخام للنظام</div>
-            <div class="answer-box">الإجابة: صح</div>
+        <h3>1. المفاهيم الأساسية</h3>
+        <ul>
+            <li><strong>تحليل النظم:</strong> استخدام أساليب متنوعة لتحديد أفضل وسيلة للاستفادة من إمكانيات الحاسب لضمان تدفق المعلومات.</li>
+            <li><strong>محلل النظم:</strong> فني مختص بالحاسب يعطي توصيات باستخدامه في نظم الأعمال، وأوسع من البرمجة. دوره استشاري.</li>
+            <li><strong>طرق الحصول عليه:</strong> أن يكون أحد موظفي المنشأة، أو استشاري خارجي.</li>
+        </ul>
+        <p><strong>وظائف محلل النظم الخمس:</strong> 1. تحديد أهداف النظام الحالي. 2. دراسة إجراءاته. 3. دراسة مشاكله. 4. التعاون مع المستفيدين. 5. تصميم نظام يتفق مع إمكانيات المنظمة.</p>
+
+        <h3>2. مصادر المعلومات المتاحة لمحلل النظم (5)</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المصدر</th><th>ملاحظة</th></tr>
+                <tr><td>المقابلات الشخصية</td><td>من أهم الأساليب، مع الأشخاص الرئيسيين في كل المستويات.</td></tr>
+                <tr><td>المستندات</td><td>تبين القنوات الرسمية لتدفق المعلومات. مشكلتها كثرة الأنواع والتقادم.</td></tr>
+                <tr><td>الملاحظة</td><td>تكشف الإجراءات والأدوات الفعلية ونقاط الضعف.</td></tr>
+                <tr><td>استطلاع الرأي (الاستبيان)</td><td>محدود الفائدة: سوء فهم الأسئلة وضعف الاستجابة. يناسب الإجابات البسيطة أو العدد الكبير.</td></tr>
+                <tr><td>القياسات</td><td>إحصاءات (عدد الأصناف بالمخازن، العملاء، الدائنين).</td></tr>
+            </table>
         </div>
-        <div class="question-box">
-            <div class="question-text">2. المعلومة تزيد رصيد المعرفة لدى من يحصل عليها</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">3. الدقة تعني خلو المعلومات من الأخطاء</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">4. خاصية الشمول سهلة القياس</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: غير ملموسة يصعب قياسها.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">5. خاصية الملاءمة من السهل قياسها</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: من الصعب قياسها.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. يمكن قياس سرعة الحصول على المعلومات</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. الاكتمال من الخصائص المعززة</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: أساسية تحت التعبير الصادق.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. القابلية للمقارنة من الخصائص المعززة</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. المساهمون من المستخدمين الداخليين</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: خارجيون.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. مصلحة الضرائب من المستخدمين الخارجيين</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. النظام الإلكتروني يتكون من 4 عناصر (حسب المحاضرة)</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. الإجراءات من مكونات النظام اليدوي</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. النظام المغلق يؤثر ويتأثر بالبيئة</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: ده المفتوح.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. الحاسب الآلي مثال على النظم المحددة</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. النظام المعدل لا يستطيع تعديل نفسه</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: غير المعدل.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. التغذية العكسية والرقابة نفس المعنى</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: مرتبطان ومختلفان.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. مدخلات نظام المعلومات هي البيانات</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">18. فرز البيانات من وظائف جمع البيانات</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: من تشغيل البيانات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">19. تخزين البيانات من وظائف إدارة البيانات</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">20. نظم ERP من نظم التكنولوجيا الحديثة</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">21. إذن الصرف مستند داخلي</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">22. الفاتورة مستند خارجي</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">23. دليل الحسابات من المقومات المحاسبية</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">24. اليومية والأستاذ من المجموعة المستندية</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: دفترية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">25. المدخل التدريجي من مداخل التحول</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">26. في حالة التأكد قيمة المعلومة = عائدها − تكلفة الحصول عليها</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">27. النظام المحاسبي نظام رئيسي في المنشأة</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">ملاحظة: فرعي.</div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> "بساطة هيكل النظام" و"المرونة" و"الاقتصاد في التكلفة" من الأهداف العامة للنظام، مش مصادر معلومات. لو الاختيار فيه واحد منهم فهو الاختيار الغلط.
         </div>
 
+        <h3>3. مراحل تحليل النظام</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المرحلة</th><th>المحتوى</th></tr>
+                <tr><td>1. تحديد أهداف نظام المعلومات</td><td>أهداف عامة (بساطة الهيكل، المرونة، الاقتصاد، مخرجات ملائمة)، واحتياجات الإدارة العليا.</td></tr>
+                <tr><td>2. تقييم النظام القائم</td><td>حصر التطبيقات، تدفق المعلومات، مقارنة الحالي بالمطلوب، دراسة خرائط التدفق.</td></tr>
+                <tr><td>3. تقييم فاعلية النظام</td><td>عدد المستخدمين، المشاكل، شكل التقارير، التوقيت، تحليل التكلفة والعائد، تقييم الرقابة الداخلية، نقاط القوة والضعف، التوصيات.</td></tr>
+                <tr><td>4. تقرير التوصيات</td><td>مقدمة، صياغة التطوير المقترح وأسباب الاختيار، طريقة التنفيذ.</td></tr>
+            </table>
+        </div>
+
+        <h3>4. مداخل التصميم</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المدخل</th><th>المزايا</th><th>العيوب</th></tr>
+                <tr><td>من أعلى لأسفل</td><td>هيكلة سليمة، تصميم منطقي، قلة التعديلات أثناء التشغيل، ضمان تأييد الإدارة العليا.</td><td>صعب في النظم المعقدة وكثرة التعديلات.</td></tr>
+                <tr><td>من أسفل لأعلى</td><td>البدء بالعناصر المألوفة، الأكثر استخداماً لسهولة تنفيذ احتياجات المستويات التشغيلية.</td><td>عدم تنسيق بين النظم الفرعية، يحتاج جهداً كبيراً.</td></tr>
+                <tr><td>التجزئة ثم التجميع</td><td>يناسب النظم الكبيرة التي لا يمكن تصميمها في وقت واحد.</td><td>—</td></tr>
+            </table>
+        </div>
+        <p><strong>الهيكل العام للنظام:</strong> مركزي (مركز تشغيل واحد)، لامركزي (مركز لكل إدارة)، موزع (وحدات موزعة على الإدارات).</p>
+
+        <h3>5. مرحلتا التصميم وخطوات التصميم الست</h3>
+        <ul>
+            <li><strong>المرحلة المبدئية:</strong> هيكل عام من وجهة نظر المستخدم (دراسة البيانات، تحديد المتطلبات، تحديد المواصفات).</li>
+            <li><strong>المرحلة التفصيلية:</strong> تصميم المعالجة، تصميم المخرجات، تصميم المدخلات، إعداد نماذج مواصفات النظام (التقرير النهائي).</li>
+        </ul>
+        <p><strong>الخطوات الست:</strong> 1. المسح المبدئي الشامل. 2. تصميم النظام الجديد. 3. تطبيق النظام الجديد واختباره. 4. التحول إلى النظام الجديد. 5. تقييم النظام الجديد. 6. تقديم تقرير للإدارة.</p>
+        <p><strong>مبادئ تصميم النظام الجديد (6):</strong> الجدوى الاقتصادية، الملاءمة للنشاط، إمكانية التطبيق، تكامل وترابط العمليات، السهولة والوضوح، المرونة.</p>
+        <p><strong>المستندات:</strong> ثبوتية (تؤيد حدوث العمليات: المشتريات، عقود الإيجار) ومحاسبية (قبض، صرف، قيد يومية).</p>
+
+        <h3>6. دورة تحليل وتصميم النظم</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المرحلة</th><th>أهم ما فيها</th></tr>
+                <tr><td>1. التخطيط</td><td>تعرف المشكلة، أهداف ومحددات النظام، دراسة الجدوى، قرار الاستمرار.</td></tr>
+                <tr><td>2. التحليل</td><td>تجزئة النظام. طرق: التركيبية (خرائط التدفق)، هندسة البرمجيات، النمذجة، جداول القرار.</td></tr>
+                <tr><td>3. التصميم</td><td>الهيكل العام، بدائل التصميم، مواصفات النظام، اختيار الأجهزة، تدريب الأفراد.</td></tr>
+                <tr><td>4. التنفيذ</td><td>شراء الأجهزة، تجهيز المكان، تصميم وكتابة البرامج، اختبار النظام، قرار التحول.</td></tr>
+                <tr><td>5. توثيق النظام</td><td>تجميع مستندات التحليل والتصميم والتنفيذ.</td></tr>
+                <tr><td>6. التقييم بعد التنفيذ</td><td>مدى تحقيق الأهداف وتقييم أداء المحللين والمصممين.</td></tr>
+                <tr><td>7. صيانة النظم</td><td>إطالة عمر النظام: حذف أو إضافة أو تعديل أو تحسين مع توثيقه.</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> سؤال دورة التحليل والتصميم: الإجابة (أ، ب معاً) لأن "تقييم النظام الجديد" خطوة من خطوات التصميم الست، ومن الدورة المختصرة اللي في الكتاب.
+        </div>
+
+        <h3>7. مدخلا التحول للنظام الجديد</h3>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المدخل</th><th>الفكرة</th><th>ميزته</th><th>عيوبه</th></tr>
+                <tr><td>التحول المتوازي</td><td>تشغيل الجديد مع القديم معاً ومقارنة المخرجات.</td><td>أمان كامل، الأكثر استخداماً عملياً.</td><td>مكلف ويحتاج جهداً ووقتاً.</td></tr>
+                <tr><td>التحول المباشر</td><td>إيقاف القديم فوراً والتحول للجديد.</td><td>غير مكلف.</td><td>مخاطرة. (يستخدم لو التوازي صعب أو القديم سيء جداً أو الجديد اجتاز كل الاختبارات).</td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> الكتاب ذكر مدخلين: المتوازي والمباشر. لكن أسئلة بنك الأسئلة ذكرت "التدريجي" كمان. أي جملة بكلمة "المتوازي فقط" خطأ.
+        </div>
         <div class="footer">
             <div class="footer-logo">
                 <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
                 <span class="footer-name">الدحيح</span>
             </div>
-            <div>بنك الأسئلة المصحح - صفحة 5</div>
+            <div>الفصل الرابع</div>
         </div>
     </div>
 
-    <!-- القسم الثاني: ملف الأسئلة المحلولة (100 سؤال) -->
+    <!-- الفصل الخامس -->
     <div class="page">
-        <h2>القسم الثاني: ملف الأسئلة المحلولة (100 سؤال)</h2>
-        <h3>أولاً: أسئلة الاختيار من متعدد (1 - 25)</h3>
+        <h2>الفصل الخامس: أدوات تحليل وتصميم نظم المعلومات المحاسبية</h2>
 
-        <div class="question-box">
-            <div class="question-text">1. يُعرف أي نظام بأنه مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل معاً لتحقيق:</div>
-            <div class="options">أ) ربح مادي فقط &nbsp;|&nbsp; ب) هدف محدد &nbsp;|&nbsp; ج) تقارير ورقية &nbsp;|&nbsp; د) لا شيء مما سبق</div>
-            <div class="answer-box">الإجابة: ب</div>
+        <h3>1. خرائط التدفق</h3>
+        <p>أسلوب تحليلي يصف جانباً من نظام المعلومات بطريقة واضحة ودقيقة ومنطقية باستخدام رموز قياسية. من أكثر وسائل تحليل النظم شيوعاً، وتستخدم في التحليل والتوثيق وإعادة التصميم.</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>النوع</th><th>الاستخدام</th></tr>
+                <tr><td>خرائط تدفق المستندات</td><td>عرض تدفق المستندات بين الأقسام والإدارات، وتستخدم في النظم اليدوية.</td></tr>
+                <tr><td>خرائط تدفق النظم</td><td>عرض الخطوات للتعامل مع نظام فرعي، يدوي أو إلكتروني.</td></tr>
+                <tr><td>خرائط تدفق البرامج</td><td>عرض إجراءات البرنامج والتطبيق المستخدم.</td></tr>
+            </table>
         </div>
-        <div class="question-box">
-            <div class="question-text">2. يُطلق على نظام المعلومات في المنشأة باعتباره أحد النظم الفرعية اسم:</div>
-            <div class="options">أ) نظام الرقابة المالية &nbsp;|&nbsp; ب) نظام تشغيل البيانات &nbsp;|&nbsp; ج) النظام الرئيسي الوحيد &nbsp;|&nbsp; د) نظام الإنتاج</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">3. من القيود التي تحد من قدرة النظام على تحقيق أهدافه وتكون خارجية:</div>
-            <div class="options">أ) ندرة الموارد &nbsp;|&nbsp; ب) القيود الخارجية &nbsp;|&nbsp; ج) حجم الطلب في السوق الخارجي &nbsp;|&nbsp; د) الإجابة غير واضحة</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. إمكانية تقسيم أجزاء النظام إلى أجزاء فرعية، وتقسيم كل جزء فرعي إلى أجزاء فرعية أدنى تُعرف بخاصية:</div>
-            <div class="options">أ) التكامل &nbsp;|&nbsp; ب) الترتيب الهرمي &nbsp;|&nbsp; ج) التحويل &nbsp;|&nbsp; د) الاستقرار</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. من أمثلة النظم الطبيعية التي لا يتدخل الإنسان في وجودها:</div>
-            <div class="options">أ) النظام المحاسبي &nbsp;|&nbsp; ب) نظام التعليم &nbsp;|&nbsp; ج) الكون وأجهزة جسم الإنسان &nbsp;|&nbsp; د) نظام النقل</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. النظم التي يمكن قياس نتائجها ودراسة التفاعل بين أجزائها بدقة والتنبؤ بمخرجاتها بصورة مؤكدة هي:</div>
-            <div class="options">أ) النظم المحتملة &nbsp;|&nbsp; ب) النظم المحددة &nbsp;|&nbsp; ج) النظم المفتوحة &nbsp;|&nbsp; د) النظم غير المعدلة</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. النظم التي لا تتفاعل مع البيئة المحيطة ولا تؤثر فيها ولا تتأثر بها (مثل الساعة والتجارب الكيميائية) هي:</div>
-            <div class="options">أ) نظم مفتوحة &nbsp;|&nbsp; ب) نظم مغلقة &nbsp;|&nbsp; ج) نظم معقدة &nbsp;|&nbsp; د) نظم رئيسية</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. تمثل الجانب الفني في النموذج العام للنظام، وتشتمل على كيفية تحويل البيانات إلى معلومات:</div>
-            <div class="options">أ) المدخلات &nbsp;|&nbsp; ب) المخرجات &nbsp;|&nbsp; ج) عمليات التشغيل أو التحويل &nbsp;|&nbsp; د) الرقابة</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. مجموعة الحقائق أو المشاهدات أو القياسات التي تكون في شكلها الخام أو الأولي ولم تعالج بعد هي:</div>
-            <div class="options">أ) المعلومات المحاسبية &nbsp;|&nbsp; ب) البيانات المحاسبية &nbsp;|&nbsp; ج) المعرفة &nbsp;|&nbsp; د) القوائم المالية</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. تجمع البيانات في المنشآت عن ثلاثة عناصر رئيسية هي الأحداث (Events)، والموارد (Resources)، و:</div>
-            <div class="options">أ) الأرباح (Profits) &nbsp;|&nbsp; ب) الوكالة المشاركون في الحدث (Agents) &nbsp;|&nbsp; ج) الضرائب (Taxes) &nbsp;|&nbsp; د) الموازنات (Budgets)</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. إذا زادت كمية المعلومات المقدمة للمستخدم عن اللازم فإن ذلك يؤدي إلى:</div>
-            <div class="options">أ) تحسن جودة القرارات تلقائياً &nbsp;|&nbsp; ب) معاناة المستخدم من عبء المعلومات وتدني جودة القرارات &nbsp;|&nbsp; ج) انخفاض تكلفة إنتاج المعلومات &nbsp;|&nbsp; د) سرعة اتخاذ القرار</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. خاصة المعلومات التي تعني إمكانية استخدامها لتلبية احتياجات أكثر من مستخدم وأكثر من قرار هي:</div>
-            <div class="options">أ) الدقة &nbsp;|&nbsp; ب) المرونة &nbsp;|&nbsp; ج) الوضوح &nbsp;|&nbsp; د) الشمول</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. حتى تكون المعلومات موضوعية طبقاً للخصائص الأساسية للمعلومات، يجب توافر ثلاث خصائص هي الحياد، إمكانية التحقق، و:</div>
-            <div class="options">أ) المرونة &nbsp;|&nbsp; ب) صدق التعبير &nbsp;|&nbsp; ج) السرعة والسهولة &nbsp;|&nbsp; د) القابلية للقياس</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. طبقاً للإطار المفاهيمي للمعايير المحاسبية الدولية، تنقسم الخصائص النوعية للمعلومات إلى:</div>
-            <div class="options">أ) أساسية ومعززة (مكملة) &nbsp;|&nbsp; ب) داخلية وخارجية &nbsp;|&nbsp; ج) مالية وغير مالية &nbsp;|&nbsp; د) يدوية وآلية</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. أي من الخصائص التالية يُعد من الخصائص النوعية «الأساسية» طبقاً للإطار المفاهيمي للمعايير المحاسبية الدولية؟</div>
-            <div class="options">أ) القابلية للمقارنة &nbsp;|&nbsp; ب) التوقيت المناسب &nbsp;|&nbsp; ج) الملاءمة والتعبير الصادق &nbsp;|&nbsp; د) القابلية للفهم</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">20. يتكون نظام المعلومات المحاسبي اليدوي من ثلاثة عناصر أساسية هي الموارد البشرية، الإجراءات، و:</div>
-            <div class="options">أ) الأجهزة والمعدات &nbsp;|&nbsp; ب) مخزون البيانات &nbsp;|&nbsp; ج) تكنولوجيا الاتصالات &nbsp;|&nbsp; د) نظام إدارة قاعدة البيانات</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">21. الأنظمة التي تستخدم قواعد البيانات الخاصة والتماذج الإحصائية والكمية لدعم متخذي القرارات شبه المهيكلة هي:</div>
-            <div class="options">أ) أنظمة معالجة العمليات (TPS) &nbsp;|&nbsp; ب) أنظمة دعم القرارات (DSS) &nbsp;|&nbsp; ج) أنظمة ميكانيك (OAS) &nbsp;|&nbsp; د) أنظمة العمل المعرفية (KWS)</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">25. طريقة الترميز التي تأخذ فيها الحسابات الرئيسية أرقاماً صحيحة وتضاف أرقام عشرية للحسابات الفرعية (مثل 1 و 1.1) هي:</div>
-            <div class="options">أ) الترميز بالحروف الأبجدية &nbsp;|&nbsp; ب) الترميز بالأرقام العشرية &nbsp;|&nbsp; ج) الترميز بالكتل الرقمية &nbsp;|&nbsp; د) الترميز بالحروف والأرقام معاً</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
+        <p><strong>مجموعات الرموز الأربع:</strong> رموز المدخلات والمخرجات، رموز المعالجة والتشغيل، رموز التخزين، رموز التدفق.</p>
 
+        <h3>2. خرائط تدفق المستندات</h3>
+        <p><strong>مزاياها (3):</strong> 1. تحديد خط سير المستند واقتراح التعديل. 2. صورة واضحة عن خطوط الاتصال الرسمية. 3. توضيح التصرف في كل صور المستند ومدى كفاية عددها.</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>الرمز</th><th>الاستخدام (حسب المحاضرة الأولى)</th></tr>
+                <tr><td>دائرة</td><td>بدء عملية معينة</td></tr>
+                <tr><td>مثلث مقلوب</td><td>حفظ المستند (دائم أو مؤقت)</td></tr>
+                <tr><td>مربع مطلق</td><td>دخول المستند إلى النظام</td></tr>
+                <tr><td>مستطيل</td><td>القيام بعملية فحص أو مراجعة (مطابقة)</td></tr>
+                <tr><td>سهم</td><td>انتقال المستند من جهة لأخرى</td></tr>
+                <tr><td>مستند من عدة صور</td><td>مستند له أكثر من صورة</td></tr>
+            </table>
+        </div>
+        <p><strong>دورة الشراء في الخريطة:</strong> تبدأ بـ "طلب شراء" من إدارة المخازن، المشتريات تطابق وتصدر "أمر توريد"، إدارة الاستلام تستلم وتحرر "محضر استلام"، المطابقة تم بين طلب الشراء وأمر التوريد والمحضر والفاتورة، والفاتورة تذهب لدفاتر اليومية بالحسابات، وإشعار الاستلام لدفتر وبطاقات الأصناف، والحفظ بالمثلث المقلوب.</p>
+
+        <h3>3. خرائط تدفق النظم</h3>
+        <p><strong>خصائصها:</strong> تحديد نوع البيانات المراد تشغيلها (جديدة أو تاريخية)، توضيح الوسائط وأجهزة الإدخال والإخراج، تحديد أنواع العمليات (معالجة، تبويب، تلخيص) بدون تفصيل، تحديد النتائج والتقارير المطلوبة.</p>
+        <p><strong>مزاياها:</strong> تجدد نقاط الضعف في الإجراءات الرقابية، سهلة الفهم في النظم الكبيرة، تكتشف المسارات غير المكتملة والمكررة، لا تحتاج تخصصاً دقيقاً وتصلح للتواصل مع غير المتخصصين.</p>
+        <p><strong>رموزها:</strong> وثيقة ورقية (مستند أو تقرير)، إدخال يدوي للحاسب، معالجة بالحاسب، بيانات مخزنة (قرص ممغنط)، محطة عمل (إدخال عن بعد).</p>
+
+        <h3>4. خرائط تدفق البرامج</h3>
+        <p><strong>تشرح التسلسل المنطقي لخطوات البرنامج.</strong> مهمة للمبرمجين قبل كتابة البرنامج، وتستخدم في الكتابة والاختبار والتوثيق والصيانة. تعالج الفجوة بين محلي النظم ومعدي البرامج، وتساعد المراجع في فهم النظام وتقييمه.</p>
+        <p><strong>مزاياها (5):</strong> 1. خطوات تفصيلية منطقية مبسطة. 2. تساعد في التفكير المنطقي للمشاكل المعقدة. 3. تراجع خطوات التشغيل وتكتشف الأخطاء. 4. سهلة التعبير والفهم. 5. وسيلة اتصال يسهل تحويلها لبرنامج.</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>الرمز</th><th>الاسم</th><th>الاستخدام</th></tr>
+                <tr><td>الشكل البيضاوي</td><td>البداية والنهاية</td><td>بداية البرنامج ونهايته</td></tr>
+                <tr><td>متوازي أضلاع</td><td>إدخال وإخراج</td><td>إدخال البيانات أو إخراج المعلومات</td></tr>
+                <tr><td>مستطيل</td><td>معالجة</td><td>العمليات الحسابية والإحصائية</td></tr>
+                <tr><td>معين</td><td>القرار</td><td>المقارنات المنطقية والحسابية</td></tr>
+            </table>
+        </div>
+        <p><strong>مثال:</strong> مجموع ثلاثة أرقام A و B و C ⬅️ START ⬅️ READ (A,B,C) ⬅️ M = A + B + C ⬅️ WRITE M ⬅️ STOP.</p>
+
+        <h3>5. جداول القرارات</h3>
+        <p>أداة اتصال بين محلي النظم وواضعي البرامج، تضع إطاراً في صورة جدول للأعمال أو القرارات عند تحقق شروط معينة.</p>
+        <div class="table-responsive">
+            <table>
+                <tr><th>العنصر</th><th>التوضيح</th></tr>
+                <tr><td>الجزء العلوي</td><td>السؤال: كل الحالات والظروف الممكنة (مدخلات).</td></tr>
+                <tr><td>الجزء السفلي</td><td>الاستجابة: الأعمال أو القرارات الملائمة (مخرجات).</td></tr>
+                <tr><td>أوضاع كل شرط</td><td>نعم: الشرط متحقق. لا: غير متحقق. شرطة (-): غير مؤثر على القرار.</td></tr>
+                <tr><td>علامة × في القرارات</td><td>يجب اتخاذ القرار. والخلية الفارغة: لا يتخذ.</td></tr>
+            </table>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <tr><th>المزايا (5)</th><th>العيوب (3)</th></tr>
+                <tr><td>1. تكتشف عدم التناسق وقواعد غير مهمة.</td><td>1. غير فعالة عند تداخل كبير بين الشروط والقرارات.</td></tr>
+                <tr><td>2. سهلة الترجمة لبرنامج حاسب.</td><td>2. لا تظهر التسلسل المنطقي للتنفيذ (عكس خرائط البرامج).</td></tr>
+                <tr><td>3. تضمن تغطية شاملة لكل البدائل.</td><td>3. يصعب تتبعها لو القرارات والشروط كثيرة.</td></tr>
+                <tr><td>4. تظهر العلاقة بين الشروط والقرارات.</td><td></td></tr>
+                <tr><td>5. تبين أن العمليات نتاج شروط معينة.</td><td></td></tr>
+            </table>
+        </div>
+        <div class="exam-trap">
+            <strong>فخ الامتحان:</strong> جداول القرارات تصميم مش تحليل (إجابة الدكتورة)، وعيبها إنها مش بتوضح تسلسل التنفيذ. وإعطاء صورة واضحة عن خطوط الاتصال ميزة لخرائط المستندات.
+        </div>
         <div class="footer">
             <div class="footer-logo">
                 <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
                 <span class="footer-name">الدحيح</span>
             </div>
-            <div>100 سؤال محلول - صفحة 6</div>
-        </div>
-    </div>
-
-    <!-- القسم الثاني: ملف الأسئلة المحلولة (تكملة) -->
-    <div class="page">
-        <h3>تابع: أسئلة الاختيار من متعدد (26 - 50)</h3>
-
-        <div class="question-box">
-            <div class="question-text">26. الطريقة المحاسبية التي تعتمد على دفتر واحد تسجل فيه العمليات وترحل في نفس الصفحة (يومية وأستاذ معاً) وتناسب المشاريع الصغيرة هي:</div>
-            <div class="options">أ) الطريقة الفرنسية &nbsp;|&nbsp; ب) الطريقة الإنجليزية &nbsp;|&nbsp; ج) الطريقة الأمريكية &nbsp;|&nbsp; د) الطريقة الإيطالية</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">30. الرقابة التي تقوم على تحديد سلطة المديرين في اعتماد العمليات بحد أقصى لقيمة العملية تسمى:</div>
-            <div class="options">أ) الرقابة المزدوجة &nbsp;|&nbsp; ب) الرقابة الحدية &nbsp;|&nbsp; ج) الرقابة التلقائية &nbsp;|&nbsp; د) الضبط المستمر</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">35. يُعد «وضع عناوين خارجية على وسائط التخزين» و«عناوين داخلية للملفات» من ضوابط:</div>
-            <div class="options">أ) الرقابة على المخرجات &nbsp;|&nbsp; ب) الرقابة على التشغيل الإلكتروني للبيانات &nbsp;|&nbsp; ج) المكونات المادية للحاسب &nbsp;|&nbsp; د) تطوير النظام</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">36. أحد الفنيين المختصين بالحاسب الآلي الذي يعطي توصيات خاصة باستخدام الحاسب في نظم الأعمال، ويعمل المبرمج تحت إشرافه هو:</div>
-            <div class="options">أ) المراجع الخارجي &nbsp;|&nbsp; ب) محلل النظم &nbsp;|&nbsp; ج) أمين المخزن &nbsp;|&nbsp; د) مدخل البيانات</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">37. أسلوب جمع المعلومات الذي يمكن محلل النظم من التعرف على الطرق والأدوات الفعلية التي تُستخدم في تنفيذ العمل وكيفية التنفيذ هو:</div>
-            <div class="options">أ) الاستبيان &nbsp;|&nbsp; ب) الملاحظة &nbsp;|&nbsp; ج) القياسات الإحصائية &nbsp;|&nbsp; د) المستندات</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">38. أسلوب جمع المعلومات الذي يتسم بضعف الاستجابة أحيانًا أو عدم فهم الأسئلة، ولكنه يناسب الحالات التي يكون فيها عدد المستقصى منهم كبيراً هو:</div>
-            <div class="options">أ) المقابلات الشخصية &nbsp;|&nbsp; ب) استطلاع الرأي (الاستبيان) &nbsp;|&nbsp; ج) الملاحظة المباشرة &nbsp;|&nbsp; د) الفحص المستندي</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">39. مدخل تصميم النظم الذي يبدأ بتصميم النظم الفرعية في المستويات العليا وصولاً للمستويات الدنيا ويمتاز بضمان تأييد الإدارة العليا هو:</div>
-            <div class="options">أ) التصميم من أسفل إلى أعلى &nbsp;|&nbsp; ب) التصميم من أعلى إلى أسفل &nbsp;|&nbsp; ج) التصميم بالتجزئة ثم التجميع &nbsp;|&nbsp; د) التصميم العشوائي</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">43. المدخل الذي يتصف بالمخاطرة العالية حيث يتم الإيقاف الفوري للنظام القديم والاعتماد على الجديد مباشرة (ويتيمز بانخفاض التكلفة) هو:</div>
-            <div class="options">أ) التحول المتوازي &nbsp;|&nbsp; ب) التحول المباشر &nbsp;|&nbsp; ج) التحول التدريجي &nbsp;|&nbsp; د) التحول التجريبي</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">44. المرحلة الأخيرة في دورة تحليل وتصميم نظم المعلومات المحاسبية والتي تهدف لإطالة عمر النظام وتكييفه مع التغيرات البيئية هي:</div>
-            <div class="options">أ) مرحلة التخطيط &nbsp;|&nbsp; ب) مرحلة التوثيق &nbsp;|&nbsp; ج) مرحلة صيانة النظم &nbsp;|&nbsp; د) مرحلة التحليل</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">45. تُستخدم في عرض تدفق المستندات بين الأقسام والإدارات الخاصة بالمنشأة في النظم اليدوية:</div>
-            <div class="options">أ) خرائط تدفق البرامج &nbsp;|&nbsp; ب) خرائط تدفق المستندات &nbsp;|&nbsp; ج) خرائط تدفق النظم &nbsp;|&nbsp; د) جداول القرارات</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">48. الرمز الذي يأخذ شكل «متوازي الأضلاع» في خرائط تدفق البرامج يدل على:</div>
-            <div class="options">أ) البداية والنهاية &nbsp;|&nbsp; ب) إدخال البيانات أو إخراج المعلومات &nbsp;|&nbsp; ج) العمليات الحسابية &nbsp;|&nbsp; د) اتخاذ القرار</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">49. ثُعد «خرائط تدفق البرامج» أداة اتصال فعالة ومهمة لسد الفجوة بين محلي النظم و:</div>
-            <div class="options">أ) العملاء &nbsp;|&nbsp; ب) معدي البرامج (المبرمجين) &nbsp;|&nbsp; ج) الموردين &nbsp;|&nbsp; د) مصلحة الضرائب</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-
-        <div class="footer">
-            <div class="footer-logo">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
-                <span class="footer-name">الدحيح</span>
-            </div>
-            <div>100 سؤال محلول - صفحة 7</div>
-        </div>
-    </div>
-
-    <!-- القسم الثاني: ملف الأسئلة المحلولة (صح وخطأ) -->
-    <div class="page">
-        <h3>ثانياً: أسئلة الصواب والخطأ (1 - 25)</h3>
-
-        <div class="question-box">
-            <div class="question-text">1. يُعرف النظام بأنه مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل مع بعضها البعض لتحقيق هدف محدد.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">2. ينشأ تعارض الأهداف عندما يكون نشاط النظام الفرعي منسجماً تمامًا مع النظام الرئيسي.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: عندما يكون غير منسجم.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">3. الموارد المالية للنظام تشمل المحاسبين ومصممي النظم ومشغلي الحاسب الآلي.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هذه موارد بشرية، أما المالية فتشمل رأس المال.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">4. تعني خاصية التكامل أن النتيجة الإجمالية التي تحققها أجزاء النظام عند تكاملها تفوق مجموع ناتج كل جزء على حدة.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">5. التغذية العكسية والرقابة هما مصطلحان متطابقان تمامًا ولا يوجد أي اختلاف بينهما في النموذج العام للنظام.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: مرتبطان ولكن مختلفان في الوظيفة والمصدر.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. النظم التشغيلية (المصنوعة) هي وسيلة من صنع الإنسان يتحقق من خلالها أداء عملية معينة لبلوغ أهداف محددة.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. النظم المحتملة هي النظم التي يمكن التنبؤ بمخرجاتها بصورة مؤكدة بنسبة 100% بناءً على معرفة المدخلات.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هذه النظم المحددة، أما المحتملة فتعتمد على الاحتمالات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. النظم المستقرة هي التي تكون علاقاتها محددة بدقة، وإذا حدث بها اضطراب يكون مؤقتاً وسرعان ما تعود لحالتها الطبيعية.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. تُعد المنشآت الصناعية من أمثلة النظم المغلقة التي لا تؤثر في البيئة المحيطة ولا تتأثر بها.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي نظم مفتوحة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. النظم المعدلة هي التي تستطيع تعديل نفسها ذاتياً للتكيف مع التغيرات البيئية مثل تحول البنك من النظام اليدوي للإلكتروني.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. المعلومات المحاسبية هي بيانات تم تصنيفها وترتيبها وتلخيصها وعرضها لتصبح ذات معنى مفيد في اتخاذ القرارات.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. المعرفة هي الحقائق الأولية الخام التي لم يتم معالجتها أو تنظيمها بعد.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هذه البيانات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. تعد خاصية «الشمول» و«الملاءمة» في المعلومات من الخصائص الملموسة التي يسهل قياسها كمياً بدقة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي خصائص غير ملموسة ويصعب قياسها.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. يقصد بإمكانية التحقق توافر الأدلة المستندية على صحة المعلومات بحيث يمكن الرجوع إليها للتأكد من صحتها.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. طبقاً للإطار المفاهيمي، تُعد خاصية «التوقيت المناسب» و«القابلية للمقارنة» من الخصائص النوعية الأساسية.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي من الخصائص المعززة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. هناك ثلاث خصائص فرعية تساهم في تحقيق التعبير الصادق وهي: الاكتمال، الموضوعية، والدقة.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. نظام المعلومات المحاسبي هو النظام الرئيسي الوحيد في المنشأة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هو نظام فرعي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">18. يرجع اهتمام المقرضين بالمعلومات المحاسبية إلى رغبتهم في معرفة المركز المالي الحالي والمستقبلي وقدرة المنشأة على سداد التزاماتها.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">19. تندرج وظيفة «تلخيص البيانات» و«إجراء العمليات المحاسبية» تحت وظيفة إدارة البيانات.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: تندرج تحت وظيفة تشغيل البيانات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">20. يتكون نظام المعلومات المحاسبي الإلكتروني من أربعة عناصر هي: الأجهزة، برامج الحاسب، نظام إدارة قاعدة البيانات، وتكنولوجيا الاتصالات.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">21. أنظمة دعم التنفيذيين (ESS) مصممة لخدمة المستويات الإدارية الدنيا في العمليات الروتينية اليومية.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: مصممة لدعم الإدارة العليا.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">22. في حالة عدم التأكد التام، يتم احتساب قيمة المعلومات بالأخذ في الاعتبار درجة المخاطر والاحتمالات الرياضية للعوائد.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">23. تُعد طلبات الشراء وأذون الصرف من المخازن من المستندات الخارجية للمنشأة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي مستندات داخلية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">24. من الاعتبارات الواجب مراعاتها عند تصميم المستندات أن يتضمن توقيع المسؤول عن تحريره.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">25. يُعد طلب الشراء من ثلاث نسخ؛ ترسل نسختان للمورد وتبقى نسخة في الإدارة الطالبة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: يُعد من نسختين؛ الأصل للمشتريات وصورة للطالبة.</div>
-        </div>
-
-        <div class="footer">
-            <div class="footer-logo">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
-                <span class="footer-name">الدحيح</span>
-            </div>
-            <div>100 سؤال محلول - صفحة 8</div>
-        </div>
-    </div>
-
-    <!-- القسم الثاني: ملف الأسئلة المحلولة (صح وخطأ تكملة) -->
-    <div class="page">
-        <h3>تابع: أسئلة الصواب والخطأ (26 - 50)</h3>
-
-        <div class="question-box">
-            <div class="question-text">26. يتناسب الترميز طبقاً للحروف الأبجدية فقط مع المنشآت الصغيرة التي لديها عدد محدود من الحسابات.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">27. يجوز في دفتر اليومية القانوني الكشط والشطب والتحشير بين السطور طالما تم التوقيع بجانبه.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: يُحظر الشطب وإلا فقد الدفتر حجيته.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">28. تعتمد الطريقة الإيطالية في إمساك الدفاتر على دفترين فقط هما دفتر اليومية العامة ودفتر الأستاذ العام.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">29. تُعد التقارير غير النمطية التي ينتجها نظام المحاسبة الإدارية موحدة الشكل والمضمون لجميع المنشآت.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: يتوقف شكلها على حاجة المستخدم.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">30. يُعد وجود دليل الحسابات والموازنات التخطيطية من المقومات الإدارية للرقابة الداخلية.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي من المقومات المحاسبية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">31. إجراء تنقلات دورية بين العاملين وإعطاؤهم إجازات إجبارية من أهم المقومات الإدارية لاكتشاف التلاعب.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">32. الرقابة المزدوجة تعني أن يقوم موظف واحد بأداء العملية من بدايتها إلى نهايتها لضمان السرعة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: أداء العمل بواسطة شخصين.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">33. يتم التقييم المستمر لنظام الرقابة الداخلية أثناء تأدية العمل وخلال تنفيذ النشاط.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">34. يستطيع الحاسب الآلي تحديد الهدف النهائي من إعداد البيانات والعمل بمعزل عن رغبات الإنسان.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: لا يحدد الهدف ويعمل طبقاً لرغبات الإنسان.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">35. يجب ألا يتصل المبرمجون ومصممو الأنظمة بعملية التشغيل الفعلي للبيانات كأحد ضوابط تنظيم العمل.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">36. يُعد الاحتفاظ بنسخ احتياطية من الملفات والبرامج والتأمين على النظام من ضوابط الرقابة على المخرجات.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: من ضوابط حماية النظام الإلكتروني.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">37. من ضوابط الرقابة على المخرجات مطابقة الإجماليات قبل الإدخال وبعد الإخراج والتأكد من تسليمها للمصرح لهم.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">38. يتولى المبرمج الإشراف على محلل النظم وتحديد أهداف النظام العام للمنشأة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: المبرمج يعمل تحت إشراف محلل النظم.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">39. يمكن الحصول على محلل نظم المعلومات المحاسبية إما بتعيينه من موظفي المنشأة أو الاستعانة باستشاري خارجي.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">40. تعمل الإدارة العليا غالباً في ظل ظروف التأكد التام وتعتمد قراراتها على بيانات داخلية قصيرة الأجل.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: تعمل في ظل عدم التأكد ومعلومات خارجية طويلة الأجل.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">41. كلما زادت درجة تعقيد نظام المعلومات، أدى ذلك إلى إصابة موظفي الشركة بالإحباط لصعوبة فهم مكوناته.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">42. في ظل النظم الآلية الحديثة، يتم إلغاء كافة إجراءات المعالجة والرقابة اليدوية تماماً.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: تظل هناك إجراءات يدوية مثل تجميع المستندات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">43. ينبغي أن يتلاءم نظام المعلومات المحاسبية المصمم مع طبيعة نشاط المنشأة، لأن الاعتماد الأعمى على النظم المستوردة قد يؤدي للفشل.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">44. يتكون جدول القرارات من ثلاثة أجزاء رئيسية: جزء علوي، وجزء أوسط، وجزء سفلي.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: يتكون من جزئين فقط: علوي للشروط وسفلي للقرارات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">45. تُعد مرحلة التخطيط هي المرحلة الأولى التي تسبق عملية تحليل النظام وتشمل تعريف المشكلة وإعداد دراسة الجدوى.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">46. يمتاز مدخل «التحول المتوازي» بانخفاض التكلفة وعدم الحاجة إلى مجهود إضافي عند الانتقال للنظام الجديد.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هو مكلف ويحتاج وقتاً لكنه آمن.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">47. مرحلة توثيق النظام الجديد تعني تجميع كل المستندات الخاصة بالنظام وحفظها بصورة منظمة للرجوع إليها.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">48. تُعد خرائط تدفق النظم وسيلة اتصال فعالة لا تحتاج لتخصص دقيق في البرمجة، وتوضح خط سير البيانات.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">49. العلامة (-) في الجانب الأيسر السفلي من جدول القرارات تعني وجوب اتخاذ القرار وتنفيذ الفعل.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: تعني عدم اتخاذ القرار، بينما علامة (x) تعني وجوب اتخاذ القرار.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">50. من عيوب جداول القرارات أنها لا تُظهر بوضوح التسلسل المنطقي الذي تُنفذ به العمليات بعكس خرائط تدفق البرامج.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-
-        <div class="footer">
-            <div class="footer-logo">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
-                <span class="footer-name">الدحيح</span>
-            </div>
-            <div>100 سؤال محلول - صفحة 9</div>
-        </div>
-    </div>
-
-    <!-- القسم الثالث: ملف الأسئلة التدريبية -->
-    <div class="page">
-        <h2>القسم الثالث: ملف الأسئلة التدريبية</h2>
-        <h3>أولاً: أسئلة الاختيار من متعدد</h3>
-
-        <div class="question-box">
-            <div class="question-text">1. ما التعريف الأدق للنظام؟</div>
-            <div class="options">أ) مجموعة عناصر مترابطة تتفاعل لتحقيق هدف محدد &nbsp;|&nbsp; ب) مجموعة مستندات لا تتغير &nbsp;|&nbsp; ج) برنامج حاسوبي فقط &nbsp;|&nbsp; د) مجموعة أفراد دون هدف</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">2. أي مما يلي يُعد من الموارد المادية للنظام؟</div>
-            <div class="options">أ) الأفراد القائمون على التشغيل &nbsp;|&nbsp; ب) المطبوعات والمستندات والسجلات والدفاتر &nbsp;|&nbsp; ج) المديرون فقط &nbsp;|&nbsp; د) العملاء والموردون</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">3. ماذا يعني الترتيب الهرمي للنظام؟</div>
-            <div class="options">أ) عدم وجود نظم فرعية &nbsp;|&nbsp; ب) تقسيم النظام إلى أجزاء فرعية، ثم تقسيم الأجزاء إلى أجزاء أدنى &nbsp;|&nbsp; ج) إلغاء حدود النظام &nbsp;|&nbsp; د) تحويل المخرجات إلى مدخلات فقط</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">4. أي نوع من النظم لا يتدخل الإنسان في وجوده ويعمل تلقائيًا؟</div>
-            <div class="options">أ) النظام التشغيلي &nbsp;|&nbsp; ب) النظام الطبيعي &nbsp;|&nbsp; ج) النظام المغلق &nbsp;|&nbsp; د) النظام المعدل</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">5. أي عبارة تصف النظم المحددة؟</div>
-            <div class="options">أ) تعتمد نتائجها فقط على الاحتمالات &nbsp;|&nbsp; ب) لا يمكن قياس نتائجها &nbsp;|&nbsp; ج) يمكن التنبؤ بمخرجاتها بصورة مؤكدة &nbsp;|&nbsp; د) لا تحتوي على مدخلات</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. النظم التي تتفاعل باستمرار مع البيئة المحيطة تسمى:</div>
-            <div class="options">أ) نظماً مغلقة &nbsp;|&nbsp; ب) نظماً مفتوحة &nbsp;|&nbsp; ج) نظماً طبيعية فقط &nbsp;|&nbsp; د) نظماً محددة فقط</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. ما المقصود بمدخلات النظام بصفة عامة؟</div>
-            <div class="options">أ) البيانات باعتبارها مادة خام تخضع للمعالجة &nbsp;|&nbsp; ب) القرارات النهائية فقط &nbsp;|&nbsp; ج) التغذية العكسية فقط &nbsp;|&nbsp; د) المخرجات بعد استخدامها</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. ما الفرق الأدق بين التغذية العكسية والرقابة؟</div>
-            <div class="options">أ) لا يوجد فرق بينهما &nbsp;|&nbsp; ب) التغذية العكسية معلومات مرتبطة بالمخرجات، والرقابة معرفة بكيفية عمل النظام &nbsp;|&nbsp; ج) الرقابة مدخلات والتغذية العكسية موارد بشرية &nbsp;|&nbsp; د) كلاهما مخرجات مالية فقط</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. ما المقصود بالبيانات المحاسبية؟</div>
-            <div class="options">أ) معلومات نهائية جاهزة للقرار &nbsp;|&nbsp; ب) حقائق أو مشاهدات خام لم تُعالج بعد &nbsp;|&nbsp; ج) تعليمات تشغيل النظام &nbsp;|&nbsp; د) تقارير الإدارة فقط</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. المعلومات هي:</div>
-            <div class="options">أ) بيانات خام لم تُنظم &nbsp;|&nbsp; ب) ناتج معالجة وتنظيم البيانات لإعطاء معنى مفيد &nbsp;|&nbsp; ج) مستندات ورقية فقط &nbsp;|&nbsp; د) مدخلات النظام حصراً</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. ماذا يحدث عند تقديم معلومات أكثر من اللازم لمتخذ القرار؟</div>
-            <div class="options">أ) تتحسن القرارات دائماً &nbsp;|&nbsp; ب) يحدث عبء المعلومات وقد تتدنى جودة القرارات &nbsp;|&nbsp; ج) تختفي الحاجة إلى الرقابة &nbsp;|&nbsp; د) تتحول البيانات إلى موارد مادية</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. أي خاصية تعني خلو المعلومات من الأخطاء؟</div>
-            <div class="options">أ) الشمول &nbsp;|&nbsp; ب) المرونة &nbsp;|&nbsp; ج) الدقة &nbsp;|&nbsp; د) إمكانية التحقق</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. وفقاً للإطار المفاهيمي للمعايير المحاسبية الدولية، إمكانية التحقق من الخصائص:</div>
-            <div class="options">أ) الأساسية &nbsp;|&nbsp; ب) المعززة أو المكملة &nbsp;|&nbsp; ج) التشغيلية &nbsp;|&nbsp; د) الداخلية</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. ما طبيعة نظام المعلومات المحاسبي داخل المنشأة؟</div>
-            <div class="options">أ) النظام الرئيسي الوحيد &nbsp;|&nbsp; ب) نظام فرعي يحول البيانات المحاسبية إلى معلومات &nbsp;|&nbsp; ج) نظام لا يرتبط بالقرار &nbsp;|&nbsp; د) نظام خاص بالمستخدمين الخارجيين فقط</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. أي مجموعة تمثل مستخدمين خارجيين للمعلومات المحاسبية؟</div>
-            <div class="options">أ) مجلس الإدارة ومدير الإنتاج &nbsp;|&nbsp; ب) الموردون والعمليات والمساهمون والجهات الحكومية &nbsp;|&nbsp; ج) المحاسبون ومديرو الأقسام فقط &nbsp;|&nbsp; د) موظفو نظم المعلومات فقط</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. يمكن أن يكون ترميز البيانات في نظام المعلومات المحاسبي على شكل:</div>
-            <div class="options">أ) حروف فقط &nbsp;|&nbsp; ب) أرقام فقط &nbsp;|&nbsp; ج) حروف أو أرقام أو كليهما &nbsp;|&nbsp; د) صور دون رموز</div>
-            <div class="answer-box">الإجابة: ج</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. أي مما يلي يمثل مكونات النظام المحاسبي اليدوي؟</div>
-            <div class="options">أ) أجهزة وبرامج وشبكات &nbsp;|&nbsp; ب) موارد بشرية ومخزون بيانات وإجراءات &nbsp;|&nbsp; ج) معالجات إلكترونية فقط &nbsp;|&nbsp; د) أقمار صناعية وبرامج اتصال</div>
-            <div class="answer-box">الإجابة: ب</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">18. أي مما يلي من أنواع نظم المعلومات المحاسبية الحديثة والإدارية؟</div>
-            <div class="options">أ) TPS وDSS &nbsp;|&nbsp; ب) PDF وDOCX &nbsp;|&nbsp; ج) RAM وCPU &nbsp;|&nbsp; د) HTML وCSS</div>
-            <div class="answer-box">الإجابة: أ</div>
-        </div>
-
-        <div class="footer">
-            <div class="footer-logo">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
-                <span class="footer-name">الدحيح</span>
-            </div>
-            <div>أسئلة التدريب - صفحة 10</div>
-        </div>
-    </div>
-
-    <!-- القسم الثالث: ملف الأسئلة التدريبية (صح وخطأ) -->
-    <div class="page">
-        <h3>ثانياً: أسئلة الصواب والخطأ (ملف التدريب)</h3>
-
-        <div class="question-box">
-            <div class="question-text">1. يُعرف النظام بأنه مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل مع بعضها البعض لتحقيق هدف محدد.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">2. الهدف الجزئي للنظام الفرعي لا يلزم أن يكون في إطار الهدف الكلي للمنشأة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: لابد أن يكون في إطار الهدف الكلي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">3. تعتبر المطبوعات والمستندات والسجلات والدفاتر من الموارد البشرية للنظام.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي من الموارد المادية.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">4. خاصة التكامل تعني أن لكل نظام بيئة وحدوداً، ويصعب أحياناً تحديد حد فاصل دقيق بين بيئة النظام وحدوده.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">5. القيود الداخلية للنظام تتمثل في عوامل مثل حجم الطلب على المنتجات في السوق الخارجي.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: حجم الطلب الخارجي قيد خارجي.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">6. يعني الترتيب الهرمي إمكانية تقسيم أجزاء النظام إلى أجزاء فرعية، كما يمكن تقسيم كل جزء فرعي إلى أجزاء فرعية أدنى.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">7. النظم الطبيعية هي نظم كونية لا يتدخل الإنسان في وجودها، بل هي من صنع الله وتعمل تلقائياً.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">8. النظم التشغيلية أو المصنوعة هي نظم لا ترتبط بأي أهداف أو أنشطة محددة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هي وسيلة يتحقق من خلالها أداء عملية معينة ترتبط بهدف.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">9. النظم المحددة هي النظم التي لا يمكن توقع أعمالها بدقة وتعتمد فقط على الاحتمالات.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: النظم المحددة يمكن التنبؤ بمخرجاتها بصورة مؤكدة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">10. النظم المغلقة هي التي تتفاعل باستمرار مع البيئة المحيطة وتؤثر وتتأثر بها.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هذه هي النظم المفتوحة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">11. النظم المعدلة هي التي لا تستطيع تعديل نفسها للتكيف مع التغيرات البيئية المحيطة بها.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: النظم المعدلة تستطيع تعديل نفسها ذاتياً.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">12. تتمثل مدخلات النظام بصفة عامة في البيانات باعتبارها المادة الخام التي تخضع لعمليات التحويل.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">13. التغذية العكسية والرقابة شيء واحد ولا يوجد أي فرق بينهما في النموذج العام للنظام.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هما مرتبطان ولكن مختلفان.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">14. البيانات المحاسبية هي عبارة عن حقائق أو مشاهدات في شكلها الخام أو الأولي لم تتم معالجتها بعد.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">15. المعلومات هي ناتج معالجة وتنظيم البيانات لإعطاء معنى مفيد لمستخدمها في صناعة القرارات.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">16. إذا زادت كمية المعلومات المقدمة لمتخذ القرار عن اللازم، فإن ذلك يحسن جودة القرار تمامًا.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: الزيادة عن اللازم تسبب عبء المعلومات.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">17. خاصية الشمول في المعلومات تعني خلو المعلومات تمامًا من الأخطاء وهي خاصية ملموسة وسهلة القياس.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: الدقة تعني الخلو من الأخطاء، والشمول خاصية غير ملموسة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">18. المرونة في المعلومات تعني إمكانية استخدام المعلومات لتلبية احتياجات أكثر من مستخدم وأكثر من قرار.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">19. وفقاً للإطار المفاهيمي للمعايير المحاسبية الدولية، تعتبر إمكانية التحقق من الخصائص النوعية الأساسية للمعلومات وليست من الخصائص المعززة.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: إمكانية التحقق من الخصائص المعززة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">20. نظام المعلومات المحاسبي هو النظام الرئيسي الوحيد في المنشأة ولا يوجد تحته أي نظم فرعية أخرى.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: نظام فرعي داخل المنشأة.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">21. يعتبر مجلس الإدارة من المستخدمين الخارجيين للمعلومات المحاسبية.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: مجلس الإدارة من المستخدمين الداخليين.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">22. الموردون والعمليات والمساهمون والجهات الحكومية يعتبرون من المستخدمين الخارجيين للمعلومات المحاسبية.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">23. ترميز البيانات قد يكون على شكل حروف أو أرقام أو الاثنين معاً ضمن الوظائف الأساسية لنظام المعلومات المحاسبي.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">24. يتكون نظام المعلومات المحاسبي اليدوي من أجهزة ومعدات مادية وبرامج حاسب وتكنولوجيا اتصالات.</div>
-            <div class="answer-box">الإجابة: خطأ</div>
-            <div class="note-box">التصحيح: هذه مكونات النظام الإلكتروني.</div>
-        </div>
-        <div class="question-box">
-            <div class="question-text">25. تعتبر أنظمة معالجة العمليات (TPS) وأنظمة دعم القرارات (DSS) من أنواع تصنيفات نظم المعلومات المحاسبية الحديثة والإدارية.</div>
-            <div class="answer-box">الإجابة: صح</div>
-        </div>
-
-        <div class="footer">
-            <div class="footer-logo">
-                <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" alt="Logo">
-                <span class="footer-name">الدحيح</span>
-            </div>
-            <div>أسئلة التدريب - صفحة 11</div>
+            <div>الفصل الخامس</div>
         </div>
     </div>
 
