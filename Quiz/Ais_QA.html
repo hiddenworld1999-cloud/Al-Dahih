@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>امتحان نظم المعلومات المحاسبية - الميد ترم</title>
+    
+    <!-- ================= بداية كود الحماية الموحد ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+    <style>
+        * { -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important; -webkit-touch-callout: none !important; }
+        @media print { html, body { display: none !important; } }
+        #antiScreenshotShield { position: fixed; inset: 0; background: #020202; color: #ffffff; display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 999999; font-family: 'Cairo', sans-serif; text-align: center; }
+        #watermarkGrid { position: fixed; inset: 0; pointer-events: none; z-index: 99998; overflow: hidden; display: flex; flex-wrap: wrap; justify-content: space-around; align-content: space-around; opacity: 0.12; }
+        .watermark-item { transform: rotate(-25deg); color: #ffffff; font-size: 15px; font-weight: 800; white-space: nowrap; padding: 35px; font-family: monospace; user-select: none; mix-blend-mode: difference; text-shadow: 0 0 2px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6); }
+    </style>
+    <script>
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || localStorage.getItem('daheeh_is_admin') === 'true';
+        if (!isDev) {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || e.key === 'F12') { e.preventDefault(); }
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+            let sName = "طالب الدحيح", sCode = "";
+            try { sName = localStorage.getItem('studentName') || "طالب الدحيح"; sCode = localStorage.getItem('studentCode') || "0000"; } catch (e) {}
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية ================= -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* تصميم محاسبي فاتح وأنيق */
+        :root {
+            --bg-body: #F8FAFC;
+            --bg-page: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --primary-blue: #0F4C81; 
+            --primary-light: #E0F2FE;
+            --accent-green: #059669; 
+            --accent-green-light: #D1FAE5;
+            --accent-gold: #F59E0B; 
+            --accent-gold-light: #FEF3C7;
+            --accent-red: #DC2626;
+            --border-color: #E2E8F0;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
+            background-color: var(--bg-body);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            line-height: 1.5; 
+            padding: 60px 0 90px 0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-blue); border-radius: 8px; }
+
+        /* ============ الشريط العلوي (التقدم) ============ */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05); z-index: 1000;
+            display: flex; justify-content: center; padding: 9px 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .top-bar-content {
+            width: 100%; max-width: 794px;
+            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+        }
+        .top-bar-title { font-weight: 800; font-size: 15px; color: var(--primary-blue); white-space: nowrap; }
+        .progress-container { flex: 1; background: #E2E8F0; height: 8px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary-blue), var(--accent-green)); width: 0%; transition: width 0.4s ease; }
+        .progress-text { font-weight: 700; font-size: 13px; color: var(--text-muted); min-width: 60px; text-align: left; }
+
+        /* ============ الحاوية الأساسية للورقة ============ */
+        .page-wrapper {
+            width: 100%; display: flex; justify-content: center;
+            margin-bottom: 20px; overflow: hidden; padding: 0 10px; 
+        }
+        
+        /* ============ تصميم ورقة A4 ============ */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 794px; min-height: 1123px; height: auto;
+            padding: 15px 15px 45px 15px; 
+            border: 1px solid var(--border-color); border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative;
+            display: flex; flex-direction: column;
+            transform-origin: top center; flex-shrink: 0;
+        }
+
+        .a4-page::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-green));
+            border-radius: 8px 8px 0 0; z-index: 10;
+        }
+
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; height: 400px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat; background-position: center; background-size: contain;
+            opacity: 0.03; pointer-events: none; z-index: 0; filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative; z-index: 2; display: flex; flex-direction: column;
+            width: 100%; align-items: stretch; flex-grow: 1;
+        }
+
+        .hero-header { text-align: center; padding: 10px 0 15px; margin-bottom: 15px; border-bottom: 2px dashed var(--border-color); }
+        .hero-header h1 { font-family: 'Amiri', serif; font-size: 28px; font-weight: 700; color: var(--primary-blue); margin-bottom: 5px; }
+        .hero-header p { font-size: 16px; color: var(--text-muted); font-weight: 600; }
+
+        .main-title-banner {
+            background: var(--primary-light); border-right: 4px solid var(--primary-blue);
+            border-radius: 6px; padding: 8px 15px; font-size: 15px; font-weight: 800;
+            color: var(--primary-blue); margin: 5px 0 15px 0; display: flex; align-items: center; gap: 8px;
+        }
+
+        .section-divider {
+            background: var(--primary-light); color: var(--primary-blue);
+            text-align: center; padding: 8px; border-radius: 6px; font-weight: 800;
+            margin: 15px 0; font-size: 18px; page-break-inside: avoid;
+            border: 1px solid rgba(15, 76, 129, 0.1);
+        }
+
+        /* ============ كارت السؤال ============ */
+        .q-card {
+            background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 15px; margin-bottom: 12px; 
+            box-shadow: var(--card-shadow); position: relative;
+            border-right: 4px solid var(--primary-blue); transition: all 0.3s;
+        }
+
+        .q-card.missed {
+            border-color: var(--accent-red) !important;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.2) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .q-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+        .q-head-right { display: flex; align-items: center; gap: 10px; }
+        
+        .q-num {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; background: var(--primary-light); color: var(--primary-blue);
+            font-weight: 800; font-size: 16px;
+        }
+
+        .info-btn {
+            display: none; width: 28px; height: 28px; border-radius: 50%;
+            background: #FFF; border: 2px solid var(--accent-gold); color: var(--accent-gold);
+            font-size: 16px; font-weight: 900; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .info-btn:hover { background: var(--accent-gold-light); }
+        .info-btn.active { background: var(--accent-gold); color: #FFF; }
+
+        .q-text { margin: 0 0 12px 0; font-size: 17px; font-weight: 700; line-height: 1.5; color: var(--text-main); }
+
+        /* ============ الخيارات (2x2) ============ */
+        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .option {
+            position: relative; display: flex; flex-direction: row; align-items: center;
+            justify-content: flex-start; gap: 10px; min-height: 40px; padding: 8px 12px;
+            border: 1px solid var(--border-color); border-radius: 6px; background: #F8FAFC;
+            font-size: 15px; font-weight: 600; color: var(--text-main); line-height: 1.4;
+            cursor: pointer; transition: all 0.2s; overflow-wrap: break-word; word-break: break-word;
+        }
+        
+        .option:hover { border-color: var(--primary-blue); background: #FFF; }
+        .option input { position: absolute; opacity: 0; pointer-events: none; }
+        
+        .option .letter {
+            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; background: #E2E8F0; color: var(--text-muted);
+            font-size: 13px; font-weight: 800; flex-shrink: 0; transition: all 0.2s;
+        }
+        
+        .option .opt-text { flex: 1; }
+
+        /* الحالات التفاعلية */
+        .option.selected { border-color: var(--primary-blue); background: rgba(15, 76, 129, 0.05); box-shadow: 0 0 8px rgba(15, 76, 129, 0.1); }
+        .option.selected .letter { background: var(--primary-blue); color: #FFF; }
+        .option.locked { pointer-events: none; }
+        
+        .option.correct { border-color: var(--accent-green); background: var(--accent-green-light); }
+        .option.correct .letter { background: var(--accent-green); color: #FFF; }
+        .option.correct .opt-text { color: var(--accent-green); font-weight: 800; }
+        
+        .option.wrong { border-color: var(--accent-red); background: rgba(220, 38, 38, 0.05); }
+        .option.wrong .letter { background: var(--accent-red); color: #FFF; }
+        .option.wrong .opt-text { color: var(--accent-red); }
+
+        .option .mark { margin-inline-start: auto; font-size: 20px; font-weight: bold; }
+
+        .q-explanation {
+            display: none; margin-top: 12px; padding: 12px 15px;
+            background: var(--accent-gold-light); border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 6px; font-size: 15px; font-weight: 600; color: #92400E; line-height: 1.5;
+        }
+        .q-explanation strong { color: var(--primary-blue); }
+        .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .footer-bar {
+            position: absolute; bottom: 15px; left: 20px; right: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color); padding-top: 10px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--primary-blue); object-fit: cover; filter: grayscale(20%); }
+        .footer-brand-name { font-size: 15px; font-weight: 900; color: var(--primary-blue); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        /* ============ الشريط السفلي (تسليم) ============ */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.05); z-index: 1000;
+            display: flex; justify-content: center; padding: 12px 15px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn-submit {
+            width: 100%; max-width: 794px; padding: 14px; border: none; border-radius: 8px;
+            background: linear-gradient(90deg, var(--primary-blue), #2563EB);
+            color: #FFF; font-size: 18px; font-weight: 800; font-family: 'Cairo', sans-serif;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center;
+            justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(15, 76, 129, 0.3);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 76, 129, 0.4); }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled { background: #9CA3AF; color: #FFF; cursor: not-allowed; box-shadow: none; }
+
+        .btn-submit.ready {
+            background: linear-gradient(90deg, var(--accent-green), #10B981);
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.4); animation: pulseReady 2s infinite;
+        }
+        @keyframes pulseReady {
+            0% { box-shadow: 0 0 15px rgba(5, 150, 105, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(5, 150, 105, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(5, 150, 105, 0.4); }
+        }
+
+        .result-card {
+            display: none; background: var(--bg-page);
+            border: 2px solid var(--primary-blue); border-radius: 15px; padding: 25px;
+            text-align: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%; max-width: 794px; margin-top: 20px;
+        }
+        .result-card h2 { color: var(--primary-blue); margin-bottom: 10px; font-size: 30px; font-weight: 800; }
+        .result-score { font-size: 64px; font-weight: 900; color: var(--accent-green); margin-bottom: 10px; text-shadow: 0 0 10px rgba(5, 150, 105, 0.2); }
+        .result-score small { font-size: 30px; color: var(--text-muted); }
+        .result-msg { color: var(--text-main); font-size: 20px; font-weight: 600; }
+
+        /* ============ شاشة التنبيه (Modal) ============ */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: var(--bg-page); border: 2px solid var(--accent-red); border-radius: 12px;
+            padding: 25px 28px; width: 92%; max-width: 480px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transform: translateY(20px); transition: all 0.3s;
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-icon { font-size: 60px; margin-bottom: 10px; animation: float 2s infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .modal-content h2 { color: var(--accent-red); margin-bottom: 12px; font-size: 26px; font-weight: 900; }
+        .modal-content p { color: var(--text-main); font-size: 18px; margin-bottom: 18px; line-height: 1.6; font-weight: 600; }
+        .missed-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; max-height: 140px; overflow-y: auto; padding: 5px; }
+        .badge-missed {
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(220, 38, 38, 0.1);
+            border: 2px solid var(--accent-red); color: var(--accent-red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 800; cursor: pointer; transition: all 0.2s;
+        }
+        .badge-missed:hover { background: var(--accent-red); color: #FFF; transform: scale(1.15); }
+        .btn-close-modal {
+            background: var(--primary-blue); border: 2px solid var(--primary-blue); color: #FFF;
+            padding: 12px 25px; border-radius: 8px; font-size: 18px; font-weight: 800;
+            font-family: inherit; cursor: pointer; transition: all 0.2s; width: 100%;
+        }
+        .btn-close-modal:hover { background: transparent; color: var(--primary-blue); }
+
+        /* ============ الطباعة ============ */
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; overflow: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .top-bar, .bottom-bar, .modal-overlay { display: none !important; }
+            .page-wrapper { height: auto !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; display: block !important; break-after: page; page-break-after: always; break-inside: avoid; }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page { transform: none !important; box-shadow: none !important; height: 1123px !important; min-height: 1123px !important; overflow: hidden !important; margin: 0 auto; border-radius: 0 !important; border: none !important; }
+            .a4-page::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-title">AIS Exam</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 0</div>
+        </div>
+    </div>
+
+    <!-- شاشة التنبيه -->
+    <div class="modal-overlay" id="missedModal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h2>لسه مجاوبتش على كل الأسئلة!</h2>
+            <p>باقي عليك <strong id="missedCount" style="color: var(--accent-red); font-size: 22px;">0</strong> أسئلة. اضغط على رقم السؤال عشان تروحله:</p>
+            <div class="missed-badges" id="missedBadges"></div>
+            <button class="btn-close-modal" onclick="closeMissedModal()">راجع الأسئلة</button>
+        </div>
+    </div>
+
+    <!-- شريط النتيجة -->
+    <div class="result-card" id="resultCard">
+        <h2>تم تسليم الامتحان!</h2>
+        <div class="result-score" id="resultScore">0 <small>/ 0</small></div>
+        <p class="result-msg" id="resultMsg">جارٍ إرسال الدرجة للمنصة...</p>
+    </div>
+
+    <!-- الحاوية -->
+    <div id="pagesContainer" style="display: contents;"></div>
+
+    <!-- الشريط السفلي -->
+    <div class="bottom-bar">
+        <button class="btn-submit" id="submitBtn" onclick="submitExam()">تسليم الامتحان</button>
+    </div>
+
+<script>
+const QUIZ = [
+    // ================= القسم الأول =================
+    { section: "الجزء الأول من الأسئلة (اختيار من متعدد)", text: "1. تعريف النظم التشغيلية:", options: ["نظم طبيعية لا يتدخل فيها الإنسان", "وسيلة يتحقق من خلالها أداء عملية معينة", "نظم تقاس بمعدلات افتراضية", "نظم لا ترتبط بأهداف"], correct: 1, explanation: "الطبيعية = من صنع الله، التشغيلية = مصنوعة." },
+    { text: "2. جمع البيانات وتسجيلها وتصنيفها وتحويلها وتلخيصها تعتبر من:", options: ["الخصائص الأساسية", "الوظائف الأساسية", "المكونات الأساسية", "لا شيء"], correct: 1, explanation: "وظائف نظام المعلومات المحاسبي." },
+    { text: "3. من ضوابط المكونات المادية للحاسب:", options: ["المراجعة العكسية بين الحاسب المركزي والوحدات المساعدة", "التأكد من شرعية التعامل مع الجهاز", "المراجعة بطريقة الأداء المزدوج", "جميع ما سبق"], correct: 3, explanation: "تصحيح أ هي 'العكسية' مش 'اللحظية'." },
+    { text: "4. من ضوابط حماية النظام الإلكتروني:", options: ["الرقابة على التعديلات", "اختبار النظام", "التأكد من الموافقة على التطوير", "لا شيء مما سبق"], correct: 3, explanation: "أ، ب، ج ضوابط تطوير وتوثيق النظام." },
+    { text: "5. من ضوابط الرقابة على المخرجات:", options: ["مقارنة بيانات الفترة", "مراجعة توزيع المخرجات", "وضع عناوين خارجية", "أ، ب معاً"], correct: 3, explanation: "تصحيح ب 'توزيع' المخرجات. العناوين الخارجية من ضوابط المدخلات والملفات." },
+    { text: "6. من مصادر المعلومات المتاحة لمحلل النظم:", options: ["المستندات", "وسائط هيكل النظام", "استطلاع الرأي", "أ، ج معاً"], correct: 3, explanation: "تصحيح ب 'وسائط' مش 'بساطة'." },
+    { text: "7. خطوات تصميم نظم المعلومات المحاسبية:", options: ["المسح الميداني الشامل", "تصميم النظام الجديد", "تطبيق النظام الجديد", "جميع ما سبق"], correct: 3, explanation: "الخطوات الست تشمل المسح والتصميم والتطبيق والتحول والتقييم والتقرير." },
+    { text: "8. دورة تحليل وتصميم نظم المعلومات المحاسبية:", options: ["تحليل وتصميم النظام", "تنفيذ النظام المقترح", "تقييم النظام الجديد", "أ، ب معاً"], correct: 3, explanation: "إجابة البنك. التقييم (ج) منطقياً جزء من الدورة، اسأل الدكتورة." },
+    { text: "9. عملية تدفق الإجراءات والمستندات تتمثل في:", options: ["بدء العملية", "إدارة المشتريات", "المستندات النهائية", "جميع ما سبق"], correct: 3, explanation: "كلها خطوات في تدفق الإجراءات." },
+
+    // ================= الجزء الثاني (صح وخطأ) =================
+    { section: "تابع: الجزء الثاني (صح وخطأ)", text: "1. النظام مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل لتحقيق هدف محدد", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "هذا هو التعريف العام للنظام." },
+    { text: "2. من خصائص النظام وعناصره الموارد (بشرية، مادية، مالية) والتفاعل بين الأجزاء", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "النظام يتكون من موارد وأهداف وتفاعل." },
+    { text: "3. لا يوجد خصائص للنظام المحاسبي", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: للنظام خصائص مميزة." },
+    { text: "4. النظم الطبيعية لا يتدخل الإنسان في وجودها", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "مثل الكون والكواكب وجسم الإنسان." },
+    { text: "5. لا يوجد فرق بين البيانات والمعلومات", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: البيانات مادة خام، والمعلومات بيانات معالجة." },
+    { text: "6. تعتبر المرونة من الخصائص الأساسية للمعلومات", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "ضمن قائمة الـ10 خصائص بالمحاضرة. مش من خصائص الإطار الدولي." },
+    { text: "7. لا يشترط توافر المعلومات في توقيت محدد", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: التوقيت المناسب شرط." },
+    { text: "8. لا يوجد اختلاف بين الخصائص الأساسية للمعلومات وفقاً للإطار المفاهيمي الدولي", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: أساسية (الملاءمة والتعبير الصادق) ومعززة." },
+    { text: "9. نظام المعلومات المحاسبي هو النظام الرئيسي الذي يحول البيانات المحاسبية إلى معلومات", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هو نظام فرعي." },
+    { text: "10. لا تعتبر زيادة قنوات الاتصال في المنشأة من أهمية نظم المعلومات المحاسبية", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هي من الأسباب الخمسة للأهمية." },
+    { text: "11. يعتبر مجلس الإدارة من المستخدمين الخارجيين", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: مجلس الإدارة مستخدم داخلي." },
+    { text: "12. يتكون نظام المعلومات المحاسبي الإلكتروني من ثلاثة عناصر فقط", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: 4 عناصر بالمحاضرة (البنك قال 5). اليدوي هو اللي 3." },
+    { text: "13. تعتبر أنظمة العمل المعرفية (KWS) من مكونات النظام اليدوي", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هي نوع/تصنيف من أنواع النظم." },
+    { text: "14. قيمة المعلومات في حالة عدم التأكد = عائد المعلومات − تكلفتها", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هذا قانون حالة التأكد." },
+    { text: "15. قيمة المعلومات = العائد بعد − العائد قبل الحصول عليها، في حالة التأكد", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: دي صيغة عدم التأكد، وفي التأكد: العائد − التكلفة." },
+    { text: "16. تنقسم المجموعة المستندية إلى مستندات خارجية وداخلية", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "صحيح." },
+    { text: "17. وفقاً لخريطة تدفق المستندات يمكن لإدارة المشتريات جمع الطلبات والتأكد من عدم توافرها بالمخازن", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "صحيح." },
+    { text: "18. دفاتر الأستاذ المساعد والأستاذ العام من المجموعة المستندية", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هي من المجموعة الدفترية." },
+    { text: "19. حساب الأرباح والخسائر من القوائم والتقارير المالية المنتهية في العام المالي", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: القوائم هي الدخل، المركز المالي، التدفقات، حقوق الملكية." },
+    { text: "20. الفصل بين الواجبات من المقومات المحاسبية", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: مقوم إداري. المحاسبية: دليل الحسابات، المستندية، الدفترية، دورة التقارير." },
+    { text: "21. تعتبر خرائط تدفق البرامج من تصميم عمليات التشغيل", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "صحيح." },
+    { text: "22. تعتبر جداول القرارات من تحليل عمليات التشغيل", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: هي تصميم مش تحليل." },
+    { text: "23. يمكن اتخاذ قرار التحول للنظام الجديد بمدخل التحول المتوازي فقط", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: مباشر، متوازي، تدريجي." },
+    { text: "24. لا توجد رموز نمطية لعمليات المدخلات والمخرجات والتشغيل", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: توجد رموز نمطية." },
+    { text: "25. من عيوب خرائط تدفق المستندات إعطاء صورة واضحة عن خطوط الاتصال الرسمية", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: ده من مميزاتها." },
+
+    // ================= الجزء الثالث (أسئلة جديدة) =================
+    { section: "تابع: الجزء الثالث (أسئلة متنوعة)", text: "1. البيانات المحاسبية هي:", options: ["حقائق خام لم تُعالج", "تقارير جاهزة للقرار", "رصيد خبرات", "قوائم مالية"], correct: 0, explanation: "" },
+    { text: "2. الخصائص النوعية الأساسية حسب الإطار المفاهيمي:", options: ["المقارنة والتحقق", "الملاءمة والتعبير الصادق", "الفهم والتوقيت", "السرعة والمرونة"], correct: 1, explanation: "" },
+    { text: "3. من الخصائص التي تحقق التعبير الصادق:", options: ["الاكتمال", "المقارنة", "التوقيت", "الفهم"], correct: 0, explanation: "الاكتمال، الموضوعية، الدقة." },
+    { text: "4. ليست من الخصائص المعززة:", options: ["المقارنة", "الفهم", "الموضوعية", "التوقيت المناسب"], correct: 2, explanation: "المعززة: فهم، مقارنة، تحقق، توقيت." },
+    { text: "5. تعتبر المعلومة ملائمة إذا كان لها قيمة:", options: ["توكيدية أو تنبؤية", "مالية فقط", "تاريخية فقط", "لا شيء"], correct: 0, explanation: "" },
+    { text: "6. من المستخدمين الخارجيين:", options: ["الإدارة العليا", "المساهمون", "مدير القسم", "رئيس الحسابات"], correct: 1, explanation: "" },
+    { text: "7. ليس من أسباب أهمية نظم المعلومات المحاسبية:", options: ["النمو في الحجم", "تعدد الأهداف", "انخفاض حجم المنشأة", "التطورات التقنية"], correct: 2, explanation: "" },
+    { text: "8. ترميز البيانات وتصنيفها وفحصها من وظائف:", options: ["جمع البيانات", "تشغيل البيانات", "إدارة البيانات", "الرقابة"], correct: 0, explanation: "" },
+    { text: "9. تخزين البيانات واسترجاعها وصيانتها من وظائف:", options: ["جمع البيانات", "تشغيل البيانات", "إدارة البيانات", "لا شيء"], correct: 2, explanation: "" },
+    { text: "10. ليس من مكونات النظام اليدوي:", options: ["الموارد البشرية", "مخزون البيانات", "الإجراءات", "برامج الحاسب"], correct: 3, explanation: "" },
+    { text: "11. النظام الذي لا يتفاعل مع بيئته ولا يتأثر بها:", options: ["مفتوح", "مغلق", "معدل", "محتمل"], correct: 1, explanation: "" },
+    { text: "12. النظم التي يتنبأ بنتائجها بالاحتمالات وليس بتأكيد:", options: ["محددة", "محتملة", "مستقرة", "بسيطة"], correct: 1, explanation: "" },
+    { text: "13. مطابقة المخرجات بالأهداف المحددة مقدماً:", options: ["الرقابة", "التغذية العكسية", "المدخلات", "التحويل"], correct: 1, explanation: "" },
+    { text: "14. TPS هي:", options: ["أنظمة معالجة العمليات", "أنظمة دعم القرارات", "النظم الخبيرة", "نظم دعم التنفيذيين"], correct: 0, explanation: "" },
+    { text: "15. عائد البديل 300000 وتكلفته 50000 وثمن المعلومة المؤكدة 40000. قيمة المعلومة (حالة التأكد):", options: ["250000", "210000", "260000", "90000"], correct: 1, explanation: "250000 − 40000." },
+    { text: "16. وضع عناوين خارجية من ضوابط:", options: ["المدخلات والملفات", "المخرجات", "المكونات المادية", "التطوير"], correct: 0, explanation: "" },
+    { text: "17. مداخل التحول للنظام الجديد:", options: ["المباشر فقط", "المتوازي فقط", "المباشر والمتوازي والتدريجي", "لا شيء"], correct: 2, explanation: "" },
+
+    // ================= الجزء الرابع (صح وخطأ جديد) =================
+    { section: "تابع: الجزء الرابع (صح وخطأ)", text: "1. البيانات هي المادة الخام للنظام", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "2. المعلومة تزيد رصيد المعرفة لدى من يحصل عليها", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "3. الدقة تعني خلو المعلومات من الأخطاء", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "4. خاصية الشمول سهلة القياس", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: غير ملموسة يصعب قياسها." },
+    { text: "5. خاصية الملاءمة من السهل قياسها", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: من الصعب قياسها." },
+    { text: "6. يمكن قياس سرعة الحصول على المعلومات", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "7. الاكتمال من الخصائص المعززة", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: أساسية تحت التعبير الصادق." },
+    { text: "8. القابلية للمقارنة من الخصائص المعززة", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "9. المساهمون من المستخدمين الداخليين", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: خارجيون." },
+    { text: "10. مصلحة الضرائب من المستخدمين الخارجيين", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "11. النظام الإلكتروني يتكون من 4 عناصر (حسب المحاضرة)", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "12. الإجراءات من مكونات النظام اليدوي", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "13. النظام المغلق يؤثر ويتأثر بالبيئة", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: ده المفتوح." },
+    { text: "14. الحاسب الآلي مثال على النظم المحددة", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "15. النظام المعدل لا يستطيع تعديل نفسه", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: غير المعدل هو الذي لا يستطيع." },
+    { text: "16. التغذية العكسية والرقابة نفس المعنى", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: مرتبطان ومختلفان." },
+    { text: "17. مدخلات نظام المعلومات هي البيانات", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "18. فرز البيانات من وظائف جمع البيانات", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: من تشغيل البيانات." },
+    { text: "19. تخزين البيانات من وظائف إدارة البيانات", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "20. نظم ERP من نظم التكنولوجيا الحديثة", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "21. إذن الصرف مستند داخلي", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "22. الفاتورة مستند خارجي", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "23. دليل الحسابات من المقومات المحاسبية", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "24. اليومية والأستاذ من المجموعة المستندية", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: دفترية." },
+    { text: "25. المدخل التدريجي من مداخل التحول", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "26. في حالة التأكد قيمة المعلومة = عائدها − تكلفة الحصول عليها", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "27. النظام المحاسبي نظام رئيسي في المنشأة", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "خطأ: فرعي." },
+
+    // ================= الجزء الخامس (الأسئلة المحلولة) =================
+    { section: "الجزء الخامس: أسئلة الاختيار من متعدد", text: "1. يُعرف أي نظام بأنه مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل معاً لتحقيق:", options: ["ربح مادي فقط", "هدف محدد", "تقارير ورقية", "لا شيء مما سبق"], correct: 1, explanation: "" },
+    { text: "2. يُطلق على نظام المعلومات في المنشأة باعتباره أحد النظم الفرعية اسم:", options: ["نظام الرقابة المالية", "نظام تشغيل البيانات", "النظام الرئيسي الوحيد", "نظام الإنتاج"], correct: 1, explanation: "" },
+    { text: "3. من القيود التي تحد من قدرة النظام على تحقيق أهدافه وتكون خارجية:", options: ["ندرة الموارد", "القيود الخارجية", "حجم الطلب في السوق الخارجي", "الإجابة غير واضحة"], correct: 1, explanation: "" },
+    { text: "6. إمكانية تقسيم أجزاء النظام إلى أجزاء فرعية، وتقسيم كل جزء فرعي إلى أجزاء فرعية أدنى تُعرف بخاصية:", options: ["التكامل", "الترتيب الهرمي", "التحويل", "الاستقرار"], correct: 1, explanation: "" },
+    { text: "7. من أمثلة النظم الطبيعية التي لا يتدخل الإنسان في وجودها:", options: ["النظام المحاسبي", "نظام التعليم", "الكون وأجهزة جسم الإنسان", "نظام النقل"], correct: 2, explanation: "" },
+    { text: "8. النظم التي يمكن قياس نتائجها ودراسة التفاعل بين أجزائها بدقة والتنبؤ بمخرجاتها بصورة مؤكدة هي:", options: ["النظم المحتملة", "النظم المحددة", "النظم المفتوحة", "النظم غير المعدلة"], correct: 1, explanation: "" },
+    { text: "9. النظم التي لا تتفاعل مع البيئة المحيطة ولا تؤثر فيها ولا تتأثر بها (مثل الساعة والتجارب الكيميائية) هي:", options: ["نظم مفتوحة", "نظم مغلقة", "نظم معقدة", "نظم رئيسية"], correct: 1, explanation: "" },
+    { text: "10. تمثل الجانب الفني في النموذج العام للنظام، وتشتمل على كيفية تحويل البيانات إلى معلومات:", options: ["المدخلات", "المخرجات", "عمليات التشغيل أو التحويل", "الرقابة"], correct: 2, explanation: "" },
+    { text: "11. مجموعة الحقائق أو المشاهدات أو القياسات التي تكون في شكلها الخام أو الأولي ولم تعالج بعد هي:", options: ["المعلومات المحاسبية", "البيانات المحاسبية", "المعرفة", "القوائم المالية"], correct: 1, explanation: "" },
+    { text: "12. تجمع البيانات في المنشآت عن ثلاثة عناصر رئيسية هي الأحداث (Events)، والموارد (Resources)، و:", options: ["الأرباح (Profits)", "الوكالة المشاركون في الحدث (Agents)", "الضرائب (Taxes)", "الموازنات (Budgets)"], correct: 1, explanation: "" },
+    { text: "13. إذا زادت كمية المعلومات المقدمة للمستخدم عن اللازم فإن ذلك يؤدي إلى:", options: ["تحسن جودة القرارات تلقائياً", "معاناة المستخدم من عبء المعلومات وتدني جودة القرارات", "انخفاض تكلفة إنتاج المعلومات", "سرعة اتخاذ القرار"], correct: 1, explanation: "" },
+    { text: "14. خاصة المعلومات التي تعني إمكانية استخدامها لتلبية احتياجات أكثر من مستخدم وأكثر من قرار هي:", options: ["الدقة", "المرونة", "الوضوح", "الشمول"], correct: 1, explanation: "" },
+    { text: "15. حتى تكون المعلومات موضوعية طبقاً للخصائص الأساسية للمعلومات، يجب توافر ثلاث خصائص هي الحياد، إمكانية التحقق، و:", options: ["المرونة", "صدق التعبير", "السرعة والسهولة", "القابلية للقياس"], correct: 1, explanation: "" },
+    { text: "16. طبقاً للإطار المفاهيمي للمعايير المحاسبية الدولية، تنقسم الخصائص النوعية للمعلومات إلى:", options: ["أساسية ومعززة (مكملة)", "داخلية وخارجية", "مالية وغير مالية", "يدوية وآلية"], correct: 0, explanation: "" },
+    { text: "17. أي من الخصائص التالية يُعد من الخصائص النوعية «الأساسية» طبقاً للإطار المفاهيمي للمعايير المحاسبية الدولية؟", options: ["القابلية للمقارنة", "التوقيت المناسب", "الملاءمة والتعبير الصادق", "القابلية للفهم"], correct: 2, explanation: "" },
+    { text: "20. يتكون نظام المعلومات المحاسبي اليدوي من ثلاثة عناصر أساسية هي الموارد البشرية، الإجراءات، و:", options: ["الأجهزة والمعدات", "مخزون البيانات", "تكنولوجيا الاتصالات", "نظام إدارة قاعدة البيانات"], correct: 1, explanation: "" },
+    { text: "21. الأنظمة التي تستخدم قواعد البيانات الخاصة والنماذج الإحصائية والكمية لدعم متخذي القرارات شبه المهيكلة هي:", options: ["أنظمة معالجة العمليات (TPS)", "أنظمة دعم القرارات (DSS)", "أنظمة ميكانة (OAS)", "أنظمة العمل المعرفية (KWS)"], correct: 1, explanation: "" },
+    { text: "25. طريقة الترميز التي تأخذ فيها الحسابات الرئيسية أرقاماً صحيحة وتضاف أرقام عشرية للحسابات الفرعية (مثل 1 و 1.1) هي:", options: ["الترميز بالحروف الأبجدية", "الترميز بالأرقام العشرية", "الترميز بالكتل الرقمية", "الترميز بالحروف والأرقام معاً"], correct: 1, explanation: "" },
+    { text: "26. الطريقة المحاسبية التي تعتمد على دفتر واحد تسجل فيه العمليات وترحل في نفس الصفحة (يومية وأستاذ معاً) وتناسب المشاريع الصغيرة هي:", options: ["الطريقة الفرنسية", "الطريقة الإنجليزية", "الطريقة الأمريكية", "الطريقة الإيطالية"], correct: 2, explanation: "" },
+    { text: "30. الرقابة التي تقوم على تحديد سلطة المديرين في اعتماد العمليات بحد أقصى لقيمة العملية تسمى:", options: ["الرقابة المزدوجة", "الرقابة الحدية", "الرقابة التلقائية", "الضبط المستمر"], correct: 1, explanation: "" },
+    { text: "35. يُعد «وضع عناوين خارجية على وسائط التخزين» و«عناوين داخلية للملفات» من ضوابط:", options: ["الرقابة على المخرجات", "الرقابة على التشغيل الإلكتروني للبيانات", "المكونات المادية للحاسب", "تطوير النظام"], correct: 1, explanation: "" },
+    { text: "36. أحد الفنيين المختصين بالحاسب الآلي الذي يعطي توصيات خاصة باستخدام الحاسب في نظم الأعمال، ويعمل المبرمج تحت إشرافه هو:", options: ["المراجع الخارجي", "محلل النظم", "أمين المخزن", "مدخل البيانات"], correct: 1, explanation: "" },
+    { text: "37. أسلوب جمع المعلومات الذي يمكن محلل النظم من التعرف على الطرق والأدوات الفعلية التي تُستخدم في تنفيذ العمل وكيفية التنفيذ هو:", options: ["الاستبيان", "الملاحظة", "القياسات الإحصائية", "المستندات"], correct: 1, explanation: "" },
+    { text: "38. أسلوب جمع المعلومات الذي يتسم بضعف الاستجابة أحيانًا أو عدم فهم الأسئلة، ولكنه يناسب الحالات التي يكون فيها عدد المستقصى منهم كبيراً هو:", options: ["المقابلات الشخصية", "استطلاع الرأي (الاستبيان)", "الملاحظة المباشرة", "الفحص المستندي"], correct: 1, explanation: "" },
+    { text: "39. مدخل تصميم النظم الذي يبدأ بتصميم النظم الفرعية في المستويات العليا وصولاً للمستويات الدنيا ويمتاز بضمان تأييد الإدارة العليا هو:", options: ["التصميم من أسفل إلى أعلى", "التصميم من أعلى إلى أسفل", "التصميم بالتجزئة ثم التجميع", "التصميم العشوائي"], correct: 1, explanation: "" },
+    { text: "43. المدخل الذي يتصف بالمخاطرة العالية حيث يتم الإيقاف الفوري للنظام القديم والاعتماد على الجديد مباشرة (ويتيمز بانخفاض التكلفة) هو:", options: ["التحول المتوازي", "التحول المباشر", "التحول التدريجي", "التحول التجريبي"], correct: 1, explanation: "" },
+    { text: "44. المرحلة الأخيرة في دورة تحليل وتصميم نظم المعلومات المحاسبية والتي تهدف لإطالة عمر النظام وتكييفه مع التغيرات البيئية هي:", options: ["مرحلة التخطيط", "مرحلة التوثيق", "مرحلة صيانة النظم", "مرحلة التحليل"], correct: 2, explanation: "" },
+    { text: "45. تُستخدم في عرض تدفق المستندات بين الأقسام والإدارات الخاصة بالمنشأة في النظم اليدوية:", options: ["خرائط تدفق البرامج", "خرائط تدفق المستندات", "خرائط تدفق النظم", "جداول القرارات"], correct: 1, explanation: "" },
+    { text: "48. الرمز الذي يأخذ شكل «متوازي الأضلاع» في خرائط تدفق البرامج يدل على:", options: ["البداية والنهاية", "إدخال البيانات أو إخراج المعلومات", "العمليات الحسابية", "اتخاذ القرار"], correct: 1, explanation: "" },
+    { text: "49. ثُعد «خرائط تدفق البرامج» أداة اتصال فعالة ومهمة لسد الفجوة بين محلي النظم و:", options: ["العملاء", "معدي البرامج (المبرمجين)", "الموردين", "مصلحة الضرائب"], correct: 1, explanation: "" },
+
+    // ================= الجزء السادس (الأسئلة المحلولة - صح وخطأ) =================
+    { section: "تابع: الجزء السادس (صح وخطأ)", text: "1. يُعرف النظام بأنه مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل مع بعضها البعض لتحقيق هدف محدد.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "2. ينشأ تعارض الأهداف عندما يكون نشاط النظام الفرعي منسجماً تمامًا مع النظام الرئيسي.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: عندما يكون غير منسجم." },
+    { text: "3. الموارد المالية للنظام تشمل المحاسبين ومصممي النظم ومشغلي الحاسب الآلي.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هذه موارد بشرية، أما المالية فتشمل رأس المال." },
+    { text: "4. تعني خاصية التكامل أن النتيجة الإجمالية التي تحققها أجزاء النظام عند تكاملها تفوق مجموع ناتج كل جزء على حدة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "5. التغذية العكسية والرقابة هما مصطلحان متطابقان تمامًا ولا يوجد أي اختلاف بينهما في النموذج العام للنظام.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: مرتبطان ولكن مختلفان في الوظيفة والمصدر." },
+    { text: "6. النظم التشغيلية (المصنوعة) هي وسيلة من صنع الإنسان يتحقق من خلالها أداء عملية معينة لبلوغ أهداف محددة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "7. النظم المحتملة هي النظم التي يمكن التنبؤ بمخرجاتها بصورة مؤكدة بنسبة 100% بناءً على معرفة المدخلات.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هذه النظم المحددة، أما المحتملة فتعتمد على الاحتمالات." },
+    { text: "8. النظم المستقرة هي التي تكون علاقاتها محددة بدقة، وإذا حدث بها اضطراب يكون مؤقتاً وسرعان ما تعود لحالتها الطبيعية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "9. تُعد المنشآت الصناعية من أمثلة النظم المغلقة التي لا تؤثر في البيئة المحيطة ولا تتأثر بها.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي نظم مفتوحة." },
+    { text: "10. النظم المعدلة هي التي تستطيع تعديل نفسها ذاتياً للتكيف مع التغيرات البيئية مثل تحول البنك من النظام اليدوي للإلكتروني.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "11. المعلومات المحاسبية هي بيانات تم تصنيفها وترتيبها وتلخيصها وعرضها لتصبح ذات معنى مفيد في اتخاذ القرارات.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "12. المعرفة هي الحقائق الأولية الخام التي لم يتم معالجتها أو تنظيمها بعد.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هذه البيانات." },
+    { text: "13. تعد خاصية «الشمول» و«الملاءمة» في المعلومات من الخصائص الملموسة التي يسهل قياسها كمياً بدقة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي خصائص غير ملموسة ويصعب قياسها." },
+    { text: "14. يقصد بإمكانية التحقق توافر الأدلة المستندية على صحة المعلومات بحيث يمكن الرجوع إليها للتأكد من صحتها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "15. طبقاً للإطار المفاهيمي، تُعد خاصية «التوقيت المناسب» و«القابلية للمقارنة» من الخصائص النوعية الأساسية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي من الخصائص المعززة." },
+    { text: "16. هناك ثلاث خصائص فرعية تساهم في تحقيق التعبير الصادق وهي: الاكتمال، الموضوعية، والدقة.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "17. نظام المعلومات المحاسبي هو النظام الرئيسي الوحيد في المنشأة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هو نظام فرعي." },
+    { text: "18. يرجع اهتمام المقرضين بالمعلومات المحاسبية إلى رغبتهم في معرفة المركز المالي الحالي والمستقبلي وقدرة المنشأة على سداد التزاماتها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "19. تندرج وظيفة «تلخيص البيانات» و«إجراء العمليات المحاسبية» تحت وظيفة إدارة البيانات.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: تندرج تحت وظيفة تشغيل البيانات." },
+    { text: "20. يتكون نظام المعلومات المحاسبي الإلكتروني من أربعة عناصر هي: الأجهزة، برامج الحاسب، نظام إدارة قاعدة البيانات، وتكنولوجيا الاتصالات.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "21. أنظمة دعم التنفيذيين (ESS) مصممة لخدمة المستويات الإدارية الدنيا في العمليات الروتينية اليومية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: مصممة لدعم الإدارة العليا." },
+    { text: "22. في حالة عدم التأكد التام، يتم احتساب قيمة المعلومات بالأخذ في الاعتبار درجة المخاطر والاحتمالات الرياضية للعوائد.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "23. تُعد طلبات الشراء وأذون الصرف من المخازن من المستندات الخارجية للمنشأة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي مستندات داخلية." },
+    { text: "24. من الاعتبارات الواجب مراعاتها عند تصميم المستندات أن يتضمن توقيع المسؤول عن تحريره.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "25. يُعد طلب الشراء من ثلاث نسخ؛ ترسل نسختان للمورد وتبقى نسخة في الإدارة الطالبة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: يُعد من نسختين؛ الأصل للمشتريات وصورة للطالبة." },
+    { text: "26. يتناسب الترميز طبقاً للحروف الأبجدية فقط مع المنشآت الصغيرة التي لديها عدد محدود من الحسابات.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "27. يجوز في دفتر اليومية القانوني الكشط والشطب والتحشير بين السطور طالما تم التوقيع بجانبه.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: يُحظر الشطب وإلا فقد الدفتر حجيته." },
+    { text: "28. تعتمد الطريقة الإيطالية في إمساك الدفاتر على دفترين فقط هما دفتر اليومية العامة ودفتر الأستاذ العام.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "29. تُعد التقارير غير النمطية التي ينتجها نظام المحاسبة الإدارية موحدة الشكل والمضمون لجميع المنشآت.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: يتوقف شكلها على حاجة المستخدم." },
+    { text: "30. يُعد وجود دليل الحسابات والموازنات التخطيطية من المقومات الإدارية للرقابة الداخلية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي من المقومات المحاسبية." },
+    { text: "31. إجراء تنقلات دورية بين العاملين وإعطاؤهم إجازات إجبارية من أهم المقومات الإدارية لاكتشاف التلاعب.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "32. الرقابة المزدوجة تعني أن يقوم موظف واحد بأداء العملية من بدايتها إلى نهايتها لضمان السرعة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: أداء العمل بواسطة شخصين." },
+    { text: "33. يتم التقييم المستمر لنظام الرقابة الداخلية أثناء تأدية العمل وخلال تنفيذ النشاط.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "34. يستطيع الحاسب الآلي تحديد الهدف النهائي من إعداد البيانات والعمل بمعزل عن رغبات الإنسان.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: لا يحدد الهدف ويعمل طبقاً لرغبات الإنسان." },
+    { text: "35. يجب ألا يتصل المبرمجون ومصممو الأنظمة بعملية التشغيل الفعلي للبيانات كأحد ضوابط تنظيم العمل.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "36. يُعد الاحتفاظ بنسخ احتياطية من الملفات والبرامج والتأمين على النظام من ضوابط الرقابة على المخرجات.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: من ضوابط حماية النظام الإلكتروني." },
+    { text: "37. من ضوابط الرقابة على المخرجات مطابقة الإجماليات قبل الإدخال وبعد الإخراج والتأكد من تسليمها للمصرح لهم.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "38. يتولى المبرمج الإشراف على محلل النظم وتحديد أهداف النظام العام للمنشأة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: المبرمج يعمل تحت إشراف محلل النظم." },
+    { text: "39. يمكن الحصول على محلل نظم المعلومات المحاسبية إما بتعيينه من موظفي المنشأة أو الاستعانة باستشاري خارجي.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "40. تعمل الإدارة العليا غالباً في ظل ظروف التأكد التام وتعتمد قراراتها على بيانات داخلية قصيرة الأجل.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: تعمل في ظل عدم التأكد ومعلومات خارجية طويلة الأجل." },
+    { text: "41. كلما زادت درجة تعقيد نظام المعلومات، أدى ذلك إلى إصابة موظفي الشركة بالإحباط لصعوبة فهم مكوناته.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "42. في ظل النظم الآلية الحديثة، يتم إلغاء كافة إجراءات المعالجة والرقابة اليدوية تماماً.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: تظل هناك إجراءات يدوية مثل تجميع المستندات." },
+    { text: "43. ينبغي أن يتلاءم نظام المعلومات المحاسبية المصمم مع طبيعة نشاط المنشأة، لأن الاعتماد الأعمى على النظم المستوردة قد يؤدي للفشل.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "44. يتكون جدول القرارات من ثلاثة أجزاء رئيسية: جزء علوي، وجزء أوسط، وجزء سفلي.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: يتكون من جزئين فقط: علوي للشروط وسفلي للقرارات." },
+    { text: "45. تُعد مرحلة التخطيط هي المرحلة الأولى التي تسبق عملية تحليل النظام وتشمل تعريف المشكلة وإعداد دراسة الجدوى.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "46. يمتاز مدخل «التحول المتوازي» بانخفاض التكلفة وعدم الحاجة إلى مجهود إضافي عند الانتقال للنظام الجديد.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هو مكلف ويحتاج وقتاً لكنه آمن." },
+    { text: "47. مرحلة توثيق النظام الجديد تعني تجميع كل المستندات الخاصة بالنظام وحفظها بصورة منظمة للرجوع إليها.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "48. تُعد خرائط تدفق النظم وسيلة اتصال فعالة لا تحتاج لتخصص دقيق في البرمجة، وتوضح خط سير البيانات.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "49. العلامة (-) في الجانب الأيسر السفلي من جدول القرارات تعني وجوب اتخاذ القرار وتنفيذ الفعل.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: تعني عدم اتخاذ القرار، بينما علامة (x) تعني وجوب اتخاذ القرار." },
+    { text: "50. من عيوب جداول القرارات أنها لا تُظهر بوضوح التسلسل المنطقي الذي تُنفذ به العمليات بعكس خرائط تدفق البرامج.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+
+    // ================= الجزء السابع (أسئلة تدريبية) =================
+    { section: "الجزء السابع: أسئلة تدريبية (اختيار من متعدد)", text: "1. ما التعريف الأدق للنظام؟", options: ["مجموعة عناصر مترابطة تتفاعل لتحقيق هدف محدد", "مجموعة مستندات لا تتغير", "برنامج حاسوبي فقط", "مجموعة أفراد دون هدف"], correct: 0, explanation: "" },
+    { text: "2. أي مما يلي يُعد من الموارد المادية للنظام؟", options: ["الأفراد القائمون على التشغيل", "المطبوعات والمستندات والسجلات والدفاتر", "المديرون فقط", "العملاء والموردون"], correct: 1, explanation: "" },
+    { text: "3. ماذا يعني الترتيب الهرمي للنظام؟", options: ["عدم وجود نظم فرعية", "تقسيم النظام إلى أجزاء فرعية، ثم تقسيم الأجزاء إلى أجزاء أدنى", "إلغاء حدود النظام", "تحويل المخرجات إلى مدخلات فقط"], correct: 1, explanation: "" },
+    { text: "4. أي نوع من النظم لا يتدخل الإنسان في وجوده ويعمل تلقائيًا؟", options: ["النظام التشغيلي", "النظام الطبيعي", "النظام المغلق", "النظام المعدل"], correct: 1, explanation: "" },
+    { text: "5. أي عبارة تصف النظم المحددة؟", options: ["تعتمد نتائجها فقط على الاحتمالات", "لا يمكن قياس نتائجها", "يمكن التنبؤ بمخرجاتها بصورة مؤكدة", "لا تحتوي على مدخلات"], correct: 2, explanation: "" },
+    { text: "6. النظم التي تتفاعل باستمرار مع البيئة المحيطة تسمى:", options: ["نظماً مغلقة", "نظماً مفتوحة", "نظماً طبيعية فقط", "نظماً محددة فقط"], correct: 1, explanation: "" },
+    { text: "7. ما المقصود بمدخلات النظام بصفة عامة؟", options: ["البيانات باعتبارها مادة خام تخضع للمعالجة", "القرارات النهائية فقط", "التغذية العكسية فقط", "المخرجات بعد استخدامها"], correct: 0, explanation: "" },
+    { text: "8. ما الفرق الأدق بين التغذية العكسية والرقابة؟", options: ["لا يوجد فرق بينهما", "التغذية العكسية معلومات مرتبطة بالمخرجات، والرقابة معرفة بكيفية عمل النظام", "الرقابة مدخلات والتغذية العكسية موارد بشرية", "كلاهما مخرجات مالية فقط"], correct: 1, explanation: "" },
+    { text: "9. ما المقصود بالبيانات المحاسبية؟", options: ["معلومات نهائية جاهزة للقرار", "حقائق أو مشاهدات خام لم تُعالج بعد", "تعليمات تشغيل النظام", "تقارير الإدارة فقط"], correct: 1, explanation: "" },
+    { text: "10. المعلومات هي:", options: ["بيانات خام لم تُنظم", "ناتج معالجة وتنظيم البيانات لإعطاء معنى مفيد", "مستندات ورقية فقط", "مدخلات النظام حصراً"], correct: 1, explanation: "" },
+    { text: "11. ماذا يحدث عند تقديم معلومات أكثر من اللازم لمتخذ القرار؟", options: ["تتحسن القرارات دائماً", "يحدث عبء المعلومات وقد تتدنى جودة القرارات", "تختفي الحاجة إلى الرقابة", "تتحول البيانات إلى موارد مادية"], correct: 1, explanation: "" },
+    { text: "12. أي خاصية تعني خلو المعلومات من الأخطاء؟", options: ["الشمول", "المرونة", "الدقة", "إمكانية التحقق"], correct: 2, explanation: "" },
+    { text: "13. وفقاً للإطار المفاهيمي للمعايير المحاسبية الدولية، إمكانية التحقق من الخصائص:", options: ["الأساسية", "المعززة أو المكملة", "التشغيلية", "الداخلية"], correct: 1, explanation: "" },
+    { text: "14. ما طبيعة نظام المعلومات المحاسبي داخل المنشأة؟", options: ["النظام الرئيسي الوحيد", "نظام فرعي يحول البيانات المحاسبية إلى معلومات", "نظام لا يرتبط بالقرار", "نظام خاص بالمستخدمين الخارجيين فقط"], correct: 1, explanation: "" },
+    { text: "15. أي مجموعة تمثل مستخدمين خارجيين للمعلومات المحاسبية؟", options: ["مجلس الإدارة ومدير الإنتاج", "الموردون والعملاء والمساهمون والجهات الحكومية", "المحاسبون ومديرو الأقسام فقط", "موظفو نظم المعلومات فقط"], correct: 1, explanation: "" },
+    { text: "16. يمكن أن يكون ترميز البيانات في نظام المعلومات المحاسبي على شكل:", options: ["حروف فقط", "أرقام فقط", "حروف أو أرقام أو كليهما", "صور دون رموز"], correct: 2, explanation: "" },
+    { text: "17. أي مما يلي يمثل مكونات النظام المحاسبي اليدوي؟", options: ["أجهزة وبرامج وشبكات", "موارد بشرية ومخزون بيانات وإجراءات", "معالجات إلكترونية فقط", "أقمار صناعية وبرامج اتصال"], correct: 1, explanation: "" },
+    { text: "18. أي مما يلي من أنواع نظم المعلومات المحاسبية الحديثة والإدارية؟", options: ["TPS وDSS", "PDF وDOCX", "RAM وCPU", "HTML وCSS"], correct: 0, explanation: "" },
+
+    // ================= الجزء الثامن (أسئلة تدريبية - صح وخطأ) =================
+    { section: "تابع: الجزء الثامن (صح وخطأ)", text: "1. يُعرف النظام بأنه مجموعة من العناصر أو المكونات المتداخلة والمترابطة التي تتفاعل مع بعضها البعض لتحقيق هدف محدد.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "2. الهدف الجزئي للنظام الفرعي لا يلزم أن يكون في إطار الهدف الكلي للمنشأة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: لابد أن يكون في إطار الهدف الكلي." },
+    { text: "3. تعتبر المطبوعات والمستندات والسجلات والدفاتر من الموارد البشرية للنظام.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي من الموارد المادية." },
+    { text: "4. خاصة التكامل تعني أن لكل نظام بيئة وحدوداً، ويصعب أحياناً تحديد حد فاصل دقيق بين بيئة النظام وحدوده.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "5. القيود الداخلية للنظام تتمثل في عوامل مثل حجم الطلب على المنتجات في السوق الخارجي.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: حجم الطلب الخارجي قيد خارجي." },
+    { text: "6. يعني الترتيب الهرمي إمكانية تقسيم أجزاء النظام إلى أجزاء فرعية، كما يمكن تقسيم كل جزء فرعي إلى أجزاء فرعية أدنى.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "7. النظم الطبيعية هي نظم كونية لا يتدخل الإنسان في وجودها، بل هي من صنع الله وتعمل تلقائياً.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "8. النظم التشغيلية أو المصنوعة هي نظم لا ترتبط بأي أهداف أو أنشطة محددة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هي وسيلة يتحقق من خلالها أداء عملية معينة ترتبط بهدف." },
+    { text: "9. النظم المحددة هي النظم التي لا يمكن توقع أعمالها بدقة وتعتمد فقط على الاحتمالات.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: النظم المحددة يمكن التنبؤ بمخرجاتها بصورة مؤكدة." },
+    { text: "10. النظم المغلقة هي التي تتفاعل باستمرار مع البيئة المحيطة وتؤثر وتتأثر بها.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هذه هي النظم المفتوحة." },
+    { text: "11. النظم المعدلة هي التي لا تستطيع تعديل نفسها للتكيف مع التغيرات البيئية المحيطة بها.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: النظم المعدلة تستطيع تعديل نفسها ذاتياً." },
+    { text: "12. تتمثل مدخلات النظام بصفة عامة في البيانات باعتبارها المادة الخام التي تخضع لعمليات التحويل.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "13. التغذية العكسية والرقابة شيء واحد ولا يوجد أي فرق بينهما في النموذج العام للنظام.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هما مرتبطان ولكن مختلفان." },
+    { text: "14. البيانات المحاسبية هي عبارة عن حقائق أو مشاهدات في شكلها الخام أو الأولي لم تتم معالجتها بعد.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "15. المعلومات هي ناتج معالجة وتنظيم البيانات لإعطاء معنى مفيد لمستخدمها في صناعة القرارات.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "16. إذا زادت كمية المعلومات المقدمة لمتخذ القرار عن اللازم، فإن ذلك يحسن جودة القرار تمامًا.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: الزيادة عن اللازم تسبب عبء المعلومات." },
+    { text: "17. خاصية الشمول في المعلومات تعني خلو المعلومات تمامًا من الأخطاء وهي خاصية ملموسة وسهلة القياس.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: الدقة تعني الخلو من الأخطاء، والشمول خاصية غير ملموسة." },
+    { text: "18. المرونة في المعلومات تعني إمكانية استخدام المعلومات لتلبية احتياجات أكثر من مستخدم وأكثر من قرار.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "19. وفقاً للإطار المفاهيمي للمعايير المحاسبية الدولية، تعتبر إمكانية التحقق من الخصائص النوعية الأساسية للمعلومات وليست من الخصائص المعززة.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: إمكانية التحقق من الخصائص المعززة." },
+    { text: "20. نظام المعلومات المحاسبي هو النظام الرئيسي الوحيد في المنشأة ولا يوجد تحته أي نظم فرعية أخرى.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: نظام فرعي داخل المنشأة." },
+    { text: "21. يعتبر مجلس الإدارة من المستخدمين الخارجيين للمعلومات المحاسبية.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: مجلس الإدارة من المستخدمين الداخليين." },
+    { text: "22. الموردون والعملاء والمساهمون والجهات الحكومية يعتبرون من المستخدمين الخارجيين للمعلومات المحاسبية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "23. ترميز البيانات قد يكون على شكل حروف أو أرقام أو الاثنين معاً ضمن الوظائف الأساسية لنظام المعلومات المحاسبي.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" },
+    { text: "24. يتكون نظام المعلومات المحاسبي اليدوي من أجهزة ومعدات مادية وبرامج حاسب وتكنولوجيا اتصالات.", options: ["صح (√)", "خطأ (×)"], correct: 1, explanation: "التصحيح: هذه مكونات النظام الإلكتروني." },
+    { text: "25. تعتبر أنظمة معالجة العمليات (TPS) وأنظمة دعم القرارات (DSS) من أنواع تصنيفات نظم المعلومات المحاسبية الحديثة والإدارية.", options: ["صح (√)", "خطأ (×)"], correct: 0, explanation: "" }
+];
+
+/* حساب isGeneric مرة واحدة */
+QUIZ.forEach(q => {
+    q.isGeneric = (
+        q.explanation === 'صح.' ||
+        q.explanation === 'خطأ.' ||
+        q.explanation === q.options[q.correct] ||
+        q.explanation.length <= q.options[q.correct].length + 3
+    );
+});
+
+const LETTERS = ['أ', 'ب', 'ج', 'د'];
+const container = document.getElementById('pagesContainer');
+
+let state = {
+    answers: new Array(QUIZ.length).fill(null),
+    submitted: false
+};
+
+/* =========================================================
+   التقسيم الذكي (Smart Pagination)
+   ========================================================= */
+function renderPaginatedPages() {
+    container.innerHTML = '';
+    
+    // حاوية القياس المخفية
+    const measureBox = document.createElement('div');
+    measureBox.style.position = 'absolute';
+    measureBox.style.visibility = 'hidden';
+    measureBox.style.width = '764px'; 
+    document.body.appendChild(measureBox);
+    
+    const measureWrapper = document.createElement('div');
+    measureWrapper.className = 'content-wrapper';
+    measureBox.appendChild(measureWrapper);
+
+    // قياس الهيدر
+    measureWrapper.innerHTML = `
+        <header class="hero-header">
+            <h1> اسئلة نظم المعلومات المحاسبية</h1>
+            <p>الميد ترم - امتحان </p>
+        </header>
+        <div class="main-title-banner">
+            <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
+        </div>
+    `;
+    const headerH = measureWrapper.offsetHeight;
+
+    // قياس الفاصل
+    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
+    const dividerH = measureWrapper.offsetHeight + 15; 
+
+    // قياس كل سؤال
+    const qHeights = QUIZ.map((q) => {
+        measureWrapper.innerHTML = `
+            <div class="q-card">
+                <div class="q-head">
+                    <div class="q-head-right">
+                        <span class="q-num">1</span>
+                        ${!q.isGeneric ? `<button class="info-btn">!</button>` : ''}
+                    </div>
+                </div>
+                <p class="q-text">${q.text}</p>
+                <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                    ${q.options.map((opt, j) => `
+                        <label class="option">
+                            <span class="letter">${LETTERS[j]}</span>
+                            <span class="opt-text">${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        return measureWrapper.offsetHeight + 12;
+    });
+
+    document.body.removeChild(measureBox);
+
+    // التوزيع الذكي
+    const availableHeight = 1123 - 15 - 45 - 35;
+    const pages = [];
+    let currentPage = [];
+    let currentHeight = 0;
+
+    for (let i = 0; i < QUIZ.length; i++) {
+        let required = qHeights[i];
+        
+        if (pages.length === 0 && currentPage.length === 0) {
+            required += headerH;
+        }
+
+        let forceBreak = false;
+        if (i === 30 && currentPage.length > 0) { // 30 = start of True/False section
+            forceBreak = true;
+            required += dividerH;
+        }
+
+        if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+            
+            if (forceBreak) {
+                required = qHeights[i] + dividerH;
+            } else {
+                required = qHeights[i];
+            }
+        }
+
+        currentPage.push(i);
+        currentHeight += qHeights[i];
+
+        if (pages.length === 0 && currentPage.length === 1) {
+            currentHeight += headerH;
+        }
+        if (i === 30) { 
+            currentHeight += dividerH;
+        }
+    }
+    if (currentPage.length > 0) {
+        pages.push(currentPage);
+    }
+
+    // بناء HTML
+    const totalPages = pages.length;
+
+    const pagesHTML = pages.map((pageIndices, pageIdx) => {
+        let pageHTML = `
+        <div class="page-wrapper">
+            <div class="a4-page">
+                <div class="watermark"></div>
+                <div class="content-wrapper">
+        `;
+
+        if (pageIdx === 0) {
+            pageHTML += `
+                <header class="hero-header">
+                    <h1>امتحان نظم المعلومات المحاسبية</h1>
+                    <p>الميد ترم - شامل جميع الأجزاء</p>
+                </header>
+                <div class="main-title-banner">
+                    <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
+                </div>
+            `;
+        }
+
+        pageIndices.forEach(globalIndex => {
+            const q = QUIZ[globalIndex];
+            
+            if (globalIndex === 30) {
+                pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
+            }
+
+            pageHTML += `
+                <div class="q-card" data-card="${globalIndex}">
+                    <div class="q-head">
+                        <div class="q-head-right">
+                            <span class="q-num">${globalIndex + 1}</span>
+                            ${!q.isGeneric ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        </div>
+                    </div>
+                    <p class="q-text">${q.text}</p>
+                    <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                        ${q.options.map((opt, j) => `
+                            <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
+                                <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
+                                <span class="letter">${LETTERS[j]}</span>
+                                <span class="opt-text">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    ${!q.isGeneric ? `
+                    <div class="q-explanation" id="exp-${globalIndex}">
+                        <strong>التعليل: </strong>${q.explanation}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        pageHTML += `
+                </div>
+                <div class="footer-bar">
+                    <div class="footer-brand">
+                        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                        <div class="footer-brand-name">الدحيح</div>
+                    </div>
+                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | نظم المعلومات المحاسبية</div>
+                </div>
+            </div>
+        </div>
+        `;
+        return pageHTML;
+    });
+
+    container.innerHTML = pagesHTML.join('');
+
+    updateProgress();
+    updateSubmitBtn();
+    setTimeout(scalePages, 100);
+}
+
+/* =========================================================
+   تصغير الورقة للموبايل
+   ========================================================= */
+function scalePages() {
+    const pageWidth = 794;
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const availableWidth = viewportWidth - 20;
+    const scale = Math.min(1, availableWidth / pageWidth);
+
+    document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+        const page = wrapper.querySelector('.a4-page');
+        if (scale < 1) {
+            page.style.transform = `scale(${scale})`;
+            page.style.transformOrigin = 'top center';
+            
+            const actualHeight = page.offsetHeight; 
+            wrapper.style.height = `${actualHeight * scale}px`;
+        } else {
+            page.style.transform = 'none';
+            wrapper.style.height = 'auto';
+        }
+    });
+}
+
+window.addEventListener('resize', scalePages);
+window.addEventListener('orientationchange', scalePages);
+
+/* =========================================================
+   التفاعل والتسليم
+   ========================================================= */
+function updateProgress() {
+    const answered = state.answers.filter(a => a !== null).length;
+    const percent = (answered / QUIZ.length) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').innerText = `${answered} / ${QUIZ.length}`;
+}
+
+function updateSubmitBtn() {
+    if (state.submitted) return;
+    const missing = state.answers.filter(a => a === null).length;
+    const btn = document.getElementById('submitBtn');
+    
+    if (missing === 0) {
+        btn.innerHTML = 'تسليم الامتحان 🚀';
+        btn.classList.add('ready');
+    } else {
+        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(220,38,38,0.1); color: var(--accent-red); padding: 2px 10px; border-radius: 20px; font-size: 14px; border: 1px solid var(--accent-red);">باقي ${missing}</span>`;
+        btn.classList.remove('ready');
+    }
+}
+
+window.selectOption = function(qIndex, oIndex) {
+    if (state.submitted) return;
+    state.answers[qIndex] = oIndex;
+    
+    document.querySelectorAll(`.option[data-q="${qIndex}"]`).forEach(el => el.classList.remove('selected'));
+    document.getElementById(`opt-${qIndex}-${oIndex}`).classList.add('selected');
+    
+    const card = document.querySelector(`.q-card[data-card="${qIndex}"]`);
+    if (card) card.classList.remove('missed');
+
+    updateProgress();
+    updateSubmitBtn();
+};
+
+window.goToQuestion = function(index) {
+    closeMissedModal();
+    const card = document.querySelector(`.q-card[data-card="${index}"]`);
+    if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.transition = "box-shadow 0.3s";
+        card.style.boxShadow = "0 0 20px var(--primary-blue)";
+        setTimeout(() => { card.style.boxShadow = ""; }, 1500);
+    }
+};
+
+window.closeMissedModal = function() {
+    document.getElementById('missedModal').classList.remove('show');
+};
+
+function sendScoreToPlatform(score, total) {
+    try {
+        if (window.parent && window.parent !== window && typeof window.parent.saveInteractiveExamScore === 'function') {
+            window.parent.saveInteractiveExamScore(score, total);
+            return true;
+        } else {
+            console.log(`الدرجة: ${score} من ${total}`);
+            return false;
+        }
+    } catch (e) {
+        console.log("Error sending score: ", e);
+        return false;
+    }
+}
+
+window.submitExam = function() {
+    if (state.submitted) return;
+
+    const missingIndices = [];
+    state.answers.forEach((ans, i) => {
+        if (ans === null) missingIndices.push(i);
+    });
+
+    if (missingIndices.length > 0) {
+        missingIndices.forEach(i => {
+            const card = document.querySelector(`.q-card[data-card="${i}"]`);
+            if (card) card.classList.add('missed');
+        });
+
+        const modal = document.getElementById('missedModal');
+        const badgesContainer = document.getElementById('missedBadges');
+        document.getElementById('missedCount').innerText = missingIndices.length;
+        
+        badgesContainer.innerHTML = missingIndices.map(i => 
+            `<div class="badge-missed" onclick="goToQuestion(${i})">${i + 1}</div>`
+        ).join('');
+
+        modal.classList.add('show');
+        return;
+    }
+
+    state.submitted = true;
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.classList.remove('ready');
+    submitBtn.innerText = 'تم التسليم ✅';
+
+    let score = 0;
+
+    QUIZ.forEach((q, i) => {
+        const chosen = state.answers[i];
+        const isCorrect = (chosen === q.correct);
+        if (isCorrect) score++;
+
+        const options = document.querySelectorAll(`.option[data-q="${i}"]`);
+        options.forEach(opt => {
+            opt.classList.add('locked');
+            opt.classList.remove('selected');
+            const oIndex = parseInt(opt.dataset.o);
+            
+            if (oIndex === q.correct) {
+                opt.classList.add('correct');
+                opt.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
+            }
+            if (oIndex === chosen && !isCorrect) {
+                opt.classList.add('wrong');
+                opt.insertAdjacentHTML('beforeend', '<span class="mark">✗</span>');
+            }
+        });
+
+        const infoBtn = document.getElementById(`btn-${i}`);
+        if (infoBtn) infoBtn.style.display = 'flex';
+    });
+
+    const sent = sendScoreToPlatform(score, QUIZ.length);
+
+    const resultCard = document.getElementById('resultCard');
+    const resultScore = document.getElementById('resultScore');
+    const resultMsg = document.getElementById('resultMsg');
+    
+    const percent = Math.round((score / QUIZ.length) * 100);
+    let msg = percent >= 80 ? "ممتاز! أداء رائع 🎉" : (percent >= 50 ? "جيد جداً، واصل التقدم 👍" : "لا بأس، حاول مرة أخرى 💪");
+    
+    resultScore.innerHTML = `${score} <small>/ ${QUIZ.length}</small>`;
+    resultMsg.innerText = msg + (sent ? " (تم إرسال الدرجة للمنصة)" : "");
+    resultCard.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.toggleExplanation = function(index) {
+    const expBox = document.getElementById(`exp-${index}`);
+    const btn = document.getElementById(`btn-${index}`);
+    if (!expBox || !btn) return;
+    
+    const isCurrentlyOpen = expBox.classList.contains('show');
+
+    document.querySelectorAll('.q-explanation').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.info-btn').forEach(el => el.classList.remove('active'));
+
+    if (!isCurrentlyOpen) {
+        expBox.classList.add('show');
+        btn.classList.add('active');
+    }
+
+    setTimeout(scalePages, 50); 
+};
+
+/* =========================================================
+   انتظار تحميل الخطوط قبل الرسم
+   ========================================================= */
+function startRendering() {
+    renderPaginatedPages();
+}
+
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(startRendering).catch(startRendering);
+} else if (document.readyState === 'complete') {
+    startRendering();
+} else {
+    window.addEventListener('load', startRendering);
+}
+</script>
+</body>
+</html>
