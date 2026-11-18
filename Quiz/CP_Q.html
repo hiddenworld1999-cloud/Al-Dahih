@@ -21,7 +21,7 @@
         }
         @media print { html, body { display: none !important; } }
         #antiScreenshotShield {
-            position: fixed; inset: 0; background: #020202; color: #fff;
+            position: fixed; inset: 0; background: #0f172a; color: #fff;
             display: none; align-items: center; justify-content: center;
             flex-direction: column; z-index: 999999;
             font-family: 'Cairo', sans-serif; text-align: center;
@@ -29,14 +29,14 @@
         #watermarkGrid {
             position: fixed; inset: 0; pointer-events: none; z-index: 99998;
             overflow: hidden; display: flex; flex-wrap: wrap;
-            justify-content: space-around; align-content: space-around; opacity: 0.12;
+            justify-content: space-around; align-content: space-around; opacity: 0.08;
         }
         .watermark-item {
-            transform: rotate(-25deg); color: #fff; font-size: 15px;
+            transform: rotate(-25deg); color: #ffffff; font-size: 15px;
             font-weight: 800; white-space: nowrap; padding: 35px;
             font-family: monospace; user-select: none;
-            mix-blend-mode: difference;
-            text-shadow: 0 0 2px rgba(0,0,0,.8), 1px 1px 2px rgba(0,0,0,.6);
+            mix-blend-mode: overlay;
+            text-shadow: 0 0 2px rgba(0,0,0,.5);
         }
     </style>
 
@@ -58,7 +58,7 @@
             if (isDev) return;
             const shield = document.createElement("div");
             shield.id = "antiScreenshotShield";
-            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            shield.innerHTML = `<h2 style="color: #f87171; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
             document.body.appendChild(shield);
 
             let sName = "طالب الدحيح", sCode = "";
@@ -93,20 +93,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
+        /* =========================================
+           THEME: Calm Developer (Slate & Pastel)
+           ========================================= */
         :root {
-            --bg-body: #020202;
-            --bg-page: #0A0A0F;
-            --bg-card: rgba(20, 20, 25, 0.6);
-            --text-main: #E2E8F0;
-            --text-muted: #94A3B8;
+            /* خلفيات هادئة مستوحاة من محررات الأكواد */
+            --bg-body: #0f172a;       /* كحلي غامق جداً ومريح */
+            --bg-page: #1e293b;       /* كحلي أفتح للورقة */
+            --bg-card: #334155;       /* لون الكروت */
             
-            --neon-cyan: #00F0FF;
-            --neon-purple: #B026FF;
-            --neon-green: #00FF41;
-            --neon-red: #FF003C;
-            --neon-yellow: #FFD700;
+            /* نصوص */
+            --text-main: #f1f5f9;     /* أبيض مائل للرمادي (مريح) */
+            --text-muted: #94a3b8;    /* رمادي للنصوص الثانوية */
+            
+            /* ألوان البرمجة الباستيل (Syntax Highlighting) */
+            --accent-blue: #7dd3fc;   /* أزرق سماوي هادي */
+            --accent-purple: #c084fc; /* بنفسجي فاتح */
+            --accent-green: #86efac;  /* أخضر نعناعي */
+            --accent-red: #fca5a5;    /* أحمر باستيل */
+            --accent-yellow: #fde047; /* أصفر فاتح */
 
-            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-color: #475569;  /* حدود رمادية واضحة */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -115,31 +122,31 @@
             overflow-x: hidden !important; 
             width: 100%; 
             background-color: var(--bg-body);
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.05), transparent 30%),
-                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 30%);
+            /* إزالة التدرجات الصارخة */
+            background-image: none; 
             direction: rtl;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            line-height: 1.5; 
+            line-height: 1.6; 
             padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--bg-body); }
-        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
         /* ============ الحاوية الأساسية للورقة ============ */
         .page-wrapper {
             width: 100%;
             display: flex; justify-content: center;
-            margin-bottom: 20px; 
+            margin-bottom: 25px; 
             overflow: hidden;
             padding: 0 10px; 
         }
@@ -151,9 +158,9 @@
             min-height: 1123px; 
             height: auto;
             padding: 10px 10px 40px 10px; 
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            border-radius: 4px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); /* ظل ناعم بدل النيون */
             position: relative;
             display: flex;
             flex-direction: column;
@@ -161,12 +168,14 @@
             flex-shrink: 0;
         }
 
+        /* خط علوي بسيط */
         .a4-page::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), transparent);
-            opacity: 0.8; z-index: 10;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--accent-blue);
+            border-radius: 8px 8px 0 0;
+            z-index: 10;
         }
 
         .watermark {
@@ -178,9 +187,10 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.04;
+            opacity: 0.03;
             pointer-events: none;
             z-index: 0;
+            filter: grayscale(100%);
         }
 
         .content-wrapper {
@@ -193,39 +203,36 @@
             flex-grow: 1;
         }
 
-        .hero-header { text-align: center; padding: 5px 0 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-glass); }
+        .hero-header { text-align: center; padding: 10px 0 15px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
         .hero-header h1 {
-            font-size: 28px; font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 28px; font-weight: 900; color: var(--accent-blue); /* لون ثابت بدون تدرجات */
             margin-bottom: 4px;
         }
         .hero-header p { font-size: 16px; color: var(--text-muted); font-weight: 600; }
 
         .section-divider {
-            background: linear-gradient(90deg, rgba(176, 38, 255, 0.2), rgba(0, 240, 255, 0.2));
-            border: 1px dashed var(--neon-cyan);
-            color: var(--neon-cyan);
+            background: rgba(125, 211, 252, 0.1);
+            border: 1px dashed var(--accent-blue);
+            color: var(--accent-blue);
             text-align: center;
             padding: 8px;
             border-radius: 8px;
             font-weight: 800;
             margin: 8px 0 12px 0;
             font-size: 18px;
-            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
         }
 
         /* ============ كارت السؤال ============ */
         .q-card {
             background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-glass);
+            /* إزالة الـ blur لتحسين الأداء وتقليل إجهاد العين */
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px 15px; 
             margin-bottom: 10px; 
-            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* ظل بسيط */
             position: relative;
-            border-right: 4px solid var(--neon-purple);
+            border-right: 4px solid var(--accent-purple); /* لمسة برمجية */
             transition: all 0.3s;
         }
 
@@ -239,9 +246,9 @@
             width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 6px; 
-            background: rgba(176, 38, 255, 0.15);
-            color: var(--neon-purple); 
-            font-weight: 800; font-size: 17px;
+            background: rgba(192, 132, 252, 0.15); /* بنفسجي شفاف */
+            color: var(--accent-purple); 
+            font-weight: 800; font-size: 16px;
             font-family: 'Fira Code', monospace;
         }
 
@@ -250,21 +257,20 @@
             width: 30px; height: 30px;
             border-radius: 50%;
             background: transparent;
-            border: 2px solid var(--neon-cyan);
-            color: var(--neon-cyan);
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
             font-size: 15px; font-weight: 800;
             align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.3s;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
         }
-        .info-btn:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
-        .info-btn.active { background: var(--neon-cyan); color: var(--bg-body); box-shadow: 0 0 15px rgba(0, 240, 255, 0.8); }
+        .info-btn:hover { background: rgba(125, 211, 252, 0.1); }
+        .info-btn.active { background: var(--accent-blue); color: var(--bg-page); }
 
         .q-text {
             margin: 0 0 10px 0; 
-            font-size: 19px; /* خط كبير */
+            font-size: 19px;
             font-weight: 700; line-height: 1.5;
-            color: #FFFFFF;
+            color: #ffffff;
         }
 
         /* ============ الخيارات (2x2) ============ */
@@ -283,10 +289,10 @@
             gap: 8px;
             min-height: 40px;
             padding: 8px 12px;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            background: #111;
-            font-size: 17px; /* خط كبير */
+            background: var(--bg-page);
+            font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
             line-height: 1.4;
@@ -298,7 +304,7 @@
             width: 26px; height: 26px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 4px;
-            background: rgba(255,255,255,0.05);
+            background: var(--bg-card);
             color: var(--text-muted);
             font-size: 14px;
             font-weight: 800;
@@ -308,30 +314,29 @@
         
         .option .opt-text { flex: 1; }
 
-        /* حالة الإجابة الصحيحة */
+        /* حالة الإجابة الصحيحة (أخضر باستيل هادي) */
         .option.correct { 
-            border-color: var(--neon-green); 
-            background: rgba(0, 255, 65, 0.08); 
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
+            border-color: var(--accent-green); 
+            background: rgba(134, 239, 172, 0.1); 
         }
-        .option.correct .letter { background: var(--neon-green); color: #000; }
-        .option.correct .opt-text { color: var(--neon-green); font-weight: 800; }
-        .option.correct .mark { color: var(--neon-green); font-weight: bold; font-size: 20px; margin-inline-start: auto; }
+        .option.correct .letter { background: var(--accent-green); color: var(--bg-page); }
+        .option.correct .opt-text { color: var(--accent-green); font-weight: 800; }
+        .option.correct .mark { color: var(--accent-green); font-weight: bold; font-size: 20px; margin-inline-start: auto; }
 
         /* ============ صندوق التعليل ============ */
         .q-explanation {
             display: none;
             margin-top: 10px;
-            padding: 10px 15px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px dashed var(--neon-cyan);
+            padding: 12px 15px;
+            background: rgba(125, 211, 252, 0.05);
+            border: 1px dashed var(--accent-blue);
             border-radius: 6px;
             font-size: 17px;
             font-weight: 600;
             color: var(--text-main);
-            line-height: 1.5;
+            line-height: 1.6;
         }
-        .q-explanation strong { color: var(--neon-cyan); }
+        .q-explanation strong { color: var(--accent-blue); }
         .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -339,11 +344,11 @@
         .footer-bar {
             position: absolute; bottom: 12px; left: 25px; right: 25px;
             display: flex; align-items: center; justify-content: space-between;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 8px; z-index: 2;
+            border-top: 1px solid var(--border-color); padding-top: 8px; z-index: 2;
         }
         .footer-brand { display: flex; align-items: center; gap: 8px; }
-        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; }
-        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--neon-cyan); }
+        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--accent-blue); object-fit: cover; filter: grayscale(50%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--accent-blue); }
         .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 800; }
 
         /* ============ الطباعة ============ */
@@ -377,6 +382,7 @@
                 overflow: hidden !important;
                 margin: 0 auto;
                 border-radius: 0 !important;
+                border: none !important;
             }
         }
     </style>
@@ -588,7 +594,7 @@ function renderPaginatedPages() {
             pageHTML += `
                 <header class="hero-header">
                     <h1>MIDTERM SOLVED QUIZ</h1>
-                    <p>بنك أسئلة برمجة الحاسب - مراجعة نهائية</p>
+                    <p>بنك أسئلة برمجة الحاسب - الميد ترم</p>
                 </header>
             `;
         }
