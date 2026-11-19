@@ -232,7 +232,6 @@
                             visibility: hidden !important;
                             opacity: 0 !important;
                         }
-                        /* فتح كل التعليلات تلقائياً */
                         .q-explanation {
                             display: block !important;
                         }
@@ -241,7 +240,6 @@
                             html, body {
                                 display: block !important;
                                 visibility: visible !important;
-                                background: #fff !important;
                             }
                             * {
                                 -webkit-print-color-adjust: exact !important;
@@ -250,13 +248,34 @@
                             .pure-print-fab, .info-btn {
                                 display: none !important;
                             }
-                            /* منع قص الأسئلة لما التعليل يطوّل الورقة */
-                            .a4-page {
+                            /* وضع التدفق المستمر لبنوك الأسئلة لمنع الصفحات الفاضية */
+                            body.continuous-print {
+                                padding: 10mm 0 !important;
+                            }
+                            body.continuous-print .page-wrapper {
+                                break-after: auto !important;
+                                page-break-after: auto !important;
+                                break-inside: auto !important;
+                                page-break-inside: auto !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
                                 height: auto !important;
-                                min-height: 1123px !important;
                                 overflow: visible !important;
                             }
-                            .q-card {
+                            body.continuous-print .a4-page {
+                                height: auto !important;
+                                min-height: 0 !important;
+                                overflow: visible !important;
+                                padding: 0 15px !important;
+                                margin: 0 auto !important;
+                                border: none !important;
+                                box-shadow: none !important;
+                            }
+                            body.continuous-print .footer-bar {
+                                display: none !important;
+                            }
+                            body.continuous-print .q-card,
+                            body.continuous-print .section-divider {
                                 break-inside: avoid !important;
                                 page-break-inside: avoid !important;
                             }
@@ -275,7 +294,15 @@
                     <script>
                         window.addEventListener('load', () => {
                             const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-                            ready.then(() => { setTimeout(() => { window.print(); }, 600); });
+                            ready.then(() => {
+                                setTimeout(() => {
+                                    // تفعيل التدفق المستمر لو الملف فيه كروت أسئلة وتعليلات
+                                    if (document.querySelector('.q-explanation') || document.querySelector('.q-card')) {
+                                        document.body.classList.add('continuous-print');
+                                    }
+                                    window.print();
+                                }, 600);
+                            });
                         });
                     <\/script>
                 `;
