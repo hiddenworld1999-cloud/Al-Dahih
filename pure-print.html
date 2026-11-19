@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طباعة بيور (بدون علامة مائية) - الدحيح</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body {
+            background: #0F172A;
+            color: #F8FAFC;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .box {
+            background: #1E293B;
+            padding: 35px 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; color: #38BDF8; }
+        p { font-size: 0.92rem; color: #94A3B8; margin-bottom: 20px; line-height: 1.6; }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: #0F172A;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            outline: none;
+            direction: ltr;
+            text-align: left;
+        }
+        input:focus { border-color: #38BDF8; }
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: #2563EB;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:active { transform: scale(0.97); }
+        #status { margin-top: 15px; font-size: 0.9rem; color: #FBBF24; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="box" id="uiBox">
+        <h2>🖨️ الطباعة البيور (بدون كانفا)</h2>
+        <p>اكتب اسم ملف المحاضرة (مثل: <b>midterm-review.html</b>) أو الرابط الكامل لتحميله بالطباعة الأصلية للمتصفح بدون علامة مائية.</p>
+        <input type="text" id="fileInput" placeholder="midterm-review.html">
+        <button onclick="startPurePrint()">تجهيز وطباعة الآن</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function loadAndPrint(filePath) {
+            const status = document.getElementById('status');
+            if (!filePath) {
+                status.innerText = '⚠️ اكتب اسم الملف أو الرابط الأول.';
+                return;
+            }
+
+            let cleanUrl = filePath.trim();
+            if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+                cleanUrl = window.location.origin + window.location.pathname.replace(/[^\/]+$/, '') + cleanUrl.replace(/^\.?\//, '');
+            }
+
+            status.innerText = '⏳ جاري سحب الملف وتنظيفه للطباعة...';
+
+            try {
+                const res = await fetch(cleanUrl + (cleanUrl.includes('?') ? '&' : '?') + 't=' + Date.now());
+                if (!res.ok) throw new Error('الملف غير موجود أو الرابط غلط');
+                let html = await res.text();
+
+                // 1. ضبط المسار الأساسي عشان الصور والملفات تحمل صح
+                const basePath = cleanUrl.substring(0, cleanUrl.lastIndexOf('/') + 1);
+                if (basePath && !html.includes('<base ')) {
+                    html = html.replace(/<head[^>]*>/i, `$&<base href="${basePath}">`);
+                }
+
+                // 2. إضافة ?admin=daheeh للرابط مؤقتاً عشان كود حماية المحاضرة ميشتغلش
+                const urlObj = new URL(window.location.href);
+                urlObj.searchParams.set('admin', 'daheeh');
+                history.replaceState(null, '', urlObj.toString());
+
+                // 3. حقن CSS إجباري للطباعة البيور وإخفاء أي علامة مائية أو درع حماية
+                const purePrintCSS = `
+                    <style id="purePrintOverride">
+                        #watermarkGrid, #antiScreenshotShield, .watermark, .watermark-overlay {
+                            display: none !important;
+                            visibility: hidden !important;
+                            opacity: 0 !important;
+                        }
+                        @page {
+                            size: A4 portrait;
+                            margin: 0;
+                        }
+                        @media print {
+                            * {
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+                            .pure-print-fab {
+                                display: none !important;
+                            }
+                        }
+                        .pure-print-fab {
+                            position: fixed;
+                            bottom: 20px;
+                            left: 20px;
+                            z-index: 9999999;
+                            background: #10B981;
+                            color: #fff;
+                            border: none;
+                            padding: 14px 24px;
+                            border-radius: 50px;
+                            font-family: 'Cairo', sans-serif;
+                            font-size: 16px;
+                            font-weight: 900;
+                            cursor: pointer;
+                            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+                        }
+                    </style>
+                `;
+
+                // 4. زرار طباعة عائم (بيختفي وقت الطباعة) + تشغيل الطباعة تلقائياً بعد تحميل الخطوط
+                const purePrintControls = `
+                    <button class="pure-print-fab" onclick="window.print()">🖨️ حفظ PDF / طباعة</button>
+                    <script>
+                        window.addEventListener('load', () => {
+                            const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+                            ready.then(() => {
+                                setTimeout(() => { window.print(); }, 600);
+                            });
+                        });
+                    <\/script>
+                `;
+
+                html = html.replace(/<\/head>/i, purePrintCSS + '</head>');
+                html = html.replace(/<\/body>/i, purePrintControls + '</body>');
+
+                // 5. عرض الصفحة الصافية مكان الصفحة الحالية
+                document.open();
+                document.write(html);
+                document.close();
+
+            } catch (err) {
+                status.innerText = '❌ حصل خطأ: ' + err.message;
+            }
+        }
+
+        function startPurePrint() {
+            const val = document.getElementById('fileInput').value;
+            loadAndPrint(val);
+        }
+
+        // لو فيه ?file= في الرابط، يشتغل أوتوماتيك
+        window.onload = function() {
+            const fileParam = new URLSearchParams(window.location.search).get('file');
+            if (fileParam) {
+                document.getElementById('fileInput').value = fileParam;
+                loadAndPrint(fileParam);
+            }
+        };
+    </script>
+</body>
+</html>
