@@ -232,7 +232,8 @@
                             visibility: hidden !important;
                             opacity: 0 !important;
                         }
-                        .q-explanation {
+                        /* فتح التعليلات فقط في الملفات المحلولة */
+                        body.show-explanations-print .q-explanation {
                             display: block !important;
                         }
                         @page { size: A4 portrait; margin: 0; }
@@ -248,7 +249,7 @@
                             .pure-print-fab, .info-btn {
                                 display: none !important;
                             }
-                            /* وضع التدفق المستمر لبنوك الأسئلة لمنع الصفحات الفاضية */
+                            /* وضع التدفق المستمر لبنوك الأسئلة المحلولة فقط لمنع الصفحات الفاضية */
                             body.continuous-print {
                                 padding: 10mm 0 !important;
                             }
@@ -296,8 +297,10 @@
                             const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
                             ready.then(() => {
                                 setTimeout(() => {
-                                    // تفعيل التدفق المستمر لو الملف فيه كروت أسئلة وتعليلات
-                                    if (document.querySelector('.q-explanation') || document.querySelector('.q-card')) {
+                                    // فحص هل الملف محلول (يحتوي على إجابات محددة كصحيحة) أم امتحان غير محلول
+                                    const isSolvedExam = document.querySelector('.option.correct') !== null;
+                                    if (isSolvedExam && document.querySelector('.q-explanation')) {
+                                        document.body.classList.add('show-explanations-print');
                                         document.body.classList.add('continuous-print');
                                     }
                                     window.print();
