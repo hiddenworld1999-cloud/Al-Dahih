@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+        @media print { html, body { display: none !important; } }
+        #antiScreenshotShield {
+            position: fixed; inset: 0; background: #020202; color: #ffffff;
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column; z-index: 999999;
+            font-family: 'Cairo', sans-serif; text-align: center;
+        }
+        #watermarkGrid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 99998;
+            overflow: hidden; display: flex; flex-wrap: wrap;
+            justify-content: space-around; align-content: space-around; opacity: 0.12;
+        }
+        .watermark-item {
+            transform: rotate(-25deg); color: #ffffff; font-size: 15px; font-weight: 800;
+            white-space: nowrap; padding: 35px; font-family: monospace; user-select: none;
+            mix-blend-mode: difference;
+            text-shadow: 0 0 2px rgba(0,0,0,.8), 1px 1px 2px rgba(0,0,0,.6);
+        }
+    </style>
+
+    <script>
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+        if (!isDev) {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح", sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>الملخص الشامل | برمجة الحاسب</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #EEF2F6;
+            --bg-page: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --primary: #3730A3;
+            --primary-light: #6366F1;
+            --primary-soft: #EEF2FF;
+            --accent: #0D9488;
+            --accent-light: #14B8A6;
+            --accent-soft: #F0FDFA;
+            --gold: #F59E0B;
+            --gold-light: #FDE68A;
+            --gold-soft: #FFFBEB;
+            --danger: #DC2626;
+            --danger-soft: #FEF2F2;
+            --formula-bg: #F0F9FF;
+            --formula-border: #0EA5E9;
+            --border: #E2E8F0;
+            --card-shadow: 0 4px 18px rgba(30, 41, 59, 0.06);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
+            background-color: var(--bg-body);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 8px; }
+
+        .page-wrapper {
+            width: 100%;
+            display: flex; justify-content: center;
+            margin-bottom: 30px; 
+            overflow: hidden;
+            padding: 0 10px; 
+        }
+        
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 794px; 
+            height: 1123px; 
+            padding: 30px 25px 55px 25px; 
+            border: 2px solid var(--primary-light);
+            border-radius: 6px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            transform-origin: top center; 
+            flex-shrink: 0;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--gold));
+            z-index: 10;
+        }
+
+        .a4-page::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            --u: calc(16px * var(--fit, 1));
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            width: 100%;
+            margin: 0 auto;
+            font-size: var(--u);
+            align-items: stretch;
+            transform-origin: top center; 
+        }
+
+        .hero-header { 
+            text-align: center; 
+            padding: calc(0.3 * var(--u)) 0 calc(0.8 * var(--u)); 
+            margin-bottom: calc(0.8 * var(--u)); 
+            border-bottom: 2px solid rgba(55, 48, 163, 0.15); 
+            position: relative;
+        }
+        .hero-header::after {
+            content: '{ } ( ) < / > ;';
+            position: absolute;
+            bottom: calc(-0.6 * var(--u));
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-page);
+            padding: 0 calc(0.6 * var(--u));
+            color: var(--primary-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: calc(0.85 * var(--u));
+            letter-spacing: 6px;
+            font-weight: 700;
+        }
+        .hero-header h1 {
+            font-family: 'Amiri', serif;
+            font-size: calc(2.5 * var(--u));
+            font-weight: 700; 
+            color: var(--primary);
+            margin-bottom: calc(0.2 * var(--u));
+        }
+        .hero-header p { 
+            font-size: calc(1.1 * var(--u)); 
+            color: var(--accent); 
+            font-weight: 700; 
+            line-height: 1.5;
+        }
+        .hero-header .subtitle {
+            font-size: calc(0.95 * var(--u));
+            color: var(--text-muted);
+            margin-top: calc(0.25 * var(--u));
+            font-weight: 600;
+        }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: calc(0.85 * var(--u)) calc(1.1 * var(--u)); 
+            margin-bottom: calc(0.85 * var(--u)); 
+            box-shadow: 0 2px 10px rgba(30, 41, 59, 0.03);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; width: 5px;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+        }
+
+        h2 {
+            font-size: calc(1.45 * var(--u)); 
+            color: var(--primary); 
+            margin-bottom: calc(0.55 * var(--u));
+            display: flex; align-items: center; gap: calc(0.5 * var(--u)); 
+            font-weight: 800;
+            border-bottom: 2px solid var(--gold-light); 
+            padding-bottom: calc(0.3 * var(--u)); 
+            width: fit-content;
+        }
+        h2 span.icon { 
+            font-size: calc(1.1 * var(--u)); 
+            background: var(--primary-soft); 
+            padding: calc(0.2 * var(--u)) calc(0.5 * var(--u)); 
+            border-radius: 6px;
+            color: var(--primary);
+        }
+
+        h3 {
+            font-size: calc(1.18 * var(--u)); 
+            color: var(--accent); 
+            margin: calc(0.7 * var(--u)) 0 calc(0.45 * var(--u));
+            font-weight: 700; 
+            display: flex; align-items: center; gap: calc(0.4 * var(--u));
+        }
+        h3::before { 
+            content: '◈'; 
+            color: var(--gold); 
+            font-size: calc(1 * var(--u)); 
+        }
+
+        p, li { 
+            font-size: calc(1.08 * var(--u)); 
+            margin-bottom: calc(0.35 * var(--u)); 
+            color: var(--text-main); 
+            line-height: 1.55; 
+            text-align: justify; 
+            word-break: break-word;
+        }
+        ul, ol { margin-right: calc(1.25 * var(--u)); margin-bottom: calc(0.55 * var(--u)); }
+        ul li::marker { color: var(--accent); }
+        ol li::marker { color: var(--primary); font-weight: bold; }
+        
+        strong { color: var(--primary); font-weight: 800; }
+        
+        .hl-yellow { background-color: rgba(253, 224, 71, 0.6); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: #000; }
+        .hl-green { background-color: rgba(13, 148, 136, 0.18); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--accent); }
+        .hl-red { background-color: rgba(220, 38, 38, 0.15); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--danger); }
+        .hl-blue { background-color: rgba(55, 48, 163, 0.12); padding: 1px 4px; border-radius: 4px; font-weight: 800; color: var(--primary); }
+
+        code, .inline-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--formula-bg);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.92em;
+            color: var(--formula-border);
+            font-weight: 700;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .summary-box {
+            background: var(--gold-soft);
+            border: 1px dashed var(--gold);
+            padding: calc(0.55 * var(--u)) calc(0.85 * var(--u));
+            border-radius: 8px;
+            margin-bottom: calc(0.55 * var(--u));
+            font-size: calc(1.05 * var(--u));
+            color: #78350F;
+            font-weight: 700;
+            line-height: 1.55;
+            text-align: justify;
+            width: 100%;
+        }
+
+        .alert-box { 
+            background: var(--danger-soft); 
+            border-right: 4px solid var(--danger); 
+            padding: calc(0.55 * var(--u)) calc(0.85 * var(--u)); 
+            border-radius: 8px; 
+            margin: calc(0.55 * var(--u)) 0; 
+            font-size: calc(1.05 * var(--u));
+            width: 100%;
+            color: #7F1D1D;
+        }
+        .alert-box h3 { color: var(--danger); margin-top: 0; font-size: calc(1.15 * var(--u)); }
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box { 
+            background: var(--accent-soft); 
+            border-right: 4px solid var(--accent-light); 
+            padding: calc(0.55 * var(--u)) calc(0.85 * var(--u)); 
+            border-radius: 8px; 
+            margin: calc(0.55 * var(--u)) 0; 
+            font-size: calc(1.05 * var(--u));
+            width: 100%;
+            color: #134E4A;
+        }
+        .tip-box h3 { color: var(--accent); margin-top: 0; font-size: calc(1.15 * var(--u)); }
+        .tip-box h3::before { content: '💡'; }
+
+        .table-wrapper { 
+            overflow-x: hidden; 
+            margin: calc(0.55 * var(--u)) 0; 
+            border-radius: 8px; 
+            border: 1px solid var(--border); 
+            background: #FFF; 
+            width: 100%;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: calc(1 * var(--u)); }
+        th, td { padding: calc(0.45 * var(--u)); border: 1px solid var(--border); }
+        th { 
+            background: var(--primary-soft); 
+            color: var(--primary); 
+            font-weight: 800; 
+            font-size: calc(1 * var(--u));
+        }
+        tr:nth-child(even) { background: #FAFBFF; }
+        .highlight-row { background: rgba(13, 148, 136, 0.12); font-weight: bold; }
+
+        .formula {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: var(--formula-bg);
+            border-right: 4px solid var(--formula-border);
+            padding: calc(0.45 * var(--u)) calc(0.75 * var(--u));
+            border-radius: 6px;
+            margin: calc(0.4 * var(--u)) 0;
+            direction: ltr;
+            text-align: left;
+            font-size: calc(1 * var(--u));
+            font-weight: 700;
+            color: #0C4A6E;
+            letter-spacing: 0.3px;
+            line-height: 1.5;
+            width: 100%;
+        }
+
+        .code-block {
+            background: #0F172A;
+            color: #E2E8F0;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            border-right: 4px solid var(--primary-light);
+            border-radius: 8px;
+            padding: calc(0.55 * var(--u)) calc(0.85 * var(--u));
+            margin: calc(0.5 * var(--u)) 0;
+            direction: ltr;
+            text-align: left;
+            font-size: calc(0.92 * var(--u));
+            line-height: 1.55;
+            overflow-x: auto;
+            white-space: pre;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+        }
+        .code-block .kw { color: #FF7B72; font-weight: 700; }
+        .code-block .fn { color: #D2A8FF; }
+        .code-block .str { color: #A5D6FF; }
+        .code-block .cm { color: #8B949E; font-style: italic; }
+        .code-block .num { color: #79C0FF; }
+
+        .model-block {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: calc(0.6 * var(--u)) calc(0.8 * var(--u));
+            margin: calc(0.5 * var(--u)) 0;
+            width: 100%;
+        }
+        .model-block .model-title {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: calc(1.05 * var(--u));
+            margin-bottom: calc(0.3 * var(--u));
+        }
+
+        .footer-bar {
+            position: absolute; bottom: 12px; left: 25px; right: 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(55, 48, 163, 0.15); 
+            padding-top: 6px; 
+            z-index: 3;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { 
+            width: 24px; height: 24px; 
+            border-radius: 50%; 
+            border: 1.5px solid var(--primary); 
+            object-fit: cover; 
+            filter: grayscale(100%); 
+        }
+        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--primary); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 11px; font-weight: 700; }
+
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body {
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+            .page-wrapper {
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                display: block !important;
+                break-after: page;
+                page-break-after: always;
+                break-inside: avoid;
+            }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page {
+                transform: none !important;
+                box-shadow: none !important;
+                height: 1122px !important;
+                margin: 0 auto;
+            }
+            #antiScreenshotShield { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= صفحة 1: البرمجة والخوارزمية ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <header class="hero-header">
+                    <h1>الملخص الشامل لبرمجة الحاسب</h1>
+                    <p>مفاهيم البرمجة • الخوارزميات • المتغيرات • هياكل البيانات • SDLC • OOP • Flask</p>
+                    <p class="subtitle">مراجعة شاملة للميدتيرم</p>
+                </header>
+
+                <section class="glass-card">
+                    <h2><span class="icon">📦</span> المفاهيم الأساسية: البرمجة ومراحل حل المشكلة</h2>
+                    <p><strong>البرمجة:</strong> هي أخذ مدخلات (Input)، ومعالجتها جوه "صندوق أسود" (Black Box)، وإخراج مخرجات (Output) لحل مشكلة.</p>
+                    
+                    <h3>مراحل حل المشكلة (Problem Solving):</h3>
+                    <ol>
+                        <li><strong>فهم المشكلة (Problem Understanding):</strong> بتفهم المطلوب إيه بالظبط قبل ما تبدأ.</li>
+                        <li><strong>تخطيط الحل (Planning):</strong> بتصمم خوارزمية (Algorithm) أو مخطط تدفق (Flowchart) أو خوارزمية زائفة (Pseudocode).</li>
+                        <li><strong>تنفيذ الخطة (Implementation):</strong> بتحول الخطة لكود بلغة برمجة زي Python أو Java.</li>
+                        <li><strong>فحص النتيجة (Testing/Verification):</strong> بتجرب الكود وتصلح الأخطاء (Debugging) عشان تتأكد إنه شغال صح.</li>
+                    </ol>
+                </section>
+
+                <section class="glass-card">
+                    <h2><span class="icon">🧮</span> الخوارزمية و Big-O</h2>
+                    <h3>الخوارزمية (Algorithm):</h3>
+                    <p>هي خطوات محددة ومنطقية لحل مشكلة. شروطها:</p>
+                    <ul>
+                        <li>تتكتب بلغة إنجليزية بسيطة.</li>
+                        <li>كل خطوة دقيقة وغير غامضة.</li>
+                        <li>متتكررش بلا نهاية، ولازم تنتهي بعد عدد محدود من الخطوات.</li>
+                        <li>النتائج بتظهر بعد انتهاء الخوارزمية بس.</li>
+                    </ul>
+                    <p><strong>عوامل تقييم جودة الخوارزمية:</strong> الوقت (أقل وقت = أفضل)، الذاكرة (أقل استهلاك = أفضل)، الدقة (تعطي نتائج صح).</p>
+                    
+                    <h3>Big-O Notation (تحليل كفاءة الخوارزميات):</h3>
+                    <p>هي طريقة رياضية بنقيس بيها كفاءة الخوارزمية (سرعة تنفيذها وحجم الذاكرة اللي بتستهلكها). كل ما الـ Big-O أصغر، كل ما الخوارزمية أفضل. مثال: البحث الخطي <code>O(n)</code>، البحث الثنائي <code>O(log n)</code>.</p>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 1</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 2: Pseudocode والمكونات ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">📝</span> Pseudocode ومكونات الخوارزمية</h2>
+                    
+                    <div class="tip-box">
+                        <h3>الخوارزمية الزائفة (Pseudocode):</h3>
+                        <p>هي كتابة الكود بلغة بسيطة جداً تشبه الإنجليزية العادية. ميزتها إنك بتركز على "المنطق" مش على قواعد اللغة المعقدة (زي الفواصل المنقوطة)، وعيبها إنها مش رسمية ومفيش شكل موحد ليها. قواعدها: الكلمات المفتاحية تبدأ بحرف كابيتال (IF, ELSE, READ)، وسطر واحد لكل أمر.</p>
+                    </div>
+                    
+                    <h3>مكونات الخوارزمية (Elements of Algorithm):</h3>
+                    <ul>
+                        <li><strong>Statements (العبارات):</strong> جمل بسيطة زي الإدخال والتعيين والإخراج.</li>
+                        <li><strong>States (الحالات):</strong> قيم المتغيرات في لحظة معينة.</li>
+                        <li><strong>Control Flow (تدفق التحكم):</strong> تسلسلي، شرطي، تكراري.</li>
+                        <li><strong>Functions (الدوال):</strong> كتلة كود قابلة لإعادة الاستخدام.</li>
+                    </ul>
+                    
+                    <h3>أنواع التعليمات (Statements):</h3>
+                    <ul>
+                        <li><strong>Input Statements (إدخال):</strong> زي <code>READ a, b</code> (بنقرأ قيم من المستخدم).</li>
+                        <li><strong>Output Statements (إخراج):</strong> زي <code>PRINT c</code> (بنطبع قيمة على الشاشة).</li>
+                        <li><strong>Assignment Statements (تعيين):</strong> زي <code>c = a + b</code> (بنخزن قيمة في متغير).</li>
+                        <li><strong>Comment Statements (تعليقات):</strong> زي <code>// This is a comment</code> (ملاحظات مش بتتنفذ، بتشرح الكود بس).</li>
+                    </ul>
+                </section>
+
+                <section class="glass-card">
+                    <h2><span class="icon">🔄</span> Main / Sub Functions و Control Flow</h2>
+                    <h3>Main Function و Sub Function:</h3>
+                    <ul>
+                        <li><strong>Main Function (الدالة الرئيسية):</strong> هي نقطة البداية اللي البرنامج بيبدأ ينفذ منها. بتستدعي الدوال التانية.</li>
+                        <li><strong>Sub Function (الدالة الفرعية):</strong> دالة بتعمل وظيفة محددة، وبتتنادى من الـ Main أو من دوال تانية.</li>
+                    </ul>
+                    <div class="summary-box">
+                        💡 <strong>مثال على الاستدعاء (من المحاضرة):</strong><br>
+                        Main Function: Start → Call add() → Stop<br>
+                        Sub Function add(): Function start → Get a, b → c = a + b → Print c → Return
+                    </div>
+
+                    <h3>تدفق التحكم (Control Flow):</h3>
+                    <ul>
+                        <li><strong>Sequential (تسلسلي):</strong> خطوة ورا خطوة.</li>
+                        <li><strong>Selection (شرطي):</strong> IF Condition → ELSE (زي لو الدرجة ≥ 50 يبقى ناجح).</li>
+                        <li><strong>Looping (تكرار):</strong> تكرار أمر معين لحد ما شرط يتحقق (زي WHILE).</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 3: المتغيرات والعمليات ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🔤</span> المتغيرات (Variables) والعمليات (Operators)</h2>
+                    
+                    <h3>قواعد تسمية المتغيرات:</h3>
+                    <ul>
+                        <li>يبدأ بحرف (A-Z or a-z) أو شرطة سفلية (_). (مينفعش يبدأ برقم).</li>
+                        <li>مينفعش يحتوي على مسافات أو رموز زي (- أو @).</li>
+                        <li>حساس لحالة الأحرف (Case-Sensitive): <code>myVar</code> غير <code>myvar</code>.</li>
+                        <li>مينفعش يكون كلمة محجوزة (Reserved Keyword) زي <code>if</code> أو <code>for</code>.</li>
+                        <li>يفضل استخدام Snake Case (زي <code>user_name</code>).</li>
+                    </ul>
+
+                    <h3>العمليات الحسابية (Arithmetic Operators):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr><th>العملية</th><th>الرمز</th><th>مثال</th><th>النتيجة</th></tr>
+                            <tr><td>جمع</td><td>+</td><td>3 + 5</td><td>8</td></tr>
+                            <tr><td>طرح</td><td>-</td><td>10 - 4</td><td>6</td></tr>
+                            <tr><td>ضرب</td><td>*</td><td>6 * 2</td><td>12</td></tr>
+                            <tr><td>قسمة</td><td>/</td><td>15 / 3</td><td>5.0</td></tr>
+                            <tr><td>قسمة صحيحة</td><td>//</td><td>17 // 5</td><td>3</td></tr>
+                            <tr><td>باقي القسمة</td><td>%</td><td>17 % 5</td><td>2</td></tr>
+                            <tr><td>الأس</td><td>**</td><td>2 ** 3</td><td>8</td></tr>
+                        </table>
+                    </div>
+
+                    <h3>العمليات المنطقية (Logical & Comparison):</h3>
+                    <ul>
+                        <li><code>=</code> : عامل تعيين (Assignment) بنخزن قيمة في متغير.</li>
+                        <li><code>==</code> : عامل مقارنة (Logical) هل القيمتين متساويتين؟</li>
+                        <li><code>!=</code> : لا يساوي. <code>&gt;</code> : أكبر. <code>&lt;</code> : أصغر. <code>&gt;=</code> : أكبر أو يساوي. <code>&lt;=</code> : أصغر أو يساوي.</li>
+                        <li>أي عملية مقارنة بترجع قيمة Boolean (True أو False).</li>
+                    </ul>
+
+                    <h3>أولويات العمليات (Precedence):</h3>
+                    <p>الأقواس () → الأس ** → الضرب والقسمة * / // % (من الشمال لليمين) → الجمع والطرح + -.</p>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 4: الحلقات ولغات البرمجة ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🔁</span> الحلقات (Loops)</h2>
+                    <ul>
+                        <li><strong>for loop:</strong> بتتكرر عدد مرات معروف. مثال: <code>for x in range(2, 6)</code> هتطبع 2, 3, 4, 5.</li>
+                        <li><strong>while loop:</strong> بتفضل تتكرر طول ما الشرط صح.</li>
+                        <li><strong>break:</strong> بتنهي الحلقة بالكامل.</li>
+                        <li><strong>continue:</strong> بتتخطى التكرار الحالي وتكمل اللي بعده.</li>
+                    </ul>
+                </section>
+
+                <section class="glass-card">
+                    <h2><span class="icon">💻</span> لغات البرمجة (Levels & Paradigms)</h2>
+                    <ul>
+                        <li><strong>High-level (عالية المستوى):</strong> سهلة وقريبة من لغة الإنسان زي Python وJava وC++.</li>
+                        <li><strong>Low-level (منخفضة المستوى):</strong> قريبة من لغة الآلة زي Assembly وMachine Language.</li>
+                        <li><strong>Procedural (إجرائي):</strong> بيعتمد على الدوال خطوة بخطوة (زي C).</li>
+                        <li><strong>OOP (موجه للكائنات):</strong> بيعتمد على الفئات (Classes) والكائنات (Objects) زي Python وJava.</li>
+                    </ul>
+                </section>
+
+                <section class="glass-card">
+                    <h2><span class="icon">📚</span> مقدمة في هياكل البيانات (Data Structures)</h2>
+                    <p>هي طرق تخزين وتنظيم البيانات عشان نقدر نوصلها ونعالجها بكفاءة. بتتقسم لـ:</p>
+                    <ul>
+                        <li><strong>Linear (خطية):</strong> البيانات متخزنة بشكل متسلسل (زي المصفوفة، الطابور، المكدس، القائمة المرتبطة).</li>
+                        <li><strong>Non-linear (غير خطية):</strong> العلاقات بين البيانات معقدة (زي الشجرة Tree والرسم البياني Graph).</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 4</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 5: جدول هياكل البيانات وعيوب Array ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🗂️</span> أنواع هياكل البيانات بالتفصيل</h2>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr><th>الهيكل</th><th>الشرح (الخلاصة)</th><th>المبدأ</th></tr>
+                            <tr><td><strong>Array (المصفوفة)</strong></td><td>حجم ثابت، عناصر من نفس النوع، متخزنة في أماكن متتالية، الوصول بالفهرس (Index) سريع جداً، أول عنصر فهرسه 0 وآخر عنصر n-1.</td><td>وصول عشوائي</td></tr>
+                            <tr><td><strong>Queue (الطابور)</strong></td><td>زي طابور العيش. الإضافة من الخلف (Back) والحذف من الأمام (Front).</td><td>FIFO (أول داخل أول خارج)</td></tr>
+                            <tr><td><strong>Stack (المكدس)</strong></td><td>زي طبق الملاعق. الإضافة والحذف من فوق (Top) بس. بيستخدم في زرار التراجع (Undo).</td><td>LIFO (آخر داخل أول خارج)</td></tr>
+                            <tr><td><strong>Linked List (القائمة المرتبطة)</strong></td><td>عبارة عن عقد (Nodes)، كل عقدة فيها البيانات + إشارة (Pointer) للعقدة اللي بعدها. حجم الذاكرة ديناميكي (مرن) لكن الوصول أبطأ.</td><td>ديناميكية</td></tr>
+                            <tr><td><strong>Tree (الشجرة)</strong></td><td>هيكل هرمي فيه جذر (Root) وفروع (Children). زي شجرة الملفات في الكمبيوتر.</td><td>هرمي</td></tr>
+                            <tr><td><strong>Graph (الرسم البياني)</strong></td><td>هيكل بيانات غير خطي بيتكون من عقد (Nodes/Vertices) وروابط بينها (Edges). زي خرائط الطرق أو شبكات التواصل الاجتماعي.</td><td>غير خطي</td></tr>
+                        </table>
+                    </div>
+
+                    <h3>عيوب المصفوفة (Array):</h3>
+                    <ul>
+                        <li>حجمها ثابت، مينفعش نكبره أو نصغره بعد الإنشاء.</li>
+                        <li>الإضافة والحذف ممكن تكون بطيئة (محتاجة إعادة ترتيب).</li>
+                        <li>لازم كل العناصر تكون من نفس النوع.</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 5</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 6: Collections ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🐍</span> أساسيات Python: المجموعات (Collections)</h2>
+                    <p>بايثون فيها 4 أنواع رئيسية لتخزين البيانات:</p>
+                    <ul>
+                        <li><strong>List (القائمة):</strong> بتتكتب بـ <code>[]</code>، مرتبة، وقابلة للتعديل. بضيف بـ <code>append()</code> وبنحذف بـ <code>remove()</code>.</li>
+                        <li><strong>Tuple (الصف):</strong> بتتكتب بـ <code>()</code>، مرتبة، لكن غير قابلة للتعديل (Immutable) بعد إنشائها.</li>
+                        <li><strong>Set (المجموعة):</strong> بتتكتب بـ <code>{}</code>، غير مرتبة، غير مهرسة، ومينفعش فيها تكرار. بضيف بـ <code>add()</code> وبنحذف بـ <code>remove()</code>.</li>
+                        <li><strong>Dictionary (القاموس):</strong> بتتكتب بـ <code>{}</code>، عبارة عن أزواج (Key : Value). مفتاح وقيمة. زي <code>{"name": "Alice", "age": 30}</code>.</li>
+                    </ul>
+
+                    <h3>مقارنة سريعة بين الأنواع الأربعة:</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr><th>النوع</th><th>الصيغة</th><th>مرتبة؟</th><th>قابلة للتعديل؟</th><th>تسمح بالتكرار؟</th></tr>
+                            <tr><td>List</td><td>[ ]</td><td>نعم</td><td>نعم</td><td>نعم</td></tr>
+                            <tr><td>Tuple</td><td>( )</td><td>نعم</td><td>لا</td><td>نعم</td></tr>
+                            <tr><td>Set</td><td>{ }</td><td>لا</td><td>نعم</td><td>لا</td></tr>
+                            <tr><td>Dictionary</td><td>{ Key:Value }</td><td>نعم (من Python 3.7)</td><td>نعم</td><td>لا (في المفاتيح)</td></tr>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 6</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 7: Functions ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">⚙️</span> الدوال (Functions)</h2>
+                    <p>كتلة كود بتعمل شغل معين، بنكتبها مرة ونستخدمها كتير. بتتعرف بـ <code>def</code>.</p>
+                    <pre class="code-block"><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+result = <span class="fn">add</span>(<span class="num">3</span>, <span class="num">5</span>)
+<span class="fn">print</span>(result)  <span class="cm"># Output: 8</span></pre>
+                    
+                    <h3>Functions with Parameters & Return Values:</h3>
+                    <p>الدالة ممكن تاخد Parameters (مدخلات) وترجع Return Value (ناتج).</p>
+                    <pre class="code-block"><span class="cm"># دالة بترجع مربع الرقم</span>
+<span class="kw">def</span> <span class="fn">square</span>(number):
+    <span class="kw">return</span> number * number
+
+<span class="fn">print</span>(<span class="fn">square</span>(<span class="num">4</span>))  <span class="cm"># Output: 16</span>
+
+<span class="cm"># دالة بترجع ناتج الضرب</span>
+<span class="kw">def</span> <span class="fn">multiply</span>(a, b):
+    <span class="kw">return</span> a * b
+
+<span class="fn">print</span>(<span class="fn">multiply</span>(<span class="num">3</span>, <span class="num">4</span>))  <span class="cm"># Output: 12</span>
+
+<span class="cm"># دالة بترجع True لو الرقم زوجي</span>
+<span class="kw">def</span> <span class="fn">is_even</span>(number):
+    <span class="kw">return</span> number % <span class="num">2</span> == <span class="num">0</span>
+
+<span class="fn">print</span>(<span class="fn">is_even</span>(<span class="num">4</span>))  <span class="cm"># Output: True</span></pre>
+                    <div class="tip-box">
+                        <h3>الفرق بين Parameters و Arguments:</h3>
+                        <p><strong>Parameters:</strong> المتغيرات اللي بتتكتب في تعريف الدالة (زي <code>a, b</code>).</p>
+                        <p><strong>Arguments:</strong> القيم الفعلية اللي بنبعتها عند استدعاء الدالة (زي <code>3, 5</code>).</p>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 7</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 8: SDLC ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🔄</span> دورة حياة تطوير البرمجيات (SDLC)</h2>
+                    <p><strong>يعني إيه SDLC؟</strong> هي منهجية منظمة بنتبعها عشان نعمل برنامج بجودة عالية. بتمر بـ 7 مراحل:</p>
+                    <ol>
+                        <li><strong>التخطيط (Planning):</strong> تحديد أهداف المشروع والميزانية والجدول الزمني (باستخدام SWOT أو Jira).</li>
+                        <li><strong>التحليل (Analysis):</strong> بنجمع متطلبات العميل في وثيقة اسمها <strong>SRS</strong> (بتشمل: متطلبات وظيفية Functional [زي تسجيل الدخول]، وغير وظيفية Non-Functional [زي الأمان والسرعة]، وقيود Constraints [زي اللغة والوقت]).</li>
+                        <li><strong>التصميم (Design):</strong> بنصمم شكل النظام، قاعدة البيانات (Database Schema)، وواجهات المستخدم (UI/UX) باستخدام أدوات زي Figma أو UML.</li>
+                        <li><strong>التطوير (Development):</strong> بنكتب الكود الفعلي باستخدام لغات زي Python.</li>
+                        <li><strong>الاختبار (Testing):</strong> بنتأكد إن مفيش أخطاء (اختبار وحدات Unit، تكامل Integration، نظام System، ومستخدم UAT).</li>
+                        <li><strong>النشر (Deployment):</strong> بنطلع البرنامج للمستخدمين (يا إما Phased بالتدريج، أو Big Bang مرة واحدة).</li>
+                        <li><strong>الصيانة (Maintenance):</strong> إصلاح أخطاء (Corrective)، تحسين أداء (Preventive)، أو إضافة ميزات جديدة (Adaptive).</li>
+                    </ol>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 8</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 9: نماذج SDLC ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">⚙️</span> نماذج ومنهجيات SDLC (مهم جداً في الامتحان)</h2>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>النموذج (Model)</th>
+                                <th>الخصائص</th>
+                                <th>متى نستخدمه؟</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Waterfall (الشلال)</strong></td>
+                                <td>خطي ومتسلسل، كل مرحلة بتخلص 100% قبل اللي بعدها، توثيق شامل، لكنه غير مرن.</td>
+                                <td>المشاريع ذات المتطلبات الثابتة والواضحة (زي أنظمة الحسابات وقواعد البيانات).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Iterative (التكرار)</strong></td>
+                                <td>بنعمل نسخة صغيرة ونختبرها وناخد رأي العميل، وبنكرر لحد ما نوصل للنسخة النهائية. مرن جداً.</td>
+                                <td>المشاريع الكبيرة اللي متطلباتها غامضة أو بتتغير. (مش مناسب للمشاريع البسيطة جداً).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RAD (التطوير السريع)</strong></td>
+                                <td>بيعتمد على النماذج الأولية (Prototypes) ومشاركة العميل المستمرة، وقت قليل جداً (أسابيع).</td>
+                                <td>الشركات اللي محتاجة تطلع للسوق بسرعة (زي المتاجر الإلكترونية).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Spiral (الحلزوني)</strong></td>
+                                <td>حلقات متوسعة، بيجمع بين التكرار والشلال، ويركز جداً على إدارة المخاطر (Risk Analysis).</td>
+                                <td>المشاريع الضخمة جداً وعالية المخاطر. (مكلف ومعقد).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>V-Model</strong></td>
+                                <td>نسخة محسنة من الشلال، كل مرحلة تطوير بيقابلها مرحلة اختبار (Verification & Validation).</td>
+                                <td>المشاريع اللي محتاجة جودة عالية وأمان (زي الأنظمة الطبية أو العسكرية).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Agile (أجايل)</strong></td>
+                                <td>مرن جداً، بيعتمد على تكرارات قصيرة اسمها Sprints (من أسبوعين لشهر)، وتسليم مستمر للميزات.</td>
+                                <td>تطبيقات الويب والموبايل الحديثة اللي بتتطور باستمرار.</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="summary-box">
+                        💡 <strong>ملاحظة للامتحان:</strong> لو السؤال قال "متطلبات غير واضحة ومتغيرة" → الإجابة Agile أو Iterative. لو قال "مخاطر عالية" → Spiral. لو قال "سريع ونماذج أولية" → RAD. لو قال "متطلبات ثابتة" → Waterfall. لو قال "أنظمة طبية/عسكرية" → V-Model.
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 9</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 10: OOP Concepts ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🧬</span> البرمجة الشيئية (OOP): المفاهيم الأساسية</h2>
+                    <h3>المفاهيم الأساسية:</h3>
+                    <ul>
+                        <li><strong>Class (الفئة):</strong> هي القالب أو التصميم (زي تصميم العربية).</li>
+                        <li><strong>Object (الكائن):</strong> هي النسخة الحقيقية من القالب (زي عربية أحمد الحمراء).</li>
+                        <li><strong>__init__ (المنشئ):</strong> دالة خاصة بتشتغل أوتوماتيك أول ما نعمل Object، وبتديه القيم الأساسية.</li>
+                    </ul>
+
+                    <h3>الفرق بين Properties و Methods:</h3>
+                    <ul>
+                        <li><strong>Properties (الخصائص):</strong> المتغيرات اللي بتخزن البيانات جوه الكائن (زي الاسم والسن).</li>
+                        <li><strong>Methods (الدوال):</strong> الأفعال أو الوظائف اللي الكائن يقدر يعملها (زي إنه يرحب أو يحتفل بعيد ميلاده).</li>
+                    </ul>
+
+                    <h3>إنشاء Object واستخدام Methods:</h3>
+                    <pre class="code-block"><span class="kw">class</span> Person:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age):
+        self.name = name
+        self.age = age
+
+    <span class="kw">def</span> <span class="fn">greet</span>(self):
+        <span class="fn">print</span>(<span class="str">"Hello, my name is "</span> + self.name)
+
+p1 = <span class="fn">Person</span>(<span class="str">"Ali"</span>, <span class="num">25</span>)
+p1.<span class="fn">greet</span>()  <span class="cm"># Output: Hello, my name is Ali</span></pre>
+
+                    <h3>تعديل Property باستخدام Method:</h3>
+                    <pre class="code-block"><span class="kw">class</span> Person:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age):
+        self.name = name
+        self.age = age
+
+    <span class="kw">def</span> <span class="fn">celebrate_birthday</span>(self):
+        self.age += <span class="num">1</span>
+        <span class="fn">print</span>(<span class="str">f"Happy birthday! You are now {self.age}"</span>)
+
+p1 = <span class="fn">Person</span>(<span class="str">"Ali"</span>, <span class="num">25</span>)
+p1.<span class="fn">celebrate_birthday</span>()  <span class="cm"># Output: Happy birthday! You are now 26</span></pre>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 10</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 11: أركان OOP ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🏛️</span> أركان OOP الأربعة</h2>
+                    <ol>
+                        <li><strong>الوراثة (Inheritance):</strong> كلاس جديد (Child) بيورث خصائص كلاس قديم (Parent). بنستخدم <code>super().__init__()</code> عشان ننادي على الأب.</li>
+                        <li><strong>التغليف (Encapsulation):</strong> إخفاء البيانات وحمايتها. بنخلي المتغير "خاص" (Private) بعلامتين (_ _) زي <code>__age</code>، ومينفعش نوصله من بره غير من خلال دالة <code>get</code> تقرأه، ودالة <code>set</code> تغيره.</li>
+                        <li><strong>تعدد الأشكال (Polymorphism):</strong> نفس اسم الدالة (زي <code>move</code>)، بس كل كلاس بينفذها بطريقته (العربية بتدور Drive، المركب بتبحر Sail).</li>
+                        <li><strong>التجريد (Abstraction):</strong> إخفاء التفاصيل المعقدة وتقديم واجهة بسيطة. بنستخدم كلاس مجرد (ABC) ومينفعش نعمل منه Object مباشرة.</li>
+                    </ol>
+
+                    <h3>كود يوضح الوراثة والتغليف:</h3>
+                    <pre class="code-block"><span class="kw">class</span> Person:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age):
+        self.name = name
+        self.__age = age  <span class="cm"># Private</span>
+
+<span class="kw">class</span> Student(Person):  <span class="cm"># Inheriting</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age, year):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(name, age)
+        self.graduationyear = year</pre>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 11</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 12: Flask ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🔐</span> Flask وتسجيل الدخول</h2>
+
+                    <h3>المصادقة (Authentication) vs التفويض (Authorization):</h3>
+                    <ul>
+                        <li><strong>Authentication:</strong> "من أنت؟" (بتتأكد من الهوية بالـ Username والـ Password).</li>
+                        <li><strong>Authorization:</strong> "مسموحلك تعمل إيه؟" (بتشوف الصلاحيات، هل أنت Admin ولا User عادي).</li>
+                    </ul>
+
+                    <h3>خطوات التسجيل (Registration Flow):</h3>
+                    <p>Submit (إرسال) → Validate (تحقق) → Hash (تشفير) → Store (تخزين) → Redirect (تحويل).</p>
+
+                    <h3>خطوات تسجيل الدخول (Login Flow):</h3>
+                    <p>Submit → Find User (دور عليه) → Verify (قارن الباسورد بالـ Hash) → Session (احفظ الـ ID) → Redirect.</p>
+
+                    <div class="alert-box">
+                        <h3>مهم جداً للأمان:</h3>
+                        <ol style="margin-bottom: 0;">
+                            <li>متخزنش الباسورد "Plain Text" أبداً. لازم تخزنه كـ <strong>Hash</strong> باستخدام دالة زي <code>generate_password_hash</code>.</li>
+                            <li>الباسورد بيتشفر بـ Salt (عشان لو مستخدمين ليهم نفس الباسورد يطلعوا Hash مختلف).</li>
+                            <li>عشان نحمي من هجمات SQL Injection، بنستخدم علامات الاستفهام <code>?</code> في استعلامات الداتابيز.</li>
+                            <li>لو تسجيل الدخول فشل، بنطلع رسالة واحدة عامة: "Invalid username or password" عشان المخترق ميعرفش مين اليوزر الصح.</li>
+                            <li>الـ HTTP Stateless (بينسى)، عشان كده بنستخدم الـ <strong>Session</strong> عشان السيرفر يفتكر المستخدم.</li>
+                        </ol>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 12</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 13: أكواد Flask ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">💻</span> أكواد Flask المهمة</h2>
+
+                    <h3>كود تسجيل الدخول (Login Route):</h3>
+                    <pre class="code-block"><span class="cm"># Login Route</span>
+user = <span class="fn">get_db</span>().<span class="fn">execute</span>(
+    <span class="str">"SELECT * FROM users WHERE username = ?"</span>, (username,)
+).<span class="fn">fetchone</span>()
+
+<span class="kw">if</span> user <span class="kw">is None</span> <span class="kw">or not</span> <span class="fn">check_password_hash</span>(user[<span class="str">"password_hash"</span>], password):
+    <span class="fn">flash</span>(<span class="str">"Invalid username or password."</span>)
+<span class="kw">else</span>:
+    session.<span class="fn">clear</span>()
+    session[<span class="str">"user_id"</span>] = user[<span class="str">"id"</span>]
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="fn">url_for</span>(<span class="str">"dashboard"</span>))</pre>
+                    <div class="tip-box">
+                        <p><strong>الشرح:</strong> بنجيب المستخدم من الداتابيز بـ <code>?</code>. لو مش موجود، أو الباسورد اللي دخلناه مش متطابق مع الـ Hash، بنطلع رسالة خطأ. لو تمام، بنفضي أي جلسة قديمة (<code>session.clear()</code>)، وبنحفظ الـ ID بتاع المستخدم في الجلسة (<code>session["user_id"]</code>)، وبعدين بنحوله للـ dashboard.</p>
+                    </div>
+
+                    <h3>كود التسجيل (Register Route):</h3>
+                    <pre class="code-block"><span class="fn">@app.route</span>(<span class="str">"/register"</span>, methods=[<span class="str">"GET"</span>, <span class="str">"POST"</span>])
+<span class="kw">def</span> <span class="fn">register</span>():
+    <span class="kw">if</span> request.method == <span class="str">"POST"</span>:
+        username = request.form[<span class="str">"username"</span>].<span class="fn">strip</span>()
+        email = request.form[<span class="str">"email"</span>].<span class="fn">strip</span>().<span class="fn">lower</span>()
+        password = request.form[<span class="str">"password"</span>]
+
+        <span class="kw">if not</span> re.<span class="fn">fullmatch</span>(<span class="str">r"\w{3,20}"</span>, username):
+            <span class="fn">flash</span>(<span class="str">"Username must be 3-20 letters, digits or underscores."</span>)
+        <span class="kw">elif</span> <span class="fn">len</span>(password) &lt; <span class="num">8</span>:
+            <span class="fn">flash</span>(<span class="str">"Password must be at least 8 characters."</span>)
+        <span class="kw">else</span>:
+            <span class="kw">try</span>:
+                <span class="fn">get_db</span>().<span class="fn">execute</span>(<span class="str">"INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)"</span>,
+                    (username, email, <span class="fn">generate_password_hash</span>(password)))
+                <span class="fn">get_db</span>().<span class="fn">commit</span>()
+                <span class="kw">return</span> <span class="fn">redirect</span>(<span class="fn">url_for</span>(<span class="str">"login"</span>))
+            <span class="kw">except</span> sqlite3.IntegrityError:
+                <span class="fn">flash</span>(<span class="str">"Username or email already exists."</span>)</pre>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 13</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= صفحة 14: Protected Pages & Logout ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🛡️</span> الصفحات المحمية (Protected Pages) و Logout</h2>
+
+                    <h3>كود الصفحة المحمية (Dashboard):</h3>
+                    <pre class="code-block"><span class="cm"># Protected Page</span>
+<span class="fn">@app.route</span>(<span class="str">"/dashboard"</span>)
+<span class="kw">def</span> <span class="fn">dashboard</span>():
+    <span class="kw">if</span> <span class="str">"user_id"</span> <span class="kw">not in</span> session:
+        <span class="kw">return</span> <span class="fn">redirect</span>(<span class="fn">url_for</span>(<span class="str">"login"</span>))
+    user = <span class="fn">get_db</span>().<span class="fn">execute</span>(<span class="str">"SELECT username FROM users WHERE id = ?"</span>, (session[<span class="str">"user_id"</span>],)).<span class="fn">fetchone</span>()
+    <span class="kw">return</span> <span class="str">f"Welcome, {user['username']}!"</span></pre>
+
+                    <h3>كود تسجيل الخروج (Logout):</h3>
+                    <pre class="code-block"><span class="cm"># Logout</span>
+<span class="fn">@app.route</span>(<span class="str">"/logout"</span>)
+<span class="kw">def</span> <span class="fn">logout</span>():
+    session.<span class="fn">clear</span>()
+    <span class="kw">return</span> <span class="fn">redirect</span>(<span class="fn">url_for</span>(<span class="str">"login"</span>))</pre>
+
+                    <div class="summary-box">
+                        💡 <strong>الشرح:</strong> الصفحة المحمية بتتأكد الأول إن <code>user_id</code> موجود في الـ Session (Guard). لو مش موجود، بتحوله للـ login. الـ Logout بيمسح الجلسة بالكامل بـ <code>session.clear()</code> عشان السيرفر ينسى المستخدم.
+                    </div>
+
+                    <div class="alert-box">
+                        <h3>ملخص الأمان في Flask:</h3>
+                        <ul style="margin-bottom: 0;">
+                            <li>تشفير الباسورد بـ <code>generate_password_hash</code>.</li>
+                            <li>التحقق بـ <code>check_password_hash</code>.</li>
+                            <li>استخدام <code>?</code> في استعلامات SQL لمنع الـ SQL Injection.</li>
+                            <li>حفظ <code>user_id</code> في الـ Session بعد تسجيل الدخول.</li>
+                            <li>مسح الـ Session بـ <code>session.clear()</code> عند تسجيل الخروج.</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مجمع محاضرات الميدتيرم | صفحة 14</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= السكريبت (نفس الملف التاني بالظبط) ================= -->
+    <script>
+        // 1) تصغير الورقة كلها على الشاشة (للعرض فقط، بيتلغي في الطباعة بالـ CSS)
+        function scalePages() {
+            const pageWidth = 794, pageHeight = 1123;
+            const scale = Math.min(1, (window.innerWidth - 20) / pageWidth);
+
+            document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+                const page = wrapper.querySelector('.a4-page');
+                if (scale < 1) {
+                    page.style.transform = `scale(${scale})`;
+                    wrapper.style.height = `${pageHeight * scale}px`;
+                } else {
+                    page.style.transform = 'none';
+                    wrapper.style.height = 'auto';
+                }
+            });
+        }
+
+        // 2) خوارزمية البحث الثنائي عشان نلاقي أحسن حجم خط يدخل الورقة بدون قص
+        function fitContentInsidePage() {
+            document.querySelectorAll('.a4-page').forEach(page => {
+                const content = page.querySelector('.content-wrapper');
+                const cs = getComputedStyle(page);
+                
+                const available = page.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 30;
+
+                content.style.flexGrow = '0';
+                content.style.setProperty('--fit', 1);
+                void content.offsetHeight;
+
+                let contentHeight = content.scrollHeight;
+
+                if (contentHeight > available) {
+                    let low = 0.3;
+                    let high = 1.0;
+                    let bestFit = 0.3;
+
+                    for (let i = 0; i < 15; i++) {
+                        let mid = (low + high) / 2;
+                        content.style.setProperty('--fit', mid);
+                        void content.offsetHeight;
+
+                        if (content.scrollHeight <= available) {
+                            bestFit = mid;
+                            low = mid + 0.01;
+                        } else {
+                            high = mid - 0.01;
+                        }
+                    }
+                    content.style.setProperty('--fit', bestFit);
+                }
+
+                content.style.flexGrow = '1';
+            });
+        }
+
+        function runAll() {
+            scalePages();
+            fitContentInsidePage();
+        }
+
+        window.addEventListener('load', () => {
+            (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(runAll, 100));
+        });
+        window.addEventListener('resize', runAll);
+        window.addEventListener('orientationchange', () => setTimeout(runAll, 200));
+        window.addEventListener('beforeprint', fitContentInsidePage);
+    </script>
+</body>
+</html>
