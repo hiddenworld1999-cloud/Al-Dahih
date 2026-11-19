@@ -232,9 +232,16 @@
                             visibility: hidden !important;
                             opacity: 0 !important;
                         }
-                        /* فتح التعليلات فقط في الملفات المحلولة */
-                        body.show-explanations-print .q-explanation {
+                        /* التحكم الإجباري في إظهار أو إخفاء التعليلات */
+                        body.show-explanations-print .q-explanation,
+                        body.show-explanations-print .explanation,
+                        body.show-explanations-print [id^="exp-"] {
                             display: block !important;
+                        }
+                        body.hide-explanations-print .q-explanation,
+                        body.hide-explanations-print .explanation,
+                        body.hide-explanations-print [id^="exp-"] {
+                            display: none !important;
                         }
                         @page { size: A4 portrait; margin: 0; }
                         @media print {
@@ -246,10 +253,10 @@
                                 -webkit-print-color-adjust: exact !important;
                                 print-color-adjust: exact !important;
                             }
-                            .pure-print-fab, .info-btn {
+                            .pure-print-bar, .info-btn, .submit-btn, #submitBtn, button[onclick*="submit"] {
                                 display: none !important;
                             }
-                            /* وضع التدفق المستمر لبنوك الأسئلة المحلولة فقط لمنع الصفحات الفاضية */
+                            /* وضع التدفق المستمر لبنوك الأسئلة المحلولة لمنع الصفحات الفاضية */
                             body.continuous-print {
                                 padding: 10mm 0 !important;
                             }
@@ -281,28 +288,60 @@
                                 page-break-inside: avoid !important;
                             }
                         }
-                        .pure-print-fab {
+                        .pure-print-bar {
                             position: fixed; bottom: 20px; left: 20px; z-index: 9999999;
-                            background: #10B981; color: #fff; border: none; padding: 14px 24px;
-                            border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 16px;
+                            display: flex; gap: 10px; align-items: center;
+                        }
+                        .pure-print-fab {
+                            background: #10B981; color: #fff; border: none; padding: 12px 20px;
+                            border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 15px;
                             font-weight: 900; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+                        }
+                        .pure-toggle-fab {
+                            background: #1E293B; color: #F8FAFC; border: 2px solid #38BDF8; padding: 10px 16px;
+                            border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 13px;
+                            font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3);
                         }
                     </style>
                 `;
 
                 const purePrintControls = `
-                    <button class="pure-print-fab" onclick="window.print()">🖨️ حفظ PDF / طباعة</button>
+                    <div class="pure-print-bar">
+                        <button class="pure-print-fab" onclick="window.print()">🖨️ حفظ PDF / طباعة</button>
+                        <button class="pure-toggle-fab" id="toggleExpBtn" onclick="togglePrintExplanations()">التعليلات: مخفية 🚫</button>
+                    </div>
                     <script>
+                        function updateExpBtnText() {
+                            const btn = document.getElementById('toggleExpBtn');
+                            if (!btn) return;
+                            const isShown = document.body.classList.contains('show-explanations-print');
+                            btn.innerText = isShown ? 'التعليلات: ظاهرة 👁️' : 'التعليلات: مخفية 🚫';
+                        }
+
+                        function togglePrintExplanations() {
+                            if (document.body.classList.contains('show-explanations-print')) {
+                                document.body.classList.remove('show-explanations-print', 'continuous-print');
+                                document.body.classList.add('hide-explanations-print');
+                            } else {
+                                document.body.classList.remove('hide-explanations-print');
+                                document.body.classList.add('show-explanations-print', 'continuous-print');
+                            }
+                            updateExpBtnText();
+                        }
+
                         window.addEventListener('load', () => {
                             const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
                             ready.then(() => {
                                 setTimeout(() => {
-                                    // فحص هل الملف محلول (يحتوي على إجابات محددة كصحيحة) أم امتحان غير محلول
-                                    const isSolvedExam = document.querySelector('.option.correct') !== null;
-                                    if (isSolvedExam && document.querySelector('.q-explanation')) {
-                                        document.body.classList.add('show-explanations-print');
-                                        document.body.classList.add('continuous-print');
+                                    const hasSubmitBtn = document.body.innerText.includes('تسليم الامتحان');
+                                    const isSolvedExam = !hasSubmitBtn && (document.querySelector('.option.correct') !== null);
+
+                                    if (isSolvedExam && document.querySelector('.q-explanation, .explanation, [id^="exp-"]')) {
+                                        document.body.classList.add('show-explanations-print', 'continuous-print');
+                                    } else {
+                                        document.body.classList.add('hide-explanations-print');
                                     }
+                                    updateExpBtnText();
                                     window.print();
                                 }, 600);
                             });
