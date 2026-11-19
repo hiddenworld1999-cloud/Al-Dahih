@@ -150,7 +150,6 @@
                 if (!res.ok) throw new Error('تعذر قراءة الفولدر من جيت هب');
                 const items = await res.json();
 
-                // ترتيب: الفولدرات الأول وبعدين ملفات الـ HTML بس
                 const folders = items.filter(i => i.type === 'dir');
                 const htmlFiles = items.filter(i => i.type === 'file' && /\.(html|htm)$/i.test(i.name) && i.name !== 'pure-print.html');
 
@@ -233,10 +232,34 @@
                             visibility: hidden !important;
                             opacity: 0 !important;
                         }
+                        /* فتح كل التعليلات تلقائياً */
+                        .q-explanation {
+                            display: block !important;
+                        }
                         @page { size: A4 portrait; margin: 0; }
                         @media print {
-                            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                            .pure-print-fab { display: none !important; }
+                            html, body {
+                                display: block !important;
+                                visibility: visible !important;
+                                background: #fff !important;
+                            }
+                            * {
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+                            .pure-print-fab, .info-btn {
+                                display: none !important;
+                            }
+                            /* منع قص الأسئلة لما التعليل يطوّل الورقة */
+                            .a4-page {
+                                height: auto !important;
+                                min-height: 1123px !important;
+                                overflow: visible !important;
+                            }
+                            .q-card {
+                                break-inside: avoid !important;
+                                page-break-inside: avoid !important;
+                            }
                         }
                         .pure-print-fab {
                             position: fixed; bottom: 20px; left: 20px; z-index: 9999999;
