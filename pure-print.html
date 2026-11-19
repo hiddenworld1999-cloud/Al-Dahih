@@ -256,6 +256,21 @@
                             .pure-print-bar, .info-btn, .submit-btn, #submitBtn, button[onclick*="submit"] {
                                 display: none !important;
                             }
+                            /* إلغاء تصغير الموبايل إجبارياً وقت الطباعة لكل الملفات */
+                            .page-wrapper {
+                                height: auto !important;
+                                width: 100% !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
+                                overflow: visible !important;
+                                display: block !important;
+                            }
+                            .a4-page {
+                                transform: none !important;
+                                zoom: normal !important;
+                                width: 794px !important;
+                                margin: 0 auto !important;
+                            }
                             /* وضع التدفق المستمر لبنوك الأسئلة المحلولة لمنع الصفحات الفاضية */
                             body.continuous-print {
                                 padding: 10mm 0 !important;
