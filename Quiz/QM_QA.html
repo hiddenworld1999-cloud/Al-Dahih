@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>امتحان تفاعلي ميد ترم - مادة بحوث العمليات (الأساليب الكمية)</title>
+    
+    <!-- ================= بداية كود الحماية الموحد ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+    <style>
+        * { -webkit-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important; -webkit-touch-callout: none !important; }
+        #antiScreenshotShield { position: fixed; inset: 0; background: #020202; color: #ffffff; display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 999999; font-family: 'Cairo', sans-serif; text-align: center; }
+        #watermarkGrid { position: fixed; inset: 0; pointer-events: none; z-index: 99998; overflow: hidden; display: flex; flex-wrap: wrap; justify-content: space-around; align-content: space-around; opacity: 0.12; }
+        .watermark-item { transform: rotate(-25deg); color: #ffffff; font-size: 15px; font-weight: 800; white-space: nowrap; padding: 35px; font-family: monospace; user-select: none; mix-blend-mode: difference; text-shadow: 0 0 2px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6); }
+    </style>
+    <script>
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || localStorage.getItem('daheeh_is_admin') === 'true';
+        if (!isDev) {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || (e.ctrlKey && ['s', 'c', 'u'].includes(e.key.toLowerCase())) || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) || e.key === 'F12') { e.preventDefault(); }
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+            let sName = "طالب الدحيح", sCode = "";
+            try { sName = localStorage.getItem('studentName') || "طالب الدحيح"; sCode = localStorage.getItem('studentCode') || "0000"; } catch (e) {}
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية ================= -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* تصميم مخصص لمادة بحوث العمليات / الأساليب الكمية */
+        :root {
+            --bg-body: #E2E8F0;
+            --bg-page: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            --emerald-dark: #065F46;
+            --emerald-light: #10B981;
+            --accent-primary: #0284C7;
+            --accent-soft: #E0F2FE;
+            --navy-blue: #0F172A;
+            --red-alert: #B91C1C;
+            --heading-main: #1E3A8A;
+            --border-color: #CBD5E1;
+            --card-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
+            background-color: var(--bg-body);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            line-height: 1.5; 
+            padding: 60px 0 90px 0; /* مساحة للشريط العلوي والسفلي */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--heading-main); border-radius: 8px; }
+
+        /* ============ الشريط العلوي (التقدم) ============ */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(248, 250, 252, 0.96); backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(15, 23, 42, 0.08); z-index: 1000;
+            display: flex; justify-content: center; padding: 9px 12px;
+            border-bottom: 2px solid var(--accent-primary);
+        }
+        .top-bar-content {
+            width: 100%; max-width: 794px;
+            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+        }
+        .top-bar-title { font-weight: 800; font-size: 15px; color: var(--heading-main); white-space: nowrap; }
+        .progress-container { flex: 1; background: rgba(15, 23, 42, 0.08); height: 8px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--heading-main), var(--accent-primary), var(--emerald-light)); width: 0%; transition: width 0.4s ease; }
+        .progress-text { font-weight: 700; font-size: 13px; color: var(--text-muted); min-width: 68px; text-align: left; }
+
+        /* ============ الحاوية الأساسية للورقة ============ */
+        .page-wrapper {
+            width: 100%; display: flex; justify-content: center;
+            margin-bottom: 20px; overflow: hidden; padding: 0 10px; 
+        }
+        
+        /* ============ تصميم ورقة A4 ============ */
+        .a4-page {
+            background-color: var(--bg-page);
+            background-image: radial-gradient(#CBD5E1 0.65px, transparent 0.65px);
+            background-size: 18px 18px;
+            width: 794px; min-height: 1123px; height: auto;
+            padding: 12px 12px 42px 12px; 
+            border: 2px solid var(--accent-primary); border-radius: 4px;
+            box-shadow: var(--card-shadow); position: relative;
+            display: flex; flex-direction: column;
+            transform-origin: top center; flex-shrink: 0;
+        }
+
+        .a4-page::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--navy-blue), var(--accent-primary), var(--emerald-light));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat; background-position: center; background-size: contain;
+            opacity: 0.04; pointer-events: none; z-index: 0; filter: grayscale(100%);
+        }
+
+        .content-wrapper {
+            position: relative; z-index: 2; display: flex; flex-direction: column;
+            width: 100%; align-items: stretch; flex-grow: 1;
+        }
+
+        .hero-header {
+            text-align: center;
+            padding: 8px 0 12px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.06), rgba(2, 132, 199, 0.08));
+            border-radius: 8px;
+            border-bottom: 2px solid var(--accent-primary);
+        }
+        .hero-header h1 { font-family: 'Amiri', serif; font-size: 32px; font-weight: 700; color: var(--heading-main); margin-bottom: 4px; }
+        .hero-header p { font-size: 18px; color: var(--accent-primary); font-weight: 800; }
+
+        .main-title-banner {
+            background: linear-gradient(90deg, rgba(30, 58, 138, 0.08), rgba(2, 132, 199, 0.1));
+            border-right: 4px solid var(--accent-primary); border-radius: 6px;
+            padding: 8px 15px; font-size: 15px; font-weight: 800; color: var(--heading-main);
+            margin: 4px 0 12px 0; display: flex; align-items: center; gap: 8px;
+        }
+
+        .section-divider {
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.08), rgba(2, 132, 199, 0.12));
+            border: 1.5px dashed var(--accent-primary); color: var(--heading-main);
+            text-align: center; padding: 7px; border-radius: 8px;
+            font-weight: 800; margin: 6px 0 12px 0; font-size: 20px;
+        }
+
+        /* صندوق المعطيات / مقدمة الرسومات */
+        .context-banner {
+            background: #EFF6FF;
+            border: 1px solid #93C5FD;
+            border-right: 4px solid var(--heading-main);
+            color: var(--heading-main);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16.5px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.45;
+        }
+
+        /* حاوية الصور البيانية */
+        .q-figure-box {
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .q-figure-box img {
+            max-width: 100%;
+            max-height: 225px;
+            width: auto;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* ============ كارت السؤال ============ */
+        .q-card {
+            background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 11px 14px; margin-bottom: 10px; 
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03); position: relative;
+            border-right: 4px solid var(--accent-primary); transition: all 0.3s;
+        }
+
+        .q-card.missed {
+            border-color: var(--red-alert) !important;
+            box-shadow: 0 0 15px rgba(185, 28, 28, 0.2) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .q-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+        .q-head-right { display: flex; align-items: center; gap: 10px; }
+        
+        .q-num {
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; background: rgba(2, 132, 199, 0.12); color: var(--heading-main);
+            font-weight: 800; font-size: 17px;
+        }
+
+        .info-btn {
+            display: none; width: 30px; height: 30px; border-radius: 50%;
+            background: transparent; border: 2px solid var(--accent-primary); color: var(--accent-primary);
+            font-size: 15px; font-weight: 800; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .info-btn:hover { background: rgba(2, 132, 199, 0.12); }
+        .info-btn.active { background: var(--accent-primary); color: #FFF; }
+
+        .q-text { margin: 0 0 9px 0; font-size: 18.5px; font-weight: 700; line-height: 1.5; color: var(--navy-blue); }
+
+        /* ============ الخيارات (2x2) ============ */
+        .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        
+        .option {
+            position: relative; display: flex; flex-direction: row; align-items: center;
+            justify-content: flex-start; gap: 8px; min-height: 38px; padding: 6px 10px;
+            border: 1px solid var(--border-color); border-radius: 6px; background: #F8FAFC;
+            font-size: 16.5px; font-weight: 600; color: var(--text-main); line-height: 1.4;
+            cursor: pointer; transition: all 0.2s; overflow-wrap: break-word; word-break: break-word;
+        }
+        
+        .option:hover { border-color: var(--accent-primary); background: #FFFFFF; }
+        .option input { position: absolute; opacity: 0; pointer-events: none; }
+        
+        .option .letter {
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; background: #E2E8F0; color: var(--text-muted);
+            font-size: 14px; font-weight: 800; flex-shrink: 0; transition: all 0.2s;
+        }
+        
+        .option .opt-text { flex: 1; }
+
+        /* الحالات التفاعلية */
+        .option.selected { border-color: var(--accent-primary); background: rgba(2, 132, 199, 0.08); box-shadow: 0 0 8px rgba(2, 132, 199, 0.15); }
+        .option.selected .letter { background: var(--accent-primary); color: #FFF; }
+        .option.selected .opt-text { color: var(--heading-main); font-weight: 700; }
+        .option.locked { pointer-events: none; }
+        
+        .option.correct { border-color: var(--emerald-light); background: rgba(16, 185, 129, 0.12); }
+        .option.correct .letter { background: var(--emerald-light); color: #FFF; }
+        .option.correct .opt-text { color: var(--emerald-dark); font-weight: 800; }
+        
+        .option.wrong { border-color: var(--red-alert); background: rgba(185, 28, 28, 0.06); }
+        .option.wrong .letter { background: var(--red-alert); color: #FFF; }
+        .option.wrong .opt-text { color: var(--red-alert); }
+
+        .option .mark { margin-inline-start: auto; font-size: 20px; font-weight: bold; }
+
+        .q-explanation {
+            display: none; margin-top: 9px; padding: 9px 14px;
+            background: #EFF6FF; border: 1px dashed var(--accent-primary);
+            border-radius: 6px; font-size: 16.5px; font-weight: 600; color: #1E3A8A; line-height: 1.5;
+        }
+        .q-explanation strong { color: var(--emerald-dark); }
+        .q-explanation.show { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .footer-bar {
+            position: absolute; bottom: 14px; left: 25px; right: 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid rgba(2, 132, 199, 0.3); padding-top: 8px; z-index: 2;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 25px; height: 25px; border-radius: 50%; border: 1.5px solid var(--accent-primary); object-fit: cover; filter: grayscale(100%); }
+        .footer-brand-name { font-size: 14px; font-weight: 900; color: var(--heading-main); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        /* ============ الشريط السفلي (تسليم) ============ */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(248, 250, 252, 0.96); backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 15px rgba(15, 23, 42, 0.08); z-index: 1000;
+            display: flex; justify-content: center; padding: 12px 15px;
+            border-top: 2px solid var(--accent-primary);
+        }
+
+        .btn-submit {
+            width: 100%; max-width: 794px; padding: 14px; border: none; border-radius: 8px;
+            background: linear-gradient(90deg, var(--heading-main), var(--accent-primary));
+            color: #FFF; font-size: 18px; font-weight: 800; font-family: 'Cairo', sans-serif;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center;
+            justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.25);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 58, 138, 0.35); }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled { background: #94A3B8; color: #FFF; cursor: not-allowed; box-shadow: none; }
+
+        .btn-submit.ready {
+            background: linear-gradient(90deg, var(--emerald-dark), var(--emerald-light));
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); animation: pulseReady 2s infinite;
+        }
+        @keyframes pulseReady {
+            0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        }
+
+        .result-card {
+            display: none; background: var(--bg-page);
+            border: 2px solid var(--accent-primary); border-radius: 15px; padding: 25px;
+            text-align: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+            width: 100%; max-width: 794px; margin-top: 20px;
+        }
+        .result-card h2 { color: var(--heading-main); margin-bottom: 10px; font-size: 30px; font-weight: 800; }
+        .result-score { font-size: 64px; font-weight: 900; color: var(--emerald-dark); margin-bottom: 10px; text-shadow: 0 0 10px rgba(6, 95, 70, 0.15); }
+        .result-score small { font-size: 30px; color: var(--text-muted); }
+        .result-msg { color: var(--text-main); font-size: 20px; font-weight: 600; }
+
+        /* ============ شاشة التنبيه (Modal) ============ */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: var(--bg-page); border: 2px solid var(--red-alert); border-radius: 12px;
+            padding: 25px 28px; width: 92%; max-width: 480px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transform: translateY(20px); transition: all 0.3s;
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-icon { font-size: 60px; margin-bottom: 10px; animation: float 2s infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .modal-content h2 { color: var(--red-alert); margin-bottom: 12px; font-size: 26px; font-weight: 900; }
+        .modal-content p { color: var(--text-main); font-size: 18px; margin-bottom: 18px; line-height: 1.6; font-weight: 600; }
+        .missed-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; max-height: 140px; overflow-y: auto; padding: 5px; }
+        .badge-missed {
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(185, 28, 28, 0.1);
+            border: 2px solid var(--red-alert); color: var(--red-alert);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.2s;
+        }
+        .badge-missed:hover { background: var(--red-alert); color: #FFF; transform: scale(1.15); }
+        .btn-close-modal {
+            background: var(--heading-main); border: 2px solid var(--heading-main); color: #FFF;
+            padding: 12px 25px; border-radius: 8px; font-size: 18px; font-weight: 800;
+            font-family: inherit; cursor: pointer; transition: all 0.2s; width: 100%;
+        }
+        .btn-close-modal:hover { background: transparent; color: var(--heading-main); }
+
+        /* ============ الطباعة ============ */
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; overflow: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .top-bar, .bottom-bar, .modal-overlay { display: none !important; }
+            #antiScreenshotShield { display: none !important; }
+            .page-wrapper { height: auto !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; display: block !important; break-after: page; page-break-after: always; break-inside: avoid; }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page { transform: none !important; box-shadow: none !important; height: 1123px !important; min-height: 1123px !important; overflow: hidden !important; margin: 0 auto; border-radius: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-title">Operations Research Exam</div>
+            <div class="progress-container">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 0</div>
+        </div>
+    </div>
+
+    <!-- شاشة التنبيه -->
+    <div class="modal-overlay" id="missedModal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h2>لسه مجاوبتش على كل الأسئلة!</h2>
+            <p>باقي عليك <strong id="missedCount" style="color: var(--red-alert); font-size: 22px;">0</strong> أسئلة. اضغط على رقم السؤال عشان تروحله:</p>
+            <div class="missed-badges" id="missedBadges"></div>
+            <button class="btn-close-modal" onclick="closeMissedModal()">راجع الأسئلة</button>
+        </div>
+    </div>
+
+    <!-- شريط النتيجة -->
+    <div class="result-card" id="resultCard">
+        <h2>تم تسليم الامتحان!</h2>
+        <div class="result-score" id="resultScore">0 <small>/ 0</small></div>
+        <p class="result-msg" id="resultMsg">جارٍ إرسال الدرجة للمنصة...</p>
+    </div>
+
+    <!-- الحاوية -->
+    <div id="pagesContainer" style="display: contents;"></div>
+
+    <!-- الشريط السفلي -->
+    <div class="bottom-bar">
+        <button class="btn-submit" id="submitBtn" onclick="submitExam()">تسليم الامتحان</button>
+    </div>
+
+<script>
+const QUIZ = [
+    {
+        "section": "mcq",
+        "text": "1- المكوّن (السكر): يجب استخدام ما لا يقل عن 500 كجم شهريًا، حيث يحتاج المنتج الأول إلى 12 جم من السكر، ويحتاج المنتج الثاني إلى 9 جم من السكر. يكون القيد:",
+        "options": [
+            "12X1 + 9X2 ≤ 500",
+            "9X1 + 12X2 ≥ 500.000",
+            "12X1 + 9X2 = 500",
+            "12X1 + 9X2 ≥ 500.000"
+        ],
+        "correct": 3,
+        "explanation": "لأن المتاح بالجرام (12 جم و9 جم) بينما المطلوب بالكيلوجرام (500 كجم = 500,000 جم)، وعبارة «ما لا يقل عن» تعني (≥).",
+        "context": "المعطيات (مسألة صياغة نموذج الإنتاج): شركة تنتج منتجين (X1, X2)، وكل منتج يحتاج إلى المكونات التالية:"
+    },
+    {
+        "section": "mcq",
+        "text": "2- المكوّن (التوت): المتاح 100 كجم شهريًا، ويحتاج المنتج الأول إلى 5 جم من التوت. يكون القيد:",
+        "options": [
+            "5X1 + 5X2 ≤ 100.000",
+            "5X1 ≥ 100",
+            "5X1 ≤ 100",
+            "5X1 ≤ 100.000"
+        ],
+        "correct": 3,
+        "explanation": "لأن المتاح 100 كجم = 100,000 جم، والمنتج الأول (X1) فقط يستهلك 5 جم، والمتاح يمثل حدًا أقصى (≤)."
+    },
+    {
+        "section": "mcq",
+        "text": "3- المكوّن (الكرز): المتاح 120 كجم شهريًا، ويحتاج المنتج الثاني إلى 7 جم من الكرز. يكون القيد:",
+        "options": [
+            "7X1 + 7X2 ≤ 120.000",
+            "7X2 ≥ 120",
+            "7X2 ≤ 120.000",
+            "7X1 ≤ 120.000"
+        ],
+        "correct": 2,
+        "explanation": "لأن المتاح 120 كجم = 120,000 جم، والمنتج الثاني (X2) فقط يستهلك 7 جم، والمتاح يمثل حدًا أقصى (≤)."
+    },
+    {
+        "section": "mcq",
+        "text": "4- مادة الفولاذ المقاوم للصدأ: الحد الأقصى المتاح 300 رطل شهريًا، ويحتاج كل منتج إلى 3 أرطال. يكون القيد:",
+        "options": [
+            "3X1 + 3X2 ≥ 300",
+            "3X1 + 3X2 ≤ 300",
+            "3X1 + 3X2 = 300",
+            "3X1 ≤ 300"
+        ],
+        "correct": 1,
+        "explanation": "الحد الأقصى المتاح من الفولاذ 300 رطل (≤)، ويحتاج كل من المنتجين (X1 و X2) إلى 3 أرطال."
+    },
+    {
+        "section": "mcq",
+        "text": "5- الربح: يحقق المنتج الأول ربحًا قدره 2 دولار، بينما يحقق المنتج الثاني ربحًا قدره 3 دولارات. تكون دالة الهدف:",
+        "options": [
+            "Max Z = 2X1 + 3X2",
+            "Min Z = 2X1 + 3X2",
+            "Max Z = 2X1 - 3X2",
+            "Min Z = X1 + X2"
+        ],
+        "correct": 0,
+        "explanation": "بما أن المطلوب تعظيم الربح (2 دولار للأول و3 دولارات للثاني)، تكون دالة الهدف Max Z = 2X1 + 3X2."
+    },
+    {
+        "section": "mcq",
+        "text": "6- ما أول خطوة في بناء نموذج بحوث العمليات؟",
+        "options": [
+            "تنفيذ نتائج الحل",
+            "تعريف وتحليل المشكلة",
+            "اتخاذ القرار النهائي",
+            "تحليل المعلومات"
+        ],
+        "correct": 1,
+        "explanation": "الخطوة الأولى في خطوات بحوث العمليات بالمحاضرة هي تعريف وتحليل المشكلة (صياغة المشكلة)."
+    },
+    {
+        "section": "mcq",
+        "text": "7- ظهرت التطبيقات العملية الأولى لبحوث العمليات خلال:",
+        "options": [
+            "الحرب العالمية الأولى",
+            "الحرب العالمية الثانية",
+            "الثورة الصناعية",
+            "الحرب الباردة"
+        ],
+        "correct": 1,
+        "explanation": "ظهرت التطبيقات العملية لبحوث العمليات لأول مرة إبان الحرب العالمية الثانية عندما شكّل الحلفاء فرق بحوث لدعم العمليات اللوجستية."
+    },
+    {
+        "section": "mcq",
+        "text": "8- ما الاسم البديل لبحوث العمليات في الجامعات الأمريكية؟",
+        "options": [
+            "علم الإدارة",
+            "علم المحاسبة",
+            "علم الاقتصاد",
+            "علم التسويق"
+        ],
+        "correct": 0,
+        "explanation": "تُسمى بحوث العمليات في الجامعات الأمريكية بمصطلح «علم الإدارة» (Management Science)."
+    },
+    {
+        "section": "mcq",
+        "text": "9- ما الهدف الأساسي من بحوث العمليات؟",
+        "options": [
+            "زيادة عدد العاملين",
+            "صياغة نماذج كمية تساعد في اتخاذ القرار واختيار البديل الأمثل",
+            "إلغاء القيود",
+            "زيادة التكاليف"
+        ],
+        "correct": 1,
+        "explanation": "تهدف بحوث العمليات إلى صياغة نماذج كمية تحليلية تساعد الإدارة في اتخاذ القرار واختيار البديل الأمثل."
+    },
+    {
+        "section": "mcq",
+        "text": "10- ما المقصود بصياغة المشكلة؟",
+        "options": [
+            "تحويل وصف المشكلة إلى رموز رياضية تتضمن دالة الهدف والقيود",
+            "تنفيذ نتائج الحل",
+            "اتخاذ القرار النهائي",
+            "جمع الأرباح فقط"
+        ],
+        "correct": 0,
+        "explanation": "صياغة المشكلة تعني تحويل وصف المشكلة من مسميات وصفية إلى رموز رياضية تتضمن دالة الهدف والقيود."
+    },
+    {
+        "section": "mcq",
+        "text": "11- إيجاد العلاقة الرياضية بين المعاملات الثابتة والمتغيرة يُسمى:",
+        "options": [
+            "تحليل المعلومات",
+            "بناء النموذج الرياضي",
+            "تنفيذ نتائج الحل",
+            "مراجعة القرار"
+        ],
+        "correct": 1,
+        "explanation": "بناء النموذج الرياضي هو إيجاد العلاقة الرياضية الصحيحة بين المعاملات الثابتة والمتغيرة لتحقيق الهدف."
+    },
+    {
+        "section": "mcq",
+        "text": "12- تطبيق تحليل الحساسية والتأكد من مصداقية المعلومات يكون ضمن مرحلة:",
+        "options": [
+            "تعريف المشكلة",
+            "بناء النموذج",
+            "تحليل المعلومات",
+            "تنفيذ نتائج الحل"
+        ],
+        "correct": 2,
+        "explanation": "مرحلة تحليل المعلومات تشمل حساب المتغيرات وتطبيق تحليل الحساسية والتأكد من مصداقية المعلومات."
+    },
+    {
+        "section": "mcq",
+        "text": "13- تنفيذ قيم المتغيرات التي تحقق الحل الأمثل واتخاذ القرار الإداري يكون ضمن مرحلة:",
+        "options": [
+            "صياغة المشكلة",
+            "تنفيذ نتائج الحل",
+            "بناء النموذج",
+            "تعريف المشكلة"
+        ],
+        "correct": 1,
+        "explanation": "تنفيذ نتائج الحل يقصد به تنفيذ قيم المتغيرات التي تحقق الحل الأمثل واتخاذ القرار الإداري وفقًا لها."
+    },
+    {
+        "section": "mcq",
+        "text": "14- أي مما يلي لا يُعد من خطوات بحوث العمليات؟",
+        "options": [
+            "تعريف وتحليل المشكلة",
+            "بناء النموذج الرياضي",
+            "تحليل المعلومات",
+            "تنفيذ البرنامج الإعلاني"
+        ],
+        "correct": 3,
+        "explanation": "خطوات بحوث العمليات تشمل تعريف المشكلة وبناء النموذج وتحليل المعلومات وتنفيذ النتائج، ولا تشمل تنفيذ البرامج الإعلانية."
+    },
+    {
+        "section": "mcq",
+        "text": "15- من تطبيقات بحوث العمليات:",
+        "options": [
+            "النقل والتعيين",
+            "تخطيط الإنتاج والمالية",
+            "صفوف الانتظار وتخطيط المشروعات",
+            "جميع ما سبق"
+        ],
+        "correct": 3,
+        "explanation": "تشمل تطبيقات بحوث العمليات النقل والتعيين وتخطيط الإنتاج والمالية وصفوف الانتظار وتخطيط المشروعات."
+    },
+    {
+        "section": "mcq",
+        "text": "16- من أمثلة تطبيقات بحوث العمليات في الصناعة:",
+        "options": [
+            "خلط النفط",
+            "تخطيط الإنتاج",
+            "تخطيط المخزون",
+            "جميع ما سبق"
+        ],
+        "correct": 3,
+        "explanation": "من أمثلة تطبيقات بحوث العمليات في المجال الصناعي: خلط النفط وتخطيط الإنتاج وتخطيط المخزون."
+    },
+    {
+        "section": "mcq",
+        "text": "17- من تطبيقات بحوث العمليات في الخدمات:",
+        "options": [
+            "صفوف الانتظار",
+            "المحاكاة",
+            "تخطيط الإشارات الضوئية",
+            "جميع ما سبق"
+        ],
+        "correct": 3,
+        "explanation": "من أمثلة تطبيقات بحوث العمليات في الخدمات: نظام صفوف الانتظار والمحاكاة وتخطيط الإشارات الضوئية في الطرق."
+    },
+    {
+        "section": "mcq",
+        "text": "18- إذا كان قيد المادة الخام في مثال الإنتاج: 2X1 + 3X2 + 4X3 ≤ 1200، فإن كمية المادة الخام المتاحة هي:",
+        "options": [
+            "400",
+            "720",
+            "1200",
+            "1500"
+        ],
+        "correct": 2,
+        "explanation": "الطرف الأيمن في القيد (1200) يمثل كمية المادة الخام المتاحة كما ورد في جدول المدخلات بمثال 1 في المحاضرة."
+    },
+    {
+        "section": "mcq",
+        "text": "19- إذا كان قيد الطاقة الميكانيكية: 3X1 + X2 + 6X3 ≤ 1500، فإن الطاقة الميكانيكية المتاحة هي:",
+        "options": [
+            "400",
+            "720",
+            "1200",
+            "1500"
+        ],
+        "correct": 3,
+        "explanation": "الطرف الأيمن في القيد (1500) يمثل إجمالي ساعات الطاقة الميكانيكية المتاحة بالمصنع."
+    },
+    {
+        "section": "mcq",
+        "text": "20- في مثال الاستثمار، إذا كان إجمالي المبلغ المستثمر 50000، فإن القيد الذي يعبر عن عدم تجاوز هذا المبلغ هو:",
+        "options": [
+            "مجموع الاستثمارات ≥ 50000",
+            "مجموع الاستثمارات ≤ 50000",
+            "مجموع الاستثمارات = 0",
+            "مجموع الاستثمارات < 0"
+        ],
+        "correct": 1,
+        "explanation": "عدم تجاوز إجمالي المبلغ المستثمر (50000) يُعبَّر عنه بعلامة أقل من أو يساوي (≤ 50000)."
+    },
+    {
+        "section": "mcq",
+        "text": "21- إذا كانت دالة الهدف في مثال الاستثمار تهدف إلى تحقيق أعلى عائد سنوي، فإن نوع المسألة هو:",
+        "options": [
+            "تعظيم",
+            "تقليل",
+            "مساواة",
+            "لا توجد دالة هدف"
+        ],
+        "correct": 0,
+        "explanation": "تحقيق أعلى عائد سنوي يعني تعظيم دالة الهدف (Maximize)."
+    },
+    {
+        "section": "mcq",
+        "text": "22- ماذا يعني القيد X3 ≤ X1 + X2؟",
+        "options": [
+            "الاستثمار في X3 لا يزيد عن مجموع الاستثمار في X1 وX2",
+            "الاستثمار في X3 يساوي صفرًا",
+            "الاستثمار في X1 لا يزيد عن X3",
+            "مجموع الاستثمارات يساوي 50000"
+        ],
+        "correct": 0,
+        "explanation": "القيد X3 ≤ X1 + X2 يعني أن الاستثمار في تجارة السلع (X3) لا يزيد عن مجموع الاستثمار في العقارات والمشروع الزراعي (X1 + X2)."
+    },
+    {
+        "section": "mcq",
+        "text": "23- ما الهدف من استخدام بحوث العمليات في اتخاذ القرارات؟",
+        "options": [
+            "اختيار البديل الأفضل وفقًا للموارد والقيود المتاحة",
+            "إلغاء جميع القيود",
+            "الاعتماد على التخمين فقط",
+            "زيادة المخاطرة"
+        ],
+        "correct": 0,
+        "explanation": "تُستخدم بحوث العمليات لاختيار البديل الأفضل من بين البدائل المتاحة في ظل الموارد والقيود المفروضة."
+    },
+    {
+        "section": "mcq",
+        "text": "24- في نموذج إنتاج ثلاثة منتجات، إذا كان X1 يمثل المنتج الأول، فإن X1 يعبر عن:",
+        "options": [
+            "كمية إنتاج المنتج الأول",
+            "تكلفة المنتج الأول فقط",
+            "الربح الكلي",
+            "عدد ساعات العمل"
+        ],
+        "correct": 0,
+        "explanation": "متغيرات القرار في نموذج الإنتاج (X1, X2, X3) تعبر عن الكمية الواجب إنتاجها من كل منتج."
+    },
+    {
+        "section": "mcq",
+        "text": "25- إذا كان ربح المنتج الأول 2 دولار وربح المنتج الثاني 3 دولارات، فإن دالة الهدف لتعظيم الربح تكون:",
+        "options": [
+            "Max Z = 2X1 + 3X2",
+            "Min Z = 2X1 + 3X2",
+            "Max Z = 2X1 - 3X2",
+            "Min Z = X1 + X2"
+        ],
+        "correct": 0,
+        "explanation": "لأن الهدف تعظيم الربح (Max)، وربح المنتج الأول 2 دولار والثاني 3 دولارات فتكون المعادلة Max Z = 2X1 + 3X2."
+    },
+    {
+        "section": "mcq",
+        "text": "26- في الدالة السابقة، ماذا يمثل X1 وX2؟",
+        "options": [
+            "الأرباح",
+            "كميات إنتاج المنتجين الأول والثاني",
+            "التكاليف الثابتة",
+            "ساعات العمل"
+        ],
+        "correct": 1,
+        "explanation": "يمثل X1 و X2 متغيرات القرار، أي كميات الإنتاج من المنتجين الأول والثاني."
+    },
+    {
+        "section": "mcq",
+        "text": "27- إذا كان ربح المنتج الأول 100 دولار وربح المنتج الثاني 200 دولار، فإن دالة الهدف تكون:",
+        "options": [
+            "Max Z = 100X1 + 200X2",
+            "Min Z = 100X1 + 200X2",
+            "Max Z = 100X1 - 200X2",
+            "Min Z = X1 + X2"
+        ],
+        "correct": 0,
+        "explanation": "ربح المنتج الأول 100 دولار والثاني 200 دولار مع هدف التعظيم يعطي دالة الهدف Max Z = 100X1 + 200X2."
+    },
+    {
+        "section": "mcq",
+        "text": "28- إذا كان العقد يتطلب إنتاج 60 وحدة على الأقل من المنتج الأول، فإن القيد هو:",
+        "options": [
+            "X1 ≤ 60",
+            "X1 ≥ 60",
+            "X1 = 60",
+            "X1 < 60"
+        ],
+        "correct": 1,
+        "explanation": "عبارة «على الأقل» تعني أن الكمية المنتجة من X1 يجب أن تكون أكبر من أو تساوي 60 (X1 ≥ 60)."
+    },
+    {
+        "section": "mcq",
+        "text": "29- إذا كان المورد المتاح 200 وحدة، ويستهلك المنتج الأول وحدتين والثاني 3 وحدات، فإن القيد هو:",
+        "options": [
+            "2X1 + 3X2 ≤ 200",
+            "2X1 + 3X2 ≥ 200",
+            "2X1 + 3X2 = 0",
+            "X1 + X2 ≤ 200"
+        ],
+        "correct": 0,
+        "explanation": "استهلاك وحدتين للأول و3 وحدات للثاني بحد أقصى متاح 200 وحدة يُكتب: 2X1 + 3X2 ≤ 200."
+    },
+    {
+        "section": "mcq",
+        "text": "30- إذا كانت الطاقة الإنتاجية الإجمالية لا تزيد عن 720 وحدة، فإن القيد هو:",
+        "options": [
+            "X1 + X2 ≥ 720",
+            "X1 + X2 ≤ 720",
+            "X1 + X2 = 720",
+            "X1 - X2 ≤ 720"
+        ],
+        "correct": 1,
+        "explanation": "عبارة «لا تزيد عن» تعني أن مجموع الإنتاج أقل من أو يساوي الطاقة القصوى (X1 + X2 ≤ 720)."
+    },
+    {
+        "section": "mcq",
+        "text": "31- إذا كان المنتج الأول يحتاج ساعتين والثاني يحتاج 3 ساعات، وإجمالي الوقت المتاح 720 ساعة، فإن القيد هو:",
+        "options": [
+            "2X1 + 3X2 ≤ 720",
+            "2X1 + 3X2 ≥ 720",
+            "X1 + X2 ≤ 720",
+            "3X1 + 2X2 ≥ 720"
+        ],
+        "correct": 0,
+        "explanation": "ساعتان للمنتج الأول (2X1) و3 ساعات للثاني (3X2) بحد أقصى 720 ساعة متاحة: 2X1 + 3X2 ≤ 720."
+    },
+    {
+        "section": "mcq",
+        "text": "32- إذا كان مجموع الاستثمارات لا يزيد عن 50000، فإن القيد الرياضي هو:",
+        "options": [
+            "X1 + X2 + X3 ≥ 50000",
+            "X1 + X2 + X3 ≤ 50000",
+            "X1 + X2 + X3 = 0",
+            "X1 - X2 - X3 ≤ 50000"
+        ],
+        "correct": 1,
+        "explanation": "مجموع الاستثمارات في المشاريع الثلاثة (X1 + X2 + X3) لا يزيد عن المبلغ المتاح (≤ 50000)."
+    },
+    {
+        "section": "mcq",
+        "text": "33- أي مما يلي يمثل قيد عدم السلبية؟",
+        "options": [
+            "X1, X2 ≥ 0",
+            "X1, X2 ≤ 0",
+            "X1 = X2",
+            "X1 + X2 = 0"
+        ],
+        "correct": 0,
+        "explanation": "قيد عدم السلبية يوجب أن تكون قيم جميع متغيرات القرار أكبر من أو تساوي الصفر (X1, X2 ≥ 0)."
+    },
+    {
+        "section": "mcq",
+        "text": "34- ماذا تعني كلمة Max في دالة الهدف؟",
+        "options": [
+            "تقليل",
+            "تعظيم",
+            "مساواة",
+            "طرح"
+        ],
+        "correct": 1,
+        "explanation": "كلمة Max هي اختصار Maximize وتعني تعظيم دالة الهدف (مثل تعظيم الأرباح أو العوائد)."
+    },
+    {
+        "section": "mcq",
+        "text": "35- ماذا تعني كلمة Min في دالة الهدف؟",
+        "options": [
+            "تعظيم",
+            "تقليل",
+            "جمع",
+            "ضرب"
+        ],
+        "correct": 1,
+        "explanation": "كلمة Min هي اختصار Minimize وتعني تقليل أو تدنية دالة الهدف (مثل تقليل التكاليف)."
+    },
+    {
+        "section": "mcq",
+        "text": "36- ماذا تعني St في نموذج البرمجة الخطية؟",
+        "options": [
+            "Subject to وتعني خضوع النموذج للقيود",
+            "Standard Time",
+            "Start",
+            "Solution Table"
+        ],
+        "correct": 0,
+        "explanation": "الرمز St هو اختصار Subject to ويعني أن تعظيم أو تقليل دالة الهدف يخضع للقيود التالية."
+    },
+    {
+        "section": "mcq",
+        "text": "37- إذا كان القيد لا يزيد عن قيمة معينة، نستخدم الرمز:",
+        "options": [
+            "≥",
+            "≤",
+            "=",
+            "≠"
+        ],
+        "correct": 1,
+        "explanation": "عبارة «لا يزيد عن» تمثل حدًا أقصى، لذا نستخدم علامة أقل من أو يساوي (≤)."
+    },
+    {
+        "section": "mcq",
+        "text": "38- إذا كان القيد لا يقل عن قيمة معينة، نستخدم الرمز:",
+        "options": [
+            "≥",
+            "≤",
+            "=",
+            "≠"
+        ],
+        "correct": 0,
+        "explanation": "عبارة «لا يقل عن» تمثل حدًا أدنى، لذا نستخدم علامة أكبر من أو يساوي (≥)."
+    },
+    {
+        "section": "mcq",
+        "text": "39- عند تحويل المتباينة إلى معادلة بهدف الرسم البياني، يتم:",
+        "options": [
+            "حذف المتغيرات",
+            "استبدال علامة المتباينة بعلامة المساواة",
+            "تغيير معاملات المتغيرات",
+            "حذف الطرف الأيمن"
+        ],
+        "correct": 1,
+        "explanation": "لرسم أي قيد خطي بيانيًا، نحول المتباينة إلى معادلة باستبدال علامة التباين بعلامة المساواة (=)."
+    },
+    {
+        "section": "mcq",
+        "text": "40- عند رسم المعادلة X1 + X2 = 10، فإن نقطة تقاطعها مع محور X1 هي:",
+        "options": [
+            "(0,10)",
+            "(10,0)",
+            "(10,10)",
+            "(0,0)"
+        ],
+        "correct": 1,
+        "explanation": "لإيجاد نقطة التقاطع مع محور X1 نضع X2 = 0 في المعادلة X1 + X2 = 10 فنحصل على X1 = 10، أي النقطة (10,0)."
+    },
+    {
+        "section": "mcq",
+        "text": "41- عند رسم المعادلة X1 + X2 = 10، فإن نقطة تقاطعها مع محور X2 هي:",
+        "options": [
+            "(0,10)",
+            "(10,0)",
+            "(10,10)",
+            "(0,0)"
+        ],
+        "correct": 0,
+        "explanation": "لإيجاد نقطة التقاطع مع محور X2 نضع X1 = 0 في المعادلة X1 + X2 = 10 فنحصل على X2 = 10، أي النقطة (0,10)."
+    },
+    {
+        "section": "mcq",
+        "text": "42- ما المقصود بمنطقة الحلول الممكنة؟",
+        "options": [
+            "المنطقة التي تحقق جميع القيود معًا",
+            "المنطقة التي لا تحقق أي قيد",
+            "المنطقة الواقعة خارج جميع القيود",
+            "منطقة الأرباح فقط"
+        ],
+        "correct": 0,
+        "explanation": "منطقة الحلول الممكنة هي منطقة التقاطع المشتركة التي تحقق جميع قيود النموذج في وقت واحد."
+    },
+    {
+        "section": "mcq",
+        "text": "43- إذا لم توجد منطقة تقاطع مشتركة بين القيود، فإن المسألة:",
+        "options": [
+            "لها حلول مثلى متعددة",
+            "ليس لها حلول ممكنة",
+            "لها حل غير محدود",
+            "لها حل وحيد"
+        ],
+        "correct": 1,
+        "explanation": "عند عدم وجود منطقة تقاطع مشتركة بين القيود، لا توجد أي نقطة تحقق جميع الشروط معًا (ليس لها حلول ممكنة)."
+    },
+    {
+        "section": "mcq",
+        "text": "44- إذا كانت منطقة الحلول الممكنة مفتوحة وغير محدودة، فإنها تُسمى:",
+        "options": [
+            "منطقة محدودة",
+            "منطقة غير محدودة",
+            "منطقة مغلقة",
+            "منطقة مستحيلة"
+        ],
+        "correct": 1,
+        "explanation": "إذا كانت منطقة الحلول مفتوحة إلى ما لا نهاية ولا تحدها قيود من الخارج تُسمى منطقة غير محدودة (Unbounded)."
+    },
+    {
+        "section": "mcq",
+        "text": "45- الحل الأمثل في طريقة الحل البياني يكون عادة عند:",
+        "options": [
+            "أي نقطة خارج منطقة الحلول",
+            "إحدى نقاط الركن في منطقة الحلول الممكنة",
+            "نقطة عشوائية",
+            "نقطة الأصل دائمًا"
+        ],
+        "correct": 1,
+        "explanation": "طبقًا لأساسيات الطريقة البيانية، يقع الحل الأمثل دائمًا عند إحدى نقاط الركن (الزوايا) لمنطقة الحلول الممكنة."
+    },
+    {
+        "section": "mcq",
+        "text": "46- متى تظهر حالة الحلول المثلى المتعددة؟",
+        "options": [
+            "عندما تعطي أكثر من نقطة نفس القيمة المثلى لدالة الهدف",
+            "عندما لا توجد قيود",
+            "عندما لا توجد حلول ممكنة",
+            "عندما تكون جميع المتغيرات سالبة"
+        ],
+        "correct": 0,
+        "explanation": "تظهر الحلول المثلى المتعددة عندما تعطي أكثر من نقطة ركن (والقطعة المستقيمة بينهما) نفس القيمة المثلى لدالة الهدف."
+    },
+    {
+        "section": "mcq",
+        "text": "47- الطريقة البيانية للبرمجة الخطية تُستخدم عادة لحل المسائل التي تحتوي على:",
+        "options": [
+            "متغير واحد فقط",
+            "متغيرين",
+            "أكثر من عشرة متغيرات",
+            "عدد غير محدود من المتغيرات"
+        ],
+        "correct": 1,
+        "explanation": "تُستخدم الطريقة البيانية لحل المسائل ذات المتغيرين فقط لسهولة تمثيلهما على المحورين الأفقي X1 والرأسي X2."
+    },
+    {
+        "section": "mcq",
+        "text": "48-1- الرسمة رقم (1) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 0,
+        "explanation": "منطقة الحلول الممكنة هي القطعة المستقيمة المحدودة على الخط الأفقي بين القيد المائل والقيد الرأسي (كما في شريحة E بالمحاضرة).",
+        "groupIntro": "48- أمامك أربعة أشكال بيانية تمثل حالات مختلفة لمنطقة الحل في مسائل البرمجة الخطية، والمطلوب تحديد الحالة التي تنطبق على كل رسم:",
+        "image": "https://i.postimg.cc/ZYcV4fhN/1795042211876.jpg"
+    },
+    {
+        "section": "mcq",
+        "text": "48-2- الرسمة رقم (2) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 2,
+        "explanation": "منطقة الحلول مفتوحة إلى ما لا نهاية في اتجاه الأسهم (كما في شريحة F بالمحاضرة)."
+    },
+    {
+        "section": "mcq",
+        "text": "48-3- الرسمة رقم (3) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 1,
+        "explanation": "عدم وجود منطقة تقاطع مشتركة تحقق جميع القيود معًا (كما في شريحة G بالمحاضرة)."
+    },
+    {
+        "section": "mcq",
+        "text": "48-4- الرسمة رقم (4) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 0,
+        "explanation": "تتقاطع القيود في الربع الأول عند نقطة ركن واحدة ممكنة A على المحور الرأسي (كما في شريحة H بالمحاضرة)."
+    },
+    {
+        "section": "mcq",
+        "text": "49-1- الرسمة رقم (1) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 0,
+        "explanation": "منطقة الحلول الممكنة مثلث مغلق ومحدود في الركن السفلي الأيسر (كما في شريحة a بالمحاضرة).",
+        "groupIntro": "49- أمامك مجموعة ثانية من الأشكال البيانية لمنطقة الحل في البرمجة الخطية، حدد الحالة التي يمثلها كل شكل:",
+        "image": "https://i.postimg.cc/Ghmz2kLt/file-00000000b21481f4832f1684b35cf677.png"
+    },
+    {
+        "section": "mcq",
+        "text": "49-2- الرسمة رقم (2) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 1,
+        "explanation": "لا يوجد تقاطع مشترك بين القيود الثلاثة (كما في شريحة b بالمحاضرة)."
+    },
+    {
+        "section": "mcq",
+        "text": "49-3- الرسمة رقم (3) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 2,
+        "explanation": "منطقة الحلول محصورة بين خطين رأسيين ومفتوحة لأعلى بلا حدود (كما في شريحة c بالمحاضرة)."
+    },
+    {
+        "section": "mcq",
+        "text": "49-4- الرسمة رقم (4) في الشكل السابق تمثل:",
+        "options": [
+            "يوجد حل أمثل واحد",
+            "لا توجد حلول ممكنة",
+            "غير محدد (عدد لا نهائي من الحدود)",
+            "لا شيء مما سبق"
+        ],
+        "correct": 0,
+        "explanation": "منطقة الحلول الممكنة مضلع رباعي مغلق ومحدود بين القيود (كما في شريحة d بالمحاضرة)."
+    },
+    {
+        "section": "mcq",
+        "text": "50-1- قيد رسمة (1):",
+        "options": [
+            "X1 + X2 = 10",
+            "X1 + X2 ≤ 10",
+            "X1 + X2 > 10",
+            "X1 + X2 < 10"
+        ],
+        "correct": 1,
+        "explanation": "الخط متصل لوجود علامة المساواة، واتجاه الأسهم للداخل نحو نقطة الأصل يعني أقل من أو يساوي (≤).",
+        "groupIntro": "50- حدد العلاقة الرياضية التي يمثّلها كل رسم بياني من الرسومات التالية:",
+        "image": "https://i.postimg.cc/MTGXRKv0/1795043815560.jpg"
+    },
+    {
+        "section": "mcq",
+        "text": "50-2- قيد رسمة (2):",
+        "options": [
+            "X1 + X2 = 10",
+            "X1 + X2 ≤ 10",
+            "X1 + X2 > 10",
+            "X1 + X2 < 10"
+        ],
+        "correct": 3,
+        "explanation": "الخط متقطع (منقط) لعدم وجود علامة المساواة، واتجاه الأسهم للداخل يعني أقل من (<)."
+    },
+    {
+        "section": "mcq",
+        "text": "50-3- قيد رسمة (3):",
+        "options": [
+            "X1 + X2 = 10",
+            "X1 + X2 ≤ 10",
+            "X1 + X2 > 10",
+            "X1 + X2 < 10"
+        ],
+        "correct": 0,
+        "explanation": "الخط متصل ولا توجد أسهم تظليل جانبية، مما يدل على أنها معادلة تساوي (=)."
+    },
+    {
+        "section": "mcq",
+        "text": "51- في مسائل البرمجة الخطية، لماذا نستخدم قيد عدم السلبية؟",
+        "options": [
+            "للسماح بقيم سالبة",
+            "لمنع القيم السالبة للمتغيرات",
+            "لزيادة عدد القيود",
+            "لإلغاء دالة الهدف"
+        ],
+        "correct": 1,
+        "explanation": "نستخدم قيد عدم السلبية (≥ 0) لمنع ظهور قيم سالبة غير منطقية لكميات الإنتاج أو الاستثمار."
+    },
+    {
+        "section": "mcq",
+        "text": "52- إذا كان القيد يحتوي على علامة ≥، فإن منطقة الحل تكون في الجهة التي تحقق أن قيمة الطرف الأيسر:",
+        "options": [
+            "أقل من الطرف الأيمن",
+            "أكبر من أو تساوي الطرف الأيمن",
+            "تساوي صفرًا دائمًا",
+            "سالبة دائمًا"
+        ],
+        "correct": 1,
+        "explanation": "علامة أكبر من أو يساوي (≥) تعني أن منطقة الحل تقع في الجهة التي يكون فيها الطرف الأيسر أكبر من أو يساوي الطرف الأيمن."
+    },
+    {
+        "section": "mcq",
+        "text": "53- ما نقطة البداية في طريقة الركن الشمالي الغربي؟",
+        "options": [
+            "الخلية في أقصى الجنوب الشرقي",
+            "الخلية في أقصى الشمال الغربي",
+            "الخلية ذات أقل تكلفة",
+            "الخلية ذات أكبر تكلفة"
+        ],
+        "correct": 1,
+        "explanation": "تبدأ طريقة الركن الشمالي الغربي بالتخصيص من أول خلية في أقصى الشمال الغربي للجدول بغض النظر عن تكلفتها."
+    },
+    {
+        "section": "mcq",
+        "text": "54- كيف يتم حساب التكلفة الكلية المبدئية في مسألة النقل؟",
+        "options": [
+            "جمع الكميات المنقولة فقط",
+            "ضرب الكميات المنقولة في تكلفة الوحدة ثم جمع النواتج",
+            "طرح التكاليف من الكميات",
+            "قسمة الكميات على عدد الصفوف"
+        ],
+        "correct": 1,
+        "explanation": "تُحسب التكلفة الكلية المبدئية للنقل بضرب الكمية المنقولة في تكلفة نقل الوحدة لكل خلية مشغولة ثم جمع النواتج."
+    },
+    {
+        "section": "mcq",
+        "text": "55- في مسائل النقل، تُستخدم طريقة الركن الشمالي الغربي من أجل:",
+        "options": [
+            "إيجاد حل ابتدائي",
+            "حساب دالة الهدف فقط",
+            "تحديد قيد عدم السلبية",
+            "إيجاد نقطة التقاطع"
+        ],
+        "correct": 0,
+        "explanation": "تُستخدم طريقة الركن الشمالي الغربي لإيجاد حل ابتدائي مقبول (الجدول الابتدائي للنقل)."
+    },
+    {
+        "section": "mcq",
+        "text": "56- ما المقصود بمشكلة التعيين؟",
+        "options": [
+            "تخصيص الأفراد أو الموارد للمهام",
+            "تحديد أسعار المنتجات فقط",
+            "حساب الأرباح دون قيود",
+            "تحديد كمية المخزون فقط"
+        ],
+        "correct": 0,
+        "explanation": "مشكلة التعيين (Assignment Problem) هي أحد تطبيقات بحوث العمليات وتهدف لتخصيص الأفراد أو الموارد للمهام بكفاءة."
+    },
+    {
+        "section": "mcq",
+        "text": "57- بأي خلية نبدأ التوزيع عند استخدام طريقة التكلفة الأقل في مسائل النقل؟",
+        "options": [
+            "الخلية في أقصى الشمال الغربي",
+            "الخلية ذات أقل تكلفة نقل للوحدة في الجدول",
+            "الخلية ذات أعلى تكلفة نقل",
+            "الخلية في أقصى الجنوب الشرقي"
+        ],
+        "correct": 1,
+        "explanation": "تبدأ طريقة التكلفة الأقل (Least Cost) بتخصيص أكبر كمية ممكنة للخلية ذات أقل تكلفة نقل للوحدة في الجدول."
+    },
+    {
+        "section": "mcq",
+        "text": "58- بعد تحديد إحداثيات نقاط الركن لمنطقة الحلول الممكنة، كيف يتم اختيار الحل الأمثل؟",
+        "options": [
+            "اختيار النقطة الأقرب لنقطة الأصل دائمًا",
+            "التعويض بإحداثيات كل نقطة ركن في دالة الهدف واختيار القيمة الأفضل (الأكبر في التعظيم أو الأصغر في التقليل)",
+            "جمع إحداثيات جميع نقاط الركن",
+            "اختيار النقطة التي تقع خارج منطقة الحلول"
+        ],
+        "correct": 1,
+        "explanation": "بعد تحديد نقاط الركن، نعوض بإحداثيات كل نقطة في دالة الهدف ونختار القيمة الأكبر في التعظيم أو الأصغر في التقليل."
+    },
+    {
+        "section": "mcq",
+        "text": "59- عند تمثيل القيود بيانياً، متى يُرسم خط القيد بشكل متقطع (منقط) بدلاً من الخط المتصل؟",
+        "options": [
+            "عندما يكون القيد معادلة (=)",
+            "عندما يحتوي القيد على علامة (≤) أو (≥)",
+            "عندما يحتوي القيد على علامة (<) أو (>) بدون علامة التساوي",
+            "عندما لا توجد حلول ممكنة"
+        ],
+        "correct": 2,
+        "explanation": "يُرسم خط القيد متقطعًا (منقطًا) عندما تكون المتباينة (<) أو (>) بدون علامة التساوي."
+    },
+    {
+        "section": "mcq",
+        "text": "60- إذا كان الاستثمار في العقارات (X1) لا يقل عن 5000 ولا يزيد عن 15000، كيف يُكتب هذا الشرط كقيدين منفصلين؟",
+        "options": [
+            "X1 ≤ 5000 و X1 ≥ 15000",
+            "X1 ≥ 5000 و X1 ≤ 15000",
+            "X1 ≥ 5000 و X1 ≥ 15000",
+            "X1 = 5000 و X1 = 15000"
+        ],
+        "correct": 1,
+        "explanation": "القيد المزدوج (5000 ≤ X1 ≤ 15000) في مثال الاستثمار يُفك إلى قيدين: X1 ≥ 5000 (لا يقل عن) و X1 ≤ 15000 (لا يزيد عن)."
+    },
+    {
+        "section": "mcq",
+        "text": "61- إذا كانت نسب العائد السنوي لثلاثة مشاريع (X1, X2, X3) هي 7% و 9% و 14% على التوالي، والمطلوب تحقيق عائد لا يقل عن 5000، فما القيد الصحيح؟",
+        "options": [
+            "7X1 + 9X2 + 14X3 ≥ 5000",
+            "0.07X1 + 0.09X2 + 0.14X3 ≥ 5000",
+            "0.07X1 + 0.09X2 + 0.14X3 ≤ 5000",
+            "X1 + X2 + X3 ≥ 5000"
+        ],
+        "correct": 1,
+        "explanation": "تُحول النسب المئوية (7%، 9%، 14%) إلى كسور عشرية (0.07، 0.09، 0.14) مع علامة (≥ 5000) لعبارة «لا يقل عن»."
+    },
+    {
+        "section": "tf",
+        "text": "1- تهتم بحوث العمليات بالمشكلات العسكرية فقط.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: ظهرت بحوث العمليات أولًا في المؤسسة العسكرية، ثم امتدت تطبيقاتها إلى الصناعة والمجالات المدنية."
+    },
+    {
+        "section": "tf",
+        "text": "2- ظهرت بحوث العمليات أولًا في المؤسسة العسكرية، ثم امتدت تطبيقاتها إلى الصناعة والمجالات المدنية.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: انطلقت التطبيقات العملية من المؤسسة العسكرية في الحرب العالمية الثانية ثم انتقلت للصناعة والمجالات المدنية."
+    },
+    {
+        "section": "tf",
+        "text": "3- بدأت التطبيقات العملية الأولى لبحوث العمليات خلال الحرب العالمية الأولى.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: بدأت التطبيقات العملية لبحوث العمليات خلال الحرب العالمية الثانية وليس الأولى."
+    },
+    {
+        "section": "tf",
+        "text": "4- تساعد بحوث العمليات في تقليل المخاطرة وعدم التأكد عند اتخاذ القرارات.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: تساعد بحوث العمليات الإدارات في حل المشاكل في الوقت الحقيقي وتقليل المخاطرة وعدم التأكد."
+    },
+    {
+        "section": "tf",
+        "text": "5- نطاق بحوث العمليات محدد ولا يتطور مع الوقت.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: نطاق أساليب بحوث العمليات غير محدد وهي في تطور مستمر."
+    },
+    {
+        "section": "tf",
+        "text": "6- تساعد بحوث العمليات في حل المشكلات في الوقت الحقيقي.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: تمكّن بحوث العمليات الإدارات من حل المشكلات في الوقت الحقيقي (Real time)."
+    },
+    {
+        "section": "tf",
+        "text": "7- الهدف من بحوث العمليات هو تعظيم الأرباح فقط ولا يمكن استخدامها لتقليل التكاليف.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: تهدف بحوث العمليات إلى تحقيق أعلى عائد متوقع وأيضًا تخفيض التكاليف إلى أدنى مستوى ممكن."
+    },
+    {
+        "section": "tf",
+        "text": "8- صياغة المشكلة تتضمن تحديد الهدف والقيود بوضوح.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: خلاصة مرحلة صياغة المشكلة هي وضعها بصورة كمية وتحديد الهدف والقيود بوضوح."
+    },
+    {
+        "section": "tf",
+        "text": "9- بناء النموذج الرياضي يأتي قبل صياغة المشكلة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: صياغة المشكلة (تعريفها وتحليلها) تأتي أولًا ثم يليها بناء النموذج الرياضي."
+    },
+    {
+        "section": "tf",
+        "text": "10- تحليل المعلومات يشمل اختبار حساسية المتغيرات والتأكد من مصداقية المعلومات.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: مرحلة تحليل المعلومات تتضمن تطبيق تحليل الحساسية والتأكد من مصداقية المعلومات عمليًا."
+    },
+    {
+        "section": "tf",
+        "text": "11- تحليل المعلومات يعني تنفيذ قيم المتغيرات واتخاذ القرار الإداري النهائي.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: تنفيذ قيم المتغيرات واتخاذ القرار الإداري هو تعريف مرحلة «تنفيذ نتائج الحل» وليس تحليل المعلومات."
+    },
+    {
+        "section": "tf",
+        "text": "12- تنفيذ نتائج الحل يعني تنفيذ قيم المتغيرات التي تحقق الحل الأمثل.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: تنفيذ نتائج الحل يعني تطبيق قيم المتغيرات التي تحقق الحل الأمثل واتخاذ القرار وفقًا لها."
+    },
+    {
+        "section": "tf",
+        "text": "13- اتخاذ القرار النهائي يأتي قبل مراجعة مشروع القرار.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: مراجعة مشروع القرار (الخطوة 6) تسبق اتخاذ القرار النهائي (الخطوة 7) في خطوات بحوث العمليات."
+    },
+    {
+        "section": "tf",
+        "text": "14- من تطبيقات بحوث العمليات تخطيط الإنتاج والمخزون.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: تخطيط الإنتاج والتحكم في المخزون من أبرز التطبيقات الصناعية لبحوث العمليات."
+    },
+    {
+        "section": "tf",
+        "text": "15- من تطبيقات بحوث العمليات صفوف الانتظار والمحاكاة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: نظام صفوف الانتظار ونظام المحاكاة من تطبيقات بحوث العمليات في المجالات الخدمية."
+    },
+    {
+        "section": "tf",
+        "text": "16- من تطبيقات بحوث العمليات السيطرة النوعية والتنبؤ وتخطيط الإشارات الضوئية.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: السيطرة النوعية والتنبؤ وتخطيط الإشارات الضوئية واردة ضمن قائمة تطبيقات بحوث العمليات بالمحاضرة."
+    },
+    {
+        "section": "tf",
+        "text": "17- من تطبيقات بحوث العمليات النقل والتعيين وتخطيط المشروعات.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: مشكلة النقل ومشكلة التعيين وتخطيط المشروعات من التطبيقات الأساسية لبحوث العمليات."
+    },
+    {
+        "section": "tf",
+        "text": "18- الطريقة البيانية تصلح عادة لحل مسائل البرمجة الخطية التي تحتوي على أكثر من متغيرين.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: الطريقة البيانية تصلح لحل مسائل البرمجة الخطية التي تحتوي على متغيرين فقط."
+    },
+    {
+        "section": "tf",
+        "text": "19- دالة الهدف يمكن أن تستخدم لتعظيم الأرباح أو تقليل التكاليف.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: دالة الهدف قد تكون للتعظيم (Max) للأرباح والعوائد أو للتقليل (Min) للتكاليف."
+    },
+    {
+        "section": "tf",
+        "text": "20- الحلول المثلى المتعددة تعني وجود أكثر من نقطة تحقق نفس القيمة المثلى.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: الحلول المثلى المتعددة تعني وجود نقطتي ركن أو أكثر (والخط الواصل بينهما) تحقق نفس القيمة المثلى."
+    },
+    {
+        "section": "tf",
+        "text": "21- منطقة الحلول الممكنة هي المنطقة التي تحقق جميع القيود في وقت واحد.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: منطقة الحلول الممكنة هي منطقة التقاطع المشتركة التي تحقق جميع القيود في آنٍ واحد."
+    },
+    {
+        "section": "tf",
+        "text": "22- منطقة الحلول الممكنة تكون في الربع الأول عند وجود قيود عدم السلبية للمتغيرات.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: قيود عدم السلبية (X1, X2 ≥ 0) تحصر منطقة الحلول الممكنة في الربع الأول الموجب."
+    },
+    {
+        "section": "tf",
+        "text": "23- قيود عدم السلبية تسمح بأن تكون قيم المتغيرات سالبة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: قيود عدم السلبية تمنع القيم السالبة وتوجب أن تكون المتغيرات موجبة أو صفرًا."
+    },
+    {
+        "section": "tf",
+        "text": "24- إذا لم توجد منطقة تقاطع مشتركة بين القيود، فلا توجد حلول ممكنة للمسألة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: عدم وجود منطقة تقاطع مشتركة بين القيود يعني عدم وجود حلول ممكنة للنموذج."
+    },
+    {
+        "section": "tf",
+        "text": "25- المنطقة المفتوحة وغير المحدودة تعني أن منطقة الحلول الممكنة غير محدودة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: المنطقة المفتوحة وغير المحدودة بقيود خارجية تُسمى منطقة حلول غير محدودة (Unbounded)."
+    },
+    {
+        "section": "tf",
+        "text": "26- في طريقة الحل البياني، يمكن أن يظهر الحل الأمثل عند إحدى نقاط الركن في منطقة الحلول الممكنة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: يقع الحل الأمثل في الطريقة البيانية عند إحدى نقاط الركن لمنطقة الحلول الممكنة."
+    },
+    {
+        "section": "tf",
+        "text": "27- عند تحويل المتباينة إلى معادلة للرسم البياني، يتم حذف الطرف الأيمن من المتباينة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: عند تحويل المتباينة لمعادلة للرسم البياني نستبدل علامة التباين بعلامة المساواة (=) مع بقاء الطرف الأيمن."
+    },
+    {
+        "section": "tf",
+        "text": "28- إذا كان القيد لا يزيد عن قيمة معينة، نستخدم الرمز ≤.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: عبارة «لا يزيد عن» تعبر عن حد أقصى ويُستخدم لها الرمز (≤)."
+    },
+    {
+        "section": "tf",
+        "text": "29- إذا كان القيد لا يقل عن قيمة معينة، نستخدم الرمز ≥.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: عبارة «لا يقل عن» تعبر عن حد أدنى ويُستخدم لها الرمز (≥)."
+    },
+    {
+        "section": "tf",
+        "text": "30- إذا كان القيد X1 ≥ 60، فهذا يعني أن إنتاج X1 لا يقل عن 60 وحدة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: القيد X1 ≥ 60 يعني أن كمية إنتاج X1 يجب أن تكون 60 وحدة على الأقل (لا تقل عن 60)."
+    },
+    {
+        "section": "tf",
+        "text": "31- إذا كان القيد X1 + X2 ≤ 720، فهذا يعني أن مجموع الإنتاج لا يزيد عن 720 وحدة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: القيد X1 + X2 ≤ 720 يعني أن إجمالي الإنتاج من المنتجين لا يزيد عن 720 وحدة."
+    },
+    {
+        "section": "tf",
+        "text": "32- إذا كان المنتج الأول يستهلك ساعتين والثاني 3 ساعات، فإن قيد الوقت يكون 2X1 + 3X2 ≤ الوقت المتاح.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: ساعتان للأول (2X1) و3 ساعات للثاني (3X2) يكون مجموع الوقت المستهلك أقل من أو يساوي الوقت المتاح."
+    },
+    {
+        "section": "tf",
+        "text": "33- في نموذج البرمجة الخطية، Max تعني تقليل قيمة دالة الهدف.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: Max تعني تعظيم قيمة دالة الهدف، بينما Min هي التي تعني تقليلها."
+    },
+    {
+        "section": "tf",
+        "text": "34- في نموذج البرمجة الخطية، Min تعني تقليل قيمة دالة الهدف.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: Min (Minimize) تعني تقليل أو تدنية قيمة دالة الهدف كالتكاليف."
+    },
+    {
+        "section": "tf",
+        "text": "35- تبدأ طريقة الركن الشمالي الغربي في مسائل النقل بالخلية ذات أقل تكلفة في الجدول.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: طريقة الركن الشمالي الغربي تبدأ بالخلية في أقصى الشمال الغربي، أما طريقة التكلفة الأقل فتبدأ بأقل تكلفة."
+    },
+    {
+        "section": "tf",
+        "text": "36- يتم حساب التكلفة الكلية المبدئية للنقل عن طريق جمع الكميات المنقولة فقط دون ضربها في تكلفة الوحدة.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: تُحسب التكلفة الكلية المبدئية بضرب الكميات المنقولة في تكلفة نقل الوحدة لكل خلية مشغولة ثم جمع النواتج."
+    },
+    {
+        "section": "tf",
+        "text": "37- بدأت تطبيقات بحوث العمليات في المجال الصناعي والمدني ثم انتقلت إلى المجال العسكري.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: العكس صحيح؛ بدأت تطبيقات بحوث العمليات في المؤسسة العسكرية ثم انتقلت للمجال الصناعي والمدني."
+    },
+    {
+        "section": "tf",
+        "text": "38- القيد X3 ≤ X1 + X2 يعني أن الاستثمار في X3 لا يزيد عن الاستثمار في X1 وX2 مجتمعين.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: X3 ≤ X1 + X2 يعني أن الاستثمار في المشروع الثالث لا يزيد عن مجموع الاستثمار في المشروعين الأول والثاني."
+    },
+    {
+        "section": "tf",
+        "text": "39- في طريقة التكلفة الأقل، يتم تخصيص أكبر كمية ممكنة للخلية التي تحتوي على أقل تكلفة نقل للوحدة أولاً.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 0,
+        "explanation": "صحيح: في طريقة التكلفة الأقل نبحث عن أقل تكلفة نقل للوحدة في الجدول ونخصص لها أكبر كمية ممكنة أولاً."
+    },
+    {
+        "section": "tf",
+        "text": "40- تعطي طريقة التكلفة الأقل دائمًا تكلفة نقل مبدئية أقل من طريقة الركن الشمالي الغربي.",
+        "options": [
+            "صح (✓)",
+            "خطأ (×)"
+        ],
+        "correct": 1,
+        "explanation": "خطأ: في مثال المحاضرة أعطت طريقة الركن الشمالي الغربي 230 دولارًا بينما أعطت طريقة التكلفة الأقل 240 دولارًا."
+    }
+];
+
+const TF_START_INDEX = 69;
+const LETTERS = ['أ', 'ب', 'ج', 'د'];
+const container = document.getElementById('pagesContainer');
+
+/* تثبيت اتجاه الرموز والمعادلات الرياضية (LTR) داخل النصوص العربية */
+function formatMath(text) {
+    if (!text) return '';
+    const normalized = String(text).replace(/و(X[123])/g, 'و $1');
+    const mathRegex = /(?:(?:Max|Min)\s+Z\s*=\s*)?(?:[0-9.]*X[123]|[0-9]+(?:\.[0-9]+)?|Z)(?:\s*(?:[≤≥<>+\-=]|,)\s*(?:[0-9.]*X[123]|[0-9]+(?:\.[0-9]+)?|Z))*(?:\s*[≤≥<>])?|(?:[≤≥<>]\s*[0-9]+(?:\.[0-9]+)?)|[≤≥<>]/g;
+    return normalized.replace(mathRegex, (match) => {
+        if (!/(?:X[123]|Z|[≤≥<>=])/.test(match)) return match;
+        return `<span dir="ltr" style="unicode-bidi: isolate;">${match}</span>`;
+    });
+}
+
+let state = {
+    answers: new Array(QUIZ.length).fill(null),
+    submitted: false
+};
+
+/* =========================================================
+   التقسيم الذكي (Smart Pagination)
+   ========================================================= */
+function renderPaginatedPages() {
+    container.innerHTML = '';
+    
+    // حاوية القياس المخفية
+    const measureBox = document.createElement('div');
+    measureBox.style.position = 'absolute';
+    measureBox.style.visibility = 'hidden';
+    measureBox.style.width = '770px'; 
+    document.body.appendChild(measureBox);
+    
+    const measureWrapper = document.createElement('div');
+    measureWrapper.className = 'content-wrapper';
+    measureWrapper.style.padding = '0';
+    measureBox.appendChild(measureWrapper);
+
+    // قياس الهيدر
+    measureWrapper.innerHTML = `
+        <header class="hero-header">
+            <h1>بنك أسئلة تفاعلي ميد ترم</h1>
+            <p>مادة بحوث العمليات (الأساليب الكمية)</p>
+        </header>
+        <div class="main-title-banner">
+            <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
+        </div>
+    `;
+    const headerH = measureWrapper.offsetHeight;
+
+    // قياس الفاصل
+    measureWrapper.innerHTML = `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
+    const dividerH = measureWrapper.offsetHeight; 
+
+    // قياس كل سؤال (شاملاً المعطيات والصور المرفقة)
+    const qHeights = QUIZ.map((q) => {
+        let extraHTML = '';
+        if (q.context) {
+            extraHTML += `<div class="context-banner">${formatMath(q.context)}</div>`;
+        }
+        if (q.groupIntro) {
+            extraHTML += `<div class="context-banner">${formatMath(q.groupIntro)}</div>`;
+        }
+        if (q.image) {
+            extraHTML += `<div class="q-figure-box" style="height: 243px;"></div>`;
+        }
+
+        measureWrapper.innerHTML = `
+            ${extraHTML}
+            <div class="q-card">
+                <div class="q-head">
+                    <div class="q-head-right">
+                        <span class="q-num">1</span>
+                    </div>
+                </div>
+                <p class="q-text">${formatMath(q.text)}</p>
+                <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                    ${q.options.map((opt, j) => `
+                        <label class="option">
+                            <span class="letter">${LETTERS[j]}</span>
+                            <span class="opt-text">${formatMath(opt)}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        return measureWrapper.offsetHeight;
+    });
+
+    document.body.removeChild(measureBox);
+
+    // التوزيع الذكي
+    const availableHeight = 1123 - 12 - 42 - 32;
+    const pages = [];
+    let currentPage = [];
+    let currentHeight = 0;
+
+    for (let i = 0; i < QUIZ.length; i++) {
+        let required = qHeights[i];
+        
+        if (pages.length === 0 && currentPage.length === 0) {
+            required += headerH;
+        }
+
+        let forceBreak = false;
+        if (i === TF_START_INDEX && currentPage.length > 0) {
+            forceBreak = true;
+            required += dividerH;
+        }
+
+        if (forceBreak || (currentPage.length > 0 && (currentHeight + required > availableHeight))) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+            
+            if (forceBreak) {
+                required = qHeights[i] + dividerH;
+            } else {
+                required = qHeights[i];
+            }
+        }
+
+        currentPage.push(i);
+        currentHeight += qHeights[i];
+
+        if (pages.length === 0 && currentPage.length === 1) {
+            currentHeight += headerH;
+        }
+        if (i === TF_START_INDEX) { 
+            currentHeight += dividerH;
+        }
+    }
+    if (currentPage.length > 0) {
+        pages.push(currentPage);
+    }
+
+    // بناء HTML
+    const totalPages = pages.length;
+
+    const pagesHTML = pages.map((pageIndices, pageIdx) => {
+        let pageHTML = `
+        <div class="page-wrapper">
+            <div class="a4-page">
+                <div class="watermark"></div>
+                <div class="content-wrapper">
+        `;
+
+        if (pageIdx === 0) {
+            pageHTML += `
+                <header class="hero-header">
+                    <h1>بنك أسئلة تفاعلي ميد ترم</h1>
+                    <p>مادة بحوث العمليات (الأساليب الكمية)</p>
+                </header>
+                <div class="main-title-banner">
+                    <span>📝</span> اختر الإجابة الصحيحة لكل سؤال، ثم اضغط "تسليم الامتحان" بالأسفل
+                </div>
+            `;
+        }
+
+        pageIndices.forEach(globalIndex => {
+            const q = QUIZ[globalIndex];
+            
+            if (globalIndex === TF_START_INDEX) {
+                pageHTML += `<div class="section-divider">القسم الثاني: أسئلة الصواب والخطأ (صح / خطأ)</div>`;
+            }
+
+            if (q.context) {
+                pageHTML += `<div class="context-banner">${formatMath(q.context)}</div>`;
+            }
+            if (q.groupIntro) {
+                pageHTML += `<div class="context-banner">${formatMath(q.groupIntro)}</div>`;
+            }
+            if (q.image) {
+                pageHTML += `
+                    <div class="q-figure-box">
+                        <img src="${q.image}" alt="شكل بياني" onload="scalePages()">
+                    </div>
+                `;
+            }
+
+            const hasExplanation = Boolean(q.explanation && q.explanation.trim().length > 0);
+
+            pageHTML += `
+                <div class="q-card" data-card="${globalIndex}">
+                    <div class="q-head">
+                        <div class="q-head-right">
+                            <span class="q-num">${globalIndex + 1}</span>
+                            ${hasExplanation ? `<button class="info-btn" id="btn-${globalIndex}" onclick="toggleExplanation(${globalIndex})" title="التعليل">!</button>` : ''}
+                        </div>
+                    </div>
+                    <p class="q-text">${formatMath(q.text)}</p>
+                    <div class="q-options" style="${q.options.length === 2 ? 'grid-template-columns: 1fr 1fr;' : ''}">
+                        ${q.options.map((opt, j) => `
+                            <label class="option" data-q="${globalIndex}" data-o="${j}" id="opt-${globalIndex}-${j}">
+                                <input type="radio" name="q${globalIndex}" value="${j}" onchange="selectOption(${globalIndex}, ${j})">
+                                <span class="letter">${LETTERS[j]}</span>
+                                <span class="opt-text">${formatMath(opt)}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    ${hasExplanation ? `
+                    <div class="q-explanation" id="exp-${globalIndex}">
+                        <strong>التعليل: </strong>${formatMath(q.explanation)}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        pageHTML += `
+                </div>
+                <div class="footer-bar">
+                    <div class="footer-brand">
+                        <img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo" alt="لوجو الدحيح">
+                        <div class="footer-brand-name">الدحيح</div>
+                    </div>
+                    <div class="footer-center-text">صفحة ${pageIdx + 1} من ${totalPages} | مادة بحوث العمليات (الأساليب الكمية)</div>
+                </div>
+            </div>
+        </div>
+        `;
+        return pageHTML;
+    });
+
+    container.innerHTML = pagesHTML.join('');
+
+    updateProgress();
+    updateSubmitBtn();
+    setTimeout(scalePages, 100);
+}
+
+/* =========================================================
+   تصغير الورقة للموبايل
+   ========================================================= */
+function scalePages() {
+    const pageWidth = 794;
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const availableWidth = viewportWidth - 20;
+    const scale = Math.min(1, availableWidth / pageWidth);
+
+    document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+        const page = wrapper.querySelector('.a4-page');
+        if (scale < 1) {
+            page.style.transform = `scale(${scale})`;
+            page.style.transformOrigin = 'top center';
+            
+            const actualHeight = page.offsetHeight; 
+            wrapper.style.height = `${actualHeight * scale}px`;
+        } else {
+            page.style.transform = 'none';
+            wrapper.style.height = 'auto';
+        }
+    });
+}
+
+window.addEventListener('resize', scalePages);
+window.addEventListener('orientationchange', scalePages);
+
+/* =========================================================
+   التفاعل والتسليم
+   ========================================================= */
+function updateProgress() {
+    const answered = state.answers.filter(a => a !== null).length;
+    const percent = (answered / QUIZ.length) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressText').innerText = `${answered} / ${QUIZ.length}`;
+}
+
+function updateSubmitBtn() {
+    if (state.submitted) return;
+    const missing = state.answers.filter(a => a === null).length;
+    const btn = document.getElementById('submitBtn');
+    
+    if (missing === 0) {
+        btn.innerHTML = 'تسليم الامتحان 🚀';
+        btn.classList.add('ready');
+    } else {
+        btn.innerHTML = `تسليم الامتحان <span style="background: rgba(185,28,28,0.1); color: var(--red-alert); padding: 2px 10px; border-radius: 20px; font-size: 14px; border: 1px solid var(--red-alert);">باقي ${missing}</span>`;
+        btn.classList.remove('ready');
+    }
+}
+
+window.selectOption = function(qIndex, oIndex) {
+    if (state.submitted) return;
+    state.answers[qIndex] = oIndex;
+    
+    document.querySelectorAll(`.option[data-q="${qIndex}"]`).forEach(el => el.classList.remove('selected'));
+    document.getElementById(`opt-${qIndex}-${oIndex}`).classList.add('selected');
+    
+    const card = document.querySelector(`.q-card[data-card="${qIndex}"]`);
+    if (card) card.classList.remove('missed');
+
+    updateProgress();
+    updateSubmitBtn();
+};
+
+window.goToQuestion = function(index) {
+    closeMissedModal();
+    const card = document.querySelector(`.q-card[data-card="${index}"]`);
+    if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.transition = "box-shadow 0.3s";
+        card.style.boxShadow = "0 0 20px var(--accent-primary)";
+        setTimeout(() => { card.style.boxShadow = ""; }, 1500);
+    }
+};
+
+window.closeMissedModal = function() {
+    document.getElementById('missedModal').classList.remove('show');
+};
+
+function sendScoreToPlatform(score, total) {
+    try {
+        if (window.parent && window.parent !== window && typeof window.parent.saveInteractiveExamScore === 'function') {
+            window.parent.saveInteractiveExamScore(score, total);
+            return true;
+        } else {
+            console.log(`الدرجة: ${score} من ${total}`);
+            return false;
+        }
+    } catch (e) {
+        console.log("Error sending score: ", e);
+        return false;
+    }
+}
+
+window.submitExam = function() {
+    if (state.submitted) return;
+
+    const missingIndices = [];
+    state.answers.forEach((ans, i) => {
+        if (ans === null) missingIndices.push(i);
+    });
+
+    if (missingIndices.length > 0) {
+        missingIndices.forEach(i => {
+            const card = document.querySelector(`.q-card[data-card="${i}"]`);
+            if (card) card.classList.add('missed');
+        });
+
+        const modal = document.getElementById('missedModal');
+        const badgesContainer = document.getElementById('missedBadges');
+        document.getElementById('missedCount').innerText = missingIndices.length;
+        
+        badgesContainer.innerHTML = missingIndices.map(i => 
+            `<div class="badge-missed" onclick="goToQuestion(${i})">${i + 1}</div>`
+        ).join('');
+
+        modal.classList.add('show');
+        return;
+    }
+
+    state.submitted = true;
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.classList.remove('ready');
+    submitBtn.innerText = 'تم التسليم ✅';
+
+    let score = 0;
+
+    QUIZ.forEach((q, i) => {
+        const chosen = state.answers[i];
+        const isCorrect = (chosen === q.correct);
+        if (isCorrect) score++;
+
+        const options = document.querySelectorAll(`.option[data-q="${i}"]`);
+        options.forEach(opt => {
+            opt.classList.add('locked');
+            opt.classList.remove('selected');
+            const oIndex = parseInt(opt.dataset.o);
+            
+            if (oIndex === q.correct) {
+                opt.classList.add('correct');
+                opt.insertAdjacentHTML('beforeend', '<span class="mark">✓</span>');
+            }
+            if (oIndex === chosen && !isCorrect) {
+                opt.classList.add('wrong');
+                opt.insertAdjacentHTML('beforeend', '<span class="mark">✗</span>');
+            }
+        });
+
+        const infoBtn = document.getElementById(`btn-${i}`);
+        if (infoBtn) infoBtn.style.display = 'flex';
+    });
+
+    const sent = sendScoreToPlatform(score, QUIZ.length);
+
+    const resultCard = document.getElementById('resultCard');
+    const resultScore = document.getElementById('resultScore');
+    const resultMsg = document.getElementById('resultMsg');
+    
+    const percent = Math.round((score / QUIZ.length) * 100);
+    let msg = percent >= 80 ? "ممتاز! أداء رائع 🎉" : (percent >= 50 ? "جيد جداً، واصل التقدم 👍" : "لا بأس، حاول مرة أخرى 💪");
+    
+    resultScore.innerHTML = `${score} <small>/ ${QUIZ.length}</small>`;
+    resultMsg.innerText = msg + (sent ? " (تم إرسال الدرجة للمنصة)" : "");
+    resultCard.style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.toggleExplanation = function(index) {
+    const expBox = document.getElementById(`exp-${index}`);
+    const btn = document.getElementById(`btn-${index}`);
+    if (!expBox || !btn) return;
+    
+    const isCurrentlyOpen = expBox.classList.contains('show');
+
+    document.querySelectorAll('.q-explanation').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.info-btn').forEach(el => el.classList.remove('active'));
+
+    if (!isCurrentlyOpen) {
+        expBox.classList.add('show');
+        btn.classList.add('active');
+    }
+
+    setTimeout(scalePages, 50); 
+};
+
+/* =========================================================
+   انتظار تحميل الخطوط قبل الرسم
+   ========================================================= */
+function startRendering() {
+    renderPaginatedPages();
+}
+
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(startRendering).catch(startRendering);
+} else if (document.readyState === 'complete') {
+    startRendering();
+} else {
+    window.addEventListener('load', startRendering);
+}
+</script>
+</body>
+</html>
