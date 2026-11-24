@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ================= بداية كود الحماية الموحد لمنصة الدحيح ================= -->
+    <noscript>
+        <style>body { display: none !important; }</style>
+        <meta http-equiv="refresh" content="0;url=../login.html">
+    </noscript>
+
+    <style>
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+        
+        #antiScreenshotShield {
+            position: fixed; inset: 0; background: #020202; color: #ffffff;
+            display: none; align-items: center; justify-content: center;
+            flex-direction: column; z-index: 999999; font-family: 'Cairo', sans-serif; text-align: center;
+        }
+        #watermarkGrid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 99998;
+            overflow: hidden; display: flex; flex-wrap: wrap;
+            justify-content: space-around; align-content: space-around; opacity: 0.10;
+        }
+        .watermark-item {
+            transform: rotate(-25deg); color: #064E3B; font-size: 15px; font-weight: 800;
+            white-space: nowrap; padding: 35px; font-family: monospace; user-select: none;
+        }
+    </style>
+
+    <script>
+        const isDev = new URLSearchParams(window.location.search).get('admin') === 'daheeh' || 
+                      localStorage.getItem('daheeh_is_admin') === 'true';
+
+        if (!isDev) {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || 
+                    (e.ctrlKey && ['s', 'c', 'p', 'u'].includes(e.key.toLowerCase())) ||
+                    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                    e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isDev) return;
+            const shield = document.createElement("div");
+            shield.id = "antiScreenshotShield";
+            shield.innerHTML = `<h2 style="color: #FF003C; margin-bottom: 8px;">⚠️ محتوى محمي</h2><p style="color: #94A3B8;">يرجى الرجوع للصفحة لمواصلة المذاكرة.</p>`;
+            document.body.appendChild(shield);
+
+            let sName = "طالب الدحيح", sCode = "";
+            try {
+                sName = localStorage.getItem('studentName') || "طالب الدحيح";
+                sCode = localStorage.getItem('studentCode') || "0000";
+            } catch (e) {}
+
+            const wmContainer = document.createElement("div");
+            wmContainer.id = "watermarkGrid";
+            const watermarkText = `${sName} • ${sCode}`;
+            for (let i = 0; i < 45; i++) {
+                const item = document.createElement("div");
+                item.className = "watermark-item";
+                item.innerText = watermarkText;
+                wmContainer.appendChild(item);
+            }
+            document.body.appendChild(wmContainer);
+
+            window.addEventListener("blur", () => { shield.style.display = "flex"; });
+            window.addEventListener("focus", () => { shield.style.display = "none"; });
+            window.addEventListener("keyup", (e) => {
+                if (e.key === "PrintScreen") {
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText("");
+                    shield.style.display = "flex";
+                    setTimeout(() => shield.style.display = "none", 1200);
+                }
+            });
+        });
+    </script>
+    <!-- ================= نهاية كود الحماية ================= -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>مراجعة الميد ترم - أنظمة معلومات المؤسسات (EIS)</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #E2E8F0;
+            --bg-page: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #475569;
+            --emerald-dark: #064E3B;
+            --emerald-primary: #047857;
+            --emerald-light: #10B981;
+            --emerald-soft: #ECFDF5;
+            --emerald-tint: #F0FDF4;
+            --teal-accent: #0F766E;
+            --amber-accent: #D97706;
+            --amber-soft: #FFFBEB;
+            --red-alert: #BE123C;
+            --red-soft: #FFF1F2;
+            --blue-badge: #1D4ED8;
+            --border-color: #CBD5E1;
+            --card-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { 
+            overflow-x: hidden !important; 
+            width: 100%; 
+            background-color: var(--bg-body);
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            line-height: 1.55;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-primary); border-radius: 8px; }
+
+        /* ============ الحاوية الأساسية للورقة ============ */
+        .page-wrapper {
+            width: 100%;
+            display: flex; 
+            justify-content: center;
+            margin-bottom: 28px; 
+            overflow: hidden;
+            padding: 0 10px; 
+        }
+        
+        /* ============ تصميم ورقة A4 صافية ============ */
+        .a4-page {
+            background-color: var(--bg-page);
+            width: 794px; 
+            height: 1123px; 
+            padding: 30px 25px 52px 25px; 
+            border: 2px solid var(--emerald-primary);
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            transform-origin: top center; 
+            flex-shrink: 0;
+        }
+
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 7px;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--emerald-light), var(--teal-accent));
+            z-index: 10;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 330px; height: 330px;
+            background-image: url('https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(100%);
+        }
+
+        /* ============ الحاوية الداخلية: التحكم في الحجم عن طريق --fit ============ */
+        .content-wrapper {
+            --u: calc(15px * var(--fit, 1));
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin: 0 auto;
+            font-size: var(--u);
+            align-items: stretch;
+            transform-origin: top center; 
+        }
+
+        .hero-header {
+            text-align: center;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--emerald-dark) 0%, var(--emerald-primary) 100%);
+            border-radius: 14px;
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(4, 120, 87, 0.18);
+        }
+        .hero-header h1 {
+            font-size: calc(2.2 * var(--u));
+            font-weight: 900;
+            color: #FFFFFF;
+            margin-bottom: 3px;
+        }
+        .hero-header p {
+            font-size: calc(1.1 * var(--u));
+            color: #D1FAE5;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+        }
+
+        .glass-card {
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 11px 14px; 
+            margin-bottom: 11px; 
+            position: relative;
+            width: 100%;
+        }
+
+        /* عناوين داخل كبسولات ملونة */
+        h2 {
+            font-size: calc(1.25 * var(--u));
+            color: #FFFFFF;
+            background: linear-gradient(90deg, var(--emerald-dark), var(--emerald-primary));
+            padding: 5px 16px;
+            border-radius: 999px;
+            margin-bottom: 9px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            width: fit-content;
+            box-shadow: 0 3px 8px rgba(4, 120, 87, 0.18);
+        }
+        h2 span.icon {
+            font-size: calc(1.1 * var(--u));
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1px 7px;
+            border-radius: 999px;
+        }
+
+        h3 {
+            font-size: calc(1.08 * var(--u));
+            color: var(--emerald-dark);
+            background: var(--emerald-soft);
+            border: 1px solid #A7F3D0;
+            padding: 3px 13px;
+            border-radius: 999px;
+            margin: 8px 0 6px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+        }
+        h3::before { content: '◈'; color: var(--emerald-primary); font-size: calc(0.95 * var(--u)); }
+
+        p, li { 
+            font-size: calc(1.03 * var(--u)); 
+            margin-bottom: 4px; 
+            color: var(--text-main); 
+            line-height: 1.46; 
+            text-align: justify; 
+            width: 100%;
+            word-break: break-word;
+        }
+        ul, ol { margin-right: 20px; margin-bottom: 7px; }
+        ul li::marker { color: var(--emerald-light); font-weight: bold; }
+        ol li::marker { color: var(--emerald-dark); font-weight: 900; }
+
+        strong { color: var(--emerald-dark); font-weight: 800; }
+        
+        /* كبسولات التظليل */
+        .hl-yellow { background-color: #FEF3C7; padding: 1px 6px; border-radius: 6px; font-weight: 800; color: #92400E; }
+        .hl-green { background-color: #D1FAE5; padding: 1px 6px; border-radius: 6px; font-weight: 800; color: #064E3B; }
+        .hl-red { background-color: #FFE4E6; padding: 1px 6px; border-radius: 6px; font-weight: 800; color: #9F1239; }
+        .hl-blue { background-color: #DBEAFE; padding: 1px 6px; border-radius: 6px; font-weight: 800; color: #1E40AF; }
+
+        .summary-box {
+            background: var(--amber-soft);
+            border: 1.5px solid #FCD34D;
+            border-right: 5px solid var(--amber-accent);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: calc(1.02 * var(--u));
+            color: #78350F;
+            font-weight: 700;
+            line-height: 1.45;
+            text-align: justify;
+            width: 100%;
+        }
+
+        .alert-box {
+            background: var(--red-soft);
+            border: 1.5px solid #FECDD3;
+            border-right: 5px solid var(--red-alert);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin: 8px 0;
+            font-size: calc(1.02 * var(--u));
+            width: 100%;
+        }
+        .alert-box h3 {
+            background: #FFE4E6;
+            border-color: #FDA4AF;
+            color: var(--red-alert);
+            margin-top: 0;
+            font-size: calc(1.08 * var(--u));
+        }
+        .alert-box h3::before { content: '⚠️'; }
+
+        .tip-box {
+            background: var(--emerald-soft);
+            border: 1.5px solid #A7F3D0;
+            border-right: 5px solid var(--emerald-light);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin: 8px 0;
+            font-size: calc(1.02 * var(--u));
+            width: 100%;
+        }
+        .tip-box h3 {
+            background: #D1FAE5;
+            border-color: #6EE7B7;
+            color: var(--emerald-dark);
+            margin-top: 0;
+            font-size: calc(1.08 * var(--u));
+        }
+        .tip-box h3::before { content: '💡'; }
+
+        /* ============ جداول مخططة واضحة في القراءة ============ */
+        .table-wrapper {
+            overflow: hidden;
+            margin: 7px 0;
+            border-radius: 10px;
+            border: 1.5px solid #94A3B8;
+            background: #FFFFFF;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: calc(0.96 * var(--u));
+        }
+        th, td {
+            padding: 5px 8px;
+            border: 1px solid var(--border-color);
+            line-height: 1.38;
+        }
+        th {
+            background: var(--emerald-dark);
+            color: #FFFFFF;
+            font-weight: 800;
+            border-color: var(--emerald-primary);
+        }
+        tr:nth-child(odd) { background: #FFFFFF; }
+        tr:nth-child(even) { background: var(--emerald-tint); }
+        
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 7px 0;
+            padding: 9px;
+            background: #F8FAFC;
+            border-radius: 10px;
+            border: 1.5px dashed var(--emerald-light);
+            flex-direction: column;
+            width: 100%;
+        }
+        .flow-chart {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            direction: rtl;
+            margin-top: 2px;
+        }
+        .flow-box {
+            background: var(--emerald-dark);
+            color: #FFFFFF;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: calc(0.92 * var(--u));
+            text-align: center;
+        }
+        .flow-box-light {
+            background: #FFFFFF;
+            color: var(--emerald-dark);
+            border: 1.5px solid var(--emerald-primary);
+            padding: 4px 11px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: calc(0.92 * var(--u));
+            text-align: center;
+        }
+        .flow-op {
+            font-size: calc(1.15 * var(--u));
+            color: var(--emerald-primary);
+            font-weight: 900;
+        }
+
+        /* تصميم الدوائر */
+        .circle-box {
+            background: #FFFFFF;
+            border: 3.5px solid var(--emerald-light);
+            border-radius: 50%;
+            width: 118px;
+            height: 118px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            font-weight: 800;
+            font-size: calc(0.9 * var(--u));
+            color: var(--emerald-dark);
+            line-height: 1.25;
+            box-shadow: 0 4px 8px rgba(6, 78, 59, 0.08);
+        }
+        
+        .arrow-left {
+            font-size: calc(2.0 * var(--u));
+            color: var(--emerald-primary);
+            font-weight: bold;
+            margin: 0 -2px;
+            z-index: 2;
+        }
+
+        .footer-bar {
+            position: absolute; bottom: 14px; left: 25px; right: 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1.5px solid #E2E8F0; padding-top: 7px; z-index: 2;
+            background: #FFFFFF;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-logo { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--emerald-primary); object-fit: cover; }
+        .footer-brand-name { font-size: 13px; font-weight: 900; color: var(--emerald-dark); }
+        .footer-center-text { flex-grow: 1; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+
+        /* ============ الطباعة / PDF ============ */
+        @page { size: A4; margin: 0; }
+        @media print {
+            html, body {
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+            .page-wrapper {
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                display: block !important;
+                break-after: page;
+                page-break-after: always;
+                break-inside: avoid;
+            }
+            .page-wrapper:last-child { break-after: auto; page-break-after: auto; }
+            .a4-page {
+                transform: none !important;
+                box-shadow: none !important;
+                height: 1122px !important;
+                margin: 0 auto;
+                border-radius: 0;
+            }
+            #antiScreenshotShield { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= الصفحة 1 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <header class="hero-header">
+                    <h1>مراجعة الميد ترم الشاملة</h1>
+                    <p>أنظمة معلومات المؤسسات Enterprise Information Systems (EIS) - د. مريم سامي</p>
+                </header>
+
+                <section class="glass-card">
+                    <h2><span class="icon">1️⃣</span> المحاضرة الأولى: أساسيات IS و EIS</h2>
+                    
+                    <h3>أولاً: إيه هو نظام المعلومات العادي (Information System - IS)؟</h3>
+                    <p>ببساطة ده إطار مترابط بيحوّل <span class="hl-yellow">البيانات الخام (Data)</span> لـ <span class="hl-green">معلومات مفيدة</span> تساعد أي مكان ياخد قرارات صح ويحسّن شغله (بيُستخدم في التعليم، الصحة، والشركات). بيتكون من <strong>5 عناصر أساسية</strong>:</p>
+                    <div class="diagram-container">
+                        <div class="flow-chart">
+                            <div class="flow-box">البيانات Data</div>
+                            <div class="flow-op">+</div>
+                            <div class="flow-box-light">البرمجيات Software</div>
+                            <div class="flow-op">+</div>
+                            <div class="flow-box">الأجهزة Hardware</div>
+                            <div class="flow-op">+</div>
+                            <div class="flow-box-light">العمليات Procedures</div>
+                            <div class="flow-op">+</div>
+                            <div class="flow-box" style="background: var(--teal-accent);">الأفراد People</div>
+                        </div>
+                        <p style="font-size: calc(0.95 * var(--u)); text-align: center; margin-top: 6px; margin-bottom: 0; color: var(--text-muted);">وظيفتهم مع بعض: <strong>جمع ← تخزين ← معالجة ← توزيع المعلومات</strong> (بتركيز على الدقة، السرعة، وسهولة الوصول).</p>
+                    </div>
+
+                    <h3>ثانياً: طب إيه الفرق بينه وبين نظام معلومات المؤسسات (EIS)؟</h3>
+                    <ul>
+                        <li><strong>نظام المعلومات العام (IS):</strong> بيركز على المفاهيم الأساسية زي معالجة البيانات وإدارة المعلومات بشكل عام.</li>
+                        <li><strong>نظام معلومات المؤسسات (EIS):</strong> ده النسخة المتخصصة والمتكاملة للشركات و<span class="hl-red">المنظمات الكبيرة</span> (لا يقتصر على المؤسسات الصناعية فقط بل يُستخدم في مجالات متنوعة). هدفه الرئيسي: <span class="hl-yellow">تحسين كفاءة وتكامل العمليات داخل المؤسسة</span> ودمج البيانات عبر جميع الأقسام، ويخدم <strong>كل المستويات الإدارية</strong>.</li>
+                        <li><strong>أشهر تطبيقات EIS:</strong> <strong>ERP</strong> (تخطيط موارد المؤسسات)، <strong>CRM</strong> (إدارة علاقات العملاء)، <strong>SCM</strong> (إدارة سلسلة التوريد).</li>
+                    </ul>
+
+                    <h3>ثالثاً: هندسة الخدمات المتجهة (SOA - Service-Oriented Architecture):</h3>
+                    <p>لما البيانات كبرت أوي في الشركات، احتجنا <strong>SOA</strong>: وهي <span class="hl-blue">نهج أو نمط تصميم لتطوير أنظمة البرمجيات يعتمد على تقسيم التطبيقات إلى خدمات مستقلة (Services) ومتفاعلة يمكن إعادة استخدامها</span>، وبتعمل معاً عبر الشبكة ببروتوكولات قياسية زي <strong>HTTP</strong> و <strong>SOAP</strong> عشان نزود المرونة والتكامل.</p>
+
+                    <h3>رابعاً: الخصائص الخمسة الأساسية لـ EIS (مهمة جداً):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>الخاصية</th>
+                                <th>معناها بالعامية</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. التكامل (Integration)</strong></td>
+                                <td>بتربط كل الأقسام (مالية، HR، إنتاج) ببعض عشان المعلومات تمشي بسلاسة.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. المرونة (Scalability)</strong></td>
+                                <td>النظام بيكبر ويتكيف مع توسع الشركة وتغيرات السوق من غير ما يقع.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. البيانات الضخمة (Big Data)</strong></td>
+                                <td>القدرة على معالجة وتخزين ملايين العمليات اليومية بسرعة وكفاءة عالية.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. دعم القرار (Decision Support)</strong></td>
+                                <td>توفر تقارير تحليلية للإدارة العليا وبيانات تفصيلية للتشغيليين.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. الأمان والخصوصية (Security)</strong></td>
+                                <td>حماية البيانات بالتشفير، والالتزام بالقوانين زي <span class="hl-red">GDPR</span> وقانون حماية البيانات المصري.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 1</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 2 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🚀</span> تابع المحاضرة 1: أهمية أنظمة EIS (6 فوائد بالأمثلة)</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 6px;"><em>* ركز في الأمثلة اللي في كل نقطة عشان بتيجي أسئلة اختياري!</em></p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th style="width: 28%;">الأهمية</th>
+                                <th style="width: 42%;">بتعمل إيه في الشركة؟</th>
+                                <th style="width: 30%;">أمثلة الامتحان</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. زيادة الكفاءة التنظيمية</strong></td>
+                                <td>منصة مركزية تقلل التكرار والأخطاء البشرية وتسرّع الشغل وتزيد الإنتاجية وتقلل التكاليف وزمن التسليم.</td>
+                                <td>• <strong>SAP ERP</strong> لأتمتة المخزون.<br>• شركة <strong>E-Finance</strong> في مصر للدفع الإلكتروني.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. تحسين اتخاذ القرار</strong></td>
+                                <td>بتوفر بيانات لحظية (<span class="hl-yellow">Real-Time Data</span>) وأدوات ذكاء أعمال (<strong>BI</strong>) ودعم قرار (<strong>DSS</strong>) لتحليل البيانات الكبيرة.</td>
+                                <td>• أداة <strong>Power BI</strong> لتحليل المبيعات.<br>• البنوك لتحليل العملاء.<br>• <strong>سوق.كوم</strong> في مصر.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. التكيف مع التحول الرقمي</strong></td>
+                                <td>بتدعم السحابة (<strong>Cloud</strong>) والذكاء الاصطناعي (<strong>AI</strong>) وإنترنت الأشياء (<strong>IoT</strong>) والتجارة الإلكترونية.</td>
+                                <td>• <strong>Salesforce CRM</strong> السحابي.<br>• منصة <strong>مصر الرقمية</strong>.<br>• رؤية السعودية 2030 (<strong>نيوم</strong>).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. الأخلاقيات والاستدامة</strong></td>
+                                <td>الالتزام بقوانين حماية البيانات وتقليل التلوث والورق عبر الحوسبة الخضراء (<span class="hl-green">Green IT</span>).</td>
+                                <td>• قانون <strong>GDPR</strong> الأوروبي.<br>• قانون حماية البيانات المصري.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. تعزيز القدرة التنافسية</strong></td>
+                                <td>تقديم خدمات أحسن بتكلفة أقل وتقليل زمن التسليم وزيادة رضا العملاء للتميز في السوق.</td>
+                                <td>• نظام <strong>SCM</strong> لسلاسل التوريد.<br>• شركة <strong>BMW</strong> في التصنيع الذكي.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>6. دعم التوسع والنمو</strong></td>
+                                <td>إضافة وحدات جديدة أو فتح فروع في بلاد تانية من غير ما تعطل الشغل الحالي.</td>
+                                <td>• نظام <strong>Oracle Cloud</strong> للشركات متعددة الجنسيات.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="tip-box">
+                        <h3>تريكة السحابة و SaaS (بتتكرر في الصح والغلط!)</h3>
+                        <p style="margin-bottom: 0;">• <strong>الحوسبة السحابية (Cloud Computing):</strong> تمكن المستخدمين من الوصول للموارد <strong>في أي وقت ومن أي مكان</strong>، وتقلل تكاليف شراء وصيانة الأجهزة (مش بتزودها!). ونظام <strong>Cloud ERP</strong> لا يحتاج لتثبيت أو صيانة محلية.<br>• <strong>نموذج SaaS:</strong> هو نموذج يقدم <strong>البرمجيات كخدمة عبر الإنترنت</strong>.</p>
+                    </div>
+                </section>
+
+                <section class="glass-card" style="margin-bottom: 0;">
+                    <h2><span class="icon">2️⃣</span> المحاضرة الثانية: تاريخ تطور الأنظمة (5 مراحل)</h2>
+                    <div class="table-wrapper" style="margin-bottom: 0;">
+                        <table>
+                            <tr>
+                                <th>المرحلة والفترة</th>
+                                <th>التكنولوجيا والخصائص</th>
+                                <th>العيوب / الحدود</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. التقليدية</strong><br>(الخمسينيات - السبعينيات)</td>
+                                <td>حواسيب رئيسية <strong>Mainframes</strong>، اسمها أنظمة معالجة البيانات (مرتبات، مخزون). لغة <strong>COBOL</strong> وبطاقات مثقوبة وأشرطة مغناطيسية.</td>
+                                <td>غير متكاملة (كل قسم لوحده)، غالية جداً وتحتاج خبراء تقنيين.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. الإدارية</strong><br>(الثمانينيات)</td>
+                                <td>حواسيب شخصية <strong>PCs</strong>، قواعد بيانات علاقية (<strong>Oracle</strong>)، ظهور <strong>MIS</strong> و <strong>DSS</strong> ونظم <strong>HRM</strong>.</td>
+                                <td>استمرار انعزال الأنظمة بين الأقسام (<span class="hl-red">Siloed Systems</span>).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. أنظمة ERP</strong><br>(التسعينيات)</td>
+                                <td>ثورة التكامل في منصة واحدة، قواعد بيانات مركزية وواجهات رسومية. أمثلة: <strong>SAP R/3</strong> (للمؤسسات الكبيرة والمتوسطة) و <strong>Oracle</strong>.</td>
+                                <td>التكلفة العالية، الحاجة للتخصيص، ومقاومة التغيير التنظيمي.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. الإنترنت والسحابة</strong><br>(2000 - 2010)</td>
+                                <td>انتشار الويب والسحابة، ظهور <strong>CRM</strong> و <strong>SCM</strong>، اعتماد <strong>SOA</strong>. أمثلة: <strong>Salesforce</strong>, <strong>NetSuite</strong> (وفودافون في مصر).</td>
+                                <td>تحديات الأمان السيبراني والامتثال لقوانين مثل <strong>GDPR</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. الرقمية المتكاملة</strong><br>(2010 - الآن)</td>
+                                <td>دمج <strong>AI</strong> و <strong>ML</strong> و <strong>IoT</strong> و <strong>Big Data</strong> و <strong>Blockchain</strong>، وسحابات <strong>AWS/Azure</strong>. أمثلة: <strong>SAP S/4HANA</strong> (وفوري في مصر).</td>
+                                <td>نقص المهارات المتقدمة، تكاليف الصيانة، والتحيز في <strong>AI</strong>.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 3 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card" style="margin-bottom: 0;">
+                    <h2><span class="icon">⚠️</span> تابع المحاضرة 2: تحديات EIS الستة وحلولها</h2>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th style="width: 24%;">التحدي</th>
+                                <th style="width: 43%;">المشكلة إيه؟</th>
+                                <th style="width: 33%;">الحل المقترح في المنهج</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. التكلفة العالية</strong><br>(High Cost)</td>
+                                <td>تراخيص SAP و Oracle وأجهزة وتدريب بملايين، صعبة على الشركات الصغيرة في مصر (لازم نحسب عائد الاستثمار <strong>ROI</strong>).</td>
+                                <td>أنظمة مفتوحة المصدر زي <strong>Odoo</strong> أو الاعتماد على السحابة <strong>Cloud</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. التكامل البيني</strong><br>(Interoperability)</td>
+                                <td>عدم توافق EIS مع الأنظمة القديمة (<strong>Legacy Systems</strong>) والأنظمة غير المتجانسة (<strong>Heterogeneous</strong>) وغياب واجهات موحدة.</td>
+                                <td>اعتماد هندسة <strong>SOA</strong> واستخدام واجهات برمجة التطبيقات <strong>APIs</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. الأمان والخصوصية</strong><br>(Security & Privacy)</td>
+                                <td>خطر الاختراق وتسريب البيانات الحساسة، والالتزام بـ <strong>GDPR</strong> وقانون حماية البيانات المصري (2020) لتجنب الغرامات.</td>
+                                <td>التشفير <strong>Encryption</strong>، جدران الحماية <strong>Firewalls</strong>، إدارة الوصول <strong>Access Management</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. التغيير التنظيمي</strong><br>(Organizational Change)</td>
+                                <td><strong>مقاومة التغيير من الموظفين</strong>، ونقص التدريب يعيق الاستفادة الكاملة من الأنظمة <em>(وفشل مشاريع ERP سببه: نقص الميزانية + جودة البرمجيات + سوء إدارة التغيير)</em>.</td>
+                                <td>تدريب شامل وتغيير الإجراءات الإدارية، وإشراك الموظفين ومنهجيات <strong>Change Management</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. التخصيص والصيانة</strong><br>(Customization)</td>
+                                <td>النظام <strong>قابل للتخصيص</strong> ليناسب طبيعة كل شركة، لكن التخصيص الزائد بيزود التكلفة والتعقيد وبيصعّب التحديثات.</td>
+                                <td>استخدام حلول قياسية جاهزة (<span class="hl-green">Out-of-the-Box</span>) ودعم فني موثوق.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>6. البيانات الكبيرة</strong><br>(Big Data)</td>
+                                <td>صعوبة تخزين وتحليل بيانات التجارة الإلكترونية الضخمة في الوقت الفعلي لضعف البنية التحتية.</td>
+                                <td>تقنيات <strong>Hadoop</strong> و <strong>Spark</strong> والسحابة زي <strong>AWS</strong> و <strong>Azure</strong>.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>هرم الإدارة واحتياجات المعلومات (Figure 1-1):</h3>
+                    <p>لا يمكن لنظام معلومات واحد تلبية كل الاحتياجات، لأن كل مستوى إداري له مواصفات بيانات مختلفة:</p>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>المستوى الإداري</th>
+                                <th>نوع القرارات</th>
+                                <th>خصائص المعلومات المطلوبة</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. الإدارة العليا</strong><br>(Strategic Planning)</td>
+                                <td>غير مهيكلة (<span class="hl-red">Unstructured</span>)</td>
+                                <td><strong>كمية أقل وجودة عالية:</strong> ملخصة (Summarized)، مستقبلية (Forward Looking)، خارجية، واسعة النطاق، غير مجدولة (Ad Hoc / Infrequent).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. الإدارة الوسطى</strong><br>(Management Control)</td>
+                                <td>شبه مهيكلة (<span class="hl-yellow">Semi-Structured</span>)</td>
+                                <td>حلقة الوصل بين التخطيط الاستراتيجي والتنفيذ التشغيلي.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. الإدارة التشغيلية</strong><br>(Operational Control)</td>
+                                <td>مهيكلة (<span class="hl-green">Structured</span>)</td>
+                                <td><strong>تفصيلية جداً:</strong> تاريخية (Historical)، داخلية (Internal)، ضيقة النطاق، مجدولة ومتكررة (Scheduled / Frequent) بدون تحليل عالي.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>مستودع البيانات (Data Warehouse) ومتاجر البيانات (Data Marts):</h3>
+                    <p style="font-size: calc(0.95 * var(--u)); margin-bottom: 4px;"><strong>الهدف من مستودع البيانات:</strong> <span class="hl-green">دعم القرارات الإدارية والتحليلية</span>، ومن أشهر أدوات تحليل البيانات فيه: <span class="hl-blue">OLAP</span> و <strong>Data Mining</strong> و <strong>Dashboards</strong>.</p>
+                    <div class="diagram-container" style="padding: 6px; margin-bottom: 0;">
+                        <div class="flow-chart">
+                            <div class="flow-box">مصادر البيانات<br><small>(ERP, CRM, Legacy, External)</small></div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box-light">التكامل<br>Integration</div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box" style="background: var(--teal-accent);">Data Warehouse<br><small>(+ Metadata)</small></div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box-light">Data Marts</div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box">التطبيقات<br><small>(Reports, OLAP, Dashboard, Data Mining)</small></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 4 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🏢</span> تابع المحاضرة 2: وظائف الأعمال vs العمليات البينية</h2>
+                    
+                    <h3>أولاً: وظائف الأعمال (Business Functions) ومشاكلها:</h3>
+                    <p>هي <strong>أقسام المنظمة الأساسية</strong>، وكل وظيفة تركز على مهام محددة وتعمل بشكل مستقل نسبياً ضمن نطاقها: <strong>التسويق (Marketing)</strong> تحديد احتياجات وترويج، <strong>المبيعات (Sales)</strong> تحويل الاهتمام لشراء <span class="hl-red">(ومن مشاكلها الشائعة: عدم معرفة المخزون المتاح)</span>، <strong>الموارد البشرية (HR)</strong> توظيف وتدريب، <strong>التمويل والمحاسبة</strong> ميزانيات وتقارير، <strong>المشتريات</strong> <span class="hl-yellow">(تحديد احتياجات الأقسام من المواد والخدمات)</span>، <strong>العمليات (Operations)</strong> إنتاج وجودة، <strong>سلسلة التوريد (Supply Chain)</strong> تدفق المواد من المورد للعميل، <strong>IT</strong>، و<strong>خدمة العملاء</strong>.</p>
+
+                    <div class="alert-box">
+                        <h3>المشاكل الثلاثة لوظائف الأعمال التقليدية (Siloed Systems)</h3>
+                        <ol style="margin-bottom: 0;">
+                            <li><strong>غياب التكامل وعقلية الصوامع (Silo Mentality):</strong> كل إدارة شغالة في جزيرة منعزلة (مثلاً التسويق يعمل إعلان لمنتج ومفيش مخزون منه في الإنتاج!).</li>
+                            <li><strong>الافتقار لرؤية موحدة وتضارب الأهداف:</strong> التمويل عايز يقلل المصاريف، والتسويق عايز يزود ميزانية الإعلانات.</li>
+                            <li><strong>تحديات التكنولوجيا:</strong> لو نظام <strong>CRM</strong> منفصل عن <strong>ERP</strong> بتحصل بيانات متضاربة واختناقات تشغيلية.</li>
+                        </ol>
+                    </div>
+
+                    <h3>ثانياً: العمليات البينية بين الوظائف (Cross-Functional Processes):</h3>
+                    <p>هي <span class="hl-green">العمليات التي تعبر أكثر من قسم أو وظيفة داخل المؤسسة</span> وتتطلب تعاون كذا إدارة عشان نخلص دورة عمل كاملة من البداية للنهاية (زي عملية البيع: مبيعات ← إنتاج ← لوجستيات ← مالية). ويدعمها نظام <strong>ERP</strong> عبر التكامل بين الأقسام ولوحات التحكم <strong>Dashboards</strong>.</p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>العملية البينية</th>
+                                <th>بتبدأ منين وتنتهي فين؟</th>
+                                <th>مثال عملي في الامتحان</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. من الطلب إلى الدفع</strong><br><span class="hl-yellow">Order-to-Cash (O2C)</span></td>
+                                <td>المبيعات تستلم الطلب (<strong>CRM</strong>) ← الإنتاج والمخزون يتأكدوا (<strong>ERP</strong>) ← الشحن ← المالية تصدر الفاتورة.</td>
+                                <td>شركة <strong>STC السعودية</strong> قللت وقت العملية من <strong>5 أيام ليوم واحد</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. من الشراء إلى الدفع</strong><br><span class="hl-green">Procure-to-Pay (P2P)</span></td>
+                                <td>المشتريات تطلب المواد (<strong>SCM</strong>) ← الإنتاج يفحص الجودة ← المالية تسجل الدفع للمورد.</td>
+                                <td><strong>الدلتا للصناعات</strong> قللت التكاليف بنسبة <strong>10%</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. تنفيذ سلسلة التوريد</strong><br><span class="hl-blue">Supply Chain Execution</span></td>
+                                <td>تنسيق بين اللوجستيات والموردين والمبيعات لتتبع الشحنات وتلبية الطلبات.</td>
+                                <td>شركة <strong>نستله</strong> قللت وقت التسليم من <strong>7 أيام لـ 3 أيام</strong> بـ SAP IBP.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>آليات تكامل العمليات البينية (إزاي بنربطهم؟):</h3>
+                    <ul>
+                        <li><strong>قاعدة بيانات مركزية:</strong> تخزن كل البيانات في مكان واحد (زي <strong>Microsoft SQL Server</strong> في <strong>Dynamics 365</strong>).</li>
+                        <li><strong>واجهات برمجة التطبيقات وموصلات (APIs & Connectors):</strong> لربط الأنظمة المختلفة (زي ربط SAP بـ Salesforce عبر <strong>RESTful APIs</strong>).</li>
+                        <li><strong>أدوات التنسيق (Orchestration):</strong> لتنظيم تدفق الشغل بين الوظائف (زي <strong>SAP Process Orchestration</strong>).</li>
+                        <li><strong>الذكاء الاصطناعي (AI):</strong> لأتمتة المهام الروتينية زي تحليل الطلبات في SCM.</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 4</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 5 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">3️⃣</span> المحاضرة الثالثة: العمليات التجارية وإدارتها (BPM)</h2>
+                    
+                    <h3>أولاً: مفهوم العملية التجارية (Business Process):</h3>
+                    <p>هي <strong>مجموعة من الأنشطة أو الخطوات المترابطة المنسقة</strong> بتحوّل <span class="hl-yellow">المدخلات (Inputs)</span> إلى <span class="hl-green">مخرجات (Outputs)</span> (وتشمل الموارد المستخدمة) لتحقيق هدف محدد وتقديم قيمة لعميل <strong>خارجي</strong> (مشتري) أو <strong>داخلي</strong> (زميل في قسم تاني). وتحدث في <strong>كل الأقسام</strong> (الإدارية والإنتاجية) ولا تعمل بمعزل عن باقي العمليات، ومبدؤها التوجيهي هو <strong>رؤية ورسالة الإدارة العليا</strong>. ويركز المديرون حالياً على <strong>التوجه بالعمليات (Process-Oriented)</strong> بدل الوظائف.</p>
+
+                    <h3>مثال تطبيقي: شراء هاتف ذكي (المدخلات والوظيفة والعملية والمخرجات):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>الإدخال (Input)</th>
+                                <th>الوظيفة المسؤولة</th>
+                                <th>العملية (Process)</th>
+                                <th>الإخراج (Output)</th>
+                            </tr>
+                            <tr>
+                                <td>طلب شراء هاتف ذكي</td>
+                                <td>التسويق والمبيعات</td>
+                                <td>أمر المبيعات</td>
+                                <td>يتم إنشاء الطلب</td>
+                            </tr>
+                            <tr>
+                                <td>مساعدة مالية للشراء</td>
+                                <td>المحاسبة والمالية</td>
+                                <td>ترتيب التمويل داخل الشركة</td>
+                                <td>يحصل العميل على تمويل</td>
+                            </tr>
+                            <tr>
+                                <td>تنفيذ الطلب</td>
+                                <td>إدارة سلسلة التوريد</td>
+                                <td>الشحن والتوصيل</td>
+                                <td>يستلم العميل الهاتف</td>
+                            </tr>
+                            <tr>
+                                <td>الدعم الفني</td>
+                                <td>التسويق والمبيعات</td>
+                                <td>خط مساعدة 24 ساعة</td>
+                                <td>يتم حل استفسار العميل</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>ثانياً: إدارة العمليات التجارية (BPM) ومثلثها:</h3>
+                    <p><strong>أهداف BPM الثلاثة:</strong> (1) تعزيز رضا العملاء، (2) خفض تكاليف التشغيل (الكفاءة التكلفية)، (3) توليد القيمة بتطوير منتجات بتكلفة منخفضة. وبتقوم على 3 عناصر مترابطة: <strong>People</strong> (الأدوار والمسؤوليات والحوكمة) ↔ <strong>Process</strong> (تستهلك وتولد وتحول البيانات) ↔ <strong>Data & Tools</strong> (صلاحيات الوصول والملكية).</p>
+
+                    <h3>مراحل تطوير إدارة العمليات التجارية (4 مراحل بالترتيب):</h3>
+                    <div class="diagram-container" style="padding: 8px;">
+                        <div class="flow-chart">
+                            <div class="flow-box">1. تحديد العملية<br><small>Identification</small></div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box-light">2. تصميم العملية<br><small>Design</small></div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box">3. تنفيذ العملية<br><small>Implementation</small></div>
+                            <div class="flow-op">←</div>
+                            <div class="flow-box-light">4. مراقبة وتحسين<br><small>Monitoring</small></div>
+                        </div>
+                    </div>
+                    <ol>
+                        <li><strong>تحديد العملية (Process Identification):</strong> مقابلات مع أصحاب المصلحة (Stakeholders)، رسم خريطة الوضع الحالي (<span class="hl-red">As-Is Process Map</span>)، وتحديد المشاكل والتأخيرات.</li>
+                        <li><strong>تصميم العملية (Process Design):</strong> تصميم النموذج المحسّن المستقبلي (<span class="hl-green">To-Be Process</span>) سواء بـ <strong>إعادة هندسة العمليات (BPR)</strong> (تهدف لتقليل الوقت والتكلفة وتحسين الجودة) أو <strong>تحسين العمليات (BPI)</strong> (يهدف لتقليل التكلفة وزيادة الكفاءة)، والرسم بأداة <strong>BPMN</strong>، واختبار التصميم.</li>
+                        <li><strong>تنفيذ العملية (Process Implementation):</strong> تثبيت الأنظمة (SAP, Oracle, POS)، تدريب الموظفين، والإطلاق التدريجي (<span class="hl-yellow">Phased Rollout</span>).</li>
+                        <li><strong>مراقبة وتحسين العملية (Monitoring & Improvement):</strong> قياس ومتابعة أداء العملية التجارية بمؤشرات <strong>KPIs</strong> (زي زمن الدورة <strong>Cycle Time</strong> ومعدل رضا العملاء) باستخدام <strong>Dashboards</strong> والتغذية الراجعة.</li>
+                    </ol>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 5</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 6 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">🤖</span> تابع المحاضرة 3: أتمتة العمليات التجارية (BPA)</h2>
+                    
+                    <h3>أولاً: إيه هي BPA وفوائدها الـ 8؟</h3>
+                    <p><strong>Business Process Automation (BPA):</strong> هي استخدام التكنولوجيا لأتمتة المهام المتكررة أو كثيفة الموارد أو المعرضة للأخطاء البشرية، لربط العمليات البينية (<strong>O2C</strong> و <strong>P2P</strong>) والقضاء على الصوامع <strong>Silos</strong>. <em>(ملحوظة: مش كل العمليات تنفع للأتمتة، الأولوية للي بتستهلك وقت وموارد أو فيها أخطاء بشرية).</em></p>
+                    <p><strong>فوائد BPA (8 فوائد):</strong> (1) ضمان الجودة، (2) الاتساق (خدمة موحدة)، (3) الحوكمة والاعتمادية، (4) تعزيز الكفاءة التشغيلية (إزالة الخطوات الزائدة)، (5) تسريع زمن التنفيذ، (6) كفاءة الوقت، (7) رؤية العملية (Process Visibility)، (8) خفض التكاليف.</p>
+
+                    <h3>ثانياً: خطوات تنفيذ أتمتة العمليات التجارية BPA (8 خطوات بالترتيب):</h3>
+                    <ol>
+                        <li><strong>تحديد الهدف من تنفيذ BPA:</strong> الإجابة على سؤال <span class="hl-yellow">"لماذا نؤتمت؟"</span> (مثال: شركة <strong>فوري</strong> لتقليل أخطاء الدفع الإلكتروني، ومنع الدفعات المكررة أو الدفع لسلع لم تُسلم).</li>
+                        <li><strong>فهم متطلبات الالتزام (Rules/Regulation):</strong> التأكد من التوافق مع القوانين المحلية والدولية زي <strong>GDPR</strong> والضرائب.</li>
+                        <li><strong>توثيق العملية المستهدفة:</strong> تحديد كل المستندات (ورقية، فاكس، إيميل، PDF)، مصدرها، المشاركين في معالجتها، وتأثير اللوائح عليها.</li>
+                        <li><strong>وضع أهداف واضحة (SMART Goals):</strong> لازم الأهداف تكون: محددة (<strong>Specific</strong>)، قابلة للقياس (<strong>Measurable</strong>)، قابلة للتحقيق (<strong>Attainable</strong>)، ذات صلة (<strong>Relevant</strong>)، ومحددة زمنياً (<strong>Timely</strong>).</li>
+                        <li><strong>توظيف استشاري عمليات تجارية:</strong> بنختاره بناءً على <strong>5 عوامل</strong>: (1) الموضوعية، (2) خبرته في عمليات المنظمة، (3) خبرته في حل المشكلات الحرجة، (4) قدرته على التوصية والتنفيذ، (5) الخبرة المطلوبة.</li>
+                        <li><strong>تقييم العائد على الاستثمار (ROI / PRO):</strong> لتبرير المشروع للإدارة العليا (خفض التكاليف، تقليل الحاجة لموظفين جدد وإعادة توزيع الحاليين، توفير الرواتب، توفير المساحة بتقليل الورق، إلغاء الغرامات، تقليل تكاليف التدقيق والقضايا، خصومات الدفع المبكر، توثيق شامل، فرص إيرادات جديدة، تحسين التدفق النقدي، نمو الأعمال، وإيرادات الوصول الفوري).</li>
+                        <li><strong>تطوير ونشر BPA:</strong> شراء أو تطوير النظام بواسطة الاستشاري بما يتوافق مع الأهداف (مثال: شركة ألبان تستخدم <strong>SAP</strong>).</li>
+                        <li><strong>اختبار حل BPA (المرحلة الأخيرة قبل التشغيل الكامل):</strong>
+                            <ul>
+                                <li><em>أهميته (3 فوائد):</em> (أ) تحسين العملية قبل الإطلاق الرسمي، (ب) تعزيز قبول المستخدمين وتقليل مقاومة التغيير، (ج) توثيق العملية النهائية لتدريب الموظفين الجدد.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 6</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 7 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">4️⃣</span> المحاضرة الرابعة: أنظمة ERP – CRM – SCM</h2>
+                    
+                    <h3>أولاً: نظام تخطيط موارد المؤسسات (ERP System):</h3>
+                    <p><strong>الهدف:</strong> دمج جميع وظائف وأقسام المؤسسة في نظام واحد و<span class="hl-yellow">قاعدة بيانات واحدة مركزية</span> لتبادل البيانات وتقليل تكرارها وتحسين دقتها، حيث يجمع البيانات من كل الأقسام في <strong>نفس المعلومات في الوقت الفعلي</strong>. <em>(مثال: تسجيل طلب شراء ← يخصم من الميزانية + يحدث المخزون تلقائياً + يبلغ المورد).</em></p>
+                    <p><strong>الوظائف الـ 6 لـ ERP:</strong> (1) الموارد البشرية <strong>HR</strong>، (2) المحاسبة والمالية <strong>Financial</strong> (تتبع الإيرادات والمصروفات)، (3) المشتريات والموردين <strong>Procurement</strong>، (4) المخزون <strong>Inventory</strong> (وتحديد نقاط إعادة الطلب)، (5) تخطيط الإنتاج <strong>Production Planning</strong>، (6) إدارة المشاريع <strong>Project Management</strong>.</p>
+
+                    <div class="tip-box" style="margin: 6px 0;">
+                        <h3>أشهر 3 أنظمة ERP في المنهج (ركز في تفاصيلهم!)</h3>
+                        <ul style="margin-bottom: 0;">
+                            <li><strong>1. SAP ERP (شركة SAP الألمانية):</strong> اختصار <em>Systems, Applications, and Products in Data Processing</em>.
+                                <br><strong>وحداته الـ 7:</strong> <strong>FI</strong> (الحسابات والمالية)، <strong>CO</strong> (تحليل التكاليف والربحية)، <strong>MM</strong> (المشتريات والمخزون)، <strong>SD</strong> (المبيعات والتوزيع)، <strong>PP</strong> (تخطيط الإنتاج)، <strong>HCM</strong> (الموارد البشرية والرواتب)، <strong>PM</strong> (الصيانة الوقائية).
+                                <br><strong>إصداراته:</strong> <strong>SAP ECC</strong> (الكلاسيكي قبل 2015) و <strong>SAP S/4HANA</strong> (الحديث المبني على قاعدة بيانات HANA السريعة وواجهة <strong>Fiori</strong>).
+                            </li>
+                            <li><strong>2. Oracle NetSuite:</strong> نظام <span class="hl-blue">ERP سحابي (Cloud-Based)</span> للشركات المتوسطة والصغيرة، تأسس <strong>1998</strong> واستحوذت عليه Oracle عام <strong>2016</strong>، لا يحتاج خوادم داخلية ويُحدّث تلقائياً.</li>
+                            <li><strong>3. Odoo:</strong> نظام <span class="hl-green">ERP مفتوح المصدر (Open Source)</span>، طُوّر في <strong>بلجيكا عام 2005</strong> وكان اسمه سابقاً <strong>OpenERP</strong> (ويحتوي على وحدات الموارد البشرية <strong>HR</strong> والحسابات <strong>Accounting</strong> وكل الأقسام).</li>
+                        </ul>
+                    </div>
+
+                    <h3>ثانياً: نظام CRM ونظام SCM:</h3>
+                    <ul>
+                        <li><strong>نظام إدارة علاقات العملاء (CRM):</strong> هدفه تحسين العلاقة مع العملاء الحاليين والمحتملين وفهمهم وتحسين رضاهم وزيادة المبيعات في مراحل (التسويق – المبيعات – خدمة ما بعد البيع). أنشطته الـ 5: إدارة بيانات العملاء، إدارة المبيعات، أتمتة التسويق (تتبع العملاء المحتملين <strong>Leads</strong>)، خدمة العملاء (الرد على الاستفسارات والشكاوى ومتابعة رضا العملاء)، وتحليل سلوك العملاء وتوقع احتياجاتهم. <em>أمثلة: <strong>Salesforce CRM</strong> (سحابي) و <strong>Odoo CRM</strong>.</em></li>
+                        <li><strong>نظام إدارة سلسلة التوريد (SCM):</strong> هدفه تنظيم تدفق السلع والخدمات والمعلومات من المورد للمستهلك بأعلى كفاءة وأقل تكلفة. أنشطته الـ 5: التخطيط اللوجستي (تحديد كيفية نقل المواد والبضائع وتخزينها)، إدارة الطلب (التنبؤ وتخطيط الإنتاج والتوزيع)، المشتريات والتوريد، إدارة المخزون والتوزيع، وإدارة النقل. <em>مثال: <strong>Amazon</strong>.</em></li>
+                    </ul>
+
+                    <h3>العلاقة والتكامل بين الأنظمة الثلاثة (جدول الامتحان):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th>النظام</th>
+                                <th>النطاق</th>
+                                <th>الوظيفة الأساسية</th>
+                                <th>مثال للتكامل بينهما</th>
+                            </tr>
+                            <tr>
+                                <td><strong>ERP</strong></td>
+                                <td><span class="hl-yellow">داخل المؤسسة</span></td>
+                                <td>إدارة الموارد الداخلية (مالية، بشرية، إنتاج)</td>
+                                <td>بيانات المبيعات من CRM تُرسل لـ ERP لتحديث الإيرادات.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SCM</strong></td>
+                                <td><span class="hl-green">خارج وداخل المؤسسة</span></td>
+                                <td>إدارة تدفق السلع والموردين</td>
+                                <td>ERP يرسل خطط الإنتاج إلى SCM لتحديد احتياجات المواد.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CRM</strong></td>
+                                <td><span class="hl-blue">واجهة مع العملاء</span></td>
+                                <td>إدارة علاقات العملاء والمبيعات</td>
+                                <td>الطلبات من CRM تنتقل إلى ERP للتنفيذ والفوترة.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 7</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 8 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">5️⃣</span> المحاضرة الخامسة: هيكلية وعمارة EIS و EA</h2>
+                    
+                    <h3>أولاً: مفهوم عمارة EIS والبنية المؤسسية (Enterprise Architecture - EA):</h3>
+                    <ul>
+                        <li><strong>عمارة EIS:</strong> التصميم الشامل اللي بيحدد إزاي الأنظمة (ERP, CRM, SCM) بتتفاعل مع بعضها وإزاي بندير البيانات والتطبيقات والبنية التحتية.</li>
+                        <li><strong>أهداف عمارة EIS (4):</strong> التكامل (<strong>Integration</strong>)، المرونة (<strong>Flexibility</strong>)، الكفاءة (<strong>Efficiency</strong>)، الأمان (<strong>Security</strong>).</li>
+                        <li><strong>البنية المؤسسية (EA):</strong> هي <span class="hl-yellow">الجسر</span> اللي بيربط بين استراتيجية الأعمال والتنفيذ التقني (IT)، وبتساعد المؤسسة تفهم وضعها الحالي (<strong>Current State</strong>) وتحدد وضعها المستقبلي (<strong>Target State</strong>) وخطة التحول.</li>
+                    </ul>
+
+                    <h3>ثانياً: مبادئ الحوكمة الأربعة (Governance Principles):</h3>
+                    <div class="diagram-container" style="padding: 8px;">
+                        <div class="flow-chart">
+                            <div class="flow-box">1. الشفافية<br><small>إتاحة المعلومات بوضوح</small></div>
+                            <div class="flow-box-light">2. المساءلة<br><small>تحديد المسؤوليات والمحاسبة</small></div>
+                            <div class="flow-box">3. العدالة<br><small>المعاملة المتساوية للجميع</small></div>
+                            <div class="flow-box-light">4. المسؤولية<br><small>الالتزام الأخلاقي والقانوني</small></div>
+                        </div>
+                    </div>
+
+                    <h3>ثالثاً: طبقات عمارة EIS الخمسة (5 Layers):</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <tr>
+                                <th style="width: 32%;">الطبقة (Layer)</th>
+                                <th style="width: 68%;">دورها ومكوناتها</th>
+                            </tr>
+                            <tr>
+                                <td><strong>1. طبقة الأعمال</strong><br>(Business Layer)</td>
+                                <td>بتركز على استراتيجية العمل، الحوكمة، التنظيم، والعمليات الرئيسية (مبيعات، إنتاج) وتحدد احتياجات المعلومات.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. طبقة التطبيقات</strong><br>(Application Layer)</td>
+                                <td>البرمجيات المستخدمة وتفاعلها مع بعض والمستخدمين: مثل <strong>SAP ERP</strong>، <strong>Salesforce CRM</strong>، <strong>Oracle SCM</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. طبقة البيانات</strong><br>(Data Layer)</td>
+                                <td>هيكل البيانات وحوكمتها وإدارة قواعد البيانات زي <strong>Oracle DB</strong> و <strong>SQL Server</strong> و <strong>Big Data</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. طبقة البنية التحتية</strong><br>(Infrastructure Layer)</td>
+                                <td>الأجهزة (Hardware)، الشبكات، والحلول السحابية زي <strong>AWS</strong> و <strong>Azure</strong> لتشغيل الأنظمة.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. طبقة الأمان والحوكمة</strong><br>(Security & Governance)</td>
+                                <td>سياسات الأمن السيبراني، التشفير، إدارة المخاطر، والامتثال للقوانين.</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h3>رابعاً: إزاي البنية المؤسسية (EA) بتدعم الأهداف الاستراتيجية؟</h3>
+                    <ol>
+                        <li><strong>مواءمة التكنولوجيا مع الاستراتيجية:</strong> ربط CRM مع ERP لزيادة رضا العملاء.</li>
+                        <li><strong>تحسين الكفاءة التشغيلية:</strong> تبسيط العمليات وتقليل التكرار وسد فجوات <strong>O2C</strong> و <strong>P2P</strong> باستخدام <strong>ERP</strong> أو <strong>SOA</strong>.</li>
+                        <li><strong>المرونة والابتكار:</strong> إضافة وحدات جديدة (زي SCM أو التجارة الإلكترونية) بدون تعطيل النظام، وتبني <strong>Cloud</strong> و <strong>Microservices</strong> و <strong>BI</strong>.</li>
+                        <li><strong>إدارة المخاطر وتحسين الأمن:</strong> دمج التشفير <strong>Encryption</strong> والتحكم في الوصول <strong>Access Control</strong> لحماية بيانات CRM ووحدة FI.</li>
+                    </ol>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 8</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 9 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <section class="glass-card">
+                    <h2><span class="icon">6️⃣</span> المحاضرة السادسة: العمارة ثلاثية الطبقات لـ ERP</h2>
+                    
+                    <h3>أولاً: مبدأ "مصدر واحد للبيانات" (Single Source of Truth):</h3>
+                    <p>في الأنظمة المنفصلة كل قسم بيسجل بياناته لنفسه؛ أما في ERP المتكامل فكل وظيفة بتقرأ وتكتب في <strong>قاعدة بيانات واحدة</strong>، فـ <span class="hl-yellow">يُسجَّل الطلب مرة واحدة ويراه الجميع لحظياً</span> وبيطلع تقارير مشتركة بدون إعادة إدخال يدوي.</p>
+
+                    <h3>ثانياً: مكونات عمارة نظام المؤسسة ERP الثلاثة (3 Layers):</h3>
+                    <div class="diagram-container">
+                        <div class="flow-chart">
+                            <div class="circle-box" style="border-color: var(--teal-accent);">1. الطبقة العليا:<br>واجهة المستخدم<br>(UI)</div>
+                            <div class="arrow-left">⇄</div>
+                            <div class="circle-box" style="border-color: var(--amber-accent);">2. الطبقة الوسطى:<br>التطبيقات<br>(Modules)</div>
+                            <div class="arrow-left">⇄</div>
+                            <div class="circle-box" style="border-color: var(--emerald-dark);">3. الطبقة السفلى:<br>قاعدة البيانات<br>(Database)</div>
+                        </div>
+                    </div>
+
+                    <ol>
+                        <li><strong>قاعدة البيانات (الطبقة السفلى - Database Layer):</strong> مخزن مركزي واحد يحقق مبدأ <em>"مصدر واحد للبيانات"</em>، وتنقسم بياناتها لنوعين مهمين جداً في الامتحان:
+                            <ul>
+                                <li><span class="hl-green">بيانات رئيسية (Master Data):</span> تصف <strong>الكيانات الثابتة نسبياً</strong> (مثل بيانات العميل، المنتج، المورد، الموظف).</li>
+                                <li><span class="hl-blue">بيانات حركية (Transactional Data):</span> تسجل <strong>الأحداث والعمليات اليومية</strong> (مثل أمر بيع، فاتورة، حركة مخزون).</li>
+                            </ul>
+                        </li>
+                        <li><strong>التطبيقات (الطبقة الوسطى - Application Layer):</strong> هي الوحدات (<strong>Modules</strong>) اللي بتنفذ منطق العمل (<strong>Business Logic</strong>) لكل وظيفة (مبيعات، مشتريات، مخازن، مالية، موارد بشرية)، وبتقرأ وتكتب في القاعدة المشتركة فوراً.</li>
+                        <li><strong>واجهة المستخدم (الطبقة العليا - User Interface):</strong> الشاشات اللي بيتعامل معها الموظف (عبر برنامج أو متصفح ويب) لإدخال البيانات واستعراضها، وتُعرض حسب <strong>صلاحيات دوره فقط</strong> (<span class="hl-red">فموظف المبيعات لا يرى مثلاً بيانات الرواتب</span>).</li>
+                    </ol>
+
+                    <div class="summary-box" style="margin-top: 10px;">
+                        <strong>مثال يربط الطبقات الثلاثة ببعض:</strong><br>
+                        1. موظف المبيعات يدخل طلب العميل في شاشة الطلبات (<strong>واجهة المستخدم</strong>).<br>
+                        2. وحدة المبيعات تتحقق من العميل وتحسب السعر، ووحدة المخازن تتأكد من توفر الكمية (<strong>التطبيقات</strong>).<br>
+                        3. يُسجل الطلب في جدول الطلبات المرتبط بجدولي العميل والمنتج (<strong>قاعدة البيانات</strong>)، وبعد الشحن تنشئ وحدة المالية الفاتورة من نفس البيانات!
+                    </div>
+                </section>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 9</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= الصفحة 10 ================= -->
+    <div class="page-wrapper">
+        <div class="a4-page">
+            <div class="watermark"></div>
+            <div class="content-wrapper">
+                <header class="hero-header" style="padding: 10px 14px; margin-bottom: 8px;">
+                    <h1 style="font-size: calc(1.9 * var(--u)); color: #FFFFFF;">كبسولة الميد ترم (زتونة الـ 77 سؤال)</h1>
+                    <p style="font-size: calc(1.0 * var(--u)); color: #D1FAE5;">كل تريكات الصح والغلط والاختياري بنفس صياغة أسئلة الامتحان</p>
+                </header>
+
+                <div class="summary-box" style="background: #FFFFFF; border-color: var(--emerald-primary); margin-bottom: 8px;">
+                    <h3 style="margin-top: 0;">أهم تريكات الصح والغلط (خلي بالك من التصحيح!):</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>خطأ:</strong> يقتصر استخدام EIS على المؤسسات الصناعية فقط أو الصغيرة فقط. <br><strong>الصح:</strong> يُستخدم في <span class="hl-green">المؤسسات الكبيرة وفي مجالات متنوعة</span>، ويفشل غالباً بسبب <strong>نقص الميزانية + جودة البرمجيات + سوء إدارة التغيير</strong>.</li>
+                        <li><strong>خطأ:</strong> ERP يستخدم في المحاسبة فقط ولا يدعم HR أو المشتريات، ويعمل محلياً فقط. <br><strong>الصح:</strong> يدعم كل الوظائف ويعمل محلياً وسحابياً (<strong>Cloud ERP</strong> لا يحتاج خوادم أو صيانة محلية، ويُستخدم للشركات الصغيرة مثل <strong>NetSuite</strong>).</li>
+                        <li><strong>خطأ:</strong> من عيوب الحوسبة السحابية زيادة تكاليف شراء وصيانة الأجهزة. <br><strong>الصح:</strong> السحابة <span class="hl-green">تقلل التكاليف</span> وتمكن الوصول في أي وقت ومكان، و<strong>SaaS</strong> يقدم البرمجيات كخدمة عبر الإنترنت.</li>
+                        <li><strong>خطأ:</strong> نظام Odoo لا يحتوي على وحدات HR أو الحسابات، ويصعب تخصيص أنظمة ERP. <br><strong>الصح:</strong> Odoo <span class="hl-green">مفتوح المصدر</span> ويحتوي على HR و Accounting، وأنظمة ERP <span class="hl-blue">قابلة للتخصيص</span>.</li>
+                        <li><strong>خطأ:</strong> العمليات التجارية تحدث في الأقسام الإدارية فقط وتعمل بمعزل عن بعضها. <br><strong>الصح:</strong> تحدث في <span class="hl-green">كل الأقسام (الإدارية والإنتاجية)</span> وتتشابك وتشمل <strong>المدخلات والمخرجات والموارد</strong>، والعميل قد يكون <strong>خارجياً أو داخلياً</strong>.</li>
+                        <li><strong>خطأ:</strong> الإدارة العليا تحتاج بيانات تفصيلية، والتشغيلية تحتاج تقارير ملخصة. <br><strong>الصح:</strong> العليا <span class="hl-green">ملخصة وقرارات غير مهيكلة</span>، والتشغيلية <span class="hl-blue">تفصيلية وقرارات مهيكلة</span>.</li>
+                        <li><strong>خطأ:</strong> بيانات العميل والمنتج حركية، وموظف المبيعات يرى كل البيانات بما فيها الرواتب. <br><strong>الصح:</strong> العميل والمنتج <span class="hl-green">بيانات رئيسية (Master Data)</span>، والفواتير <span class="hl-blue">حركية (Transactional)</span>، والواجهة تعرض حسب <span class="hl-red">صلاحيات الدور فقط</span>.</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box" style="margin: 0;">
+                    <h3 style="margin-top: 0;">خريطة الاختصارات والمصطلحات (لأسئلة الاختياري):</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>SOA:</strong> تقسيم التطبيقات لخدمات مستقلة Services متفاعلة يمكن إعادة استخدامها عبر HTTP و SOAP.</li>
+                        <li><strong>O2C vs P2P:</strong> <strong>Order-to-Cash</strong> من الطلب للدفع (STC السعودية) • <strong>Procure-to-Pay</strong> من الشراء للدفع عبر SCM (الدلتا للصناعات).</li>
+                        <li><strong>BPR vs BPI:</strong> إعادة الهندسة <strong>BPR</strong> (تقليل الوقت والتكلفة وتحسين الجودة) • تحسين العمليات <strong>BPI</strong> (تقليل التكلفة وزيادة الكفاءة) • القياس بمؤشرات <strong>KPI</strong>.</li>
+                        <li><strong>Data Warehouse & OLAP:</strong> هدف مستودع البيانات <strong>دعم القرارات الإدارية والتحليلية</strong>، ومن أدواته <strong>OLAP</strong>.</li>
+                        <li><strong>وحدات SAP:</strong> <strong>FI</strong> (مالية)، <strong>CO</strong> (تكاليف)، <strong>MM</strong> (مشتريات ومخزون)، <strong>SD</strong> (مبيعات وتوزيع)، <strong>PP</strong> (إنتاج)، <strong>HCM</strong> (موارد بشرية)، <strong>PM</strong> (صيانة)، و<strong>SAP R/3</strong> للمؤسسات الكبيرة والمتوسطة.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bar">
+                <div class="footer-brand"><img src="https://i.postimg.cc/xC0xjL0s/Picsart-24-09-19-23-01-07-444.jpg" class="footer-logo"><div class="footer-brand-name">الدحيح</div></div>
+                <div class="footer-center-text">مراجعة أنظمة معلومات المؤسسات - صفحة 10 (الأخيرة)</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function autoLayoutPages() {
+            const pages = document.querySelectorAll('.a4-page');
+            const screenWidth = window.innerWidth;
+            const pageWidth = 794;
+            const pageHeight = 1123;
+            const maxContentHeight = pageHeight - 30 - 55;
+
+            pages.forEach(page => {
+                const content = page.querySelector('.content-wrapper');
+                const wrapper = page.parentElement;
+
+                content.style.setProperty('--fit', 1);
+                const actualHeight = content.scrollHeight;
+                if (actualHeight > maxContentHeight) {
+                    const fitRatio = Math.max(0.72, (maxContentHeight / actualHeight) - 0.01);
+                    content.style.setProperty('--fit', fitRatio.toFixed(3));
+                }
+
+                if (screenWidth < pageWidth + 20) {
+                    const scale = (screenWidth - 20) / pageWidth;
+                    page.style.transform = `scale(${scale})`;
+                    wrapper.style.height = `${pageHeight * scale}px`;
+                } else {
+                    page.style.transform = 'none';
+                    wrapper.style.height = 'auto';
+                }
+            });
+        }
+
+        window.addEventListener('resize', autoLayoutPages);
+        window.addEventListener('DOMContentLoaded', () => {
+            autoLayoutPages();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(autoLayoutPages);
+            }
+        });
+    </script>
+</body>
+</html>
